@@ -25,6 +25,7 @@ function fixture() {
   );
   writeFileSync(path.join(source, "releases/v1.0.0.zh-CN.md"), "# 第一版\n\n## 重复\n\n## 重复\n");
   writeFileSync(path.join(source, "releases/v1.0.0.en.md"), "Language: English\n\n## Changes\n");
+  writeFileSync(path.join(source, "releases/v2.0.0.zh-CN.md"), "# 第二版\n");
   writeFileSync(path.join(source, "assets/demo.png"), "fixture");
   writeFileSync(path.join(source, "assets/manual.pdf"), "%PDF-1.4 fixture");
   return { root, source, output, publicOutput };
@@ -40,7 +41,7 @@ test("imports stable routes, links, assets and metadata", () => {
       commitSha: SHA,
       importedAt: "2026-07-11T00:00:00.000Z"
     });
-    assert.equal(manifest.markdownCount, 5);
+    assert.equal(manifest.markdownCount, 6);
     assert.equal(manifest.assetCount, 2);
     assert.deepEqual(
       manifest.assets.map((entry) => entry.output),
@@ -60,6 +61,12 @@ test("imports stable routes, links, assets and metadata", () => {
     assert.match(desktop, /aria-current="page">桌面端维护<\/span>/);
     const release = readFileSync(path.join(output, "releases/v1.0.0.en/index.md"), "utf8");
     assert.match(release, /# v1\.0\.0 · English/);
+    const releaseIndex = readFileSync(path.join(output, "releases/index.md"), "utf8");
+    assert.match(releaseIndex, /## 全部版本说明/);
+    assert.match(releaseIndex, /已从上游同步 \*\*2\*\* 个版本、\*\*3\*\* 篇/);
+    assert.match(releaseIndex, /\[简体中文\]\(\/projects\/lyrics-card-generator\/docs\/releases\/v2\.0\.0\.zh-CN\/\)/);
+    assert.match(releaseIndex, /\[English\]\(\/projects\/lyrics-card-generator\/docs\/releases\/v1\.0\.0\.en\/\)/);
+    assert.ok(releaseIndex.indexOf("**v2.0.0**") < releaseIndex.indexOf("**v1.0.0**"));
     assert.ok(!existsSync(path.join(output, "assets/demo.png")));
     assert.ok(existsSync(path.join(publicOutput, "assets/demo.png")));
     assert.ok(existsSync(path.join(publicOutput, "assets/manual.pdf")));
