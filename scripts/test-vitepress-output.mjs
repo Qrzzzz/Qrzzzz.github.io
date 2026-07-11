@@ -4,6 +4,7 @@ import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node
 import path from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
+import { generatedManifest } from "./lib/lyrics-card-docs.mjs";
 
 const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const markdownFixture = path.join(repositoryRoot, "docs/__vitepress-output-test.md");
@@ -14,6 +15,16 @@ const outputHtml = path.join(outputRoot, "__vitepress-output-test.html");
 const outputPdf = path.join(outputRoot, "__vitepress-output-test/manual.pdf");
 const vitepressBin = path.join(repositoryRoot, "node_modules/vitepress/bin/vitepress.js");
 const pdfFixture = "%PDF-1.4\n% VitePress public attachment fixture\n";
+const releaseLanguages = ["zh-CN", "zh-TW", "en", "fr", "ja", "es"];
+
+function routeHtml(route) {
+  const relative = route.replace(/^\/+|\/+$/g, "");
+  return path.join(outputRoot, ...relative.split("/"), "index.html");
+}
+
+function escapeRegExp(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
 
 try {
   rmSync(outputRoot, { recursive: true, force: true });
@@ -53,7 +64,44 @@ try {
   assert.ok(existsSync(outputPdf), "public PDF 没有进入最终构建产物");
   assert.equal(readFileSync(outputPdf, "utf8"), pdfFixture, "最终 PDF 内容与 public 源文件不一致");
 
-  console.log("[docs:output-test] 通过：中文锚点、重复锚点和 public PDF 构建产物均有效。");
+  const manifest = generatedManifest(path.join(repositoryRoot, "docs/projects/lyrics-card-generator/docs"));
+  for (const language of releaseLanguages) {
+    const release = manifest.routes.find((entry) => entry.source?.endsWith(`.${language}.md`));
+    assert.ok(release, `导入清单缺少 ${language} Release Note`);
+    const releaseOutput = routeHtml(release.route);
+    assert.ok(existsSync(releaseOutput), `验收构建缺少 ${language} Release Note HTML`);
+    const releaseHtml = readFileSync(releaseOutput, "utf8");
+    assert.match(releaseHtml, new RegExp(`<html lang="${language}"`), `${language} 页面 html lang 错误`);
+    const languageNav = releaseHtml.match(/<nav class="release-language-nav"[^>]*>[\s\S]*?<\/nav>/)?.[0];
+    assert.ok(languageNav, `${language} 页面缺少可见语言导航`);
+    assert.equal((languageNav.match(/aria-current="page"/g) ?? []).length, 1, `${language} 当前语言标记不唯一`);
+    for (const candidate of releaseLanguages) {
+      assert.ok(
+        languageNav.includes(`lang="${candidate}" hreflang="${candidate}"`),
+        `${language} 页面缺少 ${candidate} 的 lang/hreflang`
+      );
+    }
+    assert.match(releaseHtml, /class="project-docs-sync import-source"/, `${language} 页面缺少可见来源信息`);
+    assert.match(
+      releaseHtml,
+      new RegExp(`${escapeRegExp(manifest.repository)}/commit/${manifest.commit}`),
+      `${language} 页面缺少 commit 链接`
+    );
+    assert.match(releaseHtml, new RegExp(`<code>${manifest.commit.slice(0, 8)}</code>`), `${language} 页面缺少短 SHA`);
+    assert.match(
+      releaseHtml,
+      new RegExp(`<time datetime="${escapeRegExp(manifest.importedAt)}"`),
+      `${language} 页面缺少同步时间`
+    );
+  }
+
+  const releaseArchive = manifest.routes.find((entry) => entry.source === "docs/releases/README.md");
+  assert.ok(releaseArchive, "导入清单缺少版本档案");
+  const releaseArchiveHtml = readFileSync(routeHtml(releaseArchive.route), "utf8");
+  assert.match(releaseArchiveHtml, /class="release-archive"/, "版本档案缺少可见版本列表");
+  assert.match(releaseArchiveHtml, /class="project-docs-sync import-source"/, "版本档案缺少可见来源信息");
+
+  console.log("[docs:output-test] 通过：锚点、public PDF、六语 html lang 与可见来源信息均有效。");
 } catch (error) {
   console.error(`[docs:output-test] ${error instanceof Error ? error.message : error}`);
   process.exitCode = 1;

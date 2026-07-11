@@ -8,6 +8,7 @@ import {
   GENERATED_PUBLIC_ROOT,
   GENERATED_ROOT,
   MANIFEST_NAME,
+  PRODUCTION_BASELINE,
   generatedManifest
 } from "./lib/lyrics-card-docs.mjs";
 
@@ -127,7 +128,14 @@ try {
   const manifest = generatedManifest(generatedRoot);
   if (!/^[0-9a-f]{40}$/i.test(manifest.commit)) failures.push("导入清单中的上游 commit SHA 无效。");
   if (!manifest.importedAt || Number.isNaN(Date.parse(manifest.importedAt))) failures.push("导入清单缺少有效同步时间。");
-  if (!Array.isArray(manifest.routes) || manifest.routes.length < 6) failures.push("导入路由数量异常。");
+  if (!Array.isArray(manifest.routes)) {
+    failures.push("导入清单缺少路由列表。");
+  } else if (manifest.routes.length < PRODUCTION_BASELINE.minimumImportedRoutes) {
+    failures.push(
+      `导入路由意外缩水：当前 ${manifest.routes.length}，不得低于 ${PRODUCTION_BASELINE.minimumImportedRoutes}` +
+      `（基线 commit ${PRODUCTION_BASELINE.referenceCommit}）。`
+    );
+  }
   if (!Array.isArray(manifest.assets)) failures.push("导入清单缺少附件列表。");
 
   const routeKeys = new Set();
@@ -147,10 +155,15 @@ try {
   for (const route of requiredRoutes) {
     if (!routeKeys.has(route.toLowerCase())) failures.push(`缺少必要路由：${route}`);
   }
-  const releasePages = manifest.routes.filter(
-    (entry) => entry.route.startsWith(`${DOCS_ROUTE}releases/`) && entry.route !== `${DOCS_ROUTE}releases/`
+  const releasePages = (manifest.routes ?? []).filter(
+    (entry) => /^docs\/releases\/v(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?\.(?:zh-CN|zh-TW|en|fr|ja|es)\.md$/.test(entry.source ?? "")
   );
-  if (releasePages.length < 2) failures.push("具体版本说明页面少于两个。");
+  if (releasePages.length < PRODUCTION_BASELINE.minimumReleasePages) {
+    failures.push(
+      `具体版本说明意外缩水：当前 ${releasePages.length}，不得低于 ${PRODUCTION_BASELINE.minimumReleasePages}` +
+      `（基线 commit ${PRODUCTION_BASELINE.referenceCommit}）。`
+    );
+  }
 
   for (const asset of manifest.assets ?? []) {
     const sourceRelative = asset.source.replace(/^docs\//, "");

@@ -2,6 +2,7 @@ import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import path from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
+import { PRODUCTION_BASELINE } from "./lib/lyrics-card-docs.mjs";
 
 const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const outputRoot = path.resolve(repositoryRoot, process.argv[2] || "docs/.vitepress/dist");
@@ -106,11 +107,18 @@ while (queue.length) {
 }
 
 const unreachable = pages.filter((page) => !reached.has(page)).map((page) => page.route);
+const shrunk = pages.length < PRODUCTION_BASELINE.minimumReachablePages;
 
-if (broken.length || unreachable.length) {
+if (broken.length || unreachable.length || shrunk) {
   const messages = [];
   if (broken.length) messages.push(`失效站内链接：\n${broken.slice(0, 30).join("\n")}`);
   if (unreachable.length) messages.push(`无法从首页点击到达的页面：\n${unreachable.slice(0, 30).join("\n")}`);
+  if (shrunk) {
+    messages.push(
+      `可达页面意外缩水：当前 ${pages.length}，不得低于 ${PRODUCTION_BASELINE.minimumReachablePages}` +
+      `（基线 commit ${PRODUCTION_BASELINE.referenceCommit}）。`
+    );
+  }
   throw new Error(messages.join("\n\n"));
 }
 
