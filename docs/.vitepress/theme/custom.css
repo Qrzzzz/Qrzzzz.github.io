@@ -2540,3 +2540,105 @@ html:not(.dark) .vp-doc div[class*="language-"] code span {
     transform: none !important;
   }
 }
+
+/* lyrics-card-generator project and imported documentation */
+.docs-breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.48rem;
+  margin: 0 0 1.35rem;
+  color: var(--vp-c-text-2);
+  font-size: 0.86rem;
+}
+
+.docs-breadcrumb a {
+  color: var(--vp-c-text-2);
+  text-decoration: none;
+}
+
+.docs-breadcrumb a:hover {
+  color: var(--vp-c-brand-1);
+}
+
+.docs-breadcrumb span[aria-hidden="true"] {
+  color: var(--vp-c-divider);
+}
+
+.project-links-grid,
+.project-docs-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 1.8rem 0 2.2rem;
+}
+
+.project-link-card,
+.project-docs-card {
+  display: flex;
+  min-height: 9.2rem;
+  flex-direction: column;
+  gap: 0.7rem;
+  padding: 1.2rem;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--vp-c-bg-soft) 88%, transparent);
+  color: var(--vp-c-text-1);
+  text-decoration: none !important;
+  transition: border-color 160ms ease, transform 160ms ease, background 160ms ease;
+}
+
+.project-link-card:hover,
+.project-docs-card:hover {
+  border-color: var(--vp-c-brand-1);
+  background: var(--vp-c-bg-soft);
+  transform: translateY(-2px);
+}
+
+.project-link-card strong,
+.project-docs-card strong {
+  font-size: 1.05rem;
+}
+
+.project-link-card > span:last-child,
+.project-docs-card span {
+  color: var(--vp-c-text-2);
+  line-height: 1.65;
+}
+
+.project-link-card__type {
+  width: fit-content;
+  padding: 0.22rem 0.52rem;
+  border-radius: 999px;
+  background: var(--vp-c-brand-soft);
+  color: var(--vp-c-brand-1) !important;
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+}
+
+.project-docs-owner {
+  color: var(--vp-c-text-2);
+}
+
+.project-docs-sync {
+  display: grid;
+  gap: 0.65rem;
+  margin: 1rem 0;
+  padding: 1rem 1.1rem;
+  border-left: 3px solid var(--vp-c-brand-1);
+  background: var(--vp-c-bg-soft);
+  color: var(--vp-c-text-2);
+  font-size: 0.9rem;
+}
+
+@media (max-width: 760px) {
+  .project-links-grid,
+  .project-docs-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .project-link-card,
+  .project-docs-card {
+    min-height: auto;
+  }
+}

@@ -1,28 +1,45 @@
 name: Deploy VitePress site to Pages
 
 on:
+  pull_request:
+    branches:
+      - main
   push:
     branches: [main]
   workflow_dispatch:
+  repository_dispatch:
+    types:
+      - lyrics-card-docs-updated
+  schedule:
+    - cron: "23 3 * * *"
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
   group: pages
   cancel-in-progress: false
 
 jobs:
-  build:
+  validate:
+    name: Validate site
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout website
         uses: actions/checkout@v7
         with:
           fetch-depth: 0
+
+      - name: Checkout lyrics-card-generator docs
+        uses: actions/checkout@v7
+        with:
+          repository: Qrzzzz/lyrics-card-generator
+          ref: main
+          path: .external/lyrics-card-generator
+          sparse-checkout: |
+            docs
+          sparse-checkout-cone-mode: true
 
       - name: Setup Node
         uses: actions/setup-node@v6
@@ -30,23 +47,42 @@ jobs:
           node-version: 24
           cache: npm
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v6
-
       - name: Install dependencies
         run: npm ci
+
+      - name: Import lyrics-card-generator docs
+        run: npm run docs:import
+
+      - name: Test and validate imported docs
+        run: |
+          npm run docs:test
+          npm run docs:check
+          npm run docs:output-test
 
       - name: Build with VitePress
         run: npm run docs:build
 
+      - name: Validate routes and Pages boundary
+        run: npm run docs:check -- --dist
+
+      - name: Setup Pages
+        if: github.event_name != 'pull_request'
+        uses: actions/configure-pages@v6
+
       - name: Upload Pages artifact
+        if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v5
         with:
           path: docs/.vitepress/dist
 
   deploy:
-    needs: build
+    if: github.event_name != 'pull_request'
+    needs: validate
     runs-on: ubuntu-latest
+
+    permissions:
+      pages: write
+      id-token: write
 
     environment:
       name: github-pages

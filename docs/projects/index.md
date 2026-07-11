@@ -17,5 +17,5 @@ description: 已经公开、仍在维护的作品。
     <span>开发中</span>
   </div>
   <p>歌曲信息导入 · 歌词编辑 · 翻译 · 图片导出</p>
-  <a href="https://github.com/Qrzzzz/lyrics-card-generator">查看源码与最新进展 <span aria-hidden="true">↗</span></a>
+  <a href="/projects/lyrics-card-generator/">查看项目概览 <span aria-hidden="true">→</span></a>
 </div>
