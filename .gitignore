@@ -1,6 +1,10 @@
 node_modules/
 docs/.vitepress/dist/
 docs/.vitepress/cache/
+docs/projects/lyrics-card-generator/docs/
+
+.external/
+.cache/
 
 .DS_Store
 Thumbs.db

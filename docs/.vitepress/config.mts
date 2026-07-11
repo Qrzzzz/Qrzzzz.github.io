@@ -88,6 +88,48 @@ export default defineConfig({
             }
           ]
         }
+      ],
+
+      "/projects/lyrics-card-generator/": [
+        {
+          text: "lyrics-card-generator",
+          items: [
+            {
+              text: "项目概览",
+              link: "/projects/lyrics-card-generator/"
+            },
+            {
+              text: "在线版",
+              link: "https://qrzzzz.github.io/lyrics-card-generator/"
+            },
+            {
+              text: "源代码",
+              link: "https://github.com/Qrzzzz/lyrics-card-generator"
+            },
+            {
+              text: "发布文档",
+              collapsed: false,
+              items: [
+                {
+                  text: "文档首页",
+                  link: "/projects/lyrics-card-generator/docs/"
+                },
+                {
+                  text: "桌面端维护",
+                  link: "/projects/lyrics-card-generator/docs/desktop/"
+                },
+                {
+                  text: "示例内容维护",
+                  link: "/projects/lyrics-card-generator/docs/examples/"
+                },
+                {
+                  text: "版本说明",
+                  link: "/projects/lyrics-card-generator/docs/releases/"
+                }
+              ]
+            }
+          ]
+        }
       ]
     },
 
