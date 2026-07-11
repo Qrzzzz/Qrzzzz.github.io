@@ -103,14 +103,14 @@ export default defineConfig({
       options: {
         translations: {
           button: {
-            buttonText: "搜索",
-            buttonAriaLabel: "搜索"
+            buttonText: "搜索全站内容…",
+            buttonAriaLabel: "搜索全站内容"
           },
           modal: {
             displayDetails: "显示详细结果",
             resetButtonTitle: "清除搜索",
             backButtonTitle: "关闭搜索",
-            noResultsText: "没有找到",
+            noResultsText: "没有找到相关内容",
             footer: {
               selectText: "打开",
               selectKeyAriaLabel: "回车键",
