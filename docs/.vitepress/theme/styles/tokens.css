@@ -1,0 +1,142 @@
+:root {
+  color-scheme: light;
+
+  --site-canvas: #f5f4ef;
+  --site-surface: #fcfbf7;
+  --site-surface-subtle: #efeee8;
+  --site-text: #181818;
+  --site-text-muted: #5f625f;
+  --site-text-faint: #6b6e6a;
+  --site-line: #d4d2ca;
+  --site-line-strong: #b8b6ae;
+  --site-accent: #3156a3;
+  --site-accent-hover: #264787;
+  --site-accent-soft: rgba(49, 86, 163, 0.1);
+  --site-nav-bg: rgba(245, 244, 239, 0.86);
+  --site-code-bg: #17191d;
+  --site-code-text: #f2f0ea;
+  --site-spark-primary: #3156a3;
+  --site-spark-secondary: #30343a;
+
+  --site-font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI Variable", "Segoe UI",
+    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC",
+    "Noto Sans SC", sans-serif;
+  --site-font-mono: ui-monospace, "SFMono-Regular", "Cascadia Code", "Roboto Mono",
+    Consolas, "Liberation Mono", monospace;
+
+  --site-max: 1180px;
+  --site-reading: 740px;
+  --site-article: 690px;
+  --site-nav-height: 64px;
+  --site-radius-sm: 7px;
+  --site-radius-md: 12px;
+  --site-radius-lg: 18px;
+  --site-shadow-float: 0 18px 56px rgba(28, 29, 31, 0.1);
+
+  --vp-c-brand-1: var(--site-accent);
+  --vp-c-brand-2: var(--site-accent-hover);
+  --vp-c-brand-3: #1f3c75;
+  --vp-c-brand-soft: var(--site-accent-soft);
+  --vp-c-bg: var(--site-canvas);
+  --vp-c-bg-alt: var(--site-surface-subtle);
+  --vp-c-bg-elv: var(--site-surface);
+  --vp-c-bg-soft: #ebeae4;
+  --vp-c-text-1: var(--site-text);
+  --vp-c-text-2: var(--site-text-muted);
+  --vp-c-text-3: var(--site-text-faint);
+  --vp-c-divider: var(--site-line);
+  --vp-c-gutter: var(--site-line);
+  --vp-nav-bg-color: var(--site-nav-bg);
+  --vp-sidebar-bg-color: var(--site-canvas);
+  --vp-code-block-bg: var(--site-code-bg);
+  --vp-font-family-base: var(--site-font-sans);
+  --vp-font-family-mono: var(--site-font-mono);
+  --vp-layout-max-width: 1440px;
+  --vp-sidebar-width: 248px;
+}
+
+.dark {
+  color-scheme: dark;
+
+  --site-canvas: #111214;
+  --site-surface: #18191c;
+  --site-surface-subtle: #1d1f22;
+  --site-text: #f2f0ea;
+  --site-text-muted: #aaa8a1;
+  --site-text-faint: #8d8b85;
+  --site-line: #303237;
+  --site-line-strong: #484b51;
+  --site-accent: #a8b8ff;
+  --site-accent-hover: #c3ceff;
+  --site-accent-soft: rgba(168, 184, 255, 0.12);
+  --site-nav-bg: rgba(17, 18, 20, 0.84);
+  --site-code-bg: #0c0d0f;
+  --site-code-text: #f2f0ea;
+  --site-spark-primary: #a8b8ff;
+  --site-spark-secondary: #f2f0ea;
+  --site-shadow-float: 0 22px 64px rgba(0, 0, 0, 0.34);
+
+  --vp-c-brand-1: var(--site-accent);
+  --vp-c-brand-2: var(--site-accent-hover);
+  --vp-c-brand-3: #d8dfff;
+  --vp-c-brand-soft: var(--site-accent-soft);
+  --vp-c-bg: var(--site-canvas);
+  --vp-c-bg-alt: var(--site-surface-subtle);
+  --vp-c-bg-elv: var(--site-surface);
+  --vp-c-bg-soft: #202226;
+  --vp-c-text-1: var(--site-text);
+  --vp-c-text-2: var(--site-text-muted);
+  --vp-c-text-3: var(--site-text-faint);
+  --vp-c-divider: var(--site-line);
+  --vp-c-gutter: var(--site-line);
+  --vp-nav-bg-color: var(--site-nav-bg);
+  --vp-sidebar-bg-color: var(--site-canvas);
+  --vp-code-block-bg: var(--site-code-bg);
+}
+
+html {
+  background: var(--site-canvas);
+  scroll-behavior: smooth;
+  text-size-adjust: 100%;
+}
+
+body {
+  min-width: 320px;
+  background: var(--site-canvas);
+  color: var(--site-text);
+  font-family: var(--site-font-sans);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--site-accent-soft);
+  color: var(--site-text);
+}
+
+:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--site-accent) 74%, transparent);
+  outline-offset: 3px;
+}
+
+a,
+button,
+input {
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

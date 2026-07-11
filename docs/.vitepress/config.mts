@@ -1,5 +1,16 @@
 import { defineConfig } from "vitepress";
 
+function pageLanguage(value: unknown, relativePath = "") {
+  if (typeof value === "string" && /^[a-z]{2,3}(?:-[a-z0-9]+)*$/i.test(value)) {
+    return value;
+  }
+
+  const releaseLanguage = relativePath
+    .replaceAll("\\", "/")
+    .match(/\/releases\/v[^/]+\.(zh-CN|zh-TW|en|fr|ja|es)(?:\/index)?\.md$/i)?.[1];
+  return releaseLanguage ?? "zh-CN";
+}
+
 export default defineConfig({
   lang: "zh-CN",
   title: "Qrzzzz",
@@ -15,7 +26,26 @@ export default defineConfig({
   },
 
   head: [
-    ["meta", { name: "theme-color", content: "#111318" }],
+    [
+      "script",
+      { id: "sync-initial-theme-color" },
+      `;(() => {
+        let preference = "auto";
+        try {
+          preference = localStorage.getItem("vitepress-theme-appearance") || "auto";
+        } catch {}
+        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        const isDark = preference === "dark" || (preference !== "light" && prefersDark);
+        document.documentElement.classList.toggle("dark", isDark);
+        let themeColor = document.querySelector('meta[name="theme-color"]');
+        if (!themeColor) {
+          themeColor = document.createElement("meta");
+          themeColor.setAttribute("name", "theme-color");
+          document.head.appendChild(themeColor);
+        }
+        themeColor.setAttribute("content", isDark ? "#111214" : "#F5F4EF");
+      })()`
+    ],
     ["meta", { name: "color-scheme", content: "light dark" }],
     ["meta", { property: "og:type", content: "website" }],
     ["meta", { property: "og:site_name", content: "Qrzzzz" }],
@@ -42,6 +72,30 @@ export default defineConfig({
     );
   },
 
+  transformHtml(code, _id, context) {
+    const lang = pageLanguage(
+      context.pageData.frontmatter.lang,
+      context.pageData.relativePath
+    );
+    return code.replace(/<html lang="[^"]*"/, `<html lang="${lang}"`);
+  },
+
+  transformHead() {
+    return [
+      [
+        "script",
+        { id: "sync-site-theme-color" },
+        `;(() => {
+          const themeColor = document.querySelector('meta[name="theme-color"]');
+          themeColor?.setAttribute(
+            "content",
+            document.documentElement.classList.contains("dark") ? "#111214" : "#F5F4EF"
+          );
+        })()`
+      ]
+    ];
+  },
+
   markdown: {
     lineNumbers: true
   },
@@ -50,10 +104,9 @@ export default defineConfig({
     siteTitle: "Qrzzzz",
 
     nav: [
-      { text: "首页", link: "/" },
-      { text: "文档", link: "/guide/" },
       { text: "项目", link: "/projects/" },
-      { text: "关于", link: "/about" }
+      { text: "文档", link: "/guide/" },
+      { text: "文章", link: "/notes/" }
     ],
 
     sidebar: {
@@ -106,7 +159,7 @@ export default defineConfig({
               link: "https://github.com/Qrzzzz/lyrics-card-generator"
             },
             {
-              text: "发布文档",
+              text: "项目文档",
               collapsed: false,
               items: [
                 {
@@ -187,7 +240,7 @@ export default defineConfig({
     },
 
     footer: {
-      message: "Qrzzzz · 写清楚，留得住。",
+      message: '<a href="/about">关于 Cherry Chu</a> · 写清楚，留得住。',
       copyright: "© 2026 Qrzzzz"
     },
 

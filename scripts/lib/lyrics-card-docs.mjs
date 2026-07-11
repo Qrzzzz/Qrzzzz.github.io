@@ -16,6 +16,13 @@ export const GENERATED_ROOT = "docs/projects/lyrics-card-generator/docs";
 export const GENERATED_PUBLIC_ROOT = "docs/public/projects/lyrics-card-generator/docs";
 export const MANIFEST_NAME = ".import-manifest.json";
 export const UPSTREAM_REPOSITORY = "https://github.com/Qrzzzz/lyrics-card-generator";
+// Raise these together, with tests, after an intentional production content change.
+export const PRODUCTION_BASELINE = Object.freeze({
+  referenceCommit: "01166666",
+  minimumReleasePages: 234,
+  minimumImportedRoutes: 238,
+  minimumReachablePages: 246
+});
 
 const REQUIRED_SOURCES = ["desktop.md", "examples.md", "releases/README.md"];
 const REQUIRED_ROUTES = [
@@ -33,6 +40,23 @@ const LANGUAGE_NAMES = {
   "zh-TW": "繁體中文"
 };
 const RELEASE_LANGUAGES = ["zh-CN", "zh-TW", "en", "fr", "ja", "es"];
+const RELEASE_LANGUAGE_SET = new Set(RELEASE_LANGUAGES);
+const RELEASE_NAV_LABELS = {
+  "zh-CN": (version) => `${version} 的版本语言`,
+  "zh-TW": (version) => `${version} 的版本語言`,
+  en: (version) => `Languages for ${version}`,
+  fr: (version) => `Langues de ${version}`,
+  ja: (version) => `${version} の言語`,
+  es: (version) => `Idiomas de ${version}`
+};
+const SOURCE_INFO_COPY = {
+  "zh-CN": { label: "来源信息", repository: "上游仓库", commit: "上游 commit", synced: "同步时间" },
+  "zh-TW": { label: "來源資訊", repository: "上游儲存庫", commit: "上游 commit", synced: "同步時間" },
+  en: { label: "Source information", repository: "Upstream repository", commit: "Upstream commit", synced: "Synced" },
+  fr: { label: "Informations sur la source", repository: "Dépôt en amont", commit: "Commit en amont", synced: "Synchronisation" },
+  ja: { label: "出典情報", repository: "上流リポジトリ", commit: "上流 commit", synced: "同期日時" },
+  es: { label: "Información de origen", repository: "Repositorio de origen", commit: "Commit de origen", synced: "Sincronización" }
+};
 
 function toPosix(value) {
   return value.split(path.sep).join("/");
@@ -80,56 +104,199 @@ function escapeYaml(value) {
   return JSON.stringify(value);
 }
 
-function compareReleaseVersions(left, right) {
-  const parse = (value) => {
-    const match = value.match(/^v(\d+)\.(\d+)\.(\d+)(.*)$/i);
-    return match
-      ? [Number(match[1]), Number(match[2]), Number(match[3]), match[4]]
-      : null;
-  };
-  const leftParts = parse(left);
-  const rightParts = parse(right);
-  if (!leftParts || !rightParts) return right.localeCompare(left, "en", { numeric: true });
-  for (let index = 0; index < 3; index += 1) {
-    if (leftParts[index] !== rightParts[index]) return rightParts[index] - leftParts[index];
+function parseReleaseVersion(value) {
+  const match = value.match(
+    /^v(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?$/
+  );
+  if (!match) return null;
+  const prerelease = match[4] ? match[4].split(".") : null;
+  if (prerelease?.some((identifier) => /^\d+$/.test(identifier) && identifier.length > 1 && identifier.startsWith("0"))) {
+    return null;
   }
-  return String(rightParts[3]).localeCompare(String(leftParts[3]), "en");
+  return {
+    core: [BigInt(match[1]), BigInt(match[2]), BigInt(match[3])],
+    prerelease
+  };
 }
 
-function createReleaseArchive(markdownBySource) {
-  const versions = new Map();
+function comparePrerelease(left, right) {
+  const length = Math.max(left.length, right.length);
+  for (let index = 0; index < length; index += 1) {
+    if (left[index] === undefined) return -1;
+    if (right[index] === undefined) return 1;
+    const leftNumeric = /^\d+$/.test(left[index]);
+    const rightNumeric = /^\d+$/.test(right[index]);
+    if (leftNumeric && rightNumeric) {
+      const leftNumber = BigInt(left[index]);
+      const rightNumber = BigInt(right[index]);
+      if (leftNumber !== rightNumber) return leftNumber < rightNumber ? -1 : 1;
+      continue;
+    }
+    if (leftNumeric !== rightNumeric) return leftNumeric ? -1 : 1;
+    if (left[index] !== right[index]) return left[index] < right[index] ? -1 : 1;
+  }
+  return 0;
+}
+
+function compareReleaseVersions(left, right) {
+  const leftVersion = parseReleaseVersion(left);
+  const rightVersion = parseReleaseVersion(right);
+  if (!leftVersion || !rightVersion) return right.localeCompare(left, "en", { numeric: true });
+  for (let index = 0; index < leftVersion.core.length; index += 1) {
+    if (leftVersion.core[index] === rightVersion.core[index]) continue;
+    return leftVersion.core[index] > rightVersion.core[index] ? -1 : 1;
+  }
+  if (leftVersion.prerelease === null && rightVersion.prerelease !== null) return -1;
+  if (leftVersion.prerelease !== null && rightVersion.prerelease === null) return 1;
+  if (leftVersion.prerelease === null) return 0;
+  return -comparePrerelease(leftVersion.prerelease, rightVersion.prerelease);
+}
+
+function releaseCandidateIdentity(sourcePath) {
+  const match = sourcePath.match(/^releases\/(v[^/]+)\.md$/);
+  if (!match) return null;
+  const stem = match[1];
+  for (const language of RELEASE_LANGUAGES) {
+    const suffix = `.${language}`;
+    if (!stem.endsWith(suffix)) continue;
+    const version = stem.slice(0, -suffix.length);
+    return parseReleaseVersion(version) ? { version, language } : null;
+  }
+  const separator = stem.lastIndexOf(".");
+  if (separator !== -1) {
+    const version = stem.slice(0, separator);
+    const language = stem.slice(separator + 1);
+    if (parseReleaseVersion(version) && /^[A-Za-z]{2,3}(?:-[A-Za-z0-9]+)*$/.test(language)) {
+      return { version, language };
+    }
+  }
+  return parseReleaseVersion(stem) ? { version: stem, language: null } : null;
+}
+
+function releaseIdentity(sourcePath) {
+  const identity = releaseCandidateIdentity(sourcePath);
+  return identity?.language && RELEASE_LANGUAGE_SET.has(identity.language) ? identity : null;
+}
+
+function collectReleaseVersions(markdownBySource) {
+  const candidates = new Map();
   for (const entry of markdownBySource.values()) {
-    const match = entry.sourcePath.match(/^releases\/(v.+)\.(zh-CN|zh-TW|en|fr|ja|es)\.md$/);
-    if (!match) continue;
-    if (!versions.has(match[1])) versions.set(match[1], new Map());
-    versions.get(match[1]).set(match[2], entry);
+    const identity = releaseCandidateIdentity(entry.sourcePath);
+    if (!identity) continue;
+    if (!candidates.has(identity.version)) candidates.set(identity.version, new Map());
+    candidates.get(identity.version).set(identity.language, entry);
   }
 
+  const errors = [];
+  const versions = new Map();
+  for (const [version, languages] of candidates) {
+    const present = new Set([...languages.keys()].filter(Boolean));
+    const missing = RELEASE_LANGUAGES.filter((language) => !present.has(language));
+    const unexpected = [...present].filter((language) => !RELEASE_LANGUAGE_SET.has(language));
+    if (languages.has(null)) errors.push(`版本 ${version} 的 Release Note 文件缺少语言后缀`);
+    if (missing.length) errors.push(`版本 ${version} 缺少 Release Note 语言：${missing.join(", ")}`);
+    if (unexpected.length) errors.push(`版本 ${version} 包含不支持的 Release Note 语言：${unexpected.join(", ")}`);
+    if (!missing.length && !unexpected.length && !languages.has(null)) {
+      versions.set(version, new Map(RELEASE_LANGUAGES.map((language) => [language, languages.get(language)])));
+    }
+  }
+  if (errors.length) {
+    throw new Error(
+      `Release Note 语言集合无效；每个版本必须恰有 ${RELEASE_LANGUAGES.join(", ")} 六种语言：\n- ${errors.join("\n- ")}`
+    );
+  }
+  return versions;
+}
+
+function releaseLanguageLink({ version, language, route, className, currentLanguage }) {
+  const name = LANGUAGE_NAMES[language];
+  const current = language === currentLanguage ? ' aria-current="page"' : "";
+  return `<a class="${className}" href="${route}" lang="${language}" hreflang="${language}" aria-label="${escapeHtml(`${version} · ${name}`)}"${current}>${escapeHtml(name)}</a>`;
+}
+
+function createReleaseArchive(versions) {
   const sortedVersions = [...versions.keys()].sort(compareReleaseVersions);
   const releaseCount = [...versions.values()].reduce((total, entries) => total + entries.size, 0);
-  const header = `| 版本 | ${RELEASE_LANGUAGES.map((language) => LANGUAGE_NAMES[language]).join(" | ")} |`;
-  const separator = `| --- | ${RELEASE_LANGUAGES.map(() => "---").join(" | ")} |`;
   const rows = sortedVersions.map((version) => {
     const languages = versions.get(version);
-    const cells = RELEASE_LANGUAGES.map((language) => {
+    const links = RELEASE_LANGUAGES.map((language) => {
       const entry = languages.get(language);
-      return entry ? `[${LANGUAGE_NAMES[language]}](${entry.route})` : "—";
-    });
-    return `| **${version}** | ${cells.join(" | ")} |`;
+      return entry
+        ? releaseLanguageLink({
+            version,
+            language,
+            route: entry.route,
+            className: "release-archive__language"
+          })
+        : "";
+    }).filter(Boolean);
+    return `  <li class="release-archive__row">
+    <strong class="release-archive__version">${escapeHtml(version)}</strong>
+    <nav class="release-archive__languages" aria-label="${escapeHtml(`${version} 的语言版本`)}" lang="zh-CN">
+      ${links.join("\n      ")}
+    </nav>
+  </li>`;
   });
 
-  return `## 全部版本说明\n\n已从上游同步 **${sortedVersions.length}** 个版本、**${releaseCount}** 篇多语言 Release Note。\n\n${[
-    header,
-    separator,
-    ...rows
-  ].join("\n")}`;
+  return `<p class="release-archive__summary">已从上游同步 <strong>${sortedVersions.length}</strong> 个版本、<strong>${releaseCount}</strong> 篇多语言版本说明。</p>
+
+<ol class="release-archive" aria-label="全部版本说明" lang="zh-CN">
+${rows.join("\n")}
+</ol>`;
 }
 
-function injectAfterFirstHeading(content, addition) {
-  const match = content.match(/^#\s+.+$/m);
-  if (!match || match.index === undefined) return `${addition}\n\n${content}`;
-  const end = match.index + match[0].length;
-  return `${content.slice(0, end)}\n\n${addition}\n\n${content.slice(end).trimStart()}`;
+function demoteFirstHeading(content) {
+  let demoted = false;
+  return transformOutsideFences(content, (line) => {
+    if (demoted || !/^#\s+/.test(line)) return line;
+    demoted = true;
+    return `#${line}`;
+  });
+}
+
+function createReleaseIndex(content, archive) {
+  return `# 版本说明\n\n${archive}\n\n${demoteFirstHeading(content).trimStart()}`;
+}
+
+function createReleaseLanguageNav(versions, version, currentLanguage) {
+  const languages = versions.get(version);
+  if (!languages) return "";
+  const links = RELEASE_LANGUAGES.map((language) => {
+    const entry = languages.get(language);
+    return entry
+      ? releaseLanguageLink({
+          version,
+          language,
+          route: entry.route,
+          className: "release-language-nav__link",
+          currentLanguage
+        })
+      : "";
+  }).filter(Boolean);
+  const label = RELEASE_NAV_LABELS[currentLanguage]?.(version) ?? RELEASE_NAV_LABELS["zh-CN"](version);
+  return `<nav class="release-language-nav" aria-label="${escapeHtml(label)}" lang="${currentLanguage}">${links.join("\n  ")}</nav>`;
+}
+
+function createSourceInfo({ commitSha, importedAt, language = "zh-CN" }) {
+  const copy = SOURCE_INFO_COPY[language] ?? SOURCE_INFO_COPY["zh-CN"];
+  const shortSha = commitSha.slice(0, 8);
+  return `<footer class="project-docs-sync import-source" aria-label="${escapeHtml(copy.label)}" lang="${language}">
+  <span>${escapeHtml(copy.repository)} <a href="${UPSTREAM_REPOSITORY}">Qrzzzz/lyrics-card-generator</a></span>
+  <span>${escapeHtml(copy.commit)} <a href="${UPSTREAM_REPOSITORY}/commit/${commitSha}"><code>${shortSha}</code></a></span>
+  <span>${escapeHtml(copy.synced)} <time datetime="${escapeHtml(importedAt)}">${escapeHtml(importedAt)}</time></span>
+</footer>`;
+}
+
+function replaceInitialLanguageLine(content, navigation) {
+  let replaced = false;
+  const transformed = transformOutsideFences(content, (line) => {
+    if (replaced || !/^\s*(?:Language|Languages|Idioma|Idiomas|Langue|Langues|语言|語言|言語)\s*[:：]/.test(line)) {
+      return line;
+    }
+    replaced = true;
+    return `${navigation}\n`;
+  });
+  return replaced ? transformed : `${navigation}\n\n${transformed.trimStart()}`;
 }
 
 function withoutFrontmatter(content) {
@@ -169,20 +336,20 @@ function fallbackTitle(sourcePath) {
   return basename;
 }
 
-function breadcrumb(sourcePath, currentTitle) {
+function breadcrumb(sourcePath, currentTitle, pageLanguage = "zh-CN") {
   const items = [
-    ["首页", "/"],
-    ["项目", "/projects/"],
-    ["lyrics-card-generator", "/projects/lyrics-card-generator/"],
-    ["发布文档", DOCS_ROUTE]
+    ["首页", "/", "zh-CN"],
+    ["项目", "/projects/", "zh-CN"],
+    ["lyrics-card-generator", "/projects/lyrics-card-generator/", "en"],
+    ["项目文档", DOCS_ROUTE, "zh-CN"]
   ];
-  if (sourcePath) items.push([currentTitle, null]);
+  if (sourcePath) items.push([currentTitle, null, pageLanguage]);
   else items[items.length - 1][1] = null;
 
-  return `<nav class="docs-breadcrumb" aria-label="面包屑">${items
-    .map(([label, link]) => link
-      ? `<a href="${link}">${escapeHtml(label)}</a>`
-      : `<span aria-current="page">${escapeHtml(label)}</span>`)
+  return `<nav class="docs-breadcrumb" aria-label="面包屑" lang="zh-CN">${items
+    .map(([label, link, language]) => link
+      ? `<a href="${link}" lang="${language}">${escapeHtml(label)}</a>`
+      : `<span aria-current="page" lang="${language}">${escapeHtml(label)}</span>`)
     .join('<span aria-hidden="true">/</span>')}</nav>`;
 }
 
@@ -300,16 +467,17 @@ function rewriteLinks(content, context) {
   });
 }
 
-function frontmatter({ title, description, sourcePath, commitSha, upstreamFrontmatter }) {
+function frontmatter({ title, description, sourcePath, commitSha, upstreamFrontmatter, lang }) {
   const retained = upstreamFrontmatter
     .split(/\r?\n/)
-    .filter((line) => !/^(title|description|editLink|lastUpdated|sourceRepository|sourcePath|sourceCommit):/.test(line))
+    .filter((line) => !/^(title|description|lang|editLink|lastUpdated|sourceRepository|sourcePath|sourceCommit):/.test(line))
     .join("\n")
     .trim();
   return [
     "---",
     `title: ${escapeYaml(title)}`,
     `description: ${escapeYaml(description)}`,
+    lang ? `lang: ${escapeYaml(lang)}` : "",
     "editLink: false",
     "lastUpdated: false",
     `sourceRepository: ${escapeYaml(UPSTREAM_REPOSITORY)}`,
@@ -335,15 +503,15 @@ function readCommitSha(sourceRoot, explicitSha) {
 function createLanding({ commitSha, importedAt, releaseCount }) {
   const shortSha = commitSha.slice(0, 8);
   return `---
-title: 发布文档
+title: 项目文档
 description: lyrics-card-generator 从源仓库同步的公开维护文档和版本资料。
 editLink: false
 lastUpdated: false
 ---
 
-${breadcrumb("", "发布文档")}
+${breadcrumb("", "项目文档")}
 
-# 发布文档
+# 项目文档
 
 <p class="project-docs-owner">所属项目：<a href="/projects/lyrics-card-generator/"><strong>lyrics-card-generator</strong></a></p>
 
@@ -409,6 +577,9 @@ export function importLyricsCardDocs({
     }
   }
 
+  // Validate the complete upstream release set before replacing the last good import.
+  const releaseVersions = collectReleaseVersions(markdownBySource);
+
   rmSync(absoluteOutput, { recursive: true, force: true });
   rmSync(absolutePublicOutput, { recursive: true, force: true });
   mkdirSync(absoluteOutput, { recursive: true });
@@ -423,11 +594,14 @@ export function importLyricsCardDocs({
 
   const errors = [];
   const routes = [];
-  const releaseArchive = createReleaseArchive(markdownBySource);
+  const releaseArchive = createReleaseArchive(releaseVersions);
   for (const entry of markdownBySource.values()) {
     const raw = readFileSync(path.join(absoluteSource, ...entry.sourcePath.split("/")), "utf8");
     const { body, upstreamFrontmatter } = withoutFrontmatter(raw);
-    const title = firstHeading(body) || fallbackTitle(entry.sourcePath);
+    const release = releaseIdentity(entry.sourcePath);
+    const title = entry.sourcePath === "releases/README.md"
+      ? "版本说明"
+      : firstHeading(body) || fallbackTitle(entry.sourcePath);
     const description = entry.sourcePath.startsWith("releases/")
       ? `${title}：lyrics-card-generator 上游发布资料。`
       : `${title}：lyrics-card-generator 上游维护文档。`;
@@ -439,19 +613,27 @@ export function importLyricsCardDocs({
       errors
     });
     const pageContent = entry.sourcePath === "releases/README.md"
-      ? injectAfterFirstHeading(rewritten, releaseArchive)
-      : rewritten;
-    const needsHeading = !firstHeading(body);
+      ? createReleaseIndex(rewritten, releaseArchive)
+      : release
+        ? replaceInitialLanguageLine(
+            rewritten,
+            createReleaseLanguageNav(releaseVersions, release.version, release.language)
+          )
+        : rewritten;
+    const pageLanguage = release?.language ?? "zh-CN";
+    const needsHeading = entry.sourcePath !== "releases/README.md" && !firstHeading(body);
     const metadata = frontmatter({
       title,
       description,
       sourcePath: entry.sourcePath,
       commitSha: resolvedSha,
-      upstreamFrontmatter
+      upstreamFrontmatter,
+      lang: release?.language
     });
     const generatedHeading = needsHeading ? `# ${title}\n\n` : "";
-    const output = `${metadata}\n\n${breadcrumb(entry.sourcePath, breadcrumbTitle(entry.sourcePath, title))}\n\n` +
-      `${generatedHeading}${pageContent.trimStart()}`;
+    const sourceInfo = createSourceInfo({ commitSha: resolvedSha, importedAt, language: pageLanguage });
+    const output = `${metadata}\n\n${breadcrumb(entry.sourcePath, breadcrumbTitle(entry.sourcePath, title), pageLanguage)}\n\n` +
+      `${generatedHeading}${pageContent.trim()}\n\n${sourceInfo}`;
     const destination = path.join(absoluteOutput, ...entry.outputPath.split("/"));
     mkdirSync(path.dirname(destination), { recursive: true });
     writeFileSync(destination, `${output.trimEnd()}\n`, "utf8");
