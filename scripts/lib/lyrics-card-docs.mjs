@@ -32,6 +32,7 @@ const LANGUAGE_NAMES = {
   "zh-CN": "简体中文",
   "zh-TW": "繁體中文"
 };
+const RELEASE_LANGUAGES = ["zh-CN", "zh-TW", "en", "fr", "ja", "es"];
 
 function toPosix(value) {
   return value.split(path.sep).join("/");
@@ -77,6 +78,58 @@ function escapeHtml(value) {
 
 function escapeYaml(value) {
   return JSON.stringify(value);
+}
+
+function compareReleaseVersions(left, right) {
+  const parse = (value) => {
+    const match = value.match(/^v(\d+)\.(\d+)\.(\d+)(.*)$/i);
+    return match
+      ? [Number(match[1]), Number(match[2]), Number(match[3]), match[4]]
+      : null;
+  };
+  const leftParts = parse(left);
+  const rightParts = parse(right);
+  if (!leftParts || !rightParts) return right.localeCompare(left, "en", { numeric: true });
+  for (let index = 0; index < 3; index += 1) {
+    if (leftParts[index] !== rightParts[index]) return rightParts[index] - leftParts[index];
+  }
+  return String(rightParts[3]).localeCompare(String(leftParts[3]), "en");
+}
+
+function createReleaseArchive(markdownBySource) {
+  const versions = new Map();
+  for (const entry of markdownBySource.values()) {
+    const match = entry.sourcePath.match(/^releases\/(v.+)\.(zh-CN|zh-TW|en|fr|ja|es)\.md$/);
+    if (!match) continue;
+    if (!versions.has(match[1])) versions.set(match[1], new Map());
+    versions.get(match[1]).set(match[2], entry);
+  }
+
+  const sortedVersions = [...versions.keys()].sort(compareReleaseVersions);
+  const releaseCount = [...versions.values()].reduce((total, entries) => total + entries.size, 0);
+  const header = `| 版本 | ${RELEASE_LANGUAGES.map((language) => LANGUAGE_NAMES[language]).join(" | ")} |`;
+  const separator = `| --- | ${RELEASE_LANGUAGES.map(() => "---").join(" | ")} |`;
+  const rows = sortedVersions.map((version) => {
+    const languages = versions.get(version);
+    const cells = RELEASE_LANGUAGES.map((language) => {
+      const entry = languages.get(language);
+      return entry ? `[${LANGUAGE_NAMES[language]}](${entry.route})` : "—";
+    });
+    return `| **${version}** | ${cells.join(" | ")} |`;
+  });
+
+  return `## 全部版本说明\n\n已从上游同步 **${sortedVersions.length}** 个版本、**${releaseCount}** 篇多语言 Release Note。\n\n${[
+    header,
+    separator,
+    ...rows
+  ].join("\n")}`;
+}
+
+function injectAfterFirstHeading(content, addition) {
+  const match = content.match(/^#\s+.+$/m);
+  if (!match || match.index === undefined) return `${addition}\n\n${content}`;
+  const end = match.index + match[0].length;
+  return `${content.slice(0, end)}\n\n${addition}\n\n${content.slice(end).trimStart()}`;
 }
 
 function withoutFrontmatter(content) {
@@ -370,6 +423,7 @@ export function importLyricsCardDocs({
 
   const errors = [];
   const routes = [];
+  const releaseArchive = createReleaseArchive(markdownBySource);
   for (const entry of markdownBySource.values()) {
     const raw = readFileSync(path.join(absoluteSource, ...entry.sourcePath.split("/")), "utf8");
     const { body, upstreamFrontmatter } = withoutFrontmatter(raw);
@@ -384,6 +438,9 @@ export function importLyricsCardDocs({
       directoryIndexes,
       errors
     });
+    const pageContent = entry.sourcePath === "releases/README.md"
+      ? injectAfterFirstHeading(rewritten, releaseArchive)
+      : rewritten;
     const needsHeading = !firstHeading(body);
     const metadata = frontmatter({
       title,
@@ -394,7 +451,7 @@ export function importLyricsCardDocs({
     });
     const generatedHeading = needsHeading ? `# ${title}\n\n` : "";
     const output = `${metadata}\n\n${breadcrumb(entry.sourcePath, breadcrumbTitle(entry.sourcePath, title))}\n\n` +
-      `${generatedHeading}${rewritten.trimStart()}`;
+      `${generatedHeading}${pageContent.trimStart()}`;
     const destination = path.join(absoluteOutput, ...entry.outputPath.split("/"));
     mkdirSync(path.dirname(destination), { recursive: true });
     writeFileSync(destination, `${output.trimEnd()}\n`, "utf8");
