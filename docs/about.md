@@ -1,15 +1,17 @@
 ---
 title: 关于
-description: 关于 Qrzzzz。
+description: Qrzzzz，以及这个网站的用途。
 ---
 
 # 关于
 
-本网站由 **Qrzzzz** 维护，用于整理技术文档、学习记录、文章和开源项目。
+这里是 Qrzzzz 的公开文档与项目站。
 
-需要个人署名时，使用 **Cherry Chu**。
+文档保存会反复用到的方法，文章留住想多写几句的内容，项目页则列出仍在维护的作品。
 
-## Links
+站内内容由 **Cherry Chu** 整理。
+
+## 相关链接
 
 - [GitHub](https://github.com/Qrzzzz)
 - [Lyrics Card Generator](https://github.com/Qrzzzz/lyrics-card-generator)

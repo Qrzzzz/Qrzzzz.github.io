@@ -1,43 +1,52 @@
 ---
-title: 网站维护
-description: 本网站的本地运行、构建与发布流程。
+title: 维护这个网站
+description: 在本地编辑、检查并发布 Qrzzzz.github.io。
 ---
 
-# 网站维护
+# 维护这个网站
 
-本网站使用 VitePress 生成，并通过 GitHub Actions 发布到 GitHub Pages。
+这是一份留给自己的维护说明。改文案、加页面或发布更新时，按下面的顺序走一遍即可。
 
-## 本地运行
+## 本地编辑
+
+首次使用先安装依赖；之后启动开发服务器，终端会显示本地预览地址。
 
 ```bash
 npm install
 npm run docs:dev
 ```
 
-## 构建检查
+## 发布前检查
+
+正式构建必须通过。需要查看构建后的页面时，再启动预览服务。
 
 ```bash
 npm run docs:build
 npm run docs:preview
 ```
 
-## 更新内容
+## 发布更新
 
-1. 在 `docs` 目录中创建或修改 Markdown 文件。
-2. 执行正式构建检查。
-3. 提交并推送到 `main` 分支。
-4. GitHub Actions 自动构建并发布网站。
+1. 在 `docs` 中创建或修改 Markdown 文件。
+2. 执行 `npm run docs:build`。
+3. 提交更改并推送到 `main`。
+4. 在仓库的 Actions 页面查看部署进度。
 
-## Markdown 示例
+构建完成后，GitHub Pages 会自动更新。
 
-```ts
-function greet(name: string): string {
-  return `Hello, ${name}`;
-}
+## 新增页面
 
-console.log(greet("World"));
+```md
+---
+title: 页面标题
+description: 一句话说明这页解决什么问题。
+---
+
+# 页面标题
+
+正文从这里开始。
 ```
 
 ::: tip
-VitePress 支持提示容器、代码高亮、表格、标题锚点和 Frontmatter。
+新页面不会自动出现在导航中。创建文件后，记得把入口补到索引页或 `config.mts`。
 :::

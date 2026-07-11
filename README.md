@@ -1,15 +1,15 @@
 # Qrzzzz.github.io
 
-Qrzzzz 的个人文档、文章、笔记与项目网站。
+Qrzzzz 的个人网站源码，基于 VitePress 构建。
 
-## Development
+## 本地开发
 
 ```bash
 npm install
 npm run docs:dev
 ```
 
-## Build
+## 构建与预览
 
 ```bash
 npm run docs:build

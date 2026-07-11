@@ -1,18 +1,21 @@
 ---
 title: 项目
-description: 开源项目与开发记录。
+description: 已经公开、仍在维护的作品。
 ---
 
 # 项目
 
+这里只放已经公开，也准备继续维护的项目。
+
 ## Lyrics Card Generator
 
-现代化的歌词卡片生成工具，支持歌曲信息导入、歌词编辑、翻译和图片导出。
+用于导入歌曲信息、编辑歌词和翻译，并将排版结果导出为图片。
 
-- [查看 GitHub 仓库](https://github.com/Qrzzzz/lyrics-card-generator)
-- 状态：持续开发
-- 方向：前端、图像生成与音乐信息处理
-
-## 更多项目
-
-其他项目将在这里逐步补充。
+<div class="project-showcase">
+  <div class="project-showcase__meta">
+    <span>开源</span>
+    <span>开发中</span>
+  </div>
+  <p>歌曲信息导入 · 歌词编辑 · 翻译 · 图片导出</p>
+  <a href="https://github.com/Qrzzzz/lyrics-card-generator">查看源码与最新进展 <span aria-hidden="true">↗</span></a>
+</div>

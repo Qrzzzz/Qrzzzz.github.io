@@ -1,10 +1,12 @@
 ---
 title: 文章
-description: 文章、随笔和学习记录。
+description: 不设更新频率，只收录愿意回头再看的文字。
 ---
 
 # 文章
 
+这里不设固定选题。遇到值得多写几句的事，就单独留下一页。
+
 ## 2026
 
-- [为什么建立这个网站](/notes/why-this-site)
+- [为什么要有这个网站](/notes/why-this-site)
