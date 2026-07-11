@@ -1,6 +1,9 @@
 name: Deploy VitePress site to Pages
 
 on:
+  pull_request:
+    branches:
+      - main
   push:
     branches: [main]
   workflow_dispatch:
@@ -12,15 +15,14 @@ on:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
   group: pages
   cancel-in-progress: false
 
 jobs:
-  build:
+  validate:
+    name: Validate site
     runs-on: ubuntu-latest
 
     steps:
@@ -30,7 +32,7 @@ jobs:
           fetch-depth: 0
 
       - name: Checkout lyrics-card-generator docs
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: Qrzzzz/lyrics-card-generator
           ref: main
@@ -45,9 +47,6 @@ jobs:
           node-version: 24
           cache: npm
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v6
-
       - name: Install dependencies
         run: npm ci
 
@@ -58,6 +57,7 @@ jobs:
         run: |
           npm run docs:test
           npm run docs:check
+          npm run docs:output-test
 
       - name: Build with VitePress
         run: npm run docs:build
@@ -65,14 +65,24 @@ jobs:
       - name: Validate routes and Pages boundary
         run: npm run docs:check -- --dist
 
+      - name: Setup Pages
+        if: github.event_name != 'pull_request'
+        uses: actions/configure-pages@v6
+
       - name: Upload Pages artifact
+        if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v5
         with:
           path: docs/.vitepress/dist
 
   deploy:
-    needs: build
+    if: github.event_name != 'pull_request'
+    needs: validate
     runs-on: ubuntu-latest
+
+    permissions:
+      pages: write
+      id-token: write
 
     environment:
       name: github-pages

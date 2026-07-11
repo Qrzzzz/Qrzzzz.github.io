@@ -13,6 +13,7 @@ import path from "node:path";
 
 export const DOCS_ROUTE = "/projects/lyrics-card-generator/docs/";
 export const GENERATED_ROOT = "docs/projects/lyrics-card-generator/docs";
+export const GENERATED_PUBLIC_ROOT = "docs/public/projects/lyrics-card-generator/docs";
 export const MANIFEST_NAME = ".import-manifest.json";
 export const UPSTREAM_REPOSITORY = "https://github.com/Qrzzzz/lyrics-card-generator";
 
@@ -314,11 +315,13 @@ ${breadcrumb("", "发布文档")}
 export function importLyricsCardDocs({
   sourceRoot,
   outputRoot = path.resolve(GENERATED_ROOT),
+  publicOutputRoot = path.resolve(GENERATED_PUBLIC_ROOT),
   commitSha,
   importedAt = new Date().toISOString()
 }) {
   const absoluteSource = path.resolve(sourceRoot);
   const absoluteOutput = path.resolve(outputRoot);
+  const absolutePublicOutput = path.resolve(publicOutputRoot);
   if (!existsSync(absoluteSource) || !statSync(absoluteSource).isDirectory()) {
     throw new Error(`上游文档目录不存在：${absoluteSource}`);
   }
@@ -354,11 +357,13 @@ export function importLyricsCardDocs({
   }
 
   rmSync(absoluteOutput, { recursive: true, force: true });
+  rmSync(absolutePublicOutput, { recursive: true, force: true });
   mkdirSync(absoluteOutput, { recursive: true });
+  mkdirSync(absolutePublicOutput, { recursive: true });
 
   for (const asset of assetFiles) {
     const source = path.join(absoluteSource, ...asset.split("/"));
-    const destination = path.join(absoluteOutput, ...asset.split("/"));
+    const destination = path.join(absolutePublicOutput, ...asset.split("/"));
     mkdirSync(path.dirname(destination), { recursive: true });
     cpSync(source, destination);
   }
@@ -398,6 +403,7 @@ export function importLyricsCardDocs({
 
   if (errors.length) {
     rmSync(absoluteOutput, { recursive: true, force: true });
+    rmSync(absolutePublicOutput, { recursive: true, force: true });
     throw new Error(`文档导入失败：\n- ${errors.join("\n- ")}`);
   }
 
@@ -417,6 +423,11 @@ export function importLyricsCardDocs({
     outputRoute: DOCS_ROUTE,
     markdownCount: markdownFiles.length,
     assetCount: assetFiles.length,
+    assets: assetFiles.map((asset) => ({
+      source: `docs/${asset}`,
+      route: `${DOCS_ROUTE}${encodeRoutePath(asset)}`,
+      output: `projects/lyrics-card-generator/docs/${asset}`
+    })),
     routes: [
       { source: null, route: DOCS_ROUTE, output: "index.md" },
       ...routes.sort((a, b) => a.route.localeCompare(b.route, "en"))

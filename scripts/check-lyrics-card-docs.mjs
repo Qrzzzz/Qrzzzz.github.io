@@ -5,6 +5,7 @@ import process from "node:process";
 import { fileURLToPath } from "node:url";
 import {
   DOCS_ROUTE,
+  GENERATED_PUBLIC_ROOT,
   GENERATED_ROOT,
   MANIFEST_NAME,
   generatedManifest
@@ -12,6 +13,7 @@ import {
 
 const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const generatedRoot = path.join(repositoryRoot, GENERATED_ROOT);
+const generatedPublicRoot = path.join(repositoryRoot, GENERATED_PUBLIC_ROOT);
 const distRoot = path.join(repositoryRoot, "docs/.vitepress/dist");
 const checkDist = process.argv.includes("--dist");
 const failures = [];
@@ -61,7 +63,7 @@ function checkGeneratedLinks(manifest) {
       const clean = decodeURIComponent(href.split(/[?#]/, 1)[0]);
       if (clean.endsWith("/") && routes.has(clean)) continue;
       const relativeAsset = clean.slice(DOCS_ROUTE.length);
-      if (relativeAsset && existsSync(path.join(generatedRoot, ...relativeAsset.split("/")))) continue;
+      if (relativeAsset && existsSync(path.join(generatedPublicRoot, ...relativeAsset.split("/")))) continue;
       failures.push(`${relativeFile}: 无效的导入后链接 ${href}`);
     }
   }
@@ -69,7 +71,7 @@ function checkGeneratedLinks(manifest) {
 
 function checkTrackedGeneratedContent() {
   try {
-    const tracked = execFileSync("git", ["ls-files", "--", GENERATED_ROOT], {
+    const tracked = execFileSync("git", ["ls-files", "--", GENERATED_ROOT, GENERATED_PUBLIC_ROOT], {
       cwd: repositoryRoot,
       encoding: "utf8",
       stdio: ["ignore", "pipe", "pipe"]
@@ -97,6 +99,12 @@ function checkBuild(manifest) {
     const output = distOutput(entry.route);
     if (!existsSync(output)) failures.push(`构建产物缺少路由：${entry.route}`);
   }
+  for (const asset of manifest.assets ?? []) {
+    const output = path.join(distRoot, ...asset.output.split("/"));
+    if (!existsSync(output) || !statSync(output).isFile()) {
+      failures.push(`构建产物缺少附件：${asset.route}`);
+    }
+  }
   for (const html of walk(distRoot).filter((entry) => entry.endsWith(".html"))) {
     const content = readFileSync(html, "utf8");
     if (/(?:href|src)=["']\/lyrics-card-generator\//.test(content)) {
@@ -120,6 +128,7 @@ try {
   if (!/^[0-9a-f]{40}$/i.test(manifest.commit)) failures.push("导入清单中的上游 commit SHA 无效。");
   if (!manifest.importedAt || Number.isNaN(Date.parse(manifest.importedAt))) failures.push("导入清单缺少有效同步时间。");
   if (!Array.isArray(manifest.routes) || manifest.routes.length < 6) failures.push("导入路由数量异常。");
+  if (!Array.isArray(manifest.assets)) failures.push("导入清单缺少附件列表。");
 
   const routeKeys = new Set();
   for (const entry of manifest.routes ?? []) {
@@ -143,6 +152,14 @@ try {
   );
   if (releasePages.length < 2) failures.push("具体版本说明页面少于两个。");
 
+  for (const asset of manifest.assets ?? []) {
+    const sourceRelative = asset.source.replace(/^docs\//, "");
+    const publicFile = path.join(generatedPublicRoot, ...sourceRelative.split("/"));
+    if (!existsSync(publicFile) || !statSync(publicFile).isFile()) {
+      failures.push(`public 附件缺失：${asset.route}`);
+    }
+  }
+
   if (!existsSync(path.join(generatedRoot, MANIFEST_NAME))) failures.push("导入清单缺失。");
   checkGeneratedLinks(manifest);
   checkTrackedGeneratedContent();
@@ -154,7 +171,8 @@ try {
   }
   console.log(
     `[docs:check] 通过：${manifest.routes.length} 条唯一路由，` +
-    `${releasePages.length} 个具体版本说明，commit ${manifest.commit.slice(0, 8)}` +
+    `${releasePages.length} 个具体版本说明，${manifest.assets.length} 个附件，` +
+    `commit ${manifest.commit.slice(0, 8)}` +
     `${checkDist ? "，构建边界正常" : ""}。`
   );
 } catch (error) {

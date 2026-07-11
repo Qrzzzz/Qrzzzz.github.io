@@ -36,6 +36,7 @@ try {
   const manifest = importLyricsCardDocs({
     sourceRoot: path.join(cacheRoot, "docs"),
     outputRoot: path.join(repositoryRoot, "docs/projects/lyrics-card-generator/docs"),
+    publicOutputRoot: path.join(repositoryRoot, "docs/public/projects/lyrics-card-generator/docs"),
     commitSha
   });
   console.log(
