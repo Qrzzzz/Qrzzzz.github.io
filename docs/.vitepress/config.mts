@@ -15,7 +15,7 @@ export default defineConfig({
   },
 
   head: [
-    ["meta", { name: "theme-color", content: "#6b6fe8" }],
+    ["meta", { name: "theme-color", content: "#111318" }],
     ["meta", { name: "color-scheme", content: "light dark" }],
     ["meta", { property: "og:type", content: "website" }],
     ["meta", { property: "og:site_name", content: "Qrzzzz" }],
@@ -52,7 +52,6 @@ export default defineConfig({
     nav: [
       { text: "首页", link: "/" },
       { text: "文档", link: "/guide/" },
-      { text: "文章", link: "/notes/" },
       { text: "项目", link: "/projects/" },
       { text: "关于", link: "/about" }
     ],
