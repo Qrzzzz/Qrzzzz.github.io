@@ -2,10 +2,10 @@
 import { computed, nextTick, onBeforeUnmount, onMounted, watch } from "vue";
 import { useData } from "vitepress";
 import DefaultTheme from "vitepress/theme";
-import ClickSpark from "./ClickSpark.vue";
 import HomeContent from "./HomeContent.vue";
 import InlineSearch from "./InlineSearch.vue";
 import NotFound from "./NotFound.vue";
+import TargetCursor from "./TargetCursor.vue";
 
 const { Layout } = DefaultTheme;
 const { frontmatter, isDark, page } = useData();
@@ -292,7 +292,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <ClickSpark />
+  <TargetCursor />
 
   <div
     class="site-layout"
