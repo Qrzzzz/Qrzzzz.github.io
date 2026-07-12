@@ -36,3 +36,14 @@ test("mounts an accessible inline search instead of the VitePress modal trigger"
   assert.match(component, /stopImmediatePropagation\(\)/);
   assert.match(siteStyles, /\.VPNavBarSearch\s*\{\s*display:\s*none;/s);
 });
+
+test("keeps the staggered menu restrained and theme-aware", () => {
+  const component = readFileSync("docs/.vitepress/theme/StaggeredMenu.vue", "utf8");
+  const tokens = readFileSync("docs/.vitepress/theme/styles/tokens.css", "utf8");
+
+  assert.match(component, /startViewTransition/);
+  assert.match(component, /var\(--site-menu-prelayer\)/);
+  assert.match(component, /font-size:\s*clamp\(26px,\s*2\.5vw,\s*34px\)/);
+  assert.match(tokens, /::view-transition-old\(root\)/);
+  assert.match(tokens, /--site-menu-prelayer:/);
+});

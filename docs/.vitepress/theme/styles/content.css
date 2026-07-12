@@ -91,6 +91,20 @@
   .VPDoc.has-aside .aside-curtain {
     width: 252px;
   }
+
+  .VPDoc.has-aside.outline-is-collapsed .aside {
+    max-width: 80px;
+    padding-left: 18px;
+  }
+
+  .VPDoc.has-aside.outline-is-collapsed .aside-container,
+  .VPDoc.has-aside.outline-is-collapsed .aside-curtain {
+    width: 44px;
+  }
+
+  .VPDoc.has-aside.outline-is-collapsed .VPDocAside {
+    padding-inline-start: 0;
+  }
 }
 
 .outline-toolbar {
@@ -107,6 +121,21 @@
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.01em;
+}
+
+.outline-toolbar[data-collapsed] {
+  width: 44px;
+  margin-inline-start: auto;
+  margin-bottom: 0;
+  border-bottom: 0;
+}
+
+.outline-toolbar[data-collapsed] .outline-toolbar__label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
 }
 
 .outline-toolbar__toggle {
@@ -126,6 +155,8 @@
 .outline-toolbar__toggle:hover,
 .outline-toolbar__toggle:focus-visible,
 .outline-toolbar[data-collapsed] .outline-toolbar__toggle {
+  border: 1px solid color-mix(in srgb, var(--site-accent) 36%, var(--site-line));
+  border-radius: 50%;
   background: var(--site-accent-soft);
   color: var(--site-accent);
 }
@@ -329,40 +360,34 @@
   bottom: 24px;
   z-index: 24;
   display: inline-flex;
-  min-width: 146px;
-  min-height: 46px;
+  width: 54px;
+  height: 54px;
+  min-width: 54px;
+  min-height: 54px;
   align-items: center;
-  gap: 10px;
+  justify-content: center;
+  gap: 0;
   overflow: hidden;
-  border: 1px solid var(--site-line);
-  border-radius: 999px;
-  padding: 0 13px 0 11px;
-  background: color-mix(in srgb, var(--site-surface) 92%, transparent);
-  box-shadow: 0 10px 30px color-mix(in srgb, var(--site-canvas) 52%, transparent);
+  border: 2px solid transparent;
+  border-radius: 50%;
+  padding: 0;
+  background:
+    linear-gradient(var(--site-surface), var(--site-surface)) padding-box,
+    conic-gradient(
+        from -90deg,
+        var(--site-accent) 0 var(--back-top-progress),
+        var(--site-line) var(--back-top-progress) 100%
+      )
+      border-box;
+  box-shadow: none;
   color: var(--site-text);
   opacity: 0;
   pointer-events: none;
   transform: translateY(12px);
-  backdrop-filter: blur(14px);
   transition:
-    border-color 160ms ease,
     color 160ms ease,
     opacity 180ms ease,
     transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.back-to-top::after {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  height: 2px;
-  background: linear-gradient(
-    90deg,
-    var(--site-accent) var(--back-top-progress),
-    transparent var(--back-top-progress)
-  );
-  content: "";
 }
 
 .back-to-top.is-visible {
@@ -373,20 +398,19 @@
 
 .back-to-top:hover,
 .back-to-top:focus-visible {
-  border-color: var(--site-accent);
   color: var(--site-accent);
+  transform: translateY(-2px);
 }
 
 .back-to-top__icon {
   position: relative;
   display: inline-flex;
-  width: 22px;
-  height: 22px;
-  flex: 0 0 22px;
+  width: 26px;
+  height: 26px;
+  flex: 0 0 26px;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
-  background: var(--site-accent-soft);
+  background: transparent;
 }
 
 .back-to-top__icon::before {
@@ -408,16 +432,19 @@
 }
 
 .back-to-top__label {
-  font-size: 12px;
-  font-weight: 680;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
 }
 
 .back-to-top__progress {
-  margin-inline-start: auto;
-  color: var(--site-text-faint);
-  font-family: var(--site-font-mono);
-  font-size: 9px;
-  font-variant-numeric: tabular-nums;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -436,18 +463,10 @@
   .back-to-top {
     right: 18px;
     bottom: 18px;
-    min-width: 46px;
-    width: 46px;
-    padding: 0 11px;
-  }
-
-  .back-to-top__label,
-  .back-to-top__progress {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
+    width: 50px;
+    height: 50px;
+    min-width: 50px;
+    min-height: 50px;
   }
 }
 

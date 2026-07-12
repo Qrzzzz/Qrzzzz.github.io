@@ -43,4 +43,7 @@ test("enhances generated page outlines for any Markdown page with sections", () 
   assert.match(styles, /li:hover\s*>\s*\.VPDocOutlineItem\.nested/);
   assert.match(styles, /outline-is-collapsed/);
   assert.match(styles, /\.back-to-top\.is-visible/);
+  assert.match(styles, /VPDoc\.has-aside\.outline-is-collapsed/);
+  assert.match(styles, /conic-gradient\(/);
+  assert.doesNotMatch(styles, /\.back-to-top[\s\S]*?box-shadow:\s*0\s+10px/);
 });

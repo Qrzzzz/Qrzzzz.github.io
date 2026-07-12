@@ -11,11 +11,12 @@ let observer: MutationObserver | undefined;
 function getElements() {
   const aside = controlElement.value?.closest<HTMLElement>(".VPDocAside");
   const outline = aside?.querySelector<HTMLElement>(".VPDocAsideOutline");
-  return { aside, outline };
+  const doc = aside?.closest<HTMLElement>(".VPDoc");
+  return { aside, outline, doc };
 }
 
 function syncOutlineState() {
-  const { aside, outline } = getElements();
+  const { aside, outline, doc } = getElements();
   const hasOutline = Boolean(outline?.classList.contains("has-outline"));
   available.value = hasOutline;
 
@@ -26,6 +27,7 @@ function syncOutlineState() {
   if (shouldCollapse) outline.setAttribute("aria-hidden", "true");
   else outline.removeAttribute("aria-hidden");
   aside.classList.toggle("outline-is-collapsed", shouldCollapse);
+  doc?.classList.toggle("outline-is-collapsed", shouldCollapse);
 }
 
 function toggleOutline() {
@@ -59,8 +61,9 @@ watch(
 
 onBeforeUnmount(() => {
   observer?.disconnect();
-  const { aside, outline } = getElements();
+  const { aside, outline, doc } = getElements();
   aside?.classList.remove("outline-is-collapsed");
+  doc?.classList.remove("outline-is-collapsed");
   if (outline?.id === "site-page-outline") outline.removeAttribute("id");
   if (outline) {
     outline.inert = false;
