@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import AnimatedGeometry from "./AnimatedGeometry.vue";
+import TextType from "./TextType.vue";
 </script>
 
 <template>
@@ -10,7 +11,21 @@ import AnimatedGeometry from "./AnimatedGeometry.vue";
         <span aria-hidden="true">/</span>
         <span>Cherry Chu</span>
       </p>
-      <h1 id="home-title" class="home-title">我做工具，也写下为什么这样做。</h1>
+      <h1
+        id="home-title"
+        class="home-title"
+        aria-label="我做工具，也写下为什么这样做。"
+      >
+        <TextType
+          text="我做工具，也写下为什么这样做。"
+          :typing-speed="90"
+          :deleting-speed="45"
+          :pause-duration="2600"
+          :initial-delay="350"
+          cursor-character="_"
+          aria-hidden="true"
+        />
+      </h1>
       <div class="home-geometry" aria-hidden="true">
         <AnimatedGeometry />
       </div>

@@ -5,6 +5,7 @@ import DefaultTheme from "vitepress/theme";
 import ClickSpark from "./ClickSpark.vue";
 import HomeContent from "./HomeContent.vue";
 import InlineSearch from "./InlineSearch.vue";
+import NotFound from "./NotFound.vue";
 
 const { Layout } = DefaultTheme;
 const { frontmatter, isDark, page } = useData();
@@ -304,6 +305,9 @@ onBeforeUnmount(() => {
       </template>
       <template #home-hero-before>
         <HomeContent />
+      </template>
+      <template #not-found>
+        <NotFound />
       </template>
     </Layout>
   </div>
