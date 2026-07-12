@@ -65,37 +65,7 @@
 }
 
 .VPNavBarSearch {
-  padding: 0 8px;
-}
-
-.VPNavBarSearch .DocSearch-Button {
-  min-height: 44px;
-  height: 44px;
-  border: 1px solid var(--site-line);
-  border-radius: 10px;
-  background: color-mix(in srgb, var(--site-surface) 76%, transparent);
-  box-shadow: none;
-  transition: border-color 140ms ease, background-color 140ms ease;
-}
-
-.DocSearch-Button:hover {
-  border-color: var(--site-line-strong);
-  background: var(--site-surface);
-}
-
-.DocSearch-Button .DocSearch-Search-Icon,
-.DocSearch-Button .DocSearch-Button-Placeholder,
-.DocSearch-Button .DocSearch-Button-Keys {
-  color: var(--site-text-muted);
-}
-
-.DocSearch-Button-Key {
-  border: 0;
-  background: transparent;
-  box-shadow: none;
-  color: var(--site-text-faint);
-  font-family: var(--site-font-mono);
-  font-size: 11px;
+  display: none;
 }
 
 .VPNav .VPSocialLink,

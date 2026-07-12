@@ -4,6 +4,7 @@ import { useData } from "vitepress";
 import DefaultTheme from "vitepress/theme";
 import ClickSpark from "./ClickSpark.vue";
 import HomeContent from "./HomeContent.vue";
+import InlineSearch from "./InlineSearch.vue";
 
 const { Layout } = DefaultTheme;
 const { frontmatter, isDark, page } = useData();
@@ -184,6 +185,7 @@ function activateNavScreen(screen: HTMLElement, trigger: HTMLButtonElement) {
       [
         ".site-layout .Layout > :not(.VPNav)",
         ".VPNavBarTitle",
+        ".InlineSiteSearch",
         ".VPNavBarSearch",
         ".VPNavBarMenu",
         ".VPNavBarTranslations",
@@ -297,6 +299,9 @@ onBeforeUnmount(() => {
     :data-page-language="pageLanguage"
   >
     <Layout>
+      <template #nav-bar-content-before>
+        <InlineSearch />
+      </template>
       <template #home-hero-before>
         <HomeContent />
       </template>
