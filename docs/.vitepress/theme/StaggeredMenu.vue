@@ -221,58 +221,60 @@ onBeforeUnmount(() => closeMenu(false));
         @click="closeMenu()"
       />
 
-      <div class="sm-prelayers" aria-hidden="true">
-        <span class="sm-prelayer sm-prelayer--spark" />
-        <span class="sm-prelayer sm-prelayer--accent" />
-      </div>
+      <div class="sm-drawer-stack">
+        <div class="sm-prelayers" aria-hidden="true">
+          <span class="sm-prelayer sm-prelayer--spark" />
+          <span class="sm-prelayer sm-prelayer--accent" />
+        </div>
 
-      <aside
-        id="site-staggered-menu"
-        ref="panelElement"
-        class="staggered-menu-panel"
-        role="dialog"
-        aria-modal="true"
-        aria-label="站点导航"
-        :inert="!open"
-      >
-        <div class="sm-panel-inner">
-          <header class="sm-panel-header">
-            <p>Navigation</p>
-            <span aria-hidden="true">01—05</span>
-          </header>
+        <aside
+          id="site-staggered-menu"
+          ref="panelElement"
+          class="staggered-menu-panel"
+          role="dialog"
+          aria-modal="true"
+          aria-label="站点导航"
+          :inert="!open"
+        >
+          <div class="sm-panel-inner">
+            <header class="sm-panel-header">
+              <p>Navigation</p>
+              <span aria-hidden="true">01—05</span>
+            </header>
 
-          <nav aria-label="站点导航">
-            <ol class="sm-panel-list">
-              <li
-                v-for="(item, index) in items"
-                :key="item.link"
-                class="sm-panel-item-wrap"
-                :style="{ '--sm-item-index': index }"
-              >
-                <a
-                  class="sm-panel-item"
-                  :class="{ active: isActive(item.link) }"
-                  :href="item.link"
-                  :aria-current="isActive(item.link) ? 'page' : undefined"
-                  @click="closeMenu(false)"
+            <nav aria-label="站点导航">
+              <ol class="sm-panel-list">
+                <li
+                  v-for="(item, index) in items"
+                  :key="item.link"
+                  class="sm-panel-item-wrap"
+                  :style="{ '--sm-item-index': index }"
                 >
-                  <span class="sm-panel-item-label">{{ item.label }}</span>
-                </a>
-              </li>
-            </ol>
-          </nav>
+                  <a
+                    class="sm-panel-item"
+                    :class="{ active: isActive(item.link) }"
+                    :href="item.link"
+                    :aria-current="isActive(item.link) ? 'page' : undefined"
+                    @click="closeMenu(false)"
+                  >
+                    <span class="sm-panel-item-label">{{ item.label }}</span>
+                  </a>
+                </li>
+              </ol>
+            </nav>
 
-          <div class="sm-panel-meta">
-            <p class="sm-panel-meta-title">站点设置</p>
-            <div class="sm-panel-meta-links">
-              <button type="button" @click="toggleTheme">
-                切换主题
-              </button>
-              <a href="https://github.com/Qrzzzz">GitHub</a>
+            <div class="sm-panel-meta">
+              <p class="sm-panel-meta-title">站点设置</p>
+              <div class="sm-panel-meta-links">
+                <button type="button" @click="toggleTheme">
+                  切换主题
+                </button>
+                <a href="https://github.com/Qrzzzz">GitHub</a>
+              </div>
             </div>
           </div>
-        </div>
-      </aside>
+        </aside>
+      </div>
     </div>
   </Teleport>
 </template>
@@ -366,6 +368,8 @@ onBeforeUnmount(() => closeMenu(false));
 }
 
 .staggered-menu-overlay {
+  --sm-panel-width: 25vw;
+
   position: fixed;
   z-index: 90;
   inset: var(--site-nav-height) 0 0;
@@ -385,7 +389,7 @@ onBeforeUnmount(() => closeMenu(false));
   background: color-mix(in srgb, var(--site-canvas) 58%, transparent);
   opacity: 0;
   backdrop-filter: blur(0);
-  transition: opacity 260ms ease, backdrop-filter 260ms ease;
+  transition: opacity 360ms ease, backdrop-filter 360ms ease;
 }
 
 .staggered-menu-overlay[data-open] .sm-backdrop {
@@ -393,66 +397,74 @@ onBeforeUnmount(() => closeMenu(false));
   backdrop-filter: blur(7px);
 }
 
-.sm-prelayers,
-.staggered-menu-panel {
+.sm-drawer-stack {
   position: absolute;
   top: 0;
   right: 0;
-  width: clamp(320px, 34vw, 460px);
+  z-index: 1;
+  width: var(--sm-panel-width);
   height: 100%;
+  transform: translateX(104%);
+  transition: transform 320ms cubic-bezier(0.4, 0, 1, 1);
+  will-change: transform;
+}
+
+.staggered-menu-overlay[data-open] .sm-drawer-stack {
+  transform: translateX(0);
+  transition-duration: 420ms;
+  transition-timing-function: cubic-bezier(0.32, 0, 0.2, 1);
 }
 
 .sm-prelayers {
-  z-index: 1;
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  overflow: hidden;
   pointer-events: none;
 }
 
 .sm-prelayer {
   position: absolute;
   inset: 0;
-  opacity: 0;
-  transform: translateX(104%);
-  transition:
-    opacity 180ms ease,
-    transform 540ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .sm-prelayer--spark {
   background: var(--site-menu-prelayer);
-  transition-delay: 100ms;
 }
 
 .sm-prelayer--accent {
+  z-index: 1;
   background: var(--site-accent);
-  transition-delay: 50ms;
-}
-
-.staggered-menu-overlay[data-open] .sm-prelayer--spark {
-  opacity: 1;
-  transform: translateX(0);
-  transition-delay: 0ms;
-}
-
-.staggered-menu-overlay[data-open] .sm-prelayer--accent {
-  opacity: 1;
-  transform: translateX(0);
-  transition-delay: 50ms;
+  transform: translateX(10px);
+  transition: transform 110ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
 }
 
 .staggered-menu-panel {
+  position: absolute;
   z-index: 2;
+  inset: 0;
   overflow-y: auto;
   border-left: 1px solid var(--site-line);
   padding: clamp(32px, 5vh, 52px) clamp(28px, 3.5vw, 44px) 30px;
   background: var(--site-surface);
   color: var(--site-text);
-  transform: translateX(104%);
-  transition: transform 540ms cubic-bezier(0.22, 1, 0.36, 1);
+  transform: translateX(24px);
+  transition: transform 140ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.staggered-menu-overlay[data-open] .sm-prelayer--accent,
+.staggered-menu-overlay[data-open] .staggered-menu-panel {
+  transform: translateX(0);
+}
+
+.staggered-menu-overlay[data-open] .sm-prelayer--accent {
+  transition-delay: 80ms;
 }
 
 .staggered-menu-overlay[data-open] .staggered-menu-panel {
-  transform: translateX(0);
-  transition-delay: 100ms;
+  transition-delay: 90ms;
 }
 
 .sm-panel-inner {
@@ -586,6 +598,10 @@ onBeforeUnmount(() => closeMenu(false));
 }
 
 @media (max-width: 767px) {
+  .staggered-menu-overlay {
+    --sm-panel-width: 100%;
+  }
+
   .sm-toggle {
     min-width: 44px;
     width: 44px;
@@ -598,16 +614,6 @@ onBeforeUnmount(() => closeMenu(false));
     height: 1px;
     overflow: hidden;
     clip-path: inset(50%);
-  }
-
-  .sm-prelayers,
-  .staggered-menu-panel {
-    width: 100%;
-  }
-
-  .staggered-menu-overlay[data-open] .sm-prelayer--spark,
-  .staggered-menu-overlay[data-open] .sm-prelayer--accent {
-    transform: translateX(0);
   }
 
   .staggered-menu-panel {
@@ -629,6 +635,7 @@ onBeforeUnmount(() => closeMenu(false));
   .sm-toggle-text-inner,
   .sm-icon-line,
   .sm-backdrop,
+  .sm-drawer-stack,
   .sm-prelayer,
   .staggered-menu-panel,
   .sm-panel-item,
