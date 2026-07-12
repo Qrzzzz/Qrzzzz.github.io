@@ -670,3 +670,89 @@ button.VPSwitch.VPSwitchAppearance > .check {
     grid-template-columns: 54px minmax(0, 1fr) 18px;
   }
 }
+
+/* Home accent path */
+
+.home-title .text-type__cursor {
+  color: var(--site-spark-primary);
+}
+
+.home-geometry {
+  position: relative;
+}
+
+.home-geometry::before {
+  position: absolute;
+  inset: 12% 4%;
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--site-spark-primary) 20%, transparent),
+    transparent 68%
+  );
+  filter: blur(28px);
+  content: "";
+  pointer-events: none;
+}
+
+.home-page .home-geometry .animated-geometry {
+  position: relative;
+  color: var(--site-spark-primary);
+}
+
+.home-actions .home-text-link:first-child {
+  padding-inline: 18px;
+  border: 1px solid var(--site-accent);
+  border-radius: 999px;
+  background: var(--site-accent);
+  color: var(--site-accent-ink);
+}
+
+.home-actions .home-text-link:first-child:hover {
+  border-color: var(--site-accent-hover);
+  background: var(--site-accent-hover);
+  color: var(--site-accent-ink);
+}
+
+.home-project-title {
+  color: var(--site-spark-primary);
+}
+
+.home-project-links a:first-child {
+  padding-inline: 18px;
+  background: var(--site-accent);
+  color: var(--site-accent-ink);
+}
+
+.home-project-links a:first-child::after {
+  color: inherit;
+}
+
+.home-project-links a:first-child:hover {
+  background: var(--site-accent-hover);
+  color: var(--site-accent-ink);
+}
+
+.home-reading-row > span:first-child {
+  color: var(--site-accent);
+  font-weight: 700;
+}
+
+.home-reading-row:hover {
+  padding-inline: 14px 8px;
+  background: linear-gradient(
+    90deg,
+    var(--site-accent-soft),
+    transparent 52%
+  );
+  box-shadow: inset 4px 0 0 var(--site-accent);
+  color: var(--site-text);
+}
+
+.home-reading-row:hover strong,
+.home-reading-row:hover::after {
+  color: var(--site-accent);
+}
+
+.VPNavBarMenuLink::after {
+  height: 2px;
+}

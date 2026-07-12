@@ -9,13 +9,14 @@
   --site-text-faint: #6b6e6a;
   --site-line: #d4d2ca;
   --site-line-strong: #b8b6ae;
-  --site-accent: #3156a3;
-  --site-accent-hover: #264787;
-  --site-accent-soft: rgba(49, 86, 163, 0.1);
+  --site-accent: #d92d16;
+  --site-accent-hover: #b82310;
+  --site-accent-soft: rgba(255, 75, 43, 0.13);
+  --site-accent-ink: #ffffff;
   --site-nav-bg: rgba(245, 244, 239, 0.86);
   --site-code-bg: #17191d;
   --site-code-text: #f2f0ea;
-  --site-spark-primary: #3156a3;
+  --site-spark-primary: #ff4b2b;
   --site-spark-secondary: #30343a;
 
   --site-font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI Variable", "Segoe UI",
@@ -35,7 +36,7 @@
 
   --vp-c-brand-1: var(--site-accent);
   --vp-c-brand-2: var(--site-accent-hover);
-  --vp-c-brand-3: #1f3c75;
+  --vp-c-brand-3: #9f1d0c;
   --vp-c-brand-soft: var(--site-accent-soft);
   --vp-c-bg: var(--site-canvas);
   --vp-c-bg-alt: var(--site-surface-subtle);
@@ -66,19 +67,20 @@
   --site-text-faint: #8d8b85;
   --site-line: #303237;
   --site-line-strong: #484b51;
-  --site-accent: #a8b8ff;
-  --site-accent-hover: #c3ceff;
-  --site-accent-soft: rgba(168, 184, 255, 0.12);
+  --site-accent: #00e6b0;
+  --site-accent-hover: #6dffd5;
+  --site-accent-soft: rgba(0, 230, 176, 0.14);
+  --site-accent-ink: #111214;
   --site-nav-bg: rgba(17, 18, 20, 0.84);
   --site-code-bg: #0c0d0f;
   --site-code-text: #f2f0ea;
-  --site-spark-primary: #a8b8ff;
+  --site-spark-primary: #00e6b0;
   --site-spark-secondary: #f2f0ea;
   --site-shadow-float: 0 22px 64px rgba(0, 0, 0, 0.34);
 
   --vp-c-brand-1: var(--site-accent);
   --vp-c-brand-2: var(--site-accent-hover);
-  --vp-c-brand-3: #d8dfff;
+  --vp-c-brand-3: #b8ffe9;
   --vp-c-brand-soft: var(--site-accent-soft);
   --vp-c-bg: var(--site-canvas);
   --vp-c-bg-alt: var(--site-surface-subtle);
