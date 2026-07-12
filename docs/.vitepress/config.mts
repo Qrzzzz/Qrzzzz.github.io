@@ -97,7 +97,8 @@ export default defineConfig({
   },
 
   markdown: {
-    lineNumbers: true
+    lineNumbers: true,
+    codeCopyButtonTitle: "复制代码"
   },
 
   themeConfig: {
@@ -107,32 +108,32 @@ export default defineConfig({
       { text: "项目", link: "/projects/" },
       { text: "文档", link: "/guide/" },
       { text: "文章", link: "/notes/" },
-      { text: "Prompt Collection", link: "/prompt-collection/" }
+      { text: "提示词合集", link: "/prompt-collection/" }
     ],
 
     sidebar: {
       "/prompt-collection/": [
         {
-          text: "Prompt Collection",
+          text: "提示词合集",
           items: [
             {
-              text: "Collection Overview",
+              text: "合集概览",
               link: "/prompt-collection/"
             },
             {
-              text: "Rigorous Research and Decision Assistant",
+              text: "严谨研究与决策助手",
               link: "/prompt-collection/rigorous-research-decision-assistant"
             },
             {
-              text: "Maximum-Rigor Research and Analysis Assistant",
+              text: "最高严谨度研究与分析助手",
               link: "/prompt-collection/maximum-rigor-research-analysis-assistant"
             },
             {
-              text: "Smart Photo Retouching with Interactive Doodle Overlays",
+              text: "智能修图与互动涂鸦叠加",
               link: "/prompt-collection/smart-photo-retouching-interactive-doodle-overlays"
             },
             {
-              text: "Hand-Drawn Educational Infographic Generator",
+              text: "手绘教育信息图生成器",
               link: "/prompt-collection/hand-drawn-educational-infographic-generator"
             }
           ]

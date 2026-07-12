@@ -100,6 +100,104 @@
   color: var(--site-text);
 }
 
+/* Numbered, proximity-aware chapter navigation inspired by line sidebars. */
+
+.VPDocAsideOutline.line-outline .content {
+  border-inline-start: 0;
+  padding-inline-start: 0;
+}
+
+.VPDocAsideOutline.line-outline .outline-marker {
+  display: none;
+}
+
+.VPDocAsideOutline.line-outline .outline-title {
+  margin: 0 0 12px;
+  padding-inline-start: 2px;
+}
+
+.VPDocAsideOutline.line-outline .VPDocOutlineItem.root {
+  counter-reset: line-outline-item;
+}
+
+.VPDocAsideOutline.line-outline .VPDocOutlineItem.nested {
+  border-inline-start: 0;
+  padding-inline-start: 0;
+}
+
+.VPDocAsideOutline.line-outline .VPDocOutlineItem li {
+  counter-increment: line-outline-item;
+}
+
+.VPDocAsideOutline.line-outline .outline-link {
+  --line-outline-proximity: 0;
+  --line-outline-shift: 0px;
+  position: relative;
+  display: block;
+  min-height: 36px;
+  border-radius: 7px;
+  padding: 8px 6px 8px 64px !important;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-position: 31px 50%;
+  background-repeat: no-repeat;
+  background-size: calc(13px + var(--line-outline-proximity) * 17px) 1px;
+  color: color-mix(
+    in srgb,
+    var(--site-text-faint),
+    var(--site-accent) calc(var(--line-outline-proximity) * 36%)
+  );
+  opacity: calc(0.72 + var(--line-outline-proximity) * 0.28);
+  transform: translateX(var(--line-outline-shift));
+  transition:
+    color 120ms ease,
+    opacity 120ms ease,
+    transform 100ms ease,
+    background-size 100ms ease,
+    background-color 120ms ease;
+}
+
+.VPDocAsideOutline.line-outline .outline-link::before {
+  position: absolute;
+  inset-inline-start: 0;
+  top: 50%;
+  width: 22px;
+  content: counter(line-outline-item, decimal-leading-zero);
+  color: currentColor;
+  font-family: var(--site-font-mono);
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  transform: translateY(-50%);
+}
+
+.VPDocAsideOutline.line-outline .outline-link:hover,
+.VPDocAsideOutline.line-outline .outline-link.active,
+.VPDocAsideOutline.line-outline .outline-link:focus-visible {
+  color: var(--site-accent);
+  opacity: 1;
+}
+
+.VPDocAsideOutline.line-outline .outline-link.active {
+  font-weight: 650;
+}
+
+.VPDocAsideOutline.line-outline .outline-link:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--site-accent) 56%, transparent);
+  outline-offset: 2px;
+}
+
+.VPDocAsideOutline.line-outline .VPDocOutlineItem.nested .outline-link {
+  font-size: 11px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .VPDocAsideOutline.line-outline .outline-link {
+    transform: none;
+    transition: color 120ms ease, opacity 120ms ease;
+  }
+}
+
 .vp-doc {
   color: var(--site-text);
   font-size: 16px;

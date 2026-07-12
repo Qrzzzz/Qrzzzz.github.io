@@ -6,9 +6,12 @@ import HomeContent from "./HomeContent.vue";
 import InlineSearch from "./InlineSearch.vue";
 import NotFound from "./NotFound.vue";
 import TargetCursor from "./TargetCursor.vue";
+import { useLineOutline } from "./useLineOutline";
 
 const { Layout } = DefaultTheme;
 const { frontmatter, isDark, page } = useData();
+
+useLineOutline();
 
 type PageKind = "home" | "article" | "project" | "document" | "general";
 

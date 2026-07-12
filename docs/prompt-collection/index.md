@@ -1,36 +1,36 @@
 ---
 title: Prompt Collection
-description: A growing library of reusable prompts for writing, research, coding, and creative work.
-lang: en
+description: 一个持续更新、可复用的写作、研究、编程与创意提示词合集。
+lang: zh-CN
 ---
 
 # Prompt Collection
 
-A growing library of prompts I use for writing, research, coding, and creative work.
+这里收录了我在写作、研究、编程与创意工作中使用的提示词，并会持续更新。
 
-Each prompt is stored as a separate Markdown file so it can be revised, reused, and linked independently.
+每个提示词都单独保存，便于持续修订、重复使用和独立分享。
 
-## Prompts
+## 提示词
 
-<div class="content-index" aria-label="Prompt list">
+<div class="content-index" aria-label="提示词列表">
   <a class="content-index-row" href="/prompt-collection/rigorous-research-decision-assistant">
-    <span class="content-index-meta">Research · Analysis · Decision Support</span>
+    <span class="content-index-meta">研究 · 分析 · 决策支持</span>
     <strong class="content-index-title">严谨研究与决策助手</strong>
-    <span class="content-index-summary">A Chinese-language system prompt for careful clarification, evidence-based research, explicit judgment, and actionable answers.</span>
+    <span class="content-index-summary">通过细致澄清、证据研究、明确判断与可执行建议，帮助处理复杂问题。</span>
   </a>
   <a class="content-index-row" href="/prompt-collection/maximum-rigor-research-analysis-assistant">
-    <span class="content-index-meta">Research · Analysis · Evidence</span>
+    <span class="content-index-meta">研究 · 分析 · 证据</span>
     <strong class="content-index-title">最高严谨度研究与分析助手</strong>
-    <span class="content-index-summary">A Chinese-language system prompt for maximum analytical rigor, source quality, calibrated conclusions, and concrete recommendations.</span>
+    <span class="content-index-summary">强调分析严谨度、来源质量、结论校准与具体建议的深度研究提示词。</span>
   </a>
   <a class="content-index-row" href="/prompt-collection/smart-photo-retouching-interactive-doodle-overlays">
-    <span class="content-index-meta">Image Editing · Doodles · Social Media</span>
+    <span class="content-index-meta">图像编辑 · 涂鸦 · 社交媒体</span>
     <strong class="content-index-title">智能修图与互动涂鸦叠加</strong>
-    <span class="content-index-summary">A comprehensive Chinese-language prompt for natural photo enhancement and context-aware creative doodle composition.</span>
+    <span class="content-index-summary">用于自然照片优化与情境化创意涂鸦构图的完整提示词。</span>
   </a>
   <a class="content-index-row" href="/prompt-collection/hand-drawn-educational-infographic-generator">
-    <span class="content-index-meta">Infographic · Illustration · Visual Summary</span>
+    <span class="content-index-meta">信息图 · 插画 · 视觉摘要</span>
     <strong class="content-index-title">手绘教育信息图生成器</strong>
-    <span class="content-index-summary">A Chinese-language prompt for turning supplied content into a clean, single-page educational infographic with a warm hand-drawn aesthetic.</span>
+    <span class="content-index-summary">将给定内容转化为温暖手绘风单页教育信息图的提示词。</span>
   </a>
 </div>

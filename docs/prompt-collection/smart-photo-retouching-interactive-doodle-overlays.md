@@ -1,12 +1,12 @@
 ---
 title: 智能修图与互动涂鸦叠加
-description: A comprehensive prompt for natural photo enhancement and context-aware creative doodle composition.
+description: 用于自然照片优化与情境化创意涂鸦构图的完整提示词。
 lang: zh-CN
 ---
 
 # 智能修图与互动涂鸦叠加
 
-```text
+```md
 # 智能修图 + 涂鸦互动叠加｜创意照片成图提示词
 
 ## 1. 任务目标
@@ -574,7 +574,7 @@ lang: zh-CN
 - 粉笔风格
 - 儿童涂鸦风格
 - 手账拼贴风格
-- 美式 doodle 风格
+- 美式涂鸦风格
 - 日系手写风格
 - 漫画感线稿风格
 - 潮流喷漆风格
