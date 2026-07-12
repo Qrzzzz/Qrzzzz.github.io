@@ -58,7 +58,7 @@ import TextType from "./TextType.vue";
             <li>开源，持续维护</li>
           </ul>
           <nav class="home-project-links" aria-label="Lyrics Card Generator 项目入口">
-            <a href="https://qrzzzz.github.io/lyrics-card-generator/">在线使用</a>
+            <a href="https://qrzzzz.github.io/lyrics-card-generator/" target="_self">在线使用</a>
             <a href="https://github.com/Qrzzzz/lyrics-card-generator">查看源代码</a>
             <a href="/projects/lyrics-card-generator/docs/">阅读项目文档</a>
           </nav>
