@@ -42,8 +42,12 @@ test("enhances generated page outlines for any Markdown page with sections", () 
   assert.match(toggle, /outline-is-opening/);
   assert.match(toggle, /aria-controls="site-page-outline"/);
   assert.match(styles, /counter\(line-outline-item, decimal-leading-zero\)/);
-  assert.match(styles, /@keyframes outline-layer-sweep/);
+  assert.match(styles, /@keyframes outline-layer-enter/);
+  assert.match(styles, /@keyframes outline-panel-enter/);
   assert.match(styles, /@keyframes outline-item-enter/);
+  assert.match(styles, /outline-is-collapsed > :not\(\.outline-toolbar\)/);
+  assert.match(styles, /animation-delay: calc\(20ms \+ var\(--outline-item-index/);
+  assert.doesNotMatch(styles, /animation-delay: calc\(150ms/);
   assert.match(styles, /--line-outline-shift/);
   assert.match(styles, /outline-link\[data-outline-level="2"\]/);
   assert.match(styles, /outline-link\[data-outline-level="3"\]\s*\{\s*display:\s*none;/s);

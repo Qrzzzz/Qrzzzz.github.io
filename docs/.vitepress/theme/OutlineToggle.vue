@@ -27,7 +27,7 @@ function playEntrance() {
   aside.classList.add("outline-is-opening");
   entranceTimer = window.setTimeout(() => {
     aside.classList.remove("outline-is-opening");
-  }, 820);
+  }, 460);
 }
 
 function syncOutlineState() {
