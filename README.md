@@ -17,4 +17,4 @@ npm run docs:build
 npm run docs:preview
 ```
 
-`docs:pull` 会更新 `Qrzzzz/lyrics-card-generator` 的稀疏本地缓存，仅导入其 `docs/`，并重新生成被 Git 忽略的项目文档路由。运行 `npm run check` 可依次完成导入器测试、路由与链接检查、生产构建和 Pages 边界检查。
+`docs:pull` 会更新 `Qrzzzz/lyrics-card-generator` 的稀疏本地缓存，以根目录 `README.md` 生成项目页，并导入其 `docs/` 下的项目文档。两类生成内容都被 Git 忽略，并在构建前从同一个上游 commit 重新同步。运行 `npm run check` 可依次完成导入器测试、路由与链接检查、生产构建和 Pages 边界检查。

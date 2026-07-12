@@ -12,6 +12,8 @@ import {
 import path from "node:path";
 
 export const DOCS_ROUTE = "/projects/lyrics-card-generator/docs/";
+export const PROJECT_ROUTE = "/projects/lyrics-card-generator/";
+export const GENERATED_PROJECT_PAGE = "docs/projects/lyrics-card-generator/index.md";
 export const GENERATED_ROOT = "docs/projects/lyrics-card-generator/docs";
 export const GENERATED_PUBLIC_ROOT = "docs/public/projects/lyrics-card-generator/docs";
 export const MANIFEST_NAME = ".import-manifest.json";
@@ -467,6 +469,87 @@ function rewriteLinks(content, context) {
   });
 }
 
+function rewriteProjectReadmeLinks(content, { commitSha, markdownBySource, errors }) {
+  const resolve = (rawTarget) => {
+    const destination = splitDestination(rawTarget);
+    const originalHref = destination.href;
+    if (!originalHref || originalHref.startsWith("#")) return rawTarget;
+    if (/^(?:[a-z][a-z\d+.-]*:|\/\/|\/)/i.test(originalHref)) return rawTarget;
+
+    const { pathname: hrefPath, tail } = splitHref(originalHref);
+    let decodedPath;
+    try {
+      decodedPath = decodeURIComponent(hrefPath);
+    } catch {
+      errors.push(`README.md: 无法解析链接编码 ${originalHref}`);
+      return rawTarget;
+    }
+
+    const resolved = normalizeRelative(decodedPath);
+    if (!resolved || resolved.startsWith("../")) {
+      errors.push(`README.md: 链接超出仓库范围 ${originalHref}`);
+      return rawTarget;
+    }
+
+    if (resolved.startsWith("docs/")) {
+      const docsPath = resolved.slice("docs/".length);
+      let markdown = markdownBySource.get(docsPath);
+      if (!markdown && !path.posix.extname(docsPath)) markdown = markdownBySource.get(`${docsPath}.md`);
+      if (!markdown) {
+        errors.push(`README.md: 无法解析文档链接 ${originalHref}`);
+        return rawTarget;
+      }
+      destination.href = `${markdown.route}${tail}`;
+      return joinDestination(destination);
+    }
+
+    const encodedPath = encodeRoutePath(resolved);
+    const isImage = /\.(?:avif|gif|jpe?g|png|svg|webp)$/i.test(resolved);
+    destination.href = isImage
+      ? `https://raw.githubusercontent.com/Qrzzzz/lyrics-card-generator/${commitSha}/${encodedPath}${tail}`
+      : `${UPSTREAM_REPOSITORY}/blob/${commitSha}/${encodedPath}${tail}`;
+    return joinDestination(destination);
+  };
+
+  return transformOutsideFences(content, (line) => {
+    let transformed = line.replace(/(!?\[[^\]]*\])\(([^)]+)\)/g, (full, label, target) => {
+      return `${label}(${resolve(target)})`;
+    });
+    transformed = transformed.replace(/^(\s*\[[^\]]+\]:\s*)(\S+)(.*)$/g, (full, prefix, target, suffix) => {
+      return `${prefix}${resolve(target)}${suffix}`;
+    });
+    transformed = transformed.replace(/\b(href|src)=(['"])([^'"]+)\2/gi, (full, attribute, quote, target) => {
+      return `${attribute}=${quote}${resolve(target)}${quote}`;
+    });
+    return transformed;
+  });
+}
+
+function withoutReadmeAlignmentWrapper(content) {
+  const opening = /^\s*<div\s+align=["']center["']>\s*/i;
+  if (!opening.test(content)) return content;
+  const withoutOpening = content.replace(opening, "");
+  return withoutOpening.replace(/\n<\/div>\s*\n(?=\s*---(?:\r?\n|$))/, "\n");
+}
+
+function projectFrontmatter({ commitSha }) {
+  return `---
+title: "Lyrics Card Generator"
+description: "生成可用于分享的高质感歌词分享卡片。"
+lang: "zh-CN"
+pageClass: "project-readme-page"
+editLink: false
+lastUpdated: false
+sourceRepository: ${escapeYaml(UPSTREAM_REPOSITORY)}
+sourcePath: "README.md"
+sourceCommit: ${escapeYaml(commitSha)}
+---`;
+}
+
+function projectBreadcrumb() {
+  return `<nav class="docs-breadcrumb" aria-label="面包屑" lang="zh-CN"><a href="/" lang="zh-CN">首页</a><span aria-hidden="true">/</span><a href="/projects/" lang="zh-CN">项目</a><span aria-hidden="true">/</span><span aria-current="page" lang="en">lyrics-card-generator</span></nav>`;
+}
+
 function frontmatter({ title, description, sourcePath, commitSha, upstreamFrontmatter, lang }) {
   const retained = upstreamFrontmatter
     .split(/\r?\n/)
@@ -543,8 +626,13 @@ export function importLyricsCardDocs({
   const absoluteSource = path.resolve(sourceRoot);
   const absoluteOutput = path.resolve(outputRoot);
   const absolutePublicOutput = path.resolve(publicOutputRoot);
+  const absoluteProjectOutput = path.join(path.dirname(absoluteOutput), "index.md");
+  const projectReadme = path.join(path.dirname(absoluteSource), "README.md");
   if (!existsSync(absoluteSource) || !statSync(absoluteSource).isDirectory()) {
     throw new Error(`上游文档目录不存在：${absoluteSource}`);
+  }
+  if (!existsSync(projectReadme) || !statSync(projectReadme).isFile()) {
+    throw new Error(`上游缺少必要入口：README.md（期望位置：${projectReadme}）`);
   }
 
   const files = walk(absoluteSource);
@@ -580,6 +668,20 @@ export function importLyricsCardDocs({
   // Validate the complete upstream release set before replacing the last good import.
   const releaseVersions = collectReleaseVersions(markdownBySource);
 
+  const errors = [];
+  const rawProjectReadme = readFileSync(projectReadme, "utf8");
+  const { body: projectReadmeBody } = withoutFrontmatter(rawProjectReadme);
+  const rewrittenProjectReadme = rewriteProjectReadmeLinks(
+    withoutReadmeAlignmentWrapper(projectReadmeBody),
+    { commitSha: resolvedSha, markdownBySource, errors }
+  );
+  const projectPage = `${projectFrontmatter({ commitSha: resolvedSha })}\n\n${projectBreadcrumb()}\n\n` +
+    `${rewrittenProjectReadme.trim()}\n\n${createSourceInfo({ commitSha: resolvedSha, importedAt })}\n`;
+
+  if (errors.length) {
+    throw new Error(`README 导入失败：\n- ${errors.join("\n- ")}`);
+  }
+
   rmSync(absoluteOutput, { recursive: true, force: true });
   rmSync(absolutePublicOutput, { recursive: true, force: true });
   mkdirSync(absoluteOutput, { recursive: true });
@@ -592,7 +694,6 @@ export function importLyricsCardDocs({
     cpSync(source, destination);
   }
 
-  const errors = [];
   const routes = [];
   const releaseArchive = createReleaseArchive(releaseVersions);
   for (const entry of markdownBySource.values()) {
@@ -643,6 +744,7 @@ export function importLyricsCardDocs({
   if (errors.length) {
     rmSync(absoluteOutput, { recursive: true, force: true });
     rmSync(absolutePublicOutput, { recursive: true, force: true });
+    rmSync(absoluteProjectOutput, { force: true });
     throw new Error(`文档导入失败：\n- ${errors.join("\n- ")}`);
   }
 
@@ -652,12 +754,18 @@ export function importLyricsCardDocs({
     createLanding({ commitSha: resolvedSha, importedAt, releaseCount }),
     "utf8"
   );
+  writeFileSync(absoluteProjectOutput, projectPage, "utf8");
 
   const manifest = {
     schemaVersion: 1,
     repository: UPSTREAM_REPOSITORY,
     commit: resolvedSha,
     importedAt,
+    projectPage: {
+      source: "README.md",
+      route: PROJECT_ROUTE,
+      output: GENERATED_PROJECT_PAGE
+    },
     sourceRoot: "docs/",
     outputRoute: DOCS_ROUTE,
     markdownCount: markdownFiles.length,

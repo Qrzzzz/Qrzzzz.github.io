@@ -5,6 +5,7 @@ import process from "node:process";
 import { fileURLToPath } from "node:url";
 import {
   DOCS_ROUTE,
+  GENERATED_PROJECT_PAGE,
   GENERATED_PUBLIC_ROOT,
   GENERATED_ROOT,
   MANIFEST_NAME,
@@ -72,7 +73,7 @@ function checkGeneratedLinks(manifest) {
 
 function checkTrackedGeneratedContent() {
   try {
-    const tracked = execFileSync("git", ["ls-files", "--", GENERATED_ROOT, GENERATED_PUBLIC_ROOT], {
+    const tracked = execFileSync("git", ["ls-files", "--", GENERATED_PROJECT_PAGE, GENERATED_ROOT, GENERATED_PUBLIC_ROOT], {
       cwd: repositoryRoot,
       encoding: "utf8",
       stdio: ["ignore", "pipe", "pipe"]
@@ -121,6 +122,9 @@ function checkBuild(manifest) {
       failures.push("项目页没有保留现有 Web Lite 外部地址。");
     }
     if (!projectHtml.includes(DOCS_ROUTE)) failures.push("项目页无法进入发布文档。");
+    if (!projectHtml.includes(`https://github.com/Qrzzzz/lyrics-card-generator/commit/${manifest.commit}`)) {
+      failures.push("项目页没有显示与文档清单一致的上游 commit。");
+    }
   }
 }
 
@@ -137,6 +141,19 @@ try {
     );
   }
   if (!Array.isArray(manifest.assets)) failures.push("导入清单缺少附件列表。");
+  if (manifest.projectPage?.source !== "README.md" || manifest.projectPage?.route !== "/projects/lyrics-card-generator/") {
+    failures.push("导入清单缺少 README 驱动的项目页记录。");
+  }
+  const generatedProjectPage = path.join(repositoryRoot, GENERATED_PROJECT_PAGE);
+  if (!existsSync(generatedProjectPage)) failures.push("README 驱动的项目页源文件缺失。");
+  else {
+    const projectMarkdown = readFileSync(generatedProjectPage, "utf8");
+    if (!projectMarkdown.includes(`sourceCommit: \"${manifest.commit}\"`)) {
+      failures.push("项目页与文档清单没有锁定到同一个上游 commit。");
+    }
+    if (!projectMarkdown.includes("sourcePath: \"README.md\"")) failures.push("项目页没有记录 README.md 来源。");
+    if (!projectMarkdown.includes(DOCS_ROUTE)) failures.push("项目页没有将 README 文档链接改写为本站路由。");
+  }
 
   const routeKeys = new Set();
   for (const entry of manifest.routes ?? []) {
