@@ -196,6 +196,7 @@ button.VPSwitch.VPSwitchAppearance > .check {
 
 .home-byline {
   grid-column: 1 / -1;
+  grid-row: 1;
   margin: 0 0 42px;
   color: var(--site-text-muted);
   font-size: 13px;
@@ -205,6 +206,8 @@ button.VPSwitch.VPSwitchAppearance > .check {
 
 .home-title {
   grid-column: 1 / 11;
+  grid-row: 2 / 5;
+  align-self: center;
   max-width: 11ch;
   margin: 0;
   color: var(--site-text);
@@ -215,6 +218,14 @@ button.VPSwitch.VPSwitchAppearance > .check {
   text-wrap: balance;
 }
 
+.home-geometry {
+  grid-column: 7 / -1;
+  grid-row: 2;
+  width: 100%;
+  aspect-ratio: 1.48;
+  min-height: 280px;
+}
+
 :lang(zh-CN) .home-title,
 :lang(zh-TW) .home-title,
 :lang(ja) .home-title {
@@ -223,6 +234,7 @@ button.VPSwitch.VPSwitchAppearance > .check {
 
 .home-deck {
   grid-column: 7 / -1;
+  grid-row: 3;
   margin: 50px 0 0;
   color: var(--site-text-muted);
   font-size: clamp(17px, 1.7vw, 20px);
@@ -232,6 +244,7 @@ button.VPSwitch.VPSwitchAppearance > .check {
 .home-actions {
   display: flex;
   grid-column: 7 / -1;
+  grid-row: 4;
   flex-wrap: wrap;
   gap: 8px 30px;
   margin-top: 28px;
@@ -517,12 +530,18 @@ button.VPSwitch.VPSwitchAppearance > .check {
   }
 
   .home-title {
-    grid-column: 1 / -1;
+    grid-column: 1 / 6;
+    font-size: clamp(52px, 6.5vw, 60px);
   }
 
+  .home-geometry,
   .home-deck,
   .home-actions {
-    grid-column: 5 / -1;
+    grid-column: 6 / -1;
+  }
+
+  .home-geometry {
+    min-height: 240px;
   }
 
   .home-project-title {
@@ -561,6 +580,12 @@ button.VPSwitch.VPSwitchAppearance > .check {
     max-width: 9ch;
     font-size: clamp(48px, 14vw, 64px);
     line-height: 1.05;
+  }
+
+  .home-geometry {
+    width: min(100%, 620px);
+    min-height: 0;
+    margin: 42px auto 0;
   }
 
   .home-deck {

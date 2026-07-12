@@ -1,3 +1,7 @@
+<script setup lang="ts">
+import AnimatedGeometry from "./AnimatedGeometry.vue";
+</script>
+
 <template>
   <div class="home-page">
     <section class="home-intro" aria-labelledby="home-title">
@@ -7,6 +11,9 @@
         <span>Cherry Chu</span>
       </p>
       <h1 id="home-title" class="home-title">我做工具，也写下为什么这样做。</h1>
+      <div class="home-geometry" aria-hidden="true">
+        <AnimatedGeometry />
+      </div>
       <p class="home-deck">
         这里放着 Qrzzzz 的公开项目、维护文档，以及不想交给信息流决定寿命的文字。
       </p>
