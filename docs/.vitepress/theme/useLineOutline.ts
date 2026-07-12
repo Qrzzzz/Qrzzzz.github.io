@@ -82,7 +82,10 @@ export function useLineOutline() {
     outline.removeEventListener("focusin", handleFocusIn);
     outline.removeEventListener("focusout", handleFocusOut);
     outline.classList.remove("line-outline");
-    for (const link of links) link.removeAttribute("data-outline-level");
+    for (const link of links) {
+      link.removeAttribute("data-outline-level");
+      link.style.removeProperty("--outline-item-index");
+    }
     resetLinks();
     outline = undefined;
     links = [];
@@ -98,8 +101,9 @@ export function useLineOutline() {
 
     outline = nextOutline;
     links = Array.from(outline.querySelectorAll<HTMLAnchorElement>(".outline-link"));
-    for (const link of links) {
+    for (const [index, link] of links.entries()) {
       link.dataset.outlineLevel = outlineLevel(link);
+      link.style.setProperty("--outline-item-index", String(index));
     }
     outline.classList.add("line-outline");
     outline.addEventListener("pointermove", handlePointerMove, { passive: true });

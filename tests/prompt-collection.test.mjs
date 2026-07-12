@@ -30,13 +30,20 @@ test("marks every prompt body as Markdown inside its existing code block", () =>
 
 test("enhances generated page outlines for any Markdown page with sections", () => {
   const layout = readFileSync("docs/.vitepress/theme/Layout.vue", "utf8");
+  const toggle = readFileSync("docs/.vitepress/theme/OutlineToggle.vue", "utf8");
   const enhancer = readFileSync("docs/.vitepress/theme/useLineOutline.ts", "utf8");
   const styles = readFileSync("docs/.vitepress/theme/styles/content.css", "utf8");
 
   assert.match(layout, /useLineOutline\(\)/);
   assert.match(enhancer, /\.VPDocAsideOutline\.has-outline/);
   assert.match(enhancer, /page\.value\.relativePath/);
+  assert.match(enhancer, /--outline-item-index/);
+  assert.match(toggle, /outline-prelayers/);
+  assert.match(toggle, /outline-is-opening/);
+  assert.match(toggle, /aria-controls="site-page-outline"/);
   assert.match(styles, /counter\(line-outline-item, decimal-leading-zero\)/);
+  assert.match(styles, /@keyframes outline-layer-sweep/);
+  assert.match(styles, /@keyframes outline-item-enter/);
   assert.match(styles, /--line-outline-shift/);
   assert.match(styles, /outline-link\[data-outline-level="2"\]/);
   assert.match(styles, /outline-link\[data-outline-level="3"\]\s*\{\s*display:\s*none;/s);

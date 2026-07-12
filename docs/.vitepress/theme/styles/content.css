@@ -78,28 +78,28 @@
 }
 
 .VPDocAside {
-  padding-inline-start: 32px;
+  padding-inline-start: 28px;
 }
 
 @media (min-width: 1280px) {
   .VPDoc.has-aside .aside {
-    max-width: 288px;
-    padding-left: 36px;
+    max-width: 300px;
+    padding-left: 32px;
   }
 
   .VPDoc.has-aside .aside-container,
   .VPDoc.has-aside .aside-curtain {
-    width: 252px;
+    width: 268px;
   }
 
   .VPDoc.has-aside.outline-is-collapsed .aside {
-    max-width: 80px;
-    padding-left: 18px;
+    max-width: 84px;
+    padding-left: 20px;
   }
 
   .VPDoc.has-aside.outline-is-collapsed .aside-container,
   .VPDoc.has-aside.outline-is-collapsed .aside-curtain {
-    width: 44px;
+    width: 52px;
   }
 
   .VPDoc.has-aside.outline-is-collapsed .VPDocAside {
@@ -107,30 +107,117 @@
   }
 }
 
+.VPDocAside.staggered-outline {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid var(--site-line);
+  border-radius: var(--site-radius-md);
+  padding: 16px 14px 18px;
+  background: var(--site-surface);
+  box-shadow: 0 12px 36px color-mix(in srgb, var(--site-text) 7%, transparent);
+  transition:
+    width 360ms cubic-bezier(0.22, 1, 0.36, 1),
+    padding 360ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-radius 240ms ease;
+}
+
+.VPDocAside.staggered-outline.outline-is-collapsed {
+  width: 52px;
+  min-height: 52px;
+  margin-inline-start: auto;
+  padding: 3px;
+  border-radius: 999px;
+}
+
 .outline-toolbar {
   display: flex;
-  min-height: 44px;
+  min-height: 48px;
   align-items: center;
-  justify-content: space-between;
-  margin: 0 0 10px;
+  gap: 10px;
+  margin: 0 0 12px;
   border-bottom: 1px solid var(--site-line);
+  padding: 0 0 12px;
   color: var(--site-text);
 }
 
+.outline-prelayers {
+  position: absolute;
+  z-index: 0;
+  inset: -1px;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.outline-prelayer {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transform: translateX(108%);
+}
+
+.outline-prelayer--spark {
+  background: var(--site-menu-prelayer);
+}
+
+.outline-prelayer--accent {
+  background: var(--site-accent);
+}
+
+.VPDocAside.outline-is-opening .outline-prelayer--spark {
+  animation: outline-layer-sweep 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.VPDocAside.outline-is-opening .outline-prelayer--accent {
+  animation: outline-layer-sweep 600ms 70ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.outline-toolbar__heading {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.outline-toolbar__eyebrow,
+.outline-toolbar__count {
+  color: var(--site-text-faint);
+  font-family: var(--site-font-mono);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
 .outline-toolbar__label {
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.01em;
+  font-size: 13px;
+  font-weight: 720;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+}
+
+.outline-toolbar__count {
+  position: relative;
+  z-index: 2;
+  flex: 0 0 auto;
+  white-space: nowrap;
 }
 
 .outline-toolbar[data-collapsed] {
   width: 44px;
-  margin-inline-start: auto;
-  margin-bottom: 0;
+  min-height: 44px;
+  margin: 0;
   border-bottom: 0;
+  padding: 0;
 }
 
-.outline-toolbar[data-collapsed] .outline-toolbar__label {
+.outline-toolbar[data-collapsed] .outline-toolbar__heading,
+.outline-toolbar[data-collapsed] .outline-toolbar__count,
+.outline-toolbar[data-collapsed] .outline-prelayers {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -140,59 +227,122 @@
 
 .outline-toolbar__toggle {
   position: relative;
+  z-index: 3;
   display: inline-flex;
-  width: 44px;
+  min-width: 64px;
   height: 44px;
   align-items: center;
   justify-content: center;
-  border: 0;
-  border-radius: 9px;
+  gap: 8px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  padding: 0 10px;
   background: transparent;
   color: var(--site-text-muted);
+  font: inherit;
+  font-size: 11px;
+  font-weight: 650;
   transition: background-color 140ms ease, color 140ms ease;
 }
 
 .outline-toolbar__toggle:hover,
-.outline-toolbar__toggle:focus-visible,
-.outline-toolbar[data-collapsed] .outline-toolbar__toggle {
+.outline-toolbar__toggle:focus-visible {
   border: 1px solid color-mix(in srgb, var(--site-accent) 36%, var(--site-line));
-  border-radius: 50%;
   background: var(--site-accent-soft);
   color: var(--site-accent);
 }
 
-.outline-toolbar__toggle > span {
+.outline-toolbar[data-collapsed] .outline-toolbar__toggle {
+  width: 44px;
+  min-width: 44px;
+  padding: 0;
+  background: var(--site-accent-soft);
+  color: var(--site-accent);
+}
+
+.outline-toolbar__text-wrap {
+  width: 2em;
+  height: 1em;
+  overflow: hidden;
+  line-height: 1;
+}
+
+.outline-toolbar__text-inner {
+  display: flex;
+  flex-direction: column;
+  transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.outline-toolbar__text-inner > span {
+  display: block;
+  height: 1em;
+  line-height: 1;
+}
+
+.outline-toolbar[data-collapsed] .outline-toolbar__text-wrap {
   position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
+.outline-toolbar[data-collapsed] .outline-toolbar__text-inner {
+  transform: translateY(-1em);
+}
+
+.outline-toolbar__icon {
+  position: relative;
+  display: block;
+  width: 14px;
+  height: 14px;
+  flex: 0 0 14px;
+  transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.outline-toolbar__icon > span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
   width: 15px;
   height: 1.5px;
   border-radius: 2px;
   background: currentColor;
-  transition: opacity 180ms ease, transform 180ms ease;
+  transform: translate(-50%, -50%);
+  transition: transform 360ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.outline-toolbar__toggle > span:first-child {
-  transform: rotate(0deg);
+.outline-toolbar__icon > span:last-child {
+  transform: translate(-50%, -50%) rotate(90deg);
 }
 
-.outline-toolbar__toggle > span:last-child {
-  opacity: 0;
-  transform: rotate(90deg);
+.outline-toolbar:not([data-collapsed]) .outline-toolbar__icon {
+  transform: rotate(225deg);
 }
 
-.outline-toolbar[data-collapsed] .outline-toolbar__toggle > span:first-child {
-  transform: rotate(0deg);
+.outline-toolbar:not([data-collapsed]) .outline-toolbar__icon > span:last-child {
+  transform: translate(-50%, -50%) rotate(0deg);
 }
 
-.outline-toolbar[data-collapsed] .outline-toolbar__toggle > span:last-child {
+.VPDocAsideOutline.line-outline {
+  position: relative;
+  z-index: 2;
+  min-width: 0;
   opacity: 1;
-  transform: rotate(90deg);
+  transform: translateX(0);
+  transition:
+    opacity 220ms ease,
+    transform 360ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .VPDocAside.outline-is-collapsed .VPDocAsideOutline.has-outline {
-  display: none;
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(110%);
 }
 
-/* Numbered, proximity-aware chapter navigation inspired by line sidebars. */
+/* Numbered, staggered page outline adapted from the site's slide-out menu. */
 
 .VPDocAsideOutline.line-outline .content {
   border-inline-start: 0;
@@ -226,35 +376,41 @@
   --line-outline-proximity: 0;
   --line-outline-shift: 0px;
   position: relative;
-  display: block;
-  min-height: 36px;
-  border-radius: 7px;
-  padding: 8px 6px 8px 64px !important;
-  background-image: linear-gradient(currentColor, currentColor);
-  background-position: 31px 50%;
-  background-repeat: no-repeat;
-  background-size: calc(13px + var(--line-outline-proximity) * 17px) 1px;
+  display: flex;
+  min-height: 46px;
+  align-items: center;
+  border-radius: 8px;
+  padding: 10px 8px 10px 39px !important;
   color: color-mix(
     in srgb,
-    var(--site-text-faint),
-    var(--site-accent) calc(var(--line-outline-proximity) * 36%)
+    var(--site-text-muted),
+    var(--site-accent) calc(var(--line-outline-proximity) * 32%)
   );
-  opacity: calc(0.72 + var(--line-outline-proximity) * 0.28);
+  opacity: calc(0.82 + var(--line-outline-proximity) * 0.18);
   transform: translateX(var(--line-outline-shift));
   transition:
     color 120ms ease,
     opacity 120ms ease,
     transform 100ms ease,
-    background-size 100ms ease,
     background-color 120ms ease;
+}
+
+.VPDocAside.outline-is-opening
+  .VPDocOutlineItem.root
+  > li
+  > .outline-link[data-outline-level="2"] {
+  animation: outline-item-enter 560ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(150ms + var(--outline-item-index, 0) * 55ms);
 }
 
 .VPDocAsideOutline.line-outline
   .VPDocOutlineItem.root
   > li
   > .outline-link[data-outline-level="2"] {
+  border-bottom: 1px solid color-mix(in srgb, var(--site-line) 82%, transparent);
   font-size: 12px;
-  font-weight: 560;
+  font-weight: 600;
+  line-height: 1.35;
 }
 
 .VPDocAsideOutline.line-outline
@@ -266,9 +422,9 @@
   top: 50%;
   width: 22px;
   content: counter(line-outline-item, decimal-leading-zero);
-  color: currentColor;
+  color: var(--site-text-faint);
   font-family: var(--site-font-mono);
-  font-size: 10px;
+  font-size: 9px;
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.02em;
   line-height: 1;
@@ -285,6 +441,7 @@
 .VPDocAsideOutline.line-outline .outline-link:hover,
 .VPDocAsideOutline.line-outline .outline-link.active,
 .VPDocAsideOutline.line-outline .outline-link:focus-visible {
+  background: var(--site-accent-soft);
   color: var(--site-accent);
   opacity: 1;
 }
@@ -302,7 +459,7 @@
   max-height: 0;
   overflow: hidden;
   visibility: hidden;
-  margin: 0 0 0 31px;
+  margin: 0 0 0 39px;
   border-inline-start: 1px solid color-mix(in srgb, var(--site-line) 82%, transparent);
   padding: 0 !important;
   opacity: 0;
@@ -332,9 +489,7 @@
 
 .VPDocAsideOutline.line-outline .VPDocOutlineItem.nested .outline-link {
   min-height: 30px;
-  padding: 6px 6px 6px 31px !important;
-  background-position: 10px 50%;
-  background-size: calc(7px + var(--line-outline-proximity) * 9px) 1px;
+  padding: 6px 6px 6px 25px !important;
   color: color-mix(in srgb, var(--site-text-faint) 88%, var(--site-canvas));
   font-size: 11px;
   line-height: 1.45;
@@ -351,6 +506,35 @@
   background: currentColor;
   content: "";
   transform: translateY(-50%);
+}
+
+@keyframes outline-layer-sweep {
+  0% {
+    opacity: 1;
+    transform: translateX(108%);
+  }
+
+  58% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(-108%);
+  }
+}
+
+@keyframes outline-item-enter {
+  from {
+    opacity: 0;
+    transform: translateX(28px) rotate(1.5deg);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(var(--line-outline-shift));
+  }
 }
 
 .back-to-top {
