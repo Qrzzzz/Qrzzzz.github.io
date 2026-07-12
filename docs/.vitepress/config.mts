@@ -106,10 +106,39 @@ export default defineConfig({
     nav: [
       { text: "项目", link: "/projects/" },
       { text: "文档", link: "/guide/" },
-      { text: "文章", link: "/notes/" }
+      { text: "文章", link: "/notes/" },
+      { text: "Prompt Collection", link: "/prompt-collection/" }
     ],
 
     sidebar: {
+      "/prompt-collection/": [
+        {
+          text: "Prompt Collection",
+          items: [
+            {
+              text: "Collection Overview",
+              link: "/prompt-collection/"
+            },
+            {
+              text: "Rigorous Research and Decision Assistant",
+              link: "/prompt-collection/rigorous-research-decision-assistant"
+            },
+            {
+              text: "Maximum-Rigor Research and Analysis Assistant",
+              link: "/prompt-collection/maximum-rigor-research-analysis-assistant"
+            },
+            {
+              text: "Smart Photo Retouching with Interactive Doodle Overlays",
+              link: "/prompt-collection/smart-photo-retouching-interactive-doodle-overlays"
+            },
+            {
+              text: "Hand-Drawn Educational Infographic Generator",
+              link: "/prompt-collection/hand-drawn-educational-infographic-generator"
+            }
+          ]
+        }
+      ],
+
       "/guide/": [
         {
           text: "文档",

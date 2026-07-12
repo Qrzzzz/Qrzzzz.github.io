@@ -66,6 +66,11 @@
           <strong>Lyrics Card Generator 项目文档</strong>
           <span>维护说明、桌面端资料与多语言版本记录。</span>
         </a>
+        <a class="home-reading-row" href="/prompt-collection/">
+          <span>Prompts</span>
+          <strong>Prompt Collection</strong>
+          <span>A growing library of reusable prompts.</span>
+        </a>
       </div>
     </section>
 
