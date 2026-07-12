@@ -36,8 +36,8 @@ onBeforeUnmount(() => {
 
 <style>
 .target-cursor {
-  --target-cursor-color: #fff;
-  --target-cursor-target-color: #9db4ff;
+  --target-cursor-color: var(--site-cursor);
+  --target-cursor-target-color: color-mix(in srgb, var(--site-cursor) 82%, white);
 
   position: fixed;
   z-index: 10000;
@@ -48,7 +48,7 @@ onBeforeUnmount(() => {
   opacity: 0;
   pointer-events: none;
   user-select: none;
-  mix-blend-mode: difference;
+  filter: drop-shadow(0 0 5px color-mix(in srgb, var(--site-cursor) 32%, transparent));
   will-change: transform, opacity;
 }
 

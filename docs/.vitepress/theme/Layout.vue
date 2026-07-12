@@ -2,9 +2,12 @@
 import { computed, nextTick, onBeforeUnmount, onMounted, watch } from "vue";
 import { useData } from "vitepress";
 import DefaultTheme from "vitepress/theme";
+import BackToTop from "./BackToTop.vue";
 import HomeContent from "./HomeContent.vue";
 import InlineSearch from "./InlineSearch.vue";
 import NotFound from "./NotFound.vue";
+import OutlineToggle from "./OutlineToggle.vue";
+import StaggeredMenu from "./StaggeredMenu.vue";
 import TargetCursor from "./TargetCursor.vue";
 import { useLineOutline } from "./useLineOutline";
 
@@ -305,6 +308,15 @@ onBeforeUnmount(() => {
     <Layout>
       <template #nav-bar-content-before>
         <InlineSearch />
+      </template>
+      <template #nav-bar-content-after>
+        <StaggeredMenu />
+      </template>
+      <template #aside-outline-before>
+        <OutlineToggle />
+      </template>
+      <template #doc-bottom>
+        <BackToTop />
       </template>
       <template #home-hero-before>
         <HomeContent />

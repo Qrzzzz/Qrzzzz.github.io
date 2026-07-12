@@ -13,6 +13,7 @@
   --site-accent-hover: #b82310;
   --site-accent-soft: rgba(255, 75, 43, 0.13);
   --site-accent-ink: #ffffff;
+  --site-cursor: #ff8068;
   --site-nav-bg: rgba(245, 244, 239, 0.86);
   --site-code-bg: #17191d;
   --site-code-text: #f2f0ea;
@@ -71,6 +72,7 @@
   --site-accent-hover: #6dffd5;
   --site-accent-soft: rgba(0, 230, 176, 0.14);
   --site-accent-ink: #111214;
+  --site-cursor: #79ffde;
   --site-nav-bg: rgba(17, 18, 20, 0.84);
   --site-code-bg: #0c0d0f;
   --site-code-text: #f2f0ea;
