@@ -68,6 +68,18 @@
   display: none;
 }
 
+.VPNavBarMenu,
+.VPNavBarAppearance,
+.VPNavBarSocialLinks,
+.VPNavBarExtra,
+.VPNavBarHamburger {
+  display: none !important;
+}
+
+.VPNavBar .content {
+  gap: 10px;
+}
+
 .VPNav .VPSocialLink,
 .VPNav .VPNavBarHamburger {
   align-items: center;

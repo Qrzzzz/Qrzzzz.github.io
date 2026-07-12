@@ -38,4 +38,9 @@ test("enhances generated page outlines for any Markdown page with sections", () 
   assert.match(enhancer, /page\.value\.relativePath/);
   assert.match(styles, /counter\(line-outline-item, decimal-leading-zero\)/);
   assert.match(styles, /--line-outline-shift/);
+  assert.match(styles, /outline-link\[data-outline-level="2"\]/);
+  assert.match(styles, /outline-link\[data-outline-level="3"\]\s*\{\s*display:\s*none;/s);
+  assert.match(styles, /li:hover\s*>\s*\.VPDocOutlineItem\.nested/);
+  assert.match(styles, /outline-is-collapsed/);
+  assert.match(styles, /\.back-to-top\.is-visible/);
 });

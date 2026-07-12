@@ -3,6 +3,18 @@ import { useData } from "vitepress";
 
 const proximityRadius = 104;
 const maximumShift = 18;
+const nestedMaximumShift = 9;
+
+function outlineLevel(link: HTMLAnchorElement) {
+  const id = link.hash.slice(1);
+  if (!id) return "2";
+
+  try {
+    return document.getElementById(decodeURIComponent(id))?.tagName === "H3" ? "3" : "2";
+  } catch {
+    return "2";
+  }
+}
 
 export function useLineOutline() {
   const { page } = useData();
@@ -21,15 +33,26 @@ export function useLineOutline() {
     if (event.pointerType === "touch") return;
 
     for (const link of links) {
+      const nested = link.dataset.outlineLevel === "3";
+      const nestedList = nested
+        ? link.closest<HTMLElement>(".VPDocOutlineItem.nested")
+        : undefined;
+      if (nestedList && nestedList.clientHeight === 0) {
+        link.style.removeProperty("--line-outline-proximity");
+        link.style.removeProperty("--line-outline-shift");
+        continue;
+      }
+
       const bounds = link.getBoundingClientRect();
       const distance = Math.abs(event.clientY - (bounds.top + bounds.height / 2));
       const linear = Math.max(0, 1 - distance / proximityRadius);
       const proximity = linear * linear * (3 - 2 * linear);
+      const shift = nested ? nestedMaximumShift : maximumShift;
 
       link.style.setProperty("--line-outline-proximity", proximity.toFixed(3));
       link.style.setProperty(
         "--line-outline-shift",
-        `${(proximity * maximumShift).toFixed(2)}px`
+        `${(proximity * shift).toFixed(2)}px`
       );
     }
   }
@@ -42,8 +65,9 @@ export function useLineOutline() {
     resetLinks();
     const target = event.target;
     if (!(target instanceof HTMLAnchorElement) || !links.includes(target)) return;
+    const shift = target.dataset.outlineLevel === "3" ? nestedMaximumShift : maximumShift;
     target.style.setProperty("--line-outline-proximity", "1");
-    target.style.setProperty("--line-outline-shift", `${maximumShift}px`);
+    target.style.setProperty("--line-outline-shift", `${shift}px`);
   }
 
   function handleFocusOut(event: FocusEvent) {
@@ -58,6 +82,7 @@ export function useLineOutline() {
     outline.removeEventListener("focusin", handleFocusIn);
     outline.removeEventListener("focusout", handleFocusOut);
     outline.classList.remove("line-outline");
+    for (const link of links) link.removeAttribute("data-outline-level");
     resetLinks();
     outline = undefined;
     links = [];
@@ -73,6 +98,9 @@ export function useLineOutline() {
 
     outline = nextOutline;
     links = Array.from(outline.querySelectorAll<HTMLAnchorElement>(".outline-link"));
+    for (const link of links) {
+      link.dataset.outlineLevel = outlineLevel(link);
+    }
     outline.classList.add("line-outline");
     outline.addEventListener("pointermove", handlePointerMove, { passive: true });
     outline.addEventListener("pointerleave", handlePointerLeave);
