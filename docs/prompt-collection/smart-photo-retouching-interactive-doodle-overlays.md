@@ -1,10 +1,10 @@
 ---
-title: Smart Photo Retouching with Interactive Doodle Overlays
+title: 智能修图与互动涂鸦叠加
 description: A comprehensive prompt for natural photo enhancement and context-aware creative doodle composition.
 lang: zh-CN
 ---
 
-# Smart Photo Retouching with Interactive Doodle Overlays
+# 智能修图与互动涂鸦叠加
 
 ```text
 # 智能修图 + 涂鸦互动叠加｜创意照片成图提示词

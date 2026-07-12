@@ -1,10 +1,10 @@
 ---
-title: Hand-Drawn Educational Infographic Generator
+title: 手绘教育信息图生成器
 description: A prompt for creating clean, single-page educational infographics with a warm hand-drawn aesthetic.
 lang: zh-CN
 ---
 
-# Hand-Drawn Educational Infographic Generator
+# 手绘教育信息图生成器
 
 ```text
 你是一位擅长手绘风信息图的视觉设计师。请根据以下内容创作一张单页信息图。

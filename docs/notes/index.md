@@ -10,6 +10,11 @@ description: 不设更新频率，只收录愿意回头再看的文字。
 ## 2026
 
 <div class="content-index" aria-label="2026 年文章">
+  <a class="content-index-row" href="/notes/until-the-tower-falls">
+    <span class="content-index-meta">文章</span>
+    <strong class="content-index-title">直到大厦崩塌：关于“赢”的谎言</strong>
+    <span class="content-index-summary">从《太阳》与《高塔》谈成功、传奇与幸存的幻灭。</span>
+  </a>
   <a class="content-index-row" href="/notes/why-this-site">
     <span class="content-index-meta">文章</span>
     <strong class="content-index-title">为什么要有这个网站</strong>
