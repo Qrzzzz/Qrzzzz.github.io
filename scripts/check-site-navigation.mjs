@@ -6,7 +6,7 @@ import { PRODUCTION_BASELINE } from "./lib/lyrics-card-docs.mjs";
 
 const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const outputRoot = path.resolve(repositoryRoot, process.argv[2] || "docs/.vitepress/dist");
-const independentlyDeployedPrefixes = ["/lyrics-card-generator/"];
+const independentlyDeployedPrefixes = ["/lyrics-card-generator/", "/password-generator/"];
 
 function walk(directory) {
   return readdirSync(directory).flatMap((name) => {

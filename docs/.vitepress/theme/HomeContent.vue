@@ -69,10 +69,18 @@ import TextType from "./TextType.vue";
     <section class="home-section" aria-labelledby="home-reading-heading">
       <header class="home-section-heading">
         <h2 id="home-reading-heading">精选内容</h2>
-        <p>从一篇文章、一份维护说明和一个项目档案开始。</p>
+        <p>从一个工具、一篇文章、一份维护说明和一个项目档案开始。</p>
       </header>
 
       <div class="home-reading-list">
+        <a
+          class="home-reading-row"
+          href="https://qrzzzz.github.io/password-generator/"
+        >
+          <span>工具</span>
+          <strong>密码规则生成器</strong>
+          <span>按复杂网站规则生成合规密码。</span>
+        </a>
         <a class="home-reading-row" href="/notes/why-this-site">
           <span>文章</span>
           <strong>为什么要有这个网站</strong>

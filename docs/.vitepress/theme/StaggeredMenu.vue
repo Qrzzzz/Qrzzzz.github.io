@@ -7,6 +7,7 @@ const route = useRoute();
 
 const items = [
   { label: "项目", link: "/projects/" },
+  { label: "工具", link: "/tools/" },
   { label: "文档", link: "/guide/" },
   { label: "文章", link: "/notes/" },
   { label: "提示词合集", link: "/prompt-collection/" }
@@ -237,7 +238,7 @@ onBeforeUnmount(() => closeMenu(false));
         <div class="sm-panel-inner">
           <header class="sm-panel-header">
             <p>Navigation</p>
-            <span aria-hidden="true">01—04</span>
+            <span aria-hidden="true">01—05</span>
           </header>
 
           <nav aria-label="站点导航">
