@@ -6,15 +6,12 @@ import BackToTop from "./BackToTop.vue";
 import HomeContent from "./HomeContent.vue";
 import InlineSearch from "./InlineSearch.vue";
 import NotFound from "./NotFound.vue";
-import OutlineToggle from "./OutlineToggle.vue";
+import ReadingOutline from "./ReadingOutline.vue";
 import StaggeredMenu from "./StaggeredMenu.vue";
 import TargetCursor from "./TargetCursor.vue";
-import { useLineOutline } from "./useLineOutline";
 
 const { Layout } = DefaultTheme;
 const { frontmatter, isDark, page } = useData();
-
-useLineOutline();
 
 type PageKind = "home" | "article" | "project" | "document" | "general";
 
@@ -74,7 +71,6 @@ type InertState = {
 };
 
 let accessibilityObserver: MutationObserver | undefined;
-let mobileSidebarQuery: MediaQueryList | undefined;
 let activeNavScreen: HTMLElement | undefined;
 let navScreenTrigger: HTMLButtonElement | undefined;
 let focusFrame = 0;
@@ -91,14 +87,6 @@ function setElementInert(element: HTMLElement, inert: boolean) {
   else element.removeAttribute("aria-hidden");
 }
 
-function syncSidebarAccessibility() {
-  const sidebar = document.querySelector<HTMLElement>(".VPSidebar");
-  if (!sidebar || activeNavScreen) return;
-
-  const hidden = Boolean(mobileSidebarQuery?.matches && !sidebar.classList.contains("open"));
-  setElementInert(sidebar, hidden);
-}
-
 function setShellLanguageParts() {
   for (const element of languageParts) {
     if (!element.isConnected) languageParts.delete(element);
@@ -109,7 +97,7 @@ function setShellLanguageParts() {
 
   document
     .querySelectorAll<HTMLElement>(
-      ".VPSkipLink, .VPNav, .VPLocalNav, .VPSidebar, .VPFooter, .docs-breadcrumb"
+      ".VPSkipLink, .VPNav, .VPLocalNav, .VPFooter, .docs-breadcrumb"
     )
     .forEach((element) => {
       element.lang = "zh-CN";
@@ -118,7 +106,6 @@ function setShellLanguageParts() {
 
   const textLabels = [
     ["#main-nav-aria-label", "主导航"],
-    ["#sidebar-aria-label", "侧栏导航"],
     ["#doc-footer-aria-label", "翻页导航"]
   ] as const;
   for (const [selector, text] of textLabels) {
@@ -238,13 +225,11 @@ function deactivateNavScreen(returnFocus = true) {
   const trigger = navScreenTrigger;
   activeNavScreen = undefined;
   navScreenTrigger = undefined;
-  syncSidebarAccessibility();
   if (returnFocus) trigger?.focus();
 }
 
 function syncNavigationAccessibility() {
   setShellLanguageParts();
-  syncSidebarAccessibility();
 
   const screen = document.querySelector<HTMLElement>(".VPNavScreen");
   const trigger = document.querySelector<HTMLButtonElement>(".VPNavBarHamburger");
@@ -255,8 +240,6 @@ function syncNavigationAccessibility() {
 onMounted(() => {
   syncDocumentMetadata();
   nextTick(syncDocumentMetadata);
-  mobileSidebarQuery = window.matchMedia("(max-width: 959px)");
-  mobileSidebarQuery.addEventListener("change", syncNavigationAccessibility);
   accessibilityObserver = new MutationObserver(syncNavigationAccessibility);
   accessibilityObserver.observe(document.querySelector(".site-layout") ?? document.body, {
     attributes: true,
@@ -278,10 +261,7 @@ watch(
 );
 onBeforeUnmount(() => {
   accessibilityObserver?.disconnect();
-  mobileSidebarQuery?.removeEventListener("change", syncNavigationAccessibility);
   deactivateNavScreen(false);
-  const sidebar = document.querySelector<HTMLElement>(".VPSidebar");
-  if (sidebar) setElementInert(sidebar, false);
   for (const element of languageParts) {
     if (element.lang === "zh-CN") element.removeAttribute("lang");
   }
@@ -312,8 +292,8 @@ onBeforeUnmount(() => {
       <template #nav-bar-content-after>
         <StaggeredMenu />
       </template>
-      <template #aside-outline-before>
-        <OutlineToggle />
+      <template #doc-before>
+        <ReadingOutline />
       </template>
       <template #doc-bottom>
         <BackToTop />

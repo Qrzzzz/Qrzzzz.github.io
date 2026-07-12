@@ -43,6 +43,21 @@ test("keeps the staggered menu restrained and theme-aware", () => {
 
   assert.match(component, /startViewTransition/);
   assert.match(component, /var\(--site-menu-prelayer\)/);
+  assert.match(component, /--sm-panel-width:\s*25vw/);
+  assert.doesNotMatch(component, /--sm-prelayer-width/);
+  assert.match(component, /class="sm-drawer-stack"/);
+  assert.match(component, /\.sm-drawer-stack\s*\{[^}]*width:\s*var\(--sm-panel-width\)/s);
+  assert.match(
+    component,
+    /\.staggered-menu-overlay\[data-open\] \.sm-drawer-stack\s*\{[^}]*transition-duration:\s*420ms[^}]*cubic-bezier\(0\.32,\s*0,\s*0\.2,\s*1\)/s
+  );
+  assert.match(component, /\.sm-prelayers\s*\{[^}]*overflow:\s*hidden/s);
+  assert.doesNotMatch(component, /scaleX/);
+  assert.match(component, /\.staggered-menu-panel\s*\{[^}]*transform:\s*translateX\(24px\)/s);
+  assert.match(
+    component,
+    /\.staggered-menu-overlay\[data-open\] \.staggered-menu-panel\s*\{[^}]*transition-delay:\s*90ms/s
+  );
   assert.match(component, /font-size:\s*clamp\(26px,\s*2\.5vw,\s*34px\)/);
   assert.match(tokens, /::view-transition-old\(root\)/);
   assert.match(tokens, /--site-menu-prelayer:/);
