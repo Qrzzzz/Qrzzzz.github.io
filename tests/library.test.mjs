@@ -5,7 +5,6 @@ import test from "node:test";
 const library = readFileSync("docs/library/index.md", "utf8");
 const config = readFileSync("docs/.vitepress/config.mts", "utf8");
 const layout = readFileSync("docs/.vitepress/theme/Layout.vue", "utf8");
-const readingOutline = readFileSync("docs/.vitepress/theme/ReadingOutline.vue", "utf8");
 const styles = readFileSync("docs/.vitepress/theme/styles/content.css", "utf8");
 
 function contentRoutes(directory) {
@@ -39,8 +38,7 @@ test("links every document, article, and prompt from the Library page", () => {
 test("renders Library as a responsive folder grid", () => {
   assert.match(layout, /relativePath\.startsWith\("library\/"\)/);
   assert.match(library, /^outline: false$/m);
-  assert.match(readingOutline, /frontmatter\.value\.outline === false/);
-  assert.match(readingOutline, /startsWith\("library\/"\)/);
+  assert.match(config, /outline:\s*\{\s*label: "页内目录",\s*level: \[2, 3\]/s);
   assert.match(library, /class="library-folder"/);
   assert.match(library, /class="library-folder library-folder--wide"/);
   assert.match(styles, /\.library-folders\s*\{[\s\S]*?grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);

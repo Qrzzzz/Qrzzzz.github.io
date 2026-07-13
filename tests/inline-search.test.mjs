@@ -55,5 +55,5 @@ test("uses the top navigation and native mobile screen without a sidebar drawer"
     siteStyles,
     /@media \(max-width:\s*1079px\)[\s\S]*?\.VPNavScreen\s*\{[^}]*display:\s*block\s*!important/
   );
-  assert.doesNotMatch(tokens, /site-menu-prelayer|theme-fade-fallback|view-transition/);
+  assert.doesNotMatch(tokens, /theme-fade-fallback|view-transition/);
 });

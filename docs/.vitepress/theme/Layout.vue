@@ -7,11 +7,14 @@ import HomeContent from "./HomeContent.vue";
 import InlineSearch from "./InlineSearch.vue";
 import NavActions from "./NavActions.vue";
 import NotFound from "./NotFound.vue";
-import ReadingOutline from "./ReadingOutline.vue";
+import OutlineToggle from "./OutlineToggle.vue";
 import TargetCursor from "./TargetCursor.vue";
+import { useLineOutline } from "./useLineOutline";
 
 const { Layout } = DefaultTheme;
 const { frontmatter, isDark, page } = useData();
+
+useLineOutline();
 
 type PageKind = "home" | "article" | "project" | "document" | "library" | "general";
 
@@ -297,8 +300,8 @@ onBeforeUnmount(() => {
       <template #nav-bar-content-after>
         <NavActions />
       </template>
-      <template #doc-before>
-        <ReadingOutline />
+      <template #aside-outline-before>
+        <OutlineToggle />
       </template>
       <template #doc-bottom>
         <BackToTop />

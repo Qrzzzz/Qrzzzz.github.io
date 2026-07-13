@@ -1,11 +1,6 @@
 import assert from "node:assert/strict";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import test from "node:test";
-import {
-  buildOutlineModel,
-  MAX_INLINE_SECTIONS,
-  MIN_INLINE_SECTIONS
-} from "../docs/.vitepress/theme/readingOutlineRuntime.mjs";
 
 const promptRoot = "docs/prompt-collection";
 
@@ -20,7 +15,7 @@ test("keeps the collection title in English while localizing the visible index c
   assert.match(config, /text: "Library", link: "\/library\/"/);
   assert.doesNotMatch(config, /text: "提示词合集", link: "\/prompt-collection\/"/);
   assert.match(config, /sidebar: false/);
-  assert.match(config, /aside: false/);
+  assert.match(config, /aside: true/);
   assert.match(index, /href="\/prompt-collection\/rigorous-research-decision-assistant"/);
 });
 
@@ -36,44 +31,41 @@ test("marks every prompt body as Markdown inside its existing code block", () =>
   }
 });
 
-test("renders long pages with an inline outline and an on-demand outline popover", () => {
+test("enhances generated page outlines with the d73fdb8 staggered sidebar", () => {
   const layout = readFileSync("docs/.vitepress/theme/Layout.vue", "utf8");
-  const outline = readFileSync("docs/.vitepress/theme/ReadingOutline.vue", "utf8");
+  const toggle = readFileSync("docs/.vitepress/theme/OutlineToggle.vue", "utf8");
+  const enhancer = readFileSync("docs/.vitepress/theme/useLineOutline.ts", "utf8");
   const styles = readFileSync("docs/.vitepress/theme/styles/content.css", "utf8");
+  const tokens = readFileSync("docs/.vitepress/theme/styles/tokens.css", "utf8");
 
-  assert.match(layout, /<ReadingOutline \/>/);
-  assert.match(layout, /#doc-before/);
-  assert.doesNotMatch(layout, /OutlineToggle|useLineOutline/);
-  assert.equal(existsSync("docs/.vitepress/theme/OutlineToggle.vue"), false);
-  assert.equal(existsSync("docs/.vitepress/theme/useLineOutline.ts"), false);
-  assert.match(outline, /<Teleport/);
-  assert.match(outline, /reading-outline-inline/);
-  assert.match(outline, /reading-outline-popover/);
-  assert.match(outline, /event\.key !== "Escape"/);
-  assert.match(outline, /aria-controls="reading-outline-popover"/);
-  assert.match(styles, /\.reading-outline-inline nav/);
-  assert.match(styles, /\.reading-outline-control\[data-visible\]/);
-  assert.match(styles, /grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
-  assert.match(styles, /\.VPLocalNav\s*\{\s*display: none !important;/s);
+  assert.match(layout, /useLineOutline\(\)/);
+  assert.match(layout, /<OutlineToggle \/>/);
+  assert.match(layout, /#aside-outline-before/);
+  assert.doesNotMatch(layout, /ReadingOutline|#doc-before/);
+  assert.equal(existsSync("docs/.vitepress/theme/ReadingOutline.vue"), false);
+  assert.equal(existsSync("docs/.vitepress/theme/readingOutlineRuntime.mjs"), false);
+  assert.match(enhancer, /\.VPDocAsideOutline\.has-outline/);
+  assert.match(enhancer, /page\.value\.relativePath/);
+  assert.match(enhancer, /--outline-item-index/);
+  assert.match(toggle, /outline-prelayers/);
+  assert.match(toggle, /outline-is-opening/);
+  assert.match(toggle, /aria-controls="site-page-outline"/);
+  assert.match(styles, /counter\(line-outline-item, decimal-leading-zero\)/);
+  assert.match(styles, /@keyframes outline-layer-enter/);
+  assert.match(styles, /@keyframes outline-panel-enter/);
+  assert.match(styles, /@keyframes outline-item-enter/);
+  assert.match(styles, /outline-is-collapsed > :not\(\.outline-toolbar\)/);
+  assert.match(styles, /animation-delay: calc\(20ms \+ var\(--outline-item-index/);
+  assert.doesNotMatch(styles, /animation-delay: calc\(150ms/);
+  assert.match(styles, /--line-outline-shift/);
+  assert.match(styles, /outline-link\[data-outline-level="2"\]/);
+  assert.match(styles, /outline-link\[data-outline-level="3"\]\s*\{\s*display:\s*none;/s);
+  assert.match(styles, /li:hover\s*>\s*\.VPDocOutlineItem\.nested/);
+  assert.match(styles, /VPDoc\.has-aside\.outline-is-collapsed/);
+  assert.doesNotMatch(styles, /reading-outline-(?:inline|control|popover)/);
+  assert.match(tokens, /--site-menu-prelayer:\s*#ff765f/);
+  assert.match(tokens, /--site-menu-prelayer:\s*#6dffd5/);
   assert.match(styles, /\.back-to-top\.is-visible/);
   assert.match(styles, /conic-gradient\(/);
   assert.doesNotMatch(styles, /\.back-to-top[\s\S]*?box-shadow:\s*0\s+10px/);
-});
-
-test("keeps nested headings in the popover while limiting the inline outline", () => {
-  const entries = [
-    { id: "a", text: "第一节", level: 2 },
-    { id: "a-child", text: "第一节细目", level: 3 },
-    { id: "b", text: "第二节", level: 2 },
-    { id: "c", text: "第三节", level: 2 },
-    { id: "", text: "无效标题", level: 2 }
-  ];
-  const model = buildOutlineModel(entries, 2);
-
-  assert.equal(MIN_INLINE_SECTIONS, 3);
-  assert.equal(MAX_INLINE_SECTIONS, 8);
-  assert.equal(model.hasInlineOutline, true);
-  assert.equal(model.hasMore, true);
-  assert.deepEqual(model.inlineHeaders.map(({ id }) => id), ["a", "b"]);
-  assert.deepEqual(model.headers.map(({ id }) => id), ["a", "a-child", "b", "c"]);
 });

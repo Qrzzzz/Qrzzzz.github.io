@@ -111,7 +111,7 @@ export default defineConfig({
     ],
 
     sidebar: false,
-    aside: false,
+    aside: true,
 
     socialLinks: [
       {
