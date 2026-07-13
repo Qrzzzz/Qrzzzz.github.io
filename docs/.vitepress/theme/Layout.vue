@@ -7,7 +7,6 @@ import HomeContent from "./HomeContent.vue";
 import InlineSearch from "./InlineSearch.vue";
 import NotFound from "./NotFound.vue";
 import ReadingOutline from "./ReadingOutline.vue";
-import StaggeredMenu from "./StaggeredMenu.vue";
 import TargetCursor from "./TargetCursor.vue";
 
 const { Layout } = DefaultTheme;
@@ -288,9 +287,6 @@ onBeforeUnmount(() => {
     <Layout>
       <template #nav-bar-content-before>
         <InlineSearch />
-      </template>
-      <template #nav-bar-content-after>
-        <StaggeredMenu />
       </template>
       <template #doc-before>
         <ReadingOutline />
