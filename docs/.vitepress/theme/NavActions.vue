@@ -87,64 +87,69 @@ onBeforeUnmount(() => {
         <path d="M12 2.8a9.2 9.2 0 0 0-2.9 17.9c.5.1.6-.2.6-.4v-1.8c-2.8.6-3.4-1.2-3.4-1.2-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 0 1.6 1.1 1.6 1.1.9 1.6 2.4 1.1 3 .8.1-.7.4-1.1.7-1.4-2.3-.3-4.6-1.1-4.6-4.6 0-1 .4-1.9 1-2.5-.1-.3-.4-1.3.1-2.6 0 0 .8-.3 2.7 1a9.2 9.2 0 0 1 4.9 0c1.9-1.3 2.7-1 2.7-1 .5 1.3.2 2.3.1 2.6.6.6 1 1.5 1 2.5 0 3.5-2.4 4.3-4.6 4.6.4.3.7.9.7 1.8v2.6c0 .3.2.5.7.4A9.2 9.2 0 0 0 12 2.8Z" />
       </svg>
       <span>GitHub</span>
-      <span class="nav-github__arrow" aria-hidden="true">↗</span>
     </a>
   </div>
 </template>
 
 <style scoped>
 .NavActions {
-  position: relative;
   display: flex;
   align-items: center;
-  gap: 6px;
-  margin-left: 12px;
-  padding-left: 13px;
-}
-
-.NavActions::before {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  width: 1px;
-  height: 22px;
-  background: color-mix(in srgb, var(--site-line) 88%, transparent);
-  content: "";
-  transform: translateY(-50%);
+  gap: 12px;
+  margin-left: 18px;
 }
 
 .theme-toggle,
 .nav-github {
-  height: 42px;
-  border: 1px solid color-mix(in srgb, var(--site-line) 92%, transparent);
-  border-radius: 11px;
-  background: color-mix(in srgb, var(--site-surface) 84%, transparent);
-  box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 45%, transparent);
+  position: relative;
+  height: 44px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
   color: var(--site-text-muted);
-  transition:
-    border-color 160ms ease,
-    background-color 160ms ease,
-    color 160ms ease,
-    box-shadow 160ms ease,
-    transform 160ms ease;
+  transition: color 160ms ease;
 }
 
 .theme-toggle:hover,
 .nav-github:hover {
-  border-color: var(--site-line-strong);
-  background: var(--site-surface);
-  box-shadow:
-    inset 0 1px 0 color-mix(in srgb, #fff 52%, transparent),
-    0 8px 24px color-mix(in srgb, var(--site-text) 8%, transparent);
-  color: var(--site-text);
-  transform: translateY(-1px);
+  background: transparent;
+  color: var(--site-accent);
+}
+
+.theme-toggle::after,
+.nav-github::after {
+  position: absolute;
+  right: 0;
+  bottom: 4px;
+  left: 0;
+  height: 2px;
+  background: var(--site-accent);
+  content: "";
+  opacity: 0;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: opacity 160ms ease, transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.theme-toggle::after {
+  right: 11px;
+  left: 11px;
+}
+
+.theme-toggle:hover::after,
+.theme-toggle:focus-visible::after,
+.nav-github:hover::after,
+.nav-github:focus-visible::after {
+  opacity: 1;
+  transform: scaleX(1);
 }
 
 .theme-toggle {
   position: relative;
   display: grid;
-  width: 42px;
-  flex: 0 0 42px;
+  width: 44px;
+  flex: 0 0 44px;
   place-items: center;
   overflow: hidden;
   padding: 0;
@@ -224,11 +229,11 @@ onBeforeUnmount(() => {
 
 .nav-github {
   display: inline-flex;
-  min-width: 42px;
+  min-width: 44px;
   align-items: center;
   justify-content: center;
   gap: 7px;
-  padding: 0 11px;
+  padding: 0 3px;
   text-decoration: none;
 }
 
@@ -240,20 +245,9 @@ onBeforeUnmount(() => {
 }
 
 .nav-github > span {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 680;
   letter-spacing: -0.01em;
-}
-
-.nav-github__arrow {
-  color: var(--site-text-faint);
-  font-family: var(--site-font-mono);
-  font-size: 10px !important;
-  transition: transform 160ms ease;
-}
-
-.nav-github:hover .nav-github__arrow {
-  transform: translate(2px, -2px);
 }
 
 @keyframes theme-toggle-orbit {
@@ -272,25 +266,18 @@ onBeforeUnmount(() => {
   }
 }
 
-@media (max-width: 1199px) {
+@media (max-width: 767px) {
+  .NavActions {
+    gap: 6px;
+    margin-left: 0;
+  }
+
   .nav-github {
-    width: 42px;
+    width: 44px;
     padding: 0;
   }
 
   .nav-github > span {
-    display: none;
-  }
-}
-
-@media (max-width: 767px) {
-  .NavActions {
-    gap: 4px;
-    margin-left: 0;
-    padding-left: 0;
-  }
-
-  .NavActions::before {
     display: none;
   }
 }
@@ -302,8 +289,7 @@ onBeforeUnmount(() => {
 
   .theme-toggle__icon svg,
   .theme-toggle,
-  .nav-github,
-  .nav-github__arrow {
+  .nav-github {
     transition: none;
   }
 }
