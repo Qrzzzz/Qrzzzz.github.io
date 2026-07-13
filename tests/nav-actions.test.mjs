@@ -89,8 +89,12 @@ test("mounts direct animated theme and GitHub actions in the top bar", () => {
   assert.match(layout, /#nav-bar-content-after/);
   assert.match(layout, /<NavActions\s*\/>/);
   assert.match(component, /@click="toggleTheme"/);
-  assert.match(component, /aria-pressed/);
+  assert.match(component, /role="switch"/);
+  assert.match(component, /:aria-checked="isDark"/);
   assert.match(component, /https:\/\/github\.com\/Qrzzzz/);
+  assert.doesNotMatch(component, /<span>GitHub<\/span>/);
+  assert.match(component, /theme-toggle__track/);
+  assert.match(component, /theme-toggle__thumb/);
   assert.match(component, /theme-toggle__sun/);
   assert.match(component, /theme-toggle__moon/);
   assert.doesNotMatch(component, /<select|<details/);
@@ -98,5 +102,9 @@ test("mounts direct animated theme and GitHub actions in the top bar", () => {
   assert.match(siteStyles, /\.VPNavBarMenu\s*\{[^}]*border:\s*0[^}]*background:\s*transparent/s);
   assert.match(siteStyles, /\.VPNavBar \.VPNavBarMenuLink::after\s*\{[^}]*transform:\s*scaleX\(0\)/s);
   assert.match(component, /\.theme-toggle,\s*\.nav-github\s*\{[^}]*border:\s*0[^}]*background:\s*transparent/s);
+  assert.match(component, /\.theme-toggle\s*\{[^}]*width:\s*44px[^}]*border-radius:\s*999px/s);
+  assert.match(component, /\.theme-toggle__track\s*\{[^}]*width:\s*40px[^}]*height:\s*22px/s);
+  assert.match(component, /\.theme-toggle__thumb\s*\{[^}]*width:\s*18px[^}]*height:\s*18px/s);
+  assert.match(component, /\.theme-toggle\.is-dark \.theme-toggle__thumb\s*\{[^}]*translateX\(18px\)/s);
   assert.match(search, /\.inline-search-trigger,\s*\.inline-search-form\s*\{[^}]*border:\s*0[^}]*background:\s*transparent/s);
 });
