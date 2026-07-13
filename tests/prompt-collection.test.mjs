@@ -17,7 +17,8 @@ test("keeps the collection title in English while localizing the visible index c
   assert.match(index, /^## 提示词$/m);
   assert.match(index, /aria-label="提示词列表"/);
   assert.doesNotMatch(index, /A growing library|Chinese-language|Research · Analysis/);
-  assert.match(config, /text: "提示词合集", link: "\/prompt-collection\/"/);
+  assert.match(config, /text: "Library", link: "\/library\/"/);
+  assert.doesNotMatch(config, /text: "提示词合集", link: "\/prompt-collection\/"/);
   assert.match(config, /sidebar: false/);
   assert.match(config, /aside: false/);
   assert.match(index, /href="\/prompt-collection\/rigorous-research-decision-assistant"/);

@@ -9,7 +9,7 @@ type OutlineEntry = {
   level: 2 | 3;
 };
 
-const { page } = useData();
+const { frontmatter, page } = useData();
 const portalTarget = ref<HTMLElement | null>(null);
 const controlElement = ref<HTMLElement | null>(null);
 const triggerElement = ref<HTMLButtonElement | null>(null);
@@ -87,7 +87,11 @@ function headingText(heading: HTMLElement) {
 function syncOutline() {
   nextTick(() => {
     const content = document.querySelector<HTMLElement>(".VPDoc .vp-doc");
-    if (!content) {
+    if (
+      !content ||
+      frontmatter.value.outline === false ||
+      page.value.relativePath.replace(/\\/g, "/").startsWith("library/")
+    ) {
       headers.value = [];
       inlineHeaders.value = [];
       headingElements = [];

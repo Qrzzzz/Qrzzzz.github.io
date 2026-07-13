@@ -12,7 +12,7 @@ import TargetCursor from "./TargetCursor.vue";
 const { Layout } = DefaultTheme;
 const { frontmatter, isDark, page } = useData();
 
-type PageKind = "home" | "article" | "project" | "document" | "general";
+type PageKind = "home" | "article" | "project" | "document" | "library" | "general";
 
 const pageKind = computed<PageKind>(() => {
   const relativePath = page.value.relativePath.replace(/\\/g, "/");
@@ -23,6 +23,10 @@ const pageKind = computed<PageKind>(() => {
 
   if (relativePath.startsWith("notes/")) {
     return "article";
+  }
+
+  if (relativePath.startsWith("library/")) {
+    return "library";
   }
 
   if (

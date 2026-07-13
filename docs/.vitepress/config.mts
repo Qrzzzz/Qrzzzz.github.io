@@ -107,9 +107,7 @@ export default defineConfig({
     nav: [
       { text: "项目", link: "/projects/" },
       { text: "工具", link: "/tools/" },
-      { text: "文档", link: "/guide/" },
-      { text: "文章", link: "/notes/" },
-      { text: "提示词合集", link: "/prompt-collection/" }
+      { text: "Library", link: "/library/" }
     ],
 
     sidebar: false,
