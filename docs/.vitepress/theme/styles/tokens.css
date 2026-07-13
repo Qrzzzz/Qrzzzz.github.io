@@ -14,7 +14,6 @@
   --site-accent-soft: rgba(255, 75, 43, 0.13);
   --site-accent-ink: #ffffff;
   --site-cursor: #ff8068;
-  --site-menu-prelayer: #ff765f;
   --site-nav-bg: rgba(245, 244, 239, 0.86);
   --site-code-bg: #17191d;
   --site-code-text: #f2f0ea;
@@ -74,7 +73,6 @@
   --site-accent-soft: rgba(0, 230, 176, 0.14);
   --site-accent-ink: #111214;
   --site-cursor: #79ffde;
-  --site-menu-prelayer: #6dffd5;
   --site-nav-bg: rgba(17, 18, 20, 0.84);
   --site-code-bg: #0c0d0f;
   --site-code-text: #f2f0ea;
@@ -114,47 +112,6 @@ body {
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-  transition: opacity 180ms ease;
-}
-
-html.theme-fade-fallback body {
-  opacity: 0;
-}
-
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation-duration: 240ms;
-  animation-fill-mode: both;
-  animation-timing-function: ease;
-  mix-blend-mode: normal;
-}
-
-::view-transition-old(root) {
-  animation-name: site-theme-fade-out;
-}
-
-::view-transition-new(root) {
-  animation-name: site-theme-fade-in;
-}
-
-@keyframes site-theme-fade-out {
-  from {
-    opacity: 1;
-  }
-
-  to {
-    opacity: 0;
-  }
-}
-
-@keyframes site-theme-fade-in {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
 }
 
 ::selection {

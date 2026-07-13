@@ -435,6 +435,16 @@ button.VPSwitch.VPSwitchAppearance > .check {
   }
 }
 
+@media (max-width: 1079px) {
+  .VPNavBarHamburger {
+    display: flex !important;
+  }
+
+  .VPNavScreen {
+    display: block !important;
+  }
+}
+
 @media (max-width: 767px) {
   .VPNavBar {
     backdrop-filter: saturate(125%) blur(14px);

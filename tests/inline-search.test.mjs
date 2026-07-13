@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import test from "node:test";
 import {
   isSearchShortcut,
@@ -37,28 +37,23 @@ test("mounts an accessible inline search instead of the VitePress modal trigger"
   assert.match(siteStyles, /\.VPNavBarSearch\s*\{\s*display:\s*none;/s);
 });
 
-test("keeps the staggered menu restrained and theme-aware", () => {
-  const component = readFileSync("docs/.vitepress/theme/StaggeredMenu.vue", "utf8");
+test("uses the top navigation and native mobile screen without a sidebar drawer", () => {
+  const layout = readFileSync("docs/.vitepress/theme/Layout.vue", "utf8");
+  const siteStyles = readFileSync("docs/.vitepress/theme/styles/site.css", "utf8");
   const tokens = readFileSync("docs/.vitepress/theme/styles/tokens.css", "utf8");
 
-  assert.match(component, /startViewTransition/);
-  assert.match(component, /var\(--site-menu-prelayer\)/);
-  assert.match(component, /--sm-panel-width:\s*25vw/);
-  assert.doesNotMatch(component, /--sm-prelayer-width/);
-  assert.match(component, /class="sm-drawer-stack"/);
-  assert.match(component, /\.sm-drawer-stack\s*\{[^}]*width:\s*var\(--sm-panel-width\)/s);
+  assert.equal(existsSync("docs/.vitepress/theme/StaggeredMenu.vue"), false);
+  assert.doesNotMatch(layout, /StaggeredMenu/);
+  assert.match(layout, /\.VPNavBarHamburger/);
+  assert.match(layout, /\.VPNavScreen/);
+  assert.match(layout, /aria-modal/);
   assert.match(
-    component,
-    /\.staggered-menu-overlay\[data-open\] \.sm-drawer-stack\s*\{[^}]*transition-duration:\s*420ms[^}]*cubic-bezier\(0\.32,\s*0,\s*0\.2,\s*1\)/s
+    siteStyles,
+    /@media \(max-width:\s*1079px\)\s*\{[^}]*\.VPNavBarHamburger\s*\{[^}]*display:\s*flex\s*!important/s
   );
-  assert.match(component, /\.sm-prelayers\s*\{[^}]*overflow:\s*hidden/s);
-  assert.doesNotMatch(component, /scaleX/);
-  assert.match(component, /\.staggered-menu-panel\s*\{[^}]*transform:\s*translateX\(24px\)/s);
   assert.match(
-    component,
-    /\.staggered-menu-overlay\[data-open\] \.staggered-menu-panel\s*\{[^}]*transition-delay:\s*90ms/s
+    siteStyles,
+    /@media \(max-width:\s*1079px\)[\s\S]*?\.VPNavScreen\s*\{[^}]*display:\s*block\s*!important/
   );
-  assert.match(component, /font-size:\s*clamp\(26px,\s*2\.5vw,\s*34px\)/);
-  assert.match(tokens, /::view-transition-old\(root\)/);
-  assert.match(tokens, /--site-menu-prelayer:/);
+  assert.doesNotMatch(tokens, /site-menu-prelayer|theme-fade-fallback|view-transition/);
 });
