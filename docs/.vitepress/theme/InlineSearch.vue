@@ -287,11 +287,12 @@ onBeforeUnmount(() => {
 
 .inline-search-trigger,
 .inline-search-form {
+  position: relative;
   width: 100%;
   height: 44px;
-  border: 1px solid var(--site-line);
-  border-radius: 12px;
-  background: color-mix(in srgb, var(--site-surface) 84%, transparent);
+  border: 0;
+  border-radius: 0;
+  background: transparent;
   color: var(--site-text-muted);
 }
 
@@ -299,23 +300,36 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 0 10px 0 13px;
+  padding: 0 6px;
   text-align: left;
-  box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 46%, transparent);
-  transition:
-    border-color 160ms ease,
-    background-color 160ms ease,
-    box-shadow 160ms ease,
-    transform 160ms ease;
+  transition: color 160ms ease;
 }
 
-.inline-search-trigger:hover {
-  border-color: var(--site-line-strong);
-  background: var(--site-surface);
-  box-shadow:
-    inset 0 1px 0 color-mix(in srgb, #fff 52%, transparent),
-    0 8px 24px color-mix(in srgb, var(--site-text) 7%, transparent);
-  transform: translateY(-1px);
+.inline-search-trigger::after,
+.inline-search-form::after {
+  position: absolute;
+  right: 6px;
+  bottom: 4px;
+  left: 6px;
+  height: 2px;
+  background: var(--site-accent);
+  content: "";
+  opacity: 0;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: opacity 160ms ease, transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.inline-search-trigger:hover,
+.inline-search-trigger:focus-visible {
+  color: var(--site-accent);
+}
+
+.inline-search-trigger:hover::after,
+.inline-search-trigger:focus-visible::after,
+.inline-search-form::after {
+  opacity: 1;
+  transform: scaleX(1);
 }
 
 .inline-search-trigger svg,
@@ -340,10 +354,10 @@ onBeforeUnmount(() => {
 
 .inline-search-trigger kbd {
   flex: 0 0 auto;
-  padding: 3px 6px;
-  border: 1px solid color-mix(in srgb, var(--site-line) 84%, transparent);
-  border-radius: 6px;
-  background: color-mix(in srgb, var(--site-surface-subtle) 72%, transparent);
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
   color: var(--site-text-faint);
   font-family: var(--site-font-mono);
   font-size: 11px;
@@ -353,10 +367,9 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   gap: 9px;
-  padding: 0 8px 0 13px;
-  border-color: var(--site-accent);
-  background: var(--site-surface);
-  box-shadow: 0 0 0 3px var(--site-accent-soft);
+  padding: 0 6px;
+  background: transparent;
+  box-shadow: none;
 }
 
 .inline-search-form input {

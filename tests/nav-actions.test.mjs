@@ -83,6 +83,8 @@ test("uses a circular root view transition when the browser supports it", async 
 test("mounts direct animated theme and GitHub actions in the top bar", () => {
   const layout = readFileSync("docs/.vitepress/theme/Layout.vue", "utf8");
   const component = readFileSync("docs/.vitepress/theme/NavActions.vue", "utf8");
+  const search = readFileSync("docs/.vitepress/theme/InlineSearch.vue", "utf8");
+  const siteStyles = readFileSync("docs/.vitepress/theme/styles/site.css", "utf8");
 
   assert.match(layout, /#nav-bar-content-after/);
   assert.match(layout, /<NavActions\s*\/>/);
@@ -92,4 +94,9 @@ test("mounts direct animated theme and GitHub actions in the top bar", () => {
   assert.match(component, /theme-toggle__sun/);
   assert.match(component, /theme-toggle__moon/);
   assert.doesNotMatch(component, /<select|<details/);
+  assert.match(siteStyles, /\.VPNavBarTitle \.title\s*\{[^}]*height:\s*44px[^}]*font-size:\s*22px/s);
+  assert.match(siteStyles, /\.VPNavBarMenu\s*\{[^}]*border:\s*0[^}]*background:\s*transparent/s);
+  assert.match(siteStyles, /\.VPNavBar \.VPNavBarMenuLink::after\s*\{[^}]*transform:\s*scaleX\(0\)/s);
+  assert.match(component, /\.theme-toggle,\s*\.nav-github\s*\{[^}]*border:\s*0[^}]*background:\s*transparent/s);
+  assert.match(search, /\.inline-search-trigger,\s*\.inline-search-form\s*\{[^}]*border:\s*0[^}]*background:\s*transparent/s);
 });
