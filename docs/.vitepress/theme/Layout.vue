@@ -5,6 +5,7 @@ import DefaultTheme from "vitepress/theme";
 import BackToTop from "./BackToTop.vue";
 import HomeContent from "./HomeContent.vue";
 import InlineSearch from "./InlineSearch.vue";
+import NavActions from "./NavActions.vue";
 import NotFound from "./NotFound.vue";
 import ReadingOutline from "./ReadingOutline.vue";
 import TargetCursor from "./TargetCursor.vue";
@@ -188,7 +189,8 @@ function activateNavScreen(screen: HTMLElement, trigger: HTMLButtonElement) {
         ".VPNavBarTranslations",
         ".VPNavBarAppearance",
         ".VPNavBarSocialLinks",
-        ".VPNavBarExtra"
+        ".VPNavBarExtra",
+        ".NavActions"
       ].join(",")
     )
     .forEach((element) => {
@@ -291,6 +293,9 @@ onBeforeUnmount(() => {
     <Layout>
       <template #nav-bar-content-before>
         <InlineSearch />
+      </template>
+      <template #nav-bar-content-after>
+        <NavActions />
       </template>
       <template #doc-before>
         <ReadingOutline />
