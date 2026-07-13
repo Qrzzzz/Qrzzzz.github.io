@@ -5,24 +5,64 @@
   background: var(--site-canvas);
 }
 
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 2;
+}
+
+html.theme-is-switching,
+html.theme-is-switching body,
+html.theme-is-switching .site-layout,
+html.theme-is-switching .VPNavBar,
+html.theme-is-switching .VPNavBarMenu,
+html.theme-is-switching .VPFooter,
+html.theme-is-switching .inline-search-trigger,
+html.theme-is-switching .inline-search-form,
+html.theme-is-switching .theme-toggle,
+html.theme-is-switching .nav-github,
+html.theme-is-switching .site-layout :where(h1, h2, h3, p, a, button, strong, code) {
+  transition-property: background-color, border-color, box-shadow, color, fill, stroke;
+  transition-duration: 440ms;
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
 .VPNavBar {
   border-bottom: 1px solid color-mix(in srgb, var(--site-line) 82%, transparent);
   background: var(--site-nav-bg);
-  backdrop-filter: saturate(135%) blur(18px);
+  box-shadow: 0 8px 30px color-mix(in srgb, var(--site-text) 3%, transparent);
+  backdrop-filter: saturate(145%) blur(20px);
 }
 
 .VPNavBar .container {
-  max-width: 1320px;
+  position: relative;
+  max-width: var(--site-max);
+}
+
+.VPNavBar .content {
+  min-width: 0;
+}
+
+.VPNavBar .content-body {
+  gap: 6px;
 }
 
 .VPNavBarTitle .title {
-  min-height: 44px;
-  gap: 0;
+  min-height: 46px;
+  gap: 5px;
   color: var(--site-text);
   font-family: var(--site-font-sans);
-  font-size: 17px;
-  font-weight: 720;
-  letter-spacing: -0.025em;
+  font-size: 16px;
+  font-weight: 760;
+  letter-spacing: -0.035em;
 }
 
 .VPNavBarTitle .title::before {
@@ -30,38 +70,49 @@
   content: none;
 }
 
+.VPNavBarTitle .title::after {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--site-accent);
+  box-shadow: 0 0 0 4px var(--site-accent-soft);
+  content: "";
+  transform: translateY(-5px);
+}
+
+.VPNavBarMenu {
+  align-items: center;
+  height: 44px;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid color-mix(in srgb, var(--site-line) 92%, transparent);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--site-surface) 76%, transparent);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 42%, transparent);
+}
+
 .VPNavBarMenuLink {
   position: relative;
-  min-height: 44px;
+  min-height: 36px;
+  padding: 0 11px;
+  border-radius: 8px;
   color: var(--site-text-muted);
-  font-size: 13px;
-  font-weight: 610;
+  font-size: 12px;
+  font-weight: 660;
   letter-spacing: 0;
-  transition: color 140ms ease;
+  line-height: 36px;
+  transition: background-color 150ms ease, color 150ms ease;
 }
 
 .VPNavBarMenuLink::after {
-  position: absolute;
-  right: 12px;
-  bottom: 6px;
-  left: 12px;
-  height: 1px;
-  background: var(--site-accent);
-  content: "";
-  opacity: 0;
-  transform: scaleX(0.5);
-  transition: opacity 140ms ease, transform 140ms ease;
+  display: none;
+  content: none;
 }
 
 .VPNavBarMenuLink:hover,
 .VPNavBarMenuLink.active {
-  color: var(--site-text);
-}
-
-.VPNavBarMenuLink:hover::after,
-.VPNavBarMenuLink.active::after {
-  opacity: 1;
-  transform: scaleX(1);
+  background: var(--site-accent-soft);
+  color: var(--site-accent);
 }
 
 .VPNavBarSearch {
@@ -77,7 +128,7 @@
 }
 
 .VPNavBar .content {
-  gap: 10px;
+  gap: 6px;
 }
 
 .VPNav .VPSocialLink,
@@ -435,6 +486,12 @@ button.VPSwitch.VPSwitchAppearance > .check {
   }
 }
 
+@media (min-width: 768px) {
+  .VPNavBar .content-body {
+    position: static !important;
+  }
+}
+
 @media (max-width: 1079px) {
   .VPNavBarHamburger {
     display: flex !important;
@@ -446,6 +503,10 @@ button.VPSwitch.VPSwitchAppearance > .check {
 }
 
 @media (max-width: 767px) {
+  :root {
+    --site-nav-height: 64px;
+  }
+
   .VPNavBar {
     backdrop-filter: saturate(125%) blur(14px);
   }
@@ -546,8 +607,4 @@ button.VPSwitch.VPSwitchAppearance > .check {
   border-color: var(--site-accent-hover);
   background: var(--site-accent-hover);
   color: var(--site-accent-ink);
-}
-
-.VPNavBarMenuLink::after {
-  height: 2px;
 }

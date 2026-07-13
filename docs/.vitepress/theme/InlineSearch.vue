@@ -273,13 +273,15 @@ onBeforeUnmount(() => {
   position: relative;
   z-index: 12;
   display: flex;
+  width: 248px;
   flex: 0 1 248px;
   min-width: 44px;
   margin-right: 8px;
-  transition: flex-basis 180ms ease;
+  transition: width 220ms cubic-bezier(0.2, 0.8, 0.2, 1), flex-basis 220ms ease;
 }
 
 .InlineSiteSearch.is-expanded {
+  width: min(400px, 38vw);
   flex-basis: min(480px, 46vw);
 }
 
@@ -288,8 +290,8 @@ onBeforeUnmount(() => {
   width: 100%;
   height: 44px;
   border: 1px solid var(--site-line);
-  border-radius: 10px;
-  background: color-mix(in srgb, var(--site-surface) 78%, transparent);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--site-surface) 84%, transparent);
   color: var(--site-text-muted);
 }
 
@@ -299,12 +301,21 @@ onBeforeUnmount(() => {
   gap: 10px;
   padding: 0 10px 0 13px;
   text-align: left;
-  transition: border-color 140ms ease, background-color 140ms ease;
+  box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 46%, transparent);
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
 }
 
 .inline-search-trigger:hover {
   border-color: var(--site-line-strong);
   background: var(--site-surface);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, #fff 52%, transparent),
+    0 8px 24px color-mix(in srgb, var(--site-text) 7%, transparent);
+  transform: translateY(-1px);
 }
 
 .inline-search-trigger svg,
@@ -329,8 +340,10 @@ onBeforeUnmount(() => {
 
 .inline-search-trigger kbd {
   flex: 0 0 auto;
-  border: 0;
-  background: transparent;
+  padding: 3px 6px;
+  border: 1px solid color-mix(in srgb, var(--site-line) 84%, transparent);
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--site-surface-subtle) 72%, transparent);
   color: var(--site-text-faint);
   font-family: var(--site-font-mono);
   font-size: 11px;
@@ -394,7 +407,7 @@ onBeforeUnmount(() => {
   max-height: min(430px, calc(100vh - var(--vp-nav-height) - 28px));
   overflow-y: auto;
   border: 1px solid var(--site-line);
-  border-radius: 12px;
+  border-radius: 14px;
   background: var(--site-surface);
   box-shadow: var(--site-shadow-float);
 }
@@ -461,16 +474,40 @@ onBeforeUnmount(() => {
 
 @media (max-width: 959px) and (min-width: 768px) {
   .InlineSiteSearch {
+    width: min(230px, 30vw);
     flex-basis: 210px;
   }
 
   .InlineSiteSearch.is-expanded {
+    width: min(360px, 44vw);
     flex-basis: min(420px, 48vw);
+  }
+}
+
+@media (min-width: 768px) {
+  .InlineSiteSearch {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: 0;
+    transform: translate(-50%, -50%);
+  }
+}
+
+@media (min-width: 1200px) {
+  .InlineSiteSearch {
+    width: 280px;
+    flex-basis: 280px;
+  }
+
+  .InlineSiteSearch.is-expanded {
+    width: min(400px, 34vw);
   }
 }
 
 @media (max-width: 767px) {
   .InlineSiteSearch {
+    width: 44px;
     flex: 0 0 44px;
     margin-right: 0;
   }
@@ -492,6 +529,7 @@ onBeforeUnmount(() => {
     left: 12px;
     z-index: 80;
     display: block;
+    width: auto;
   }
 }
 
