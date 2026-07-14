@@ -41,7 +41,10 @@ void main() {
   vec2 uv = (gl_FragCoord.xy - 0.5 * uResolution) / uResolution.y;
   uv /= 1.16;
 
-  float envelope = pow(max(cos(uv.x * PI * 0.42), 0.0), 1.8);
+  float horizontal = clamp(gl_FragCoord.x / uResolution.x, 0.0, 1.0);
+  float edgeDistance = min(horizontal, 1.0 - horizontal);
+  float edgeFade = smoothstep(0.015, 0.14, edgeDistance);
+  float envelope = pow(max(sin(horizontal * PI), 0.0), 0.72);
   vec3 color = vec3(0.0);
 
   for (int i = 0; i < ${MAX_STRANDS}; i++) {
@@ -59,7 +62,7 @@ void main() {
     glow *= glow;
 
     float palettePosition = strand / float(${MAX_STRANDS}) + uv.x * 0.3 + uTime * 0.024;
-    color += samplePalette(palettePosition) * glow * envelope;
+    color += samplePalette(palettePosition) * glow * envelope * edgeFade;
   }
 
   color = 1.0 - exp(-color * 2.35);
