@@ -42,9 +42,12 @@ void main() {
   uv /= 1.16;
 
   float horizontal = clamp(gl_FragCoord.x / uResolution.x, 0.0, 1.0);
-  float edgeDistance = min(horizontal, 1.0 - horizontal);
-  float edgeFade = smoothstep(0.015, 0.14, edgeDistance);
-  float envelope = pow(max(sin(horizontal * PI), 0.0), 0.72);
+  float safeInset = 0.1;
+  float strandHorizontal = clamp((horizontal - safeInset) / (1.0 - safeInset * 2.0), 0.0, 1.0);
+  float insideSafeArea = step(safeInset, horizontal) * (1.0 - step(1.0 - safeInset, horizontal));
+  float edgeDistance = min(strandHorizontal, 1.0 - strandHorizontal);
+  float edgeFade = smoothstep(0.0, 0.14, edgeDistance) * insideSafeArea;
+  float envelope = pow(max(sin(strandHorizontal * PI), 0.0), 0.72);
   vec3 color = vec3(0.0);
 
   for (int i = 0; i < ${MAX_STRANDS}; i++) {
@@ -222,7 +225,7 @@ onBeforeUnmount(() => {
 
 .home-strands-visual::before {
   position: absolute;
-  inset: 8% -4% 4%;
+  inset: 8% 10% 4%;
   background:
     radial-gradient(ellipse at 25% 54%, color-mix(in srgb, var(--site-strands-1) 42%, transparent), transparent 54%),
     radial-gradient(ellipse at 52% 47%, color-mix(in srgb, var(--site-strands-3) 34%, transparent), transparent 58%),
