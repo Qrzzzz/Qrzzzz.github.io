@@ -11,6 +11,19 @@ function pageLanguage(value: unknown, relativePath = "") {
   return releaseLanguage ?? "zh-CN";
 }
 
+function siteIndexSidebar() {
+  return {
+    text: "站点内容",
+    items: [
+      { text: "Library", link: "/library/" },
+      { text: "文档", link: "/guide/" },
+      { text: "文章", link: "/notes/" },
+      { text: "Prompt Collection", link: "/prompt-collection/" },
+      { text: "项目", link: "/projects/" }
+    ]
+  };
+}
+
 export default defineConfig({
   lang: "zh-CN",
   title: "Qrzzzz",
@@ -110,7 +123,70 @@ export default defineConfig({
       { text: "Library", link: "/library/" }
     ],
 
-    sidebar: false,
+    sidebar: {
+      "/guide/": [
+        {
+          text: "文档",
+          items: [
+            { text: "文档首页", link: "/guide/" },
+            { text: "维护这个网站", link: "/guide/getting-started" }
+          ]
+        },
+        siteIndexSidebar()
+      ],
+      "/notes/": [
+        {
+          text: "文章",
+          items: [
+            { text: "文章首页", link: "/notes/" },
+            {
+              text: "直到大厦崩塌：关于“赢”的谎言",
+              link: "/notes/until-the-tower-falls"
+            },
+            { text: "为什么要有这个网站", link: "/notes/why-this-site" }
+          ]
+        },
+        siteIndexSidebar()
+      ],
+      "/prompt-collection/": [
+        {
+          text: "Prompt Collection",
+          items: [
+            { text: "提示词首页", link: "/prompt-collection/" },
+            {
+              text: "严谨研究与决策助手",
+              link: "/prompt-collection/rigorous-research-decision-assistant"
+            },
+            {
+              text: "最高严谨度研究与分析助手",
+              link: "/prompt-collection/maximum-rigor-research-analysis-assistant"
+            },
+            {
+              text: "智能修图与互动涂鸦叠加",
+              link: "/prompt-collection/smart-photo-retouching-interactive-doodle-overlays"
+            },
+            {
+              text: "手绘教育信息图生成器",
+              link: "/prompt-collection/hand-drawn-educational-infographic-generator"
+            }
+          ]
+        },
+        siteIndexSidebar()
+      ],
+      "/projects/": [
+        {
+          text: "项目",
+          items: [
+            { text: "项目首页", link: "/projects/" },
+            {
+              text: "Lyrics Card Generator",
+              link: "/projects/lyrics-card-generator/"
+            }
+          ]
+        },
+        siteIndexSidebar()
+      ]
+    },
     aside: true,
 
     socialLinks: [

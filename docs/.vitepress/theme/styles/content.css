@@ -5,7 +5,7 @@
 }
 
 .VPDoc .container {
-  max-width: 1320px;
+  max-width: 1280px;
 }
 
 .VPDoc .content,
@@ -15,6 +15,16 @@
 
 .VPDoc .content-container {
   max-width: var(--site-reading);
+}
+
+@media (min-width: 960px) {
+  .VPSidebar {
+    border-right: 1px solid var(--site-line);
+  }
+
+  .VPContent.has-sidebar .VPDoc.has-aside .content-container {
+    max-width: 100%;
+  }
 }
 
 .back-to-top {
@@ -38,7 +48,7 @@
   background:
     linear-gradient(var(--site-surface), var(--site-surface)) padding-box,
     conic-gradient(
-        from -90deg,
+        from 0deg,
         var(--site-accent) 0 var(--back-top-progress),
         var(--site-line) var(--back-top-progress) 100%
       )
@@ -158,12 +168,39 @@
 }
 
 .vp-doc h1 {
+  width: fit-content;
   max-width: 100%;
   border: 0;
   margin: 0 0 28px;
   font-size: clamp(38px, 4.8vw, 56px);
   line-height: 1.08;
   overflow-wrap: anywhere;
+}
+
+@supports ((background-clip: text) or (-webkit-background-clip: text)) {
+  .vp-doc h1 {
+    background-image: linear-gradient(
+      to right,
+      var(--site-accent) 0%,
+      var(--site-spark-secondary) 100%
+    );
+    background-clip: text;
+    color: transparent;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .vp-doc h1 .header-anchor {
+    -webkit-text-fill-color: currentColor;
+  }
+}
+
+@media (forced-colors: active) {
+  .vp-doc h1 {
+    background-image: none;
+    color: CanvasText;
+    -webkit-text-fill-color: currentColor;
+  }
 }
 
 .vp-doc h2 {

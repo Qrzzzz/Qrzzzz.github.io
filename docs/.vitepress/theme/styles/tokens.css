@@ -54,7 +54,7 @@
   --vp-font-family-base: var(--site-font-sans);
   --vp-font-family-mono: var(--site-font-mono);
   --vp-layout-max-width: 1440px;
-  --vp-sidebar-width: 248px;
+  --vp-sidebar-width: 224px;
   --vp-nav-height: var(--site-nav-height);
 }
 
