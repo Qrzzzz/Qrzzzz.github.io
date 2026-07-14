@@ -4,8 +4,8 @@ import { nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { useData } from "vitepress";
 import { createHomeStrandsRuntime } from "./homeStrandsRuntime.mjs";
 
-const MAX_COLORS = 3;
-const MAX_STRANDS = 3;
+const MAX_COLORS = 4;
+const MAX_STRANDS = 4;
 
 const vertexShader = `#version 300 es
 in vec2 position;
@@ -39,32 +39,34 @@ vec3 samplePalette(float value) {
 
 void main() {
   vec2 uv = (gl_FragCoord.xy - 0.5 * uResolution) / uResolution.y;
-  uv /= 1.22;
+  uv /= 1.16;
 
-  float envelope = pow(max(cos(uv.x * PI * 0.48), 0.0), 2.6);
+  float envelope = pow(max(cos(uv.x * PI * 0.42), 0.0), 1.8);
   vec3 color = vec3(0.0);
 
   for (int i = 0; i < ${MAX_STRANDS}; i++) {
     float strand = float(i);
-    float phase = strand * 1.42;
-    float frequency = 1.85 + strand * 0.32;
-    float pace = 0.74 + strand * 0.31;
-    float time = uTime * 0.22;
+    float phase = strand * 1.58;
+    float frequency = 1.72 + strand * 0.38;
+    float pace = 0.82 + strand * 0.36;
+    float time = uTime * 0.36;
     float wave = sin(uv.x * frequency + time * pace + phase) * 0.62
       + sin(uv.x * frequency * 1.13 - time * pace * 0.72 + phase * 1.6) * 0.38;
-    float center = wave * 0.082 * envelope;
+    float center = wave * 0.135 * envelope;
     float distanceToStrand = abs(uv.y - center);
-    float thickness = 0.018 * (0.42 + envelope);
-    float glow = thickness / (distanceToStrand + thickness * 0.52);
+    float thickness = 0.026 * (0.44 + envelope);
+    float glow = thickness / (distanceToStrand + thickness * 0.46);
     glow *= glow;
 
-    float palettePosition = strand / float(${MAX_STRANDS}) + uv.x * 0.22 + uTime * 0.012;
+    float palettePosition = strand / float(${MAX_STRANDS}) + uv.x * 0.3 + uTime * 0.024;
     color += samplePalette(palettePosition) * glow * envelope;
   }
 
-  color = 1.0 - exp(-color * 1.34);
+  color = 1.0 - exp(-color * 2.35);
+  float gray = dot(color, vec3(0.2126, 0.7152, 0.0722));
+  color = max(mix(vec3(gray), color, 1.34), 0.0);
   float luminance = max(max(color.r, color.g), color.b);
-  float alpha = clamp(luminance, 0.0, 1.0) * 0.34;
+  float alpha = clamp(luminance, 0.0, 1.0) * 0.84;
   fragColor = vec4(color * alpha, alpha);
 }
 `;
@@ -82,10 +84,10 @@ let runtime: ReturnType<typeof createHomeStrandsRuntime> | undefined;
 
 function paletteFromTokens(element: HTMLElement) {
   const styles = window.getComputedStyle(element);
-  const colors = [1, 2, 3]
+  const colors = [1, 2, 3, 4]
     .map((index) => styles.getPropertyValue(`--site-strands-${index}`).trim())
     .filter(Boolean);
-  return colors.length ? colors : ["#d92d16", "#ff8068", "#b8b6ae"];
+  return colors.length ? colors : ["#ff3d00", "#ffb000", "#00a6a6", "#7c3aed"];
 }
 
 function buildPalette(colors: string[]) {
@@ -156,7 +158,7 @@ function createScene({
   }
 
   function render(timestamp: number) {
-    if (timestamp - lastRender < 32) return;
+    if (timestamp - lastRender < 16) return;
     lastRender = timestamp;
     program.uniforms.uTime.value = timestamp * 0.001;
     renderer.render({ scene: mesh });
@@ -203,34 +205,37 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .home-strands-visual {
-  position: absolute;
-  z-index: 0;
-  right: -7%;
-  bottom: -8px;
-  width: min(76%, 900px);
-  height: 230px;
-  overflow: hidden;
+  position: relative;
+  grid-column: 8 / -1;
+  grid-row: 2;
+  width: 100%;
+  min-width: 0;
+  height: 280px;
+  overflow: visible;
   pointer-events: none;
+  transform: translateY(-14px);
   user-select: none;
-  mask-image: linear-gradient(90deg, transparent 0%, black 19%, black 88%, transparent 100%);
 }
 
 .home-strands-visual::before {
   position: absolute;
-  inset: 25% 4% 17% 18%;
+  inset: 8% -4% 4%;
   background:
-    radial-gradient(ellipse at 34% 54%, color-mix(in srgb, var(--site-strands-1) 22%, transparent), transparent 58%),
-    radial-gradient(ellipse at 68% 48%, color-mix(in srgb, var(--site-strands-2) 18%, transparent), transparent 61%);
+    radial-gradient(ellipse at 25% 54%, color-mix(in srgb, var(--site-strands-1) 42%, transparent), transparent 54%),
+    radial-gradient(ellipse at 52% 47%, color-mix(in srgb, var(--site-strands-3) 34%, transparent), transparent 58%),
+    radial-gradient(ellipse at 78% 52%, color-mix(in srgb, var(--site-strands-4) 38%, transparent), transparent 55%);
   content: "";
-  filter: blur(18px);
-  opacity: 0.72;
+  filter: blur(28px);
+  opacity: 0.9;
 }
 
 .home-strands-visual[data-strands-mode="webgl"]::before {
-  opacity: 0.18;
+  opacity: 0.28;
 }
 
 .home-strands-visual :deep(canvas) {
+  position: absolute;
+  inset: 0;
   display: block;
   width: 100%;
   height: 100%;
@@ -238,20 +243,24 @@ onBeforeUnmount(() => {
 
 @media (max-width: 959px) {
   .home-strands-visual {
-    right: -11%;
-    bottom: 0;
-    width: 72%;
-    height: 190px;
+    grid-column: 7 / -1;
+    height: 230px;
+    transform: translateY(-10px);
   }
 }
 
-@media (max-width: 767px), (prefers-reduced-motion: reduce) {
+@media (max-width: 767px) {
   .home-strands-visual {
-    right: -18%;
-    bottom: 8px;
-    width: 82%;
-    height: 150px;
-    opacity: 0.58;
+    width: calc(100% + 24px);
+    height: 220px;
+    margin: 30px -12px 0;
+    transform: none;
+  }
+}
+
+@media (max-width: 479px) {
+  .home-strands-visual {
+    height: 190px;
   }
 }
 </style>

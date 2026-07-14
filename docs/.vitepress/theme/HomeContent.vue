@@ -13,7 +13,6 @@ onMounted(() => {
 <template>
   <div class="home-page">
     <section class="home-intro" aria-labelledby="home-title">
-      <HomeStrands v-if="clientReady" />
       <p class="home-byline">
         <span>Qrzzzz</span>
         <span aria-hidden="true">/</span>
@@ -37,6 +36,7 @@ onMounted(() => {
           aria-hidden="true"
         />
       </h1>
+      <HomeStrands v-if="clientReady" />
       <p class="home-deck">
         这里放着 Qrzzzz 的公开项目、维护文档，以及不想交给信息流决定寿命的文字。
       </p>

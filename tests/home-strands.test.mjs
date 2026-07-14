@@ -2,8 +2,8 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
-  HOME_STRANDS_DESKTOP_QUERY,
   HOME_STRANDS_REDUCED_MOTION_QUERY,
+  HOME_STRANDS_RENDER_QUERY,
   createHomeStrandsRuntime
 } from "../docs/.vitepress/theme/homeStrandsRuntime.mjs";
 
@@ -25,7 +25,7 @@ class FakeEventTarget {
   }
 }
 
-function createHarness({ reducedMotion = false, desktop = true, failScene = false } = {}) {
+function createHarness({ reducedMotion = false, render = true, failScene = false } = {}) {
   const container = { dataset: {} };
   const document = new FakeEventTarget();
   document.hidden = false;
@@ -35,7 +35,7 @@ function createHarness({ reducedMotion = false, desktop = true, failScene = fals
       HOME_STRANDS_REDUCED_MOTION_QUERY,
       Object.assign(new FakeEventTarget(), { matches: reducedMotion })
     ],
-    [HOME_STRANDS_DESKTOP_QUERY, Object.assign(new FakeEventTarget(), { matches: desktop })]
+    [HOME_STRANDS_RENDER_QUERY, Object.assign(new FakeEventTarget(), { matches: render })]
   ]);
   window.matchMedia = (query) => queries.get(query);
 
@@ -118,7 +118,7 @@ function createHarness({ reducedMotion = false, desktop = true, failScene = fals
   };
 }
 
-test("desktop runtime animates only while visible and the page is active", () => {
+test("runtime animates only while visible and the page is active", () => {
   const harness = createHarness();
   harness.runtime.mount();
 
@@ -148,7 +148,7 @@ test("desktop runtime animates only while visible and the page is active", () =>
   assert.equal(harness.scenes[0].destroyed, true);
 });
 
-test("reduced motion and mobile widths use the static fallback", () => {
+test("reduced motion and unsupported widths use the static fallback", () => {
   const harness = createHarness({ reducedMotion: true });
   harness.runtime.mount();
   assert.equal(harness.runtime.getState().hasScene, false);
@@ -159,9 +159,9 @@ test("reduced motion and mobile widths use the static fallback", () => {
   reducedMotion.dispatch("change");
   assert.equal(harness.runtime.getState().hasScene, true);
 
-  const desktop = harness.queries.get(HOME_STRANDS_DESKTOP_QUERY);
-  desktop.matches = false;
-  desktop.dispatch("change");
+  const render = harness.queries.get(HOME_STRANDS_RENDER_QUERY);
+  render.matches = false;
+  render.dispatch("change");
   assert.equal(harness.runtime.getState().hasScene, false);
   assert.equal(harness.scenes[0].destroyed, true);
   assert.equal(harness.container.dataset.strandsMode, "fallback");

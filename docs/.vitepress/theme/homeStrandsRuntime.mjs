@@ -1,4 +1,4 @@
-export const HOME_STRANDS_DESKTOP_QUERY = "(min-width: 768px)";
+export const HOME_STRANDS_RENDER_QUERY = "(min-width: 320px)";
 export const HOME_STRANDS_REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
 
 /**
@@ -25,12 +25,12 @@ export function createHomeStrandsRuntime(options) {
   let destroyed = false;
   let visible = true;
   let reducedMotionQuery;
-  let desktopQuery;
+  let renderQuery;
   let intersectionObserver;
   let resizeObserver;
 
   function animationAllowed() {
-    return Boolean(desktopQuery?.matches) && !reducedMotionQuery?.matches;
+    return Boolean(renderQuery?.matches) && !reducedMotionQuery?.matches;
   }
 
   function shouldAnimate() {
@@ -100,9 +100,9 @@ export function createHomeStrandsRuntime(options) {
     mounted = true;
     container.dataset.strandsMode = "fallback";
     reducedMotionQuery = targetWindow.matchMedia(HOME_STRANDS_REDUCED_MOTION_QUERY);
-    desktopQuery = targetWindow.matchMedia(HOME_STRANDS_DESKTOP_QUERY);
+    renderQuery = targetWindow.matchMedia(HOME_STRANDS_RENDER_QUERY);
     reducedMotionQuery.addEventListener("change", syncScene);
-    desktopQuery.addEventListener("change", syncScene);
+    renderQuery.addEventListener("change", syncScene);
     targetDocument.addEventListener("visibilitychange", syncLoop);
 
     if (targetWindow.IntersectionObserver) {
@@ -132,7 +132,7 @@ export function createHomeStrandsRuntime(options) {
     destroyed = true;
     mounted = false;
     reducedMotionQuery?.removeEventListener("change", syncScene);
-    desktopQuery?.removeEventListener("change", syncScene);
+    renderQuery?.removeEventListener("change", syncScene);
     targetDocument.removeEventListener("visibilitychange", syncLoop);
     targetWindow.removeEventListener("resize", handleResize);
     intersectionObserver?.disconnect();
