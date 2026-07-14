@@ -18,6 +18,18 @@ test("centers the theme reveal on the toggle and covers the viewport", () => {
   assert.equal(geometry.radius, Math.hypot(110, 60));
 });
 
+test("uses the pointer as the reveal origin when one is available", () => {
+  const geometry = getThemeRevealGeometry(
+    { left: 80, top: 20, width: 20, height: 40 },
+    { width: 200, height: 100 },
+    { x: 150, y: 25 }
+  );
+
+  assert.equal(geometry.x, 150);
+  assert.equal(geometry.y, 25);
+  assert.equal(geometry.radius, Math.hypot(150, 75));
+});
+
 test("falls back to an immediate theme update when motion is reduced", async () => {
   let updates = 0;
   const documentObject = {
@@ -43,16 +55,16 @@ test("falls back to an immediate theme update when motion is reduced", async () 
   assert.equal(updates, 1);
 });
 
-test("uses a circular root view transition when the browser supports it", async () => {
+test("runs dark and light circular transitions in opposite directions", async () => {
   let updates = 0;
-  let animationOptions;
+  const animations = [];
   const documentObject = {
     startViewTransition(callback) {
       return { ready: Promise.resolve(callback()) };
     },
     documentElement: {
-      animate(_frames, options) {
-        animationOptions = options;
+      animate(frames, options) {
+        animations.push({ frames, options });
       }
     }
   };
@@ -65,19 +77,31 @@ test("uses a circular root view transition when the browser supports it", async 
     getBoundingClientRect: () => ({ left: 250, top: 18, width: 42, height: 42 })
   };
 
-  assert.equal(
-    await runThemeTransition({
-      documentObject,
-      windowObject,
-      origin,
-      update: () => {
-        updates += 1;
-      }
-    }),
-    true
-  );
-  assert.equal(updates, 1);
-  assert.equal(animationOptions.pseudoElement, "::view-transition-new(root)");
+  for (const targetIsDark of [true, false]) {
+    assert.equal(
+      await runThemeTransition({
+        documentObject,
+        windowObject,
+        origin,
+        point: { x: 270, y: 39 },
+        targetIsDark,
+        update: () => {
+          updates += 1;
+        }
+      }),
+      true
+    );
+  }
+
+  assert.equal(updates, 2);
+  assert.equal(animations[0].options.pseudoElement, "::view-transition-old(root)");
+  assert.equal(animations[0].options.duration, 300);
+  assert.equal(animations[0].options.easing, "ease-in");
+  assert.match(animations[0].frames.clipPath[0], /^circle\([^0]/);
+  assert.match(animations[0].frames.clipPath[1], /^circle\(0px/);
+  assert.equal(animations[1].options.pseudoElement, "::view-transition-new(root)");
+  assert.match(animations[1].frames.clipPath[0], /^circle\(0px/);
+  assert.match(animations[1].frames.clipPath[1], /^circle\([^0]/);
 });
 
 test("mounts direct animated theme and GitHub actions in the top bar", () => {
@@ -89,6 +113,8 @@ test("mounts direct animated theme and GitHub actions in the top bar", () => {
   assert.match(layout, /#nav-bar-content-after/);
   assert.match(layout, /<NavActions\s*\/>/);
   assert.match(component, /@click="toggleTheme"/);
+  assert.match(component, /targetIsDark/);
+  assert.match(component, /event\.detail > 0/);
   assert.match(component, /role="switch"/);
   assert.match(component, /:aria-checked="isDark"/);
   assert.match(component, /https:\/\/github\.com\/Qrzzzz/);
@@ -106,5 +132,7 @@ test("mounts direct animated theme and GitHub actions in the top bar", () => {
   assert.match(component, /\.theme-toggle__track\s*\{[^}]*width:\s*40px[^}]*height:\s*22px/s);
   assert.match(component, /\.theme-toggle__thumb\s*\{[^}]*width:\s*18px[^}]*height:\s*18px/s);
   assert.match(component, /\.theme-toggle\.is-dark \.theme-toggle__thumb\s*\{[^}]*translateX\(18px\)/s);
+  assert.match(siteStyles, /\.dark::view-transition-new\(root\)[^{]*\{\s*z-index:\s*1/s);
+  assert.match(siteStyles, /\.dark::view-transition-old\(root\)[^{]*\{\s*z-index:\s*9999/s);
   assert.match(search, /\.inline-search-trigger,\s*\.inline-search-form\s*\{[^}]*border:\s*0[^}]*background:\s*transparent/s);
 });

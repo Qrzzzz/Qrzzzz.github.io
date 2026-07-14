@@ -31,41 +31,39 @@ test("marks every prompt body as Markdown inside its existing code block", () =>
   }
 });
 
-test("enhances generated page outlines with the d73fdb8 staggered sidebar", () => {
+test("uses the native always-visible page outline without custom folding", () => {
   const layout = readFileSync("docs/.vitepress/theme/Layout.vue", "utf8");
-  const toggle = readFileSync("docs/.vitepress/theme/OutlineToggle.vue", "utf8");
-  const enhancer = readFileSync("docs/.vitepress/theme/useLineOutline.ts", "utf8");
+  const config = readFileSync("docs/.vitepress/config.mts", "utf8");
   const styles = readFileSync("docs/.vitepress/theme/styles/content.css", "utf8");
   const tokens = readFileSync("docs/.vitepress/theme/styles/tokens.css", "utf8");
 
-  assert.match(layout, /useLineOutline\(\)/);
-  assert.match(layout, /<OutlineToggle \/>/);
-  assert.match(layout, /#aside-outline-before/);
-  assert.doesNotMatch(layout, /ReadingOutline|#doc-before/);
+  assert.match(config, /sidebar: false/);
+  assert.match(config, /aside: true/);
+  assert.match(config, /outline:\s*\{\s*label: "页面导航",\s*level: "deep"/s);
+  assert.doesNotMatch(layout, /OutlineToggle|useLineOutline|#aside-outline-before/);
+  assert.equal(existsSync("docs/.vitepress/theme/OutlineToggle.vue"), false);
+  assert.equal(existsSync("docs/.vitepress/theme/useLineOutline.ts"), false);
   assert.equal(existsSync("docs/.vitepress/theme/ReadingOutline.vue"), false);
   assert.equal(existsSync("docs/.vitepress/theme/readingOutlineRuntime.mjs"), false);
-  assert.match(enhancer, /\.VPDocAsideOutline\.has-outline/);
-  assert.match(enhancer, /page\.value\.relativePath/);
-  assert.match(enhancer, /--outline-item-index/);
-  assert.match(toggle, /outline-prelayers/);
-  assert.match(toggle, /outline-is-opening/);
-  assert.match(toggle, /aria-controls="site-page-outline"/);
-  assert.match(styles, /counter\(line-outline-item, decimal-leading-zero\)/);
-  assert.match(styles, /@keyframes outline-layer-enter/);
-  assert.match(styles, /@keyframes outline-panel-enter/);
-  assert.match(styles, /@keyframes outline-item-enter/);
-  assert.match(styles, /outline-is-collapsed > :not\(\.outline-toolbar\)/);
-  assert.match(styles, /animation-delay: calc\(20ms \+ var\(--outline-item-index/);
-  assert.doesNotMatch(styles, /animation-delay: calc\(150ms/);
-  assert.match(styles, /--line-outline-shift/);
-  assert.match(styles, /outline-link\[data-outline-level="2"\]/);
-  assert.match(styles, /outline-link\[data-outline-level="3"\]\s*\{\s*display:\s*none;/s);
-  assert.match(styles, /li:hover\s*>\s*\.VPDocOutlineItem\.nested/);
-  assert.match(styles, /VPDoc\.has-aside\.outline-is-collapsed/);
-  assert.doesNotMatch(styles, /reading-outline-(?:inline|control|popover)/);
-  assert.match(tokens, /--site-menu-prelayer:\s*#ff765f/);
-  assert.match(tokens, /--site-menu-prelayer:\s*#6dffd5/);
+  assert.doesNotMatch(styles, /outline-toolbar|outline-is-collapsed|line-outline/);
+  assert.doesNotMatch(tokens, /--site-menu-prelayer/);
   assert.match(styles, /\.back-to-top\.is-visible/);
   assert.match(styles, /conic-gradient\(/);
   assert.doesNotMatch(styles, /\.back-to-top[\s\S]*?box-shadow:\s*0\s+10px/);
+});
+
+test("reproduces the macOS code window and hides line numbers by default", () => {
+  const config = readFileSync("docs/.vitepress/config.mts", "utf8");
+  const codeStyles = readFileSync("docs/.vitepress/theme/styles/code.css", "utf8");
+  const customStyles = readFileSync("docs/.vitepress/theme/custom.css", "utf8");
+
+  assert.match(config, /lineNumbers: false/);
+  assert.match(customStyles, /@import "\.\/styles\/code\.css"/);
+  assert.match(
+    codeStyles,
+    /\.vp-doc div\[class\*="language-"\]\s*\{[^}]*box-shadow:\s*0 10px 30px 0 rgb\(0 0 0 \/ 40%\)[^}]*padding-top:\s*20px/s
+  );
+  assert.match(codeStyles, /background-color:\s*#ff5f56/);
+  assert.match(codeStyles, /box-shadow:\s*20px 0 0 #ffbd2e, 40px 0 0 #27c93f/);
+  assert.match(codeStyles, /\.vp-code-group\s*\{[^}]*box-shadow:\s*0 10px 30px 0 rgb\(0 0 0 \/ 40%\)/s);
 });

@@ -1,6 +1,6 @@
-export function getThemeRevealGeometry(rect, viewport) {
-  const x = rect.left + rect.width / 2;
-  const y = rect.top + rect.height / 2;
+export function getThemeRevealGeometry(rect, viewport, point) {
+  const x = Number.isFinite(point?.x) ? point.x : rect.left + rect.width / 2;
+  const y = Number.isFinite(point?.y) ? point.y : rect.top + rect.height / 2;
   const radius = Math.hypot(
     Math.max(x, viewport.width - x),
     Math.max(y, viewport.height - y)
@@ -22,8 +22,10 @@ export async function runThemeTransition({
   documentObject,
   windowObject,
   origin,
+  point,
+  targetIsDark,
   update,
-  duration = 520
+  duration = 300
 }) {
   let didUpdate = false;
   const applyUpdate = async () => {
@@ -38,25 +40,30 @@ export async function runThemeTransition({
   }
 
   const rect = origin.getBoundingClientRect();
-  const { x, y, radius } = getThemeRevealGeometry(rect, {
-    width: windowObject.innerWidth,
-    height: windowObject.innerHeight
-  });
+  const { x, y, radius } = getThemeRevealGeometry(
+    rect,
+    {
+      width: windowObject.innerWidth,
+      height: windowObject.innerHeight
+    },
+    point
+  );
+  const clipPath = [
+    `circle(0px at ${x}px ${y}px)`,
+    `circle(${radius}px at ${x}px ${y}px)`
+  ];
 
   try {
     const transition = documentObject.startViewTransition(applyUpdate);
     await transition.ready;
     documentObject.documentElement.animate(
       {
-        clipPath: [
-          `circle(0px at ${x}px ${y}px)`,
-          `circle(${radius}px at ${x}px ${y}px)`
-        ]
+        clipPath: targetIsDark ? [...clipPath].reverse() : clipPath
       },
       {
         duration,
-        easing: "cubic-bezier(0.22, 1, 0.36, 1)",
-        pseudoElement: "::view-transition-new(root)"
+        easing: "ease-in",
+        pseudoElement: `::view-transition-${targetIsDark ? "old" : "new"}(root)`
       }
     );
     return true;

@@ -97,7 +97,7 @@ export default defineConfig({
   },
 
   markdown: {
-    lineNumbers: true,
+    lineNumbers: false,
     codeCopyButtonTitle: "复制代码"
   },
 
@@ -148,8 +148,8 @@ export default defineConfig({
     },
 
     outline: {
-      label: "页内目录",
-      level: [2, 3]
+      label: "页面导航",
+      level: "deep"
     },
 
     docFooter: {

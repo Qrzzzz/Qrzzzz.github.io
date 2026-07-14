@@ -1,0 +1,90 @@
+/* Reproduced from arch3rPro/arch3rpro.github.io@acf58fa (.vitepress/theme/styles/vp-code*.scss). */
+
+.vp-doc div[class*="language-"] {
+  box-shadow: 0 10px 30px 0 rgb(0 0 0 / 40%);
+  padding-top: 20px;
+}
+
+.vp-doc div[class*="language-"]::before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  width: 12px;
+  height: 12px;
+  background-color: #ff5f56;
+  border-radius: 50%;
+  box-shadow: 20px 0 0 #ffbd2e, 40px 0 0 #27c93f;
+  z-index: 1;
+}
+
+.vp-doc .line-numbers-wrapper {
+  padding-top: 40px;
+  border-right: none;
+}
+
+.vp-doc .line-numbers-wrapper::after {
+  content: "";
+  position: absolute;
+  top: 40px;
+  right: 0;
+  border-right: 1px solid var(--vp-code-block-divider-color);
+  height: calc(100% - 60px);
+}
+
+.vp-doc div[class*="language-"].line-numbers-mode {
+  margin-bottom: 20px;
+}
+
+.vp-code-group .tabs {
+  padding-top: 20px;
+}
+
+.vp-code-group {
+  color: var(--vp-c-black-soft);
+  border-radius: 8px;
+  box-shadow: 0 10px 30px 0 rgb(0 0 0 / 40%);
+}
+
+.vp-code-group .tabs::before {
+  content: " ";
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  height: 12px;
+  width: 12px;
+  background: #fc625d;
+  border-radius: 50%;
+  box-shadow: 20px 0 #fdbc40, 40px 0 #35cd4b;
+}
+
+.vp-code-group div[class*="language-"].vp-adaptive-theme.line-numbers-mode {
+  border-radius: 8px;
+  box-shadow: none;
+  padding-top: 0;
+}
+
+.vp-code-group
+  div[class*="language-"].vp-adaptive-theme.line-numbers-mode::before {
+  display: none;
+}
+
+.vp-code-group .line-numbers-mode .line-numbers-wrapper {
+  padding-top: 20px;
+}
+
+.vp-code-group .line-numbers-mode .line-numbers-wrapper::after {
+  top: 24px;
+  height: calc(100% - 45px);
+}
+
+.vp-code-group div[class*="language-"].vp-adaptive-theme {
+  border-radius: 8px;
+  box-shadow: none;
+  padding-top: 0;
+}
+
+.vp-code-group div[class*="language-"].vp-adaptive-theme::before {
+  display: none;
+}
