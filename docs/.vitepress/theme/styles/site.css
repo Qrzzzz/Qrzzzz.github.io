@@ -307,11 +307,19 @@ button.VPSwitch.VPSwitchAppearance > .check {
 }
 
 .home-intro {
+  position: relative;
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
   align-content: center;
   column-gap: 22px;
+  isolation: isolate;
+  overflow: hidden;
   padding: 72px 0 64px;
+}
+
+.home-intro > :not(.home-strands-visual) {
+  position: relative;
+  z-index: 1;
 }
 
 .home-byline {

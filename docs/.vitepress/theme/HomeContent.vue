@@ -1,10 +1,19 @@
 <script setup lang="ts">
+import { defineAsyncComponent, onMounted, ref } from "vue";
 import TextType from "./TextType.vue";
+
+const HomeStrands = defineAsyncComponent(() => import("./HomeStrands.vue"));
+const clientReady = ref(false);
+
+onMounted(() => {
+  clientReady.value = true;
+});
 </script>
 
 <template>
   <div class="home-page">
     <section class="home-intro" aria-labelledby="home-title">
+      <HomeStrands v-if="clientReady" />
       <p class="home-byline">
         <span>Qrzzzz</span>
         <span aria-hidden="true">/</span>
