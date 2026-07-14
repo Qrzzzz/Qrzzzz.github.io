@@ -314,7 +314,7 @@ button.VPSwitch.VPSwitchAppearance > .check {
   column-gap: 22px;
   isolation: isolate;
   overflow: hidden;
-  padding: 72px 0 64px;
+  padding: 64px 0 56px;
 }
 
 .home-byline {
@@ -363,7 +363,7 @@ button.VPSwitch.VPSwitchAppearance > .check {
   grid-column: 8 / -1;
   grid-row: 3;
   align-self: start;
-  margin: 14px 0 0;
+  margin: 8px 0 0;
   color: var(--site-text-muted);
   font-size: clamp(17px, 1.7vw, 20px);
   line-height: 1.78;
@@ -511,10 +511,6 @@ button.VPSwitch.VPSwitchAppearance > .check {
 @media (max-width: 959px) {
   .home-page {
     padding-inline: 28px;
-  }
-
-  .home-intro {
-    padding-block: 64px 56px;
   }
 
   .home-title {

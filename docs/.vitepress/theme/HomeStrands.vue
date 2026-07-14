@@ -210,11 +210,11 @@ onBeforeUnmount(() => {
 <style scoped>
 .home-strands-visual {
   position: relative;
-  grid-column: 8 / -1;
+  grid-column: 7 / -1;
   grid-row: 2;
   width: 100%;
   min-width: 0;
-  height: 280px;
+  height: 300px;
   overflow: visible;
   pointer-events: none;
   transform: translateY(-14px);
@@ -247,8 +247,7 @@ onBeforeUnmount(() => {
 
 @media (max-width: 959px) {
   .home-strands-visual {
-    grid-column: 7 / -1;
-    height: 230px;
+    height: 250px;
     transform: translateY(-10px);
   }
 }
