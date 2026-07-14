@@ -39,15 +39,13 @@ vec3 samplePalette(float value) {
 
 void main() {
   vec2 uv = (gl_FragCoord.xy - 0.5 * uResolution) / uResolution.y;
-  uv /= 1.16;
+  uv /= 1.5;
 
   float horizontal = clamp(gl_FragCoord.x / uResolution.x, 0.0, 1.0);
   float safeInset = 0.1;
   float strandHorizontal = clamp((horizontal - safeInset) / (1.0 - safeInset * 2.0), 0.0, 1.0);
   float insideSafeArea = step(safeInset, horizontal) * (1.0 - step(1.0 - safeInset, horizontal));
-  float edgeDistance = min(strandHorizontal, 1.0 - strandHorizontal);
-  float edgeFade = smoothstep(0.0, 0.14, edgeDistance) * insideSafeArea;
-  float envelope = pow(max(sin(strandHorizontal * PI), 0.0), 0.72);
+  float envelope = pow(max(sin(strandHorizontal * PI), 0.0), 3.0) * insideSafeArea;
   vec3 color = vec3(0.0);
 
   for (int i = 0; i < ${MAX_STRANDS}; i++) {
@@ -65,7 +63,7 @@ void main() {
     glow *= glow;
 
     float palettePosition = strand / float(${MAX_STRANDS}) + uv.x * 0.3 + uTime * 0.024;
-    color += samplePalette(palettePosition) * glow * envelope * edgeFade;
+    color += samplePalette(palettePosition) * glow * envelope;
   }
 
   color = 1.0 - exp(-color * 2.35);
@@ -236,7 +234,7 @@ onBeforeUnmount(() => {
 }
 
 .home-strands-visual[data-strands-mode="webgl"]::before {
-  opacity: 0.28;
+  display: none;
 }
 
 .home-strands-visual :deep(canvas) {
