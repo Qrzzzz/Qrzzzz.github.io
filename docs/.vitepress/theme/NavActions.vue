@@ -15,9 +15,11 @@ const toggleLabel = computed(() =>
   isDark.value ? "切换到浅色模式" : "切换到深色模式"
 );
 
-async function toggleTheme() {
+async function toggleTheme(event: MouseEvent) {
   if (switching.value) return;
   switching.value = true;
+  const targetIsDark = !isDark.value;
+  const point = event.detail > 0 ? { x: event.clientX, y: event.clientY } : undefined;
   const supportsReveal = canAnimateThemeTransition(
     document,
     window,
@@ -30,18 +32,21 @@ async function toggleTheme() {
       documentObject: document,
       windowObject: window,
       origin: toggleButton.value,
+      point,
+      targetIsDark,
       update: async () => {
-        isDark.value = !isDark.value;
+        isDark.value = targetIsDark;
         await nextTick();
       }
     });
   } finally {
     window.clearTimeout(resetTimer);
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const resetDelay = reducedMotion ? 40 : supportsReveal ? 360 : 540;
     resetTimer = window.setTimeout(() => {
       switching.value = false;
       document.documentElement.classList.remove("theme-is-switching");
-    }, reducedMotion ? 40 : 540);
+    }, resetDelay);
   }
 }
 

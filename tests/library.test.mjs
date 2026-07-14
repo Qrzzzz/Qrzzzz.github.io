@@ -38,7 +38,7 @@ test("links every document, article, and prompt from the Library page", () => {
 test("renders Library as a responsive folder grid", () => {
   assert.match(layout, /relativePath\.startsWith\("library\/"\)/);
   assert.match(library, /^outline: false$/m);
-  assert.match(config, /outline:\s*\{\s*label: "页内目录",\s*level: \[2, 3\]/s);
+  assert.match(config, /outline:\s*\{\s*label: "页面导航",\s*level: "deep"/s);
   assert.match(library, /class="library-folder"/);
   assert.match(library, /class="library-folder library-folder--wide"/);
   assert.match(styles, /\.library-folders\s*\{[\s\S]*?grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
