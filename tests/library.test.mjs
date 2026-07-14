@@ -14,8 +14,10 @@ function contentRoutes(directory) {
 }
 
 test("merges the three content areas into one Library navigation entry", () => {
+  const nav = config.match(/nav:\s*\[([\s\S]*?)\],\s*\n\s*sidebar:/)?.[1] ?? "";
+
   assert.match(config, /\{ text: "Library", link: "\/library\/" \}/);
-  assert.doesNotMatch(config, /\{ text: "(?:文档|文章|提示词合集)", link:/);
+  assert.doesNotMatch(nav, /\{ text: "(?:文档|文章|提示词合集)", link:/);
   assert.match(library, /^# Library$/m);
   assert.match(library, />文档<\/a><\/h2>/);
   assert.match(library, />文章<\/a><\/h2>/);

@@ -235,6 +235,12 @@ function deactivateNavScreen(returnFocus = true) {
 function syncNavigationAccessibility() {
   setShellLanguageParts();
 
+  const sidebar = document.querySelector<HTMLElement>(".VPSidebar");
+  if (sidebar) {
+    const isMobileSidebar = window.matchMedia("(max-width: 959px)").matches;
+    setElementInert(sidebar, isMobileSidebar && !sidebar.classList.contains("open"));
+  }
+
   const screen = document.querySelector<HTMLElement>(".VPNavScreen");
   const trigger = document.querySelector<HTMLButtonElement>(".VPNavBarHamburger");
   if (screen && trigger && !activeNavScreen) activateNavScreen(screen, trigger);
@@ -251,6 +257,7 @@ onMounted(() => {
     childList: true,
     subtree: true
   });
+  window.addEventListener("resize", syncNavigationAccessibility, { passive: true });
   syncNavigationAccessibility();
 });
 watch([isDark, pageLanguage], syncDocumentMetadata, { flush: "sync" });
@@ -265,6 +272,7 @@ watch(
 );
 onBeforeUnmount(() => {
   accessibilityObserver?.disconnect();
+  window.removeEventListener("resize", syncNavigationAccessibility);
   deactivateNavScreen(false);
   for (const element of languageParts) {
     if (element.lang === "zh-CN") element.removeAttribute("lang");

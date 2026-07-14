@@ -14,7 +14,7 @@ test("keeps the collection title in English while localizing the visible index c
   assert.doesNotMatch(index, /A growing library|Chinese-language|Research · Analysis/);
   assert.match(config, /text: "Library", link: "\/library\/"/);
   assert.doesNotMatch(config, /text: "提示词合集", link: "\/prompt-collection\/"/);
-  assert.match(config, /sidebar: false/);
+  assert.match(config, /"\/prompt-collection\/": \[/);
   assert.match(config, /aside: true/);
   assert.match(index, /href="\/prompt-collection\/rigorous-research-decision-assistant"/);
 });
@@ -37,7 +37,7 @@ test("uses the native always-visible page outline without custom folding", () =>
   const styles = readFileSync("docs/.vitepress/theme/styles/content.css", "utf8");
   const tokens = readFileSync("docs/.vitepress/theme/styles/tokens.css", "utf8");
 
-  assert.match(config, /sidebar: false/);
+  assert.match(config, /sidebar:\s*\{/);
   assert.match(config, /aside: true/);
   assert.match(config, /outline:\s*\{\s*label: "页面导航",\s*level: "deep"/s);
   assert.doesNotMatch(layout, /OutlineToggle|useLineOutline|#aside-outline-before/);
