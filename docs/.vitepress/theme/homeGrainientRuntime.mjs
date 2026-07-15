@@ -1,21 +1,20 @@
-export const HOME_STRANDS_RENDER_QUERY = "(min-width: 320px)";
-export const HOME_STRANDS_REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
+export const HOME_GRAINIENT_RENDER_QUERY = "(min-width: 320px)";
+export const HOME_GRAINIENT_REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
 
 /**
- * Keeps the decorative WebGL scene out of the critical rendering path and
- * suspends it whenever the user cannot see it or has asked for less motion.
- * The injectable scene boundary keeps lifecycle behavior testable without a
- * browser or a WebGL context.
+ * Keeps the decorative WebGL background out of the critical rendering path and
+ * suspends it whenever the page is hidden, the hero is off-screen, or the user
+ * has asked for less motion. The CSS layer remains as the static fallback.
  */
-export function createHomeStrandsRuntime(options) {
+export function createHomeGrainientRuntime(options) {
   const container = options?.container;
   const targetWindow = options?.window ?? globalThis.window;
   const targetDocument = options?.document ?? globalThis.document;
   const createScene = options?.createScene;
 
-  if (!container) throw new TypeError("HomeStrands requires a container element.");
+  if (!container) throw new TypeError("HomeGrainient requires a container element.");
   if (!targetWindow || !targetDocument || typeof createScene !== "function") {
-    throw new TypeError("HomeStrands requires a browser environment and scene factory.");
+    throw new TypeError("HomeGrainient requires a browser environment and scene factory.");
   }
 
   let palette = options?.palette ?? [];
@@ -62,7 +61,7 @@ export function createHomeStrandsRuntime(options) {
     cancelFrame();
     scene?.destroy();
     scene = undefined;
-    container.dataset.strandsMode = "fallback";
+    container.dataset.grainientMode = "fallback";
   }
 
   function syncScene() {
@@ -77,7 +76,7 @@ export function createHomeStrandsRuntime(options) {
         scene = createScene({ container, palette });
         scene.setPalette?.(palette);
         scene.resize();
-        container.dataset.strandsMode = "webgl";
+        container.dataset.grainientMode = "webgl";
       } catch {
         destroyScene();
         return;
@@ -98,9 +97,9 @@ export function createHomeStrandsRuntime(options) {
   function mount() {
     if (mounted || destroyed) return;
     mounted = true;
-    container.dataset.strandsMode = "fallback";
-    reducedMotionQuery = targetWindow.matchMedia(HOME_STRANDS_REDUCED_MOTION_QUERY);
-    renderQuery = targetWindow.matchMedia(HOME_STRANDS_RENDER_QUERY);
+    container.dataset.grainientMode = "fallback";
+    reducedMotionQuery = targetWindow.matchMedia(HOME_GRAINIENT_REDUCED_MOTION_QUERY);
+    renderQuery = targetWindow.matchMedia(HOME_GRAINIENT_RENDER_QUERY);
     reducedMotionQuery.addEventListener("change", syncScene);
     renderQuery.addEventListener("change", syncScene);
     targetDocument.addEventListener("visibilitychange", syncLoop);
@@ -150,7 +149,7 @@ export function createHomeStrandsRuntime(options) {
       visible,
       hasScene: Boolean(scene),
       frame,
-      mode: container.dataset.strandsMode
+      mode: container.dataset.grainientMode
     })
   };
 }

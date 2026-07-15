@@ -2,10 +2,10 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
-  HOME_STRANDS_REDUCED_MOTION_QUERY,
-  HOME_STRANDS_RENDER_QUERY,
-  createHomeStrandsRuntime
-} from "../docs/.vitepress/theme/homeStrandsRuntime.mjs";
+  HOME_GRAINIENT_REDUCED_MOTION_QUERY,
+  HOME_GRAINIENT_RENDER_QUERY,
+  createHomeGrainientRuntime
+} from "../docs/.vitepress/theme/homeGrainientRuntime.mjs";
 
 class FakeEventTarget {
   listeners = new Map();
@@ -32,10 +32,10 @@ function createHarness({ reducedMotion = false, render = true, failScene = false
   const window = new FakeEventTarget();
   const queries = new Map([
     [
-      HOME_STRANDS_REDUCED_MOTION_QUERY,
+      HOME_GRAINIENT_REDUCED_MOTION_QUERY,
       Object.assign(new FakeEventTarget(), { matches: reducedMotion })
     ],
-    [HOME_STRANDS_RENDER_QUERY, Object.assign(new FakeEventTarget(), { matches: render })]
+    [HOME_GRAINIENT_RENDER_QUERY, Object.assign(new FakeEventTarget(), { matches: render })]
   ]);
   window.matchMedia = (query) => queries.get(query);
 
@@ -92,7 +92,7 @@ function createHarness({ reducedMotion = false, render = true, failScene = false
     return scene;
   };
 
-  const runtime = createHomeStrandsRuntime({
+  const runtime = createHomeGrainientRuntime({
     container,
     window,
     document,
@@ -122,7 +122,7 @@ test("runtime animates only while visible and the page is active", () => {
   const harness = createHarness();
   harness.runtime.mount();
 
-  assert.equal(harness.container.dataset.strandsMode, "webgl");
+  assert.equal(harness.container.dataset.grainientMode, "webgl");
   assert.equal(harness.scenes.length, 1);
   assert.equal(harness.scenes[0].resizeCount, 1);
   assert.equal(harness.frames.size, 1);
@@ -152,25 +152,25 @@ test("reduced motion and unsupported widths use the static fallback", () => {
   const harness = createHarness({ reducedMotion: true });
   harness.runtime.mount();
   assert.equal(harness.runtime.getState().hasScene, false);
-  assert.equal(harness.container.dataset.strandsMode, "fallback");
+  assert.equal(harness.container.dataset.grainientMode, "fallback");
 
-  const reducedMotion = harness.queries.get(HOME_STRANDS_REDUCED_MOTION_QUERY);
+  const reducedMotion = harness.queries.get(HOME_GRAINIENT_REDUCED_MOTION_QUERY);
   reducedMotion.matches = false;
   reducedMotion.dispatch("change");
   assert.equal(harness.runtime.getState().hasScene, true);
 
-  const render = harness.queries.get(HOME_STRANDS_RENDER_QUERY);
+  const render = harness.queries.get(HOME_GRAINIENT_RENDER_QUERY);
   render.matches = false;
   render.dispatch("change");
   assert.equal(harness.runtime.getState().hasScene, false);
   assert.equal(harness.scenes[0].destroyed, true);
-  assert.equal(harness.container.dataset.strandsMode, "fallback");
+  assert.equal(harness.container.dataset.grainientMode, "fallback");
 });
 
 test("palette and resize updates reach the active scene", () => {
   const harness = createHarness();
   harness.runtime.mount();
-  const nextPalette = ["#abcdef", "#123456"];
+  const nextPalette = ["#abcdef", "#123456", "#fedcba"];
   harness.runtime.setPalette(nextPalette);
   harness.resizes[0].callback();
 
@@ -181,6 +181,7 @@ test("palette and resize updates reach the active scene", () => {
 test("WebGL failures remain a non-animated fallback", () => {
   const harness = createHarness({ failScene: true });
   assert.doesNotThrow(() => harness.runtime.mount());
-  assert.equal(harness.container.dataset.strandsMode, "fallback");
+  assert.equal(harness.runtime.getState().hasScene, false);
+  assert.equal(harness.container.dataset.grainientMode, "fallback");
   assert.equal(harness.frames.size, 0);
 });

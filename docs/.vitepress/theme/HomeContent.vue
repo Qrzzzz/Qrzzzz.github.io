@@ -2,7 +2,7 @@
 import { defineAsyncComponent, onMounted, ref } from "vue";
 import TextType from "./TextType.vue";
 
-const HomeStrands = defineAsyncComponent(() => import("./HomeStrands.vue"));
+const HomeGrainient = defineAsyncComponent(() => import("./HomeGrainient.vue"));
 const clientReady = ref(false);
 
 onMounted(() => {
@@ -36,7 +36,7 @@ onMounted(() => {
           aria-hidden="true"
         />
       </h1>
-      <HomeStrands v-if="clientReady" />
+      <HomeGrainient v-if="clientReady" />
       <p class="home-deck">
         这里放着 Qrzzzz 的公开项目、维护文档，以及不想交给信息流决定寿命的文字。
       </p>

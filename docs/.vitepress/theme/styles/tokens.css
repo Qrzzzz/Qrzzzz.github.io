@@ -19,10 +19,6 @@
   --site-code-text: #f2f0ea;
   --site-spark-primary: #ff4b2b;
   --site-spark-secondary: #30343a;
-  --site-strands-1: #ff3d00;
-  --site-strands-2: #ffb000;
-  --site-strands-3: #00a6a6;
-  --site-strands-4: #7c3aed;
 
   --site-font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI Variable", "Segoe UI",
     "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC",
@@ -83,10 +79,6 @@
   --site-code-text: #f2f0ea;
   --site-spark-primary: #00e6b0;
   --site-spark-secondary: #f2f0ea;
-  --site-strands-1: #00e6b0;
-  --site-strands-2: #38bdf8;
-  --site-strands-3: #a78bfa;
-  --site-strands-4: #fb7185;
   --site-shadow-float: 0 22px 64px rgba(0, 0, 0, 0.34);
 
   --vp-c-brand-1: var(--site-accent);

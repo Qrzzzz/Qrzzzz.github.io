@@ -314,7 +314,7 @@ button.VPSwitch.VPSwitchAppearance > .check {
   column-gap: 22px;
   isolation: isolate;
   overflow: hidden;
-  padding: 64px 0 56px;
+  padding: 64px 0 68px;
 }
 
 .home-byline {
@@ -329,10 +329,10 @@ button.VPSwitch.VPSwitchAppearance > .check {
 
 .home-title {
   position: relative;
-  grid-column: 1 / 8;
-  grid-row: 2 / 5;
+  grid-column: 1 / 11;
+  grid-row: 2;
   align-self: center;
-  max-width: 11ch;
+  max-width: 10.5ch;
   margin: 0;
   color: var(--site-text);
   font-size: clamp(58px, 7.5vw, 96px);
@@ -360,18 +360,20 @@ button.VPSwitch.VPSwitchAppearance > .check {
 }
 
 .home-deck {
-  grid-column: 8 / -1;
+  grid-column: 6 / -1;
   grid-row: 3;
   align-self: start;
-  margin: 8px 0 0;
+  max-width: 660px;
+  margin: 34px 0 0;
   color: var(--site-text-muted);
-  font-size: clamp(17px, 1.7vw, 20px);
-  line-height: 1.78;
+  font-size: clamp(18px, 1.8vw, 21px);
+  line-height: 1.72;
+  text-wrap: balance;
 }
 
 .home-actions {
   display: flex;
-  grid-column: 8 / -1;
+  grid-column: 6 / -1;
   grid-row: 4;
   align-self: start;
   align-items: center;
@@ -514,13 +516,13 @@ button.VPSwitch.VPSwitchAppearance > .check {
   }
 
   .home-title {
-    grid-column: 1 / 7;
+    grid-column: 1 / 11;
     font-size: clamp(52px, 6.5vw, 60px);
   }
 
   .home-deck,
   .home-actions {
-    grid-column: 7 / -1;
+    grid-column: 5 / -1;
   }
 
 }

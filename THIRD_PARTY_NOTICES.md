@@ -1,8 +1,8 @@
 # Third-party notices
 
-## Vue Bits — Strands
+## Vue Bits — Grainient
 
-The homepage light-strand effect in `docs/.vitepress/theme/HomeStrands.vue` is adapted from the Vue Bits Strands component.
+The homepage grainy gradient background in `docs/.vitepress/theme/HomeGrainient.vue` is adapted from the Vue Bits Grainient component.
 
 MIT + Commons Clause License Condition v1.0
 
