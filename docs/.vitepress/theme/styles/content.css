@@ -27,6 +27,62 @@
   }
 }
 
+/* Native page-outline hover trace */
+
+.VPDocAsideOutline .outline-link {
+  --site-outline-hover-offset: -17px;
+  position: relative;
+}
+
+.VPDocAsideOutline .VPDocOutlineItem.nested .outline-link {
+  --site-outline-hover-offset: -33px;
+}
+
+.VPDocAsideOutline .VPDocOutlineItem.nested .VPDocOutlineItem.nested .outline-link {
+  --site-outline-hover-offset: -49px;
+}
+
+.VPDocAsideOutline
+  .VPDocOutlineItem.nested
+  .VPDocOutlineItem.nested
+  .VPDocOutlineItem.nested
+  .outline-link {
+  --site-outline-hover-offset: -65px;
+}
+
+.VPDocAsideOutline
+  .VPDocOutlineItem.nested
+  .VPDocOutlineItem.nested
+  .VPDocOutlineItem.nested
+  .VPDocOutlineItem.nested
+  .outline-link {
+  --site-outline-hover-offset: -81px;
+}
+
+.VPDocAsideOutline .outline-link::before {
+  position: absolute;
+  top: 50%;
+  inset-inline-start: var(--site-outline-hover-offset);
+  width: 2px;
+  height: 18px;
+  border-radius: 999px;
+  background: var(--site-accent);
+  content: "";
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-50%) scaleY(0.35);
+  transform-origin: center;
+  transition:
+    opacity 120ms ease,
+    transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.VPDocAsideOutline .outline-link:hover::before,
+.VPDocAsideOutline .outline-link:focus-visible::before {
+  opacity: 1;
+  transform: translateY(-50%) scaleY(1);
+}
+
 .back-to-top {
   --back-top-progress: 0%;
   position: fixed;

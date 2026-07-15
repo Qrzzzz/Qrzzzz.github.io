@@ -46,6 +46,11 @@ test("uses the native always-visible page outline without custom folding", () =>
   assert.equal(existsSync("docs/.vitepress/theme/ReadingOutline.vue"), false);
   assert.equal(existsSync("docs/.vitepress/theme/readingOutlineRuntime.mjs"), false);
   assert.doesNotMatch(styles, /outline-toolbar|outline-is-collapsed|line-outline/);
+  assert.match(
+    styles,
+    /\.VPDocAsideOutline \.outline-link::before\s*\{[^}]*background:\s*var\(--site-accent\)/s
+  );
+  assert.match(styles, /\.VPDocAsideOutline \.outline-link:hover::before,[\s\S]*?opacity:\s*1/);
   assert.doesNotMatch(tokens, /--site-menu-prelayer/);
   assert.match(styles, /\.back-to-top\.is-visible/);
   assert.match(styles, /conic-gradient\(/);
