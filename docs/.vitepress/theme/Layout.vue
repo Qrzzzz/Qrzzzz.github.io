@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, onMounted, watch } from "vue";
+import { computed, defineAsyncComponent, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { useData } from "vitepress";
 import DefaultTheme from "vitepress/theme";
 import BackToTop from "./BackToTop.vue";
@@ -11,6 +11,8 @@ import TargetCursor from "./TargetCursor.vue";
 
 const { Layout } = DefaultTheme;
 const { frontmatter, isDark, page } = useData();
+const HomeGrainient = defineAsyncComponent(() => import("./HomeGrainient.vue"));
+const clientReady = ref(false);
 
 type PageKind = "home" | "article" | "project" | "document" | "library" | "general";
 
@@ -248,6 +250,7 @@ function syncNavigationAccessibility() {
 }
 
 onMounted(() => {
+  clientReady.value = true;
   syncDocumentMetadata();
   nextTick(syncDocumentMetadata);
   accessibilityObserver = new MutationObserver(syncNavigationAccessibility);
@@ -297,6 +300,8 @@ onBeforeUnmount(() => {
     :data-page-kind="pageKind"
     :data-page-language="pageLanguage"
   >
+    <HomeGrainient v-if="clientReady && pageKind === 'home'" />
+
     <Layout>
       <template #nav-bar-content-before>
         <InlineSearch />

@@ -246,27 +246,30 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .home-grainient-visual {
-  position: absolute;
+  position: fixed;
   z-index: 0;
   inset: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 100dvh;
+  contain: strict;
   overflow: hidden;
-  opacity: 0.48;
+  opacity: 0.36;
   pointer-events: none;
   user-select: none;
-  -webkit-mask-image: radial-gradient(ellipse 82% 88% at 76% 43%, #000 18%, rgba(0, 0, 0, 0.88) 58%, transparent 100%);
-  mask-image: radial-gradient(ellipse 82% 88% at 76% 43%, #000 18%, rgba(0, 0, 0, 0.88) 58%, transparent 100%);
 }
 
 .dark .home-grainient-visual {
-  opacity: 0.42;
+  opacity: 0.32;
 }
 
 .home-grainient-visual::before {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse at 78% 36%, color-mix(in srgb, var(--site-accent) 54%, transparent), transparent 58%),
-    linear-gradient(138deg, var(--site-surface), var(--site-canvas) 74%);
+    radial-gradient(ellipse at 82% 18%, color-mix(in srgb, var(--site-accent) 52%, transparent), transparent 54%),
+    radial-gradient(ellipse at 16% 84%, color-mix(in srgb, var(--site-surface) 78%, transparent), transparent 58%),
+    linear-gradient(142deg, var(--site-surface), var(--site-canvas) 72%);
   content: "";
 }
 
@@ -282,20 +285,13 @@ onBeforeUnmount(() => {
   height: 100%;
 }
 
-:global(.home-intro > :not(.home-grainient-visual)) {
-  position: relative;
-  z-index: 1;
-}
-
 @media (max-width: 767px) {
   .home-grainient-visual {
-    opacity: 0.36;
-    -webkit-mask-image: radial-gradient(ellipse 112% 74% at 72% 35%, #000 10%, rgba(0, 0, 0, 0.78) 58%, transparent 100%);
-    mask-image: radial-gradient(ellipse 112% 74% at 72% 35%, #000 10%, rgba(0, 0, 0, 0.78) 58%, transparent 100%);
+    opacity: 0.32;
   }
 
   .dark .home-grainient-visual {
-    opacity: 0.32;
+    opacity: 0.28;
   }
 }
 </style>

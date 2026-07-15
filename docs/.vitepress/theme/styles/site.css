@@ -1,8 +1,20 @@
 /* Global chrome */
 
 .site-layout {
+  position: relative;
   min-height: 100vh;
   background: var(--site-canvas);
+  isolation: isolate;
+}
+
+.site-layout[data-page-kind="home"] {
+  background: transparent;
+}
+
+.site-layout[data-page-kind="home"] > .Layout {
+  position: relative;
+  z-index: 1;
+  background: transparent;
 }
 
 ::view-transition-old(root),
@@ -289,12 +301,14 @@ button.VPSwitch.VPSwitchAppearance > .check {
   flex: 1 0 auto;
   flex-direction: column;
   margin-bottom: 0;
+  background: transparent;
 }
 
 .site-layout[data-page-kind="home"] .VPContent {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
+  background: transparent;
 }
 
 .home-page {
@@ -312,8 +326,6 @@ button.VPSwitch.VPSwitchAppearance > .check {
   grid-template-columns: repeat(12, minmax(0, 1fr));
   align-content: start;
   column-gap: 22px;
-  isolation: isolate;
-  overflow: hidden;
   padding: 64px 0 68px;
 }
 
@@ -496,6 +508,7 @@ button.VPSwitch.VPSwitchAppearance > .check {
 
 .site-layout[data-page-kind="home"] .VPFooter {
   border-top: 0;
+  background: transparent;
 }
 
 .VPFooter .message {

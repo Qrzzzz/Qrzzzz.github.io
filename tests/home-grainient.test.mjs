@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import test from "node:test";
 
 import {
@@ -6,6 +7,23 @@ import {
   HOME_GRAINIENT_RENDER_QUERY,
   createHomeGrainientRuntime
 } from "../docs/.vitepress/theme/homeGrainientRuntime.mjs";
+
+const layoutSource = readFileSync(
+  new URL("../docs/.vitepress/theme/Layout.vue", import.meta.url),
+  "utf8"
+);
+const homeContentSource = readFileSync(
+  new URL("../docs/.vitepress/theme/HomeContent.vue", import.meta.url),
+  "utf8"
+);
+const componentSource = readFileSync(
+  new URL("../docs/.vitepress/theme/HomeGrainient.vue", import.meta.url),
+  "utf8"
+);
+const siteStyles = readFileSync(
+  new URL("../docs/.vitepress/theme/styles/site.css", import.meta.url),
+  "utf8"
+);
 
 class FakeEventTarget {
   listeners = new Map();
@@ -184,4 +202,26 @@ test("WebGL failures remain a non-animated fallback", () => {
   assert.equal(harness.runtime.getState().hasScene, false);
   assert.equal(harness.container.dataset.grainientMode, "fallback");
   assert.equal(harness.frames.size, 0);
+});
+
+test("homepage mounts Grainient as a global background outside the hero", () => {
+  const backgroundIndex = layoutSource.indexOf("<HomeGrainient");
+  const defaultLayoutIndex = layoutSource.indexOf("<Layout>");
+
+  assert.ok(backgroundIndex > 0, "Layout should mount the Grainient background");
+  assert.ok(
+    backgroundIndex < defaultLayoutIndex,
+    "the background should sit behind the complete VitePress layout"
+  );
+  assert.doesNotMatch(homeContentSource, /HomeGrainient/);
+  assert.match(componentSource, /\.home-grainient-visual\s*\{[\s\S]*?position:\s*fixed/);
+  assert.doesNotMatch(componentSource, /mask-image/);
+  assert.match(
+    siteStyles,
+    /\.site-layout\[data-page-kind="home"\] > \.Layout\s*\{[\s\S]*?z-index:\s*1/
+  );
+  assert.match(
+    siteStyles,
+    /\.site-layout\[data-page-kind="home"\] \.VPFooter\s*\{[\s\S]*?background:\s*transparent/
+  );
 });
