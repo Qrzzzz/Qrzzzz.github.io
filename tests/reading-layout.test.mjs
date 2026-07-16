@@ -10,7 +10,7 @@ const tokens = readFileSync("docs/.vitepress/theme/styles/tokens.css", "utf8");
 test("uses contextual sidebars for a three-column reading layout", () => {
   assert.match(tokens, /--vp-sidebar-width:\s*224px/);
   assert.match(config, /sidebar:\s*\{/);
-  for (const route of ["/guide/", "/notes/", "/prompt-collection/", "/projects/"]) {
+  for (const route of ["/guide/", "/notes/", "/prompt-collection/", "/excerpts/", "/projects/"]) {
     assert.match(config, new RegExp(`"${route.replaceAll("/", "\\/")}": \\[`));
   }
   assert.match(

@@ -13,22 +13,24 @@ function contentRoutes(directory) {
     .map((name) => `/${directory}/${name.slice(0, -3)}`);
 }
 
-test("merges the three content areas into one Library navigation entry", () => {
+test("merges the four content areas into one Library navigation entry", () => {
   const nav = config.match(/nav:\s*\[([\s\S]*?)\],\s*\n\s*sidebar:/)?.[1] ?? "";
 
   assert.match(config, /\{ text: "Library", link: "\/library\/" \}/);
-  assert.doesNotMatch(nav, /\{ text: "(?:文档|文章|提示词合集)", link:/);
+  assert.doesNotMatch(nav, /\{ text: "(?:文档|文章|提示词合集|偶拾)", link:/);
   assert.match(library, /^# Library$/m);
   assert.match(library, />文档<\/a><\/h2>/);
   assert.match(library, />文章<\/a><\/h2>/);
   assert.match(library, />Prompt Collection<\/a><\/h2>/);
+  assert.match(library, />偶拾<\/a><\/h2>/);
 });
 
-test("links every document, article, and prompt from the Library page", () => {
+test("links every document, article, prompt, and excerpt from the Library page", () => {
   const routes = [
     ...contentRoutes("guide"),
     ...contentRoutes("notes"),
-    ...contentRoutes("prompt-collection")
+    ...contentRoutes("prompt-collection"),
+    ...contentRoutes("excerpts")
   ];
 
   assert.ok(routes.length > 0);

@@ -1,12 +1,12 @@
 ---
 title: Library
-description: 文档、文章与 Prompt Collection 的统一入口。
+description: 文档、文章、Prompt Collection 与偶拾的统一入口。
 outline: false
 ---
 
 # Library
 
-把可复用的方法、值得留下的文章和持续更新的提示词放在同一个入口。可以先进入一个分类，也可以从这里直接打开任意内容。
+把可复用的方法、值得留下的文章、持续更新的提示词，以及偶然遇见的句子放在同一个入口。可以先进入一个分类，也可以从这里直接打开任意内容。
 
 <div class="library-folders" aria-label="内容分类">
   <section class="library-folder" aria-labelledby="library-docs-title">
@@ -82,6 +82,37 @@ outline: false
         <span class="library-entry__content">
           <strong>手绘教育信息图生成器</strong>
           <span>信息图 · 插画 · 视觉摘要</span>
+        </span>
+        <span aria-hidden="true">→</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="library-folder library-folder--wide" aria-labelledby="library-excerpts-title">
+    <span class="library-folder__label">04 / EXCERPTS</span>
+    <div class="library-folder__title-row">
+      <h2 id="library-excerpts-title"><a href="/excerpts/">偶拾</a></h2>
+      <a class="library-folder__all" href="/excerpts/">查看分类 →</a>
+    </div>
+    <div class="library-folder__entries">
+      <a class="library-entry" href="/excerpts/2026-07-17-01">
+        <span class="library-entry__content">
+          <strong class="excerpt-preview">拜托你一直鲜活，keep learning，去思考原子……</strong>
+          <span>2026.07.17</span>
+        </span>
+        <span aria-hidden="true">→</span>
+      </a>
+      <a class="library-entry" href="/excerpts/2026-07-17-02">
+        <span class="library-entry__content">
+          <strong class="excerpt-preview">蝉真的是世界上最摇滚的生物了。一生大部分时间……</strong>
+          <span>2026.07.17</span>
+        </span>
+        <span aria-hidden="true">→</span>
+      </a>
+      <a class="library-entry" href="/excerpts/2026-07-17-03">
+        <span class="library-entry__content">
+          <strong class="excerpt-preview">棋局结束时，国王与卒子归入同一盒中。</strong>
+          <span>2026.07.17</span>
         </span>
         <span aria-hidden="true">→</span>
       </a>

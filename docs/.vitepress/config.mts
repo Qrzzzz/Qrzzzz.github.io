@@ -19,6 +19,7 @@ function siteIndexSidebar() {
       { text: "文档", link: "/guide/" },
       { text: "文章", link: "/notes/" },
       { text: "Prompt Collection", link: "/prompt-collection/" },
+      { text: "偶拾", link: "/excerpts/" },
       { text: "项目", link: "/projects/" }
     ]
   };
@@ -168,6 +169,27 @@ export default defineConfig({
             {
               text: "手绘教育信息图生成器",
               link: "/prompt-collection/hand-drawn-educational-infographic-generator"
+            }
+          ]
+        },
+        siteIndexSidebar()
+      ],
+      "/excerpts/": [
+        {
+          text: "偶拾",
+          items: [
+            { text: "偶拾首页", link: "/excerpts/" },
+            {
+              text: "拜托你一直鲜活……",
+              link: "/excerpts/2026-07-17-01"
+            },
+            {
+              text: "蝉真的是世界上最摇滚的生物了……",
+              link: "/excerpts/2026-07-17-02"
+            },
+            {
+              text: "棋局结束时，国王与卒子……",
+              link: "/excerpts/2026-07-17-03"
             }
           ]
         },

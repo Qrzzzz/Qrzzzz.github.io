@@ -14,7 +14,14 @@ const { frontmatter, isDark, page } = useData();
 const HomeGrainient = defineAsyncComponent(() => import("./HomeGrainient.vue"));
 const clientReady = ref(false);
 
-type PageKind = "home" | "article" | "project" | "document" | "library" | "general";
+type PageKind =
+  | "home"
+  | "article"
+  | "excerpt"
+  | "project"
+  | "document"
+  | "library"
+  | "general";
 
 const pageKind = computed<PageKind>(() => {
   const relativePath = page.value.relativePath.replace(/\\/g, "/");
@@ -25,6 +32,10 @@ const pageKind = computed<PageKind>(() => {
 
   if (relativePath.startsWith("notes/")) {
     return "article";
+  }
+
+  if (relativePath.startsWith("excerpts/")) {
+    return "excerpt";
   }
 
   if (relativePath.startsWith("library/")) {
