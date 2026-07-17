@@ -74,7 +74,7 @@ try {
   );
   assert.match(
     excerpt,
-    /<blockquote><p>公道世间唯白发，贵人头上不曾饶。<\/p><\/blockquote><cite>杜牧《送隐者一绝》<\/cite>/,
+    /<blockquote><p>公道世间唯白发，<br>贵人头上不曾饶。<\/p><\/blockquote><cite>杜牧《送隐者一绝》<\/cite>/,
     "第三则偶拾的古典近义表达结构缺失"
   );
   assert.doesNotMatch(
