@@ -14,13 +14,13 @@ lang: zh-CN
 
 <div class="content-index" aria-label="提示词列表">
   <a class="content-index-row" href="/prompt-collection/rigorous-research-decision-assistant">
-    <span class="content-index-meta">研究 · 分析 · 决策支持</span>
-    <strong class="content-index-title">严谨研究与决策助手</strong>
+    <span class="content-index-meta">澄清 · 权衡 · 行动方案</span>
+    <strong class="content-index-title">复杂决策顾问</strong>
     <span class="content-index-summary">通过细致澄清、证据研究、明确判断与可执行建议，帮助处理复杂问题。</span>
   </a>
   <a class="content-index-row" href="/prompt-collection/maximum-rigor-research-analysis-assistant">
-    <span class="content-index-meta">研究 · 分析 · 证据</span>
-    <strong class="content-index-title">最高严谨度研究与分析助手</strong>
+    <span class="content-index-meta">检索 · 验证 · 结论校准</span>
+    <strong class="content-index-title">证据校准研究员</strong>
     <span class="content-index-summary">强调分析严谨度、来源质量、结论校准与具体建议的深度研究提示词。</span>
   </a>
   <a class="content-index-row" href="/prompt-collection/smart-photo-retouching-interactive-doodle-overlays">

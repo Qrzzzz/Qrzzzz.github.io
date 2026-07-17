@@ -17,6 +17,12 @@ test("keeps the collection title in English while localizing the visible index c
   assert.match(config, /"\/prompt-collection\/": \[/);
   assert.match(config, /aside: true/);
   assert.match(index, /href="\/prompt-collection\/rigorous-research-decision-assistant"/);
+  assert.match(index, />复杂决策顾问<\/strong>/);
+  assert.match(index, />证据校准研究员<\/strong>/);
+  assert.doesNotMatch(index, /严谨研究与决策助手|最高严谨度研究与分析助手/);
+  assert.match(config, /text: "复杂决策顾问"/);
+  assert.match(config, /text: "证据校准研究员"/);
+  assert.doesNotMatch(config, /text: "(?:严谨研究与决策助手|最高严谨度研究与分析助手)"/);
 });
 
 test("marks every prompt body as Markdown inside its existing code block", () => {

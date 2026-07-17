@@ -155,11 +155,11 @@ export default defineConfig({
           items: [
             { text: "提示词首页", link: "/prompt-collection/" },
             {
-              text: "严谨研究与决策助手",
+              text: "复杂决策顾问",
               link: "/prompt-collection/rigorous-research-decision-assistant"
             },
             {
-              text: "最高严谨度研究与分析助手",
+              text: "证据校准研究员",
               link: "/prompt-collection/maximum-rigor-research-analysis-assistant"
             },
             {

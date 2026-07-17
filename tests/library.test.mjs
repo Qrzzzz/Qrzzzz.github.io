@@ -39,12 +39,24 @@ test("links every document, article, prompt, and excerpt from the Library page",
   }
 });
 
-test("renders Library as a responsive folder grid", () => {
+test("renders Library as a responsive editorial index", () => {
   assert.match(layout, /relativePath\.startsWith\("library\/"\)/);
   assert.match(library, /^outline: false$/m);
   assert.match(config, /outline:\s*\{\s*label: "页面导航",\s*level: "deep"/s);
   assert.match(library, /class="library-folder"/);
   assert.match(library, /class="library-folder library-folder--wide"/);
-  assert.match(styles, /\.library-folders\s*\{[\s\S]*?grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
-  assert.match(styles, /@media \(max-width: 767px\)[\s\S]*?\.library-folders\s*\{[\s\S]*?grid-template-columns: minmax\(0, 1fr\)/);
+  assert.match(styles, /\.library-folders\s*\{[^}]*border-top:\s*1px solid var\(--site-line\)/s);
+  assert.match(
+    styles,
+    /\.library-folder\s*\{[^}]*display:\s*grid[^}]*grid-template-columns:\s*72px minmax\(210px, 240px\) minmax\(0, 1fr\)[^}]*border-bottom:\s*1px solid var\(--site-line\)[^}]*background:\s*transparent/s
+  );
+  assert.doesNotMatch(styles, /\.library-folder::before/);
+  assert.match(
+    styles,
+    /\.site-layout\[data-page-kind="library"\] \.vp-doc h1\s*\{[^}]*background-image:\s*none[^}]*-webkit-text-fill-color:\s*currentColor/s
+  );
+  assert.match(
+    styles,
+    /@media \(max-width: 767px\)[\s\S]*?\.library-folder,\s*\n\s*\.library-folder--wide\s*\{[^}]*grid-template-columns:\s*64px minmax\(0, 1fr\)/s
+  );
 });

@@ -59,15 +59,15 @@ outline: false
     <div class="library-folder__entries">
       <a class="library-entry" href="/prompt-collection/rigorous-research-decision-assistant">
         <span class="library-entry__content">
-          <strong>严谨研究与决策助手</strong>
-          <span>研究 · 分析 · 决策支持</span>
+          <strong>复杂决策顾问</strong>
+          <span>澄清 · 权衡 · 行动方案</span>
         </span>
         <span aria-hidden="true">→</span>
       </a>
       <a class="library-entry" href="/prompt-collection/maximum-rigor-research-analysis-assistant">
         <span class="library-entry__content">
-          <strong>最高严谨度研究与分析助手</strong>
-          <span>研究 · 分析 · 证据</span>
+          <strong>证据校准研究员</strong>
+          <span>检索 · 验证 · 结论校准</span>
         </span>
         <span aria-hidden="true">→</span>
       </a>
