@@ -33,9 +33,7 @@ test("keeps every excerpt in its own titleless Markdown page", () => {
   assert.match(second, /这太摇滚了。/);
   assert.doesNotMatch(second, /^next: false$/m);
   assert.match(third, /<blockquote lang="it">/);
-  assert.match(third, /常被视作意大利谚语 · 确切出处待考/);
-  assert.match(third, /<h2 id="excerpt-literal-translation">直译<\/h2>/);
-  assert.match(third, /<h2 id="excerpt-classical-parallel">古典近义表达<\/h2>/);
+  assert.match(third, /<figcaption>意大利谚语<\/figcaption>/);
   assert.match(third, /杜牧《送隐者一绝》/);
   assert.match(third, /^next: false$/m);
   assert.match(styles, /\.vp-doc \.excerpt-entry__heading\s*\{[\s\S]*?clip-path: inset\(50%\)/);
