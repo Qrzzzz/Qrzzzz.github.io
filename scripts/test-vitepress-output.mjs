@@ -13,6 +13,7 @@ const publicFixture = path.join(publicFixtureRoot, "manual.pdf");
 const outputRoot = path.join(repositoryRoot, ".cache/vitepress-output-test");
 const outputHtml = path.join(outputRoot, "__vitepress-output-test.html");
 const outputPdf = path.join(outputRoot, "__vitepress-output-test/manual.pdf");
+const excerptHtml = path.join(outputRoot, "excerpts/2026-07-17-03.html");
 const vitepressBin = path.join(repositoryRoot, "node_modules/vitepress/bin/vitepress.js");
 const pdfFixture = "%PDF-1.4\n% VitePress public attachment fixture\n";
 const releaseLanguages = ["zh-CN", "zh-TW", "en", "fr", "ja", "es"];
@@ -63,6 +64,24 @@ try {
   assert.match(html, /href="#重复-1"/, "重复标题链接未指向第二个实际锚点");
   assert.ok(existsSync(outputPdf), "public PDF 没有进入最终构建产物");
   assert.equal(readFileSync(outputPdf, "utf8"), pdfFixture, "最终 PDF 内容与 public 源文件不一致");
+
+  assert.ok(existsSync(excerptHtml), "验收构建缺少第三则偶拾页面");
+  const excerpt = readFileSync(excerptHtml, "utf8");
+  assert.equal(
+    (excerpt.match(/class="excerpt-rendering"/g) ?? []).length,
+    2,
+    "第三则偶拾没有渲染为两栏中文表达"
+  );
+  assert.match(
+    excerpt,
+    /<blockquote><p>公道世间唯白发，贵人头上不曾饶。<\/p><\/blockquote><cite>杜牧《送隐者一绝》<\/cite>/,
+    "第三则偶拾的古典近义表达结构缺失"
+  );
+  assert.doesNotMatch(
+    excerpt,
+    /<code>&lt;div class="excerpt-rendering"&gt;/,
+    "第三则偶拾的网页错误显示了 HTML 源码"
+  );
 
   const manifest = generatedManifest(path.join(repositoryRoot, "docs/projects/lyrics-card-generator/docs"));
   for (const language of releaseLanguages) {
