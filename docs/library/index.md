@@ -1,6 +1,6 @@
 ---
 title: Library
-description: 文档、文章、Prompt Collection 与偶拾的统一入口。
+description: 把可复用的方法、值得留下的文章、持续更新的提示词，以及偶然遇见的句子放在同一个入口。可以先进入一个分类，也可以从这里直接打开任意内容。
 outline: false
 ---
 

@@ -25,6 +25,14 @@ test("merges the four content areas into one Library navigation entry", () => {
   assert.match(library, />偶拾<\/a><\/h2>/);
 });
 
+test("uses the visible Library introduction as the page description", () => {
+  const frontmatterDescription = library.match(/^description:\s*(.+)$/m)?.[1];
+  const visibleDescription = library.match(/^# Library\r?\n\r?\n([^\r\n]+)$/m)?.[1];
+
+  assert.ok(frontmatterDescription);
+  assert.equal(frontmatterDescription, visibleDescription);
+});
+
 test("links every document, article, prompt, and excerpt from the Library page", () => {
   const routes = [
     ...contentRoutes("guide"),

@@ -56,6 +56,10 @@ const pageKind = computed<PageKind>(() => {
   return "general";
 });
 
+const hasGrainientBackground = computed(
+  () => pageKind.value === "home" || pageKind.value === "library"
+);
+
 const pageLanguage = computed(() => {
   const lang = frontmatter.value.lang;
   return typeof lang === "string" && /^[a-z]{2,3}(?:-[a-z0-9]+)*$/i.test(lang)
@@ -311,7 +315,7 @@ onBeforeUnmount(() => {
     :data-page-kind="pageKind"
     :data-page-language="pageLanguage"
   >
-    <HomeGrainient v-if="clientReady && pageKind === 'home'" />
+    <HomeGrainient v-if="clientReady && hasGrainientBackground" />
 
     <Layout>
       <template #nav-bar-content-before>
