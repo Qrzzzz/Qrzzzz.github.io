@@ -1,12 +1,12 @@
 ---
 title: Library
-description: 把可复用的方法、值得留下的文章、持续更新的提示词，以及偶然遇见的句子放在同一个入口。可以先进入一个分类，也可以从这里直接打开任意内容。
+description: 可以先进入一个分类，也可以从这里直接打开任意内容。
 outline: false
 ---
 
 # Library
 
-把可复用的方法、值得留下的文章、持续更新的提示词，以及偶然遇见的句子放在同一个入口。可以先进入一个分类，也可以从这里直接打开任意内容。
+可以先进入一个分类，也可以从这里直接打开任意内容。
 
 <div class="library-folders" aria-label="内容分类">
   <section class="library-folder" aria-labelledby="library-docs-title">
@@ -36,7 +36,7 @@ outline: false
       <a class="library-entry" href="/notes/until-the-tower-falls">
         <span class="library-entry__content">
           <strong>直到大厦崩塌：关于“赢”的谎言</strong>
-          <span>从《太阳》与《高塔》谈成功、传奇与幸存的幻灭。</span>
+          <span>For folks like us? Wrong city. Wrong people.</span>
         </span>
         <span aria-hidden="true">→</span>
       </a>
