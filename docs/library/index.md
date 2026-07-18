@@ -36,7 +36,7 @@ outline: false
       <a class="library-entry" href="/notes/until-the-tower-falls">
         <span class="library-entry__content">
           <strong>直到大厦崩塌：关于“赢”的谎言</strong>
-          <span>For folks like us? Wrong city. Wrong people.</span>
+          <span>Here, for folks like us? Wrong city, wrong people.</span>
         </span>
         <span aria-hidden="true">→</span>
       </a>
