@@ -1,6 +1,6 @@
 ---
 title: 直到大厦崩塌：关于“赢”的谎言
-description: 从《太阳》与《高塔》谈《赛博朋克 2077》如何拆解关于成功、传奇与幸存的幻想。
+description: Here, for folks like us? Wrong city, wrong people.
 ---
 
 # 直到大厦崩塌：关于“赢”的谎言
