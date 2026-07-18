@@ -163,6 +163,10 @@ export default defineConfig({
               link: "/prompt-collection/maximum-rigor-research-analysis-assistant"
             },
             {
+              text: "学习模式导师",
+              link: "/prompt-collection/learning-mode-tutor"
+            },
+            {
               text: "智能修图与互动涂鸦叠加",
               link: "/prompt-collection/smart-photo-retouching-interactive-doodle-overlays"
             },

@@ -71,6 +71,13 @@ outline: false
         </span>
         <span aria-hidden="true">→</span>
       </a>
+      <a class="library-entry" href="/prompt-collection/learning-mode-tutor">
+        <span class="library-entry__content">
+          <strong>学习模式导师</strong>
+          <span>引导 · 练习 · 巩固</span>
+        </span>
+        <span aria-hidden="true">→</span>
+      </a>
       <a class="library-entry" href="/prompt-collection/smart-photo-retouching-interactive-doodle-overlays">
         <span class="library-entry__content">
           <strong>智能修图与互动涂鸦叠加</strong>

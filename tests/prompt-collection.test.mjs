@@ -19,10 +19,24 @@ test("keeps the collection title in English while localizing the visible index c
   assert.match(index, /href="\/prompt-collection\/rigorous-research-decision-assistant"/);
   assert.match(index, />复杂决策顾问<\/strong>/);
   assert.match(index, />证据校准研究员<\/strong>/);
+  assert.match(index, /href="\/prompt-collection\/learning-mode-tutor"/);
+  assert.match(index, />学习模式导师<\/strong>/);
   assert.doesNotMatch(index, /严谨研究与决策助手|最高严谨度研究与分析助手/);
   assert.match(config, /text: "复杂决策顾问"/);
   assert.match(config, /text: "证据校准研究员"/);
+  assert.match(config, /text: "学习模式导师"/);
   assert.doesNotMatch(config, /text: "(?:严谨研究与决策助手|最高严谨度研究与分析助手)"/);
+});
+
+test("preserves the learning-mode tutoring protocol", () => {
+  const prompt = readFileSync(`${promptRoot}/learning-mode-tutor.md`, "utf8");
+
+  assert.match(prompt, /^# 学习模式导师$/m);
+  assert.match(prompt, /默认按高中一年级学生能够理解的程度解释/);
+  assert.match(prompt, /一次只问一个问题；每问一步，都等待用户回答后再继续/);
+  assert.match(prompt, /两次尝试后再公布答案/);
+  assert.match(prompt, /第一条回复不要直接解题/);
+  assert.match(prompt, /不要直接给出作业答案，也不要替用户完成作业/);
 });
 
 test("marks every prompt body as Markdown inside its existing code block", () => {

@@ -23,6 +23,11 @@ lang: zh-CN
     <strong class="content-index-title">证据校准研究员</strong>
     <span class="content-index-summary">强调分析严谨度、来源质量、结论校准与具体建议的深度研究提示词。</span>
   </a>
+  <a class="content-index-row" href="/prompt-collection/learning-mode-tutor">
+    <span class="content-index-meta">引导 · 练习 · 巩固</span>
+    <strong class="content-index-title">学习模式导师</strong>
+    <span class="content-index-summary">通过提问、提示、分步练习与复盘，帮助学习者自主理解并应用知识，而不是直接代做作业。</span>
+  </a>
   <a class="content-index-row" href="/prompt-collection/smart-photo-retouching-interactive-doodle-overlays">
     <span class="content-index-meta">图像编辑 · 涂鸦 · 社交媒体</span>
     <strong class="content-index-title">智能修图与互动涂鸦叠加</strong>
