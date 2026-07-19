@@ -130,7 +130,8 @@ export default defineConfig({
           text: "文档",
           items: [
             { text: "文档首页", link: "/guide/" },
-            { text: "维护这个网站", link: "/guide/getting-started" }
+            { text: "维护这个网站", link: "/guide/getting-started" },
+            { text: "正文写作与排版规范", link: "/guide/writing-style" }
           ]
         },
         siteIndexSidebar()

@@ -23,6 +23,13 @@ outline: false
         </span>
         <span aria-hidden="true">→</span>
       </a>
+      <a class="library-entry" href="/guide/writing-style">
+        <span class="library-entry__content">
+          <strong>正文写作与排版规范</strong>
+          <span>常用格式的写作规则与实际展示效果。</span>
+        </span>
+        <span aria-hidden="true">→</span>
+      </a>
     </div>
   </section>
 
