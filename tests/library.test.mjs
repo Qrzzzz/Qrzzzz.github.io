@@ -27,7 +27,9 @@ test("merges the four content areas into one Library navigation entry", () => {
 
 test("uses the visible Library introduction as the page description", () => {
   const frontmatterDescription = library.match(/^description:\s*(.+)$/m)?.[1];
-  const visibleDescription = library.match(/^# Library\r?\n\r?\n([^\r\n]+)$/m)?.[1];
+  const visibleDescription = library.match(
+    /^# Library\r?\n\r?\n<p class="lead">([^\r\n]+)<\/p>$/m
+  )?.[1];
 
   assert.ok(frontmatterDescription);
   assert.equal(frontmatterDescription, visibleDescription);
@@ -53,6 +55,8 @@ test("renders Library as a responsive editorial index", () => {
   assert.match(config, /outline:\s*\{\s*label: "页面导航",\s*level: "deep"/s);
   assert.match(library, /class="library-folder"/);
   assert.match(library, /class="library-folder library-folder--wide"/);
+  assert.match(library, /class="library-entry__title"/);
+  assert.doesNotMatch(library, /<strong(?:\s|>)/);
   assert.match(styles, /\.library-folders\s*\{[^}]*border-top:\s*1px solid var\(--site-line\)/s);
   assert.match(
     styles,

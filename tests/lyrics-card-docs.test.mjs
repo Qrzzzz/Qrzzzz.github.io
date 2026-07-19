@@ -4,6 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import test from "node:test";
 import {
+  CONTENT_FORMAT,
   PRODUCTION_BASELINE,
   UPSTREAM_REPOSITORY,
   importLyricsCardDocs
@@ -36,6 +37,14 @@ const RELEASE_NAV_LABELS = {
   ja: (version) => `${version} の言語`,
   es: (version) => `Idiomas de ${version}`
 };
+const SYNC_NOTICE_TITLES = {
+  "zh-CN": "本页由上游同步",
+  "zh-TW": "本頁由上游同步",
+  en: "This page is synchronized from upstream",
+  fr: "Cette page est synchronisée depuis le dépôt source",
+  ja: "このページは上流リポジトリと同期しています",
+  es: "Esta página se sincroniza desde el repositorio de origen"
+};
 
 function writeReleaseSet(source, version) {
   for (const language of RELEASE_LANGUAGES) {
@@ -66,15 +75,24 @@ function fixture() {
   writeFileSync(
     path.join(root, "README.md"),
     `<div align="center">\n\n# 🎧 Lyrics Card Generator\n\n### 生成可用于分享的高质感歌词分享卡片\n\n` +
+    `**Windows desktop · High-quality export**\n\n` +
     `<p><a href="./README.en.md">English</a> · <a href="https://qrzzzz.github.io/lyrics-card-generator/">在线版</a></p>\n\n` +
-    `</div>\n\n---\n\n<img src="./public/app-icon.png" alt="icon" />\n\n` +
+    `</div>\n\n---\n\n<img src="./public/app-icon.png" alt="icon" align="right" />\n\n` +
+    `* 项目入口\n\n` +
     `## 下载\n\n[桌面文档](./docs/desktop.md) · [发布说明](./docs/releases/v1.0.0.zh-CN.md) · [许可证](./LICENSE)\n`
   );
   writeFileSync(
     path.join(source, "desktop.md"),
-    "# Desktop\n\n[示例](./examples.md)\n\n![图](./assets/demo.png)\n\n[维护手册](./assets/manual.pdf)\n\n<details><summary>详情</summary>内容</details>\n"
+    "---\nlang: en\n---\n\n# Desktop\n\n* Desktop entry  \n\n[Examples](./examples.md)\n\n![Image](./assets/demo.png)\n\n[Maintenance manual](./assets/manual.pdf)\n\n<details><summary>Show desktop maintenance notes</summary>Content</details>\n"
   );
-  writeFileSync(path.join(source, "examples.md"), "# Examples\n\n[版本](./releases/)\n");
+  writeFileSync(
+    path.join(source, "examples.md"),
+    "# 示例歌曲维护\n\n这里记录示例歌曲的维护流程与内容约束。\n\n[版本说明](./releases/)\n"
+  );
+  writeFileSync(
+    path.join(source, "maintenance-plan.md"),
+    "# Maintenance plan\n\nThis plan documents a small upstream maintenance change.\n"
+  );
   writeFileSync(
     path.join(source, "releases/README.md"),
     "# 多语言发布说明规范\n\n[v1 中文](./v1.0.0.zh-CN.md) · [v1 English](./v1.0.0.en.md)\n"
@@ -99,7 +117,9 @@ test("imports stable routes, links, assets and metadata", () => {
       commitSha: SHA,
       importedAt: IMPORTED_AT
     });
-    assert.equal(manifest.markdownCount, 33);
+    assert.equal(manifest.schemaVersion, 2);
+    assert.equal(manifest.contentFormat, CONTENT_FORMAT);
+    assert.equal(manifest.markdownCount, 34);
     assert.equal(manifest.assetCount, 2);
     assert.deepEqual(manifest.projectPage, {
       source: "README.md",
@@ -119,10 +139,32 @@ test("imports stable routes, links, assets and metadata", () => {
     assert.match(desktop, /\/projects\/lyrics-card-generator\/docs\/examples\//);
     assert.match(desktop, /\/projects\/lyrics-card-generator\/docs\/assets\/demo\.png/);
     assert.match(desktop, /\/projects\/lyrics-card-generator\/docs\/assets\/manual\.pdf/);
-    assert.match(desktop, /<details><summary>详情<\/summary>/);
+    assert.match(desktop, /^contentFormat: "site-writing-style@1"$/m);
+    assert.match(desktop, /^lang: "en"$/m);
+    assert.match(desktop, /^description: "Desktop: upstream maintenance documentation for Lyrics Card Generator\."$/m);
+    assert.match(
+      desktop,
+      /<details>\n<summary>Show desktop maintenance notes<\/summary>\n\nContent\n\n<\/details>/
+    );
+    assert.match(desktop, /^- Desktop entry$/m);
+    assert.doesNotMatch(desktop, /^- Desktop entry[ \t]+$/m);
     assert.match(desktop, /<\/nav>\n\n# Desktop/);
-    assert.match(desktop, /aria-current="page" lang="zh-CN">桌面端维护<\/span>/);
+    assert.match(
+      desktop,
+      new RegExp(
+        `# Desktop\\n\\n<aside class="project-docs-sync sync-notice"[\\s\\S]*?` +
+        `${UPSTREAM_REPOSITORY}/blob/${SHA}/docs/desktop\\.md`
+      )
+    );
+    assert.match(desktop, /it does not maintain a separate copy\. Make content changes upstream first\./);
+    assert.match(desktop, /aria-current="page" lang="en">Desktop maintenance<\/span>/);
     assert.match(desktop, />项目文档<\/a>/);
+    const maintenancePlan = readFileSync(path.join(output, "maintenance-plan/index.md"), "utf8");
+    assert.match(maintenancePlan, /^lang: "en"$/m);
+    assert.match(maintenancePlan, /This page is synchronized from upstream/);
+    const examples = readFileSync(path.join(output, "examples/index.md"), "utf8");
+    assert.match(examples, /^lang: "zh-CN"$/m);
+    assert.match(examples, /本页由上游同步/);
 
     for (const language of RELEASE_LANGUAGES) {
       const release = readFileSync(path.join(output, `releases/v1.0.0.${language}/index.md`), "utf8");
@@ -130,6 +172,7 @@ test("imports stable routes, links, assets and metadata", () => {
       assert.equal((release.match(/^lang:/gm) ?? []).length, 1);
       assert.match(release, new RegExp(`sourcePath: "docs/releases/v1\\.0\\.0\\.${language}\\.md"`));
       assert.match(release, new RegExp(`sourceCommit: "${SHA}"`));
+      assert.match(release, new RegExp(`^contentFormat: "${CONTENT_FORMAT}"$`, "m"));
       assert.match(release, /<nav class="docs-breadcrumb" aria-label="面包屑" lang="zh-CN">/);
       assert.match(
         release,
@@ -147,6 +190,13 @@ test("imports stable routes, links, assets and metadata", () => {
       for (const candidate of RELEASE_LANGUAGES) {
         assert.ok(navigation.includes(`lang="${candidate}" hreflang="${candidate}"`));
       }
+      const syncNotice = release.match(/<aside class="project-docs-sync sync-notice"[\s\S]*?<\/aside>/)?.[0];
+      assert.ok(syncNotice, `${language} release should explain the synchronization model`);
+      assert.ok(syncNotice.includes(`lang="${language}"`));
+      assert.ok(syncNotice.includes(SYNC_NOTICE_TITLES[language]));
+      assert.ok(syncNotice.includes(`${UPSTREAM_REPOSITORY}/blob/${SHA}/docs/releases/v1.0.0.${language}.md`));
+      assert.ok(release.indexOf("# v1.0.0") < release.indexOf("release-language-nav"));
+      assert.ok(release.indexOf("release-language-nav") < release.indexOf("sync-notice"));
       const sourceInfo = release.match(/<footer class="project-docs-sync import-source"[\s\S]*?<\/footer>/)?.[0];
       assert.ok(sourceInfo, `${language} release should expose visible source information`);
       assert.ok(sourceInfo.includes(`lang="${language}"`));
@@ -167,6 +217,8 @@ test("imports stable routes, links, assets and metadata", () => {
         ),
         `${entry.source} should render source provenance at the page tail`
       );
+      assert.match(imported, new RegExp(`^contentFormat: "${CONTENT_FORMAT}"$`, "m"));
+      assert.match(imported, /<aside class="project-docs-sync sync-notice"/);
       assert.match(imported, /<\/footer>\n$/);
     }
 
@@ -211,7 +263,21 @@ test("imports stable routes, links, assets and metadata", () => {
     const projectPage = readFileSync(path.join(root, "index.md"), "utf8");
     assert.match(projectPage, /^sourcePath: "README\.md"$/m);
     assert.match(projectPage, new RegExp(`^sourceCommit: "${SHA}"$`, "m"));
+    assert.match(projectPage, new RegExp(`^contentFormat: "${CONTENT_FORMAT}"$`, "m"));
     assert.match(projectPage, /# 🎧 Lyrics Card Generator/);
+    assert.match(projectPage, /<p class="lead">生成可用于分享的高质感歌词分享卡片<\/p>/);
+    assert.match(projectPage, /<p class="project-readme-summary">Windows desktop · High-quality export<\/p>/);
+    assert.doesNotMatch(projectPage, /^\*\*Windows desktop/m);
+    assert.match(projectPage, /class="project-readme-icon"/);
+    assert.doesNotMatch(projectPage, /\salign="right"/);
+    assert.match(projectPage, /^- 项目入口$/m);
+    assert.match(
+      projectPage,
+      new RegExp(
+        `<aside class="project-docs-sync sync-notice"[\\s\\S]*?` +
+        `${UPSTREAM_REPOSITORY}/blob/${SHA}/README\\.md`
+      )
+    );
     assert.match(projectPage, /\/projects\/lyrics-card-generator\/docs\/desktop\//);
     assert.match(projectPage, /\/projects\/lyrics-card-generator\/docs\/releases\/v1\.0\.0\.zh-CN\//);
     assert.match(projectPage, new RegExp(`${UPSTREAM_REPOSITORY}/blob/${SHA}/README\.en\.md`));
@@ -221,9 +287,31 @@ test("imports stable routes, links, assets and metadata", () => {
     assert.doesNotMatch(projectPage, /<div align="center">/);
     const landing = readFileSync(path.join(output, "index.md"), "utf8");
     assert.match(landing, /^title: 项目文档$/m);
+    assert.match(landing, new RegExp(`^contentFormat: "${CONTENT_FORMAT}"$`, "m"));
     assert.match(landing, /^# 项目文档$/m);
+    assert.match(landing, /<p class="lead">这里集中展示该项目从源仓库同步的公开维护文档和版本资料。<\/p>/);
     assert.doesNotMatch(landing, /发布文档/);
+    assert.match(landing, /href="\/projects\/lyrics-card-generator\/docs\/maintenance-plan\/"/);
+    assert.match(landing, /class="content-index-title" lang="en">Maintenance plan<\/span>/);
+    assert.match(landing, /<code>docs\/maintenance-plan\.md<\/code>/);
+    assert.doesNotMatch(landing, /<a class="project-docs-card"[^>]*><strong>/);
     assert.match(landing, new RegExp(SHA.slice(0, 8)));
+
+    const sourceBeforeRepeat = readFileSync(path.join(source, "desktop.md"), "utf8");
+    const outputBeforeRepeat = readFileSync(path.join(output, "desktop/index.md"), "utf8");
+    const projectBeforeRepeat = readFileSync(path.join(root, "index.md"), "utf8");
+    const manifestBeforeRepeat = readFileSync(path.join(output, ".import-manifest.json"), "utf8");
+    importLyricsCardDocs({
+      sourceRoot: source,
+      outputRoot: output,
+      publicOutputRoot: publicOutput,
+      commitSha: SHA,
+      importedAt: IMPORTED_AT
+    });
+    assert.equal(readFileSync(path.join(source, "desktop.md"), "utf8"), sourceBeforeRepeat);
+    assert.equal(readFileSync(path.join(output, "desktop/index.md"), "utf8"), outputBeforeRepeat);
+    assert.equal(readFileSync(path.join(root, "index.md"), "utf8"), projectBeforeRepeat);
+    assert.equal(readFileSync(path.join(output, ".import-manifest.json"), "utf8"), manifestBeforeRepeat);
   } finally {
     rmSync(root, { recursive: true, force: true });
   }

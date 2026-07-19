@@ -4,6 +4,7 @@ import path from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
 import {
+  CONTENT_FORMAT,
   DOCS_ROUTE,
   GENERATED_PROJECT_PAGE,
   GENERATED_PUBLIC_ROOT,
@@ -130,6 +131,10 @@ function checkBuild(manifest) {
 
 try {
   const manifest = generatedManifest(generatedRoot);
+  if (manifest.schemaVersion !== 2) failures.push("导入清单不是当前 schemaVersion 2。");
+  if (manifest.contentFormat !== CONTENT_FORMAT) {
+    failures.push(`导入清单没有使用当前内容格式 ${CONTENT_FORMAT}。`);
+  }
   if (!/^[0-9a-f]{40}$/i.test(manifest.commit)) failures.push("导入清单中的上游 commit SHA 无效。");
   if (!manifest.importedAt || Number.isNaN(Date.parse(manifest.importedAt))) failures.push("导入清单缺少有效同步时间。");
   if (!Array.isArray(manifest.routes)) {
@@ -152,6 +157,15 @@ try {
       failures.push("项目页与文档清单没有锁定到同一个上游 commit。");
     }
     if (!projectMarkdown.includes("sourcePath: \"README.md\"")) failures.push("项目页没有记录 README.md 来源。");
+    if (!projectMarkdown.includes(`contentFormat: \"${CONTENT_FORMAT}\"`)) {
+      failures.push("项目页没有记录当前内容格式。");
+    }
+    if (!projectMarkdown.includes('class="project-docs-sync sync-notice"')) {
+      failures.push("项目页没有说明内容由上游同步。");
+    }
+    if (!projectMarkdown.includes(`${manifest.repository}/blob/${manifest.commit}/README.md`)) {
+      failures.push("项目页的同步说明没有指向锁定 commit 的 README.md。");
+    }
     if (!projectMarkdown.includes(DOCS_ROUTE)) failures.push("项目页没有将 README 文档链接改写为本站路由。");
   }
 
@@ -160,7 +174,29 @@ try {
     const key = entry.route.toLowerCase();
     if (routeKeys.has(key)) failures.push(`重复路由：${entry.route}`);
     routeKeys.add(key);
-    if (!existsSync(routeOutput(entry.route))) failures.push(`生成源文件缺失：${entry.route}`);
+    const output = routeOutput(entry.route);
+    if (!existsSync(output)) {
+      failures.push(`生成源文件缺失：${entry.route}`);
+      continue;
+    }
+    if (!entry.source) continue;
+    const importedMarkdown = readFileSync(output, "utf8");
+    if (!importedMarkdown.includes(`contentFormat: \"${CONTENT_FORMAT}\"`)) {
+      failures.push(`生成页面没有记录当前内容格式：${entry.route}`);
+    }
+    if (!importedMarkdown.includes('class="project-docs-sync sync-notice"')) {
+      failures.push(`生成页面没有说明内容由上游同步：${entry.route}`);
+    }
+    const encodedSource = entry.source.split("/").map((part) => encodeURIComponent(part)).join("/");
+    if (!importedMarkdown.includes(`${manifest.repository}/blob/${manifest.commit}/${encodedSource}`)) {
+      failures.push(`生成页面没有链接到锁定 commit 的源文件：${entry.route}`);
+    }
+    if (/^\s*\*\s+/m.test(importedMarkdown)) {
+      failures.push(`生成页面仍使用星号列表，未按站内格式规范化：${entry.route}`);
+    }
+    if (/<details\b[^>]*>\s*<summary\b[^>]*>.*?<\/summary>.*?<\/details>/i.test(importedMarkdown)) {
+      failures.push(`生成页面仍包含单行折叠内容：${entry.route}`);
+    }
   }
 
   const requiredRoutes = [
@@ -171,6 +207,17 @@ try {
   ];
   for (const route of requiredRoutes) {
     if (!routeKeys.has(route.toLowerCase())) failures.push(`缺少必要路由：${route}`);
+  }
+  const landingMarkdown = readFileSync(path.join(generatedRoot, "index.md"), "utf8");
+  const supplementalDocs = (manifest.routes ?? []).filter(
+    (entry) => entry.source &&
+      !["docs/desktop.md", "docs/examples.md", "docs/releases/README.md"].includes(entry.source) &&
+      !entry.source.startsWith("docs/releases/")
+  );
+  for (const entry of supplementalDocs) {
+    if (!landingMarkdown.includes(`href="${entry.route}"`)) {
+      failures.push(`项目文档入口没有自动收录上游维护文档：${entry.source}`);
+    }
   }
   const releasePages = (manifest.routes ?? []).filter(
     (entry) => /^docs\/releases\/v(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?\.(?:zh-CN|zh-TW|en|fr|ja|es)\.md$/.test(entry.source ?? "")

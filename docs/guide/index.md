@@ -1,24 +1,23 @@
 ---
-
 title: 文档
 description: 记录值得重复使用的方法与经验。
 ---
 
 # 文档
 
-这里整理可能再次使用的方法。
+<p class="lead">这里整理已经验证、可能再次使用的站点维护方法与内容规范。</p>
 
 ## 现有文档
 
 <div class="content-index" aria-label="文档列表">
   <a class="content-index-row" href="/guide/getting-started">
     <span class="content-index-meta">站点维护</span>
-    <strong class="content-index-title">维护这个网站</strong>
+    <span class="content-index-title">维护这个网站</span>
     <span class="content-index-summary">介绍本地编辑、构建检查和 GitHub Pages 发布流程。</span>
   </a>
   <a class="content-index-row" href="/guide/writing-style">
     <span class="content-index-meta">内容规范</span>
-    <strong class="content-index-title">正文写作与排版规范</strong>
+    <span class="content-index-title">正文写作与排版规范</span>
     <span class="content-index-summary">统一标题、段落、强调、引用、代码、表格等常用正文格式。</span>
   </a>
 </div>

@@ -100,7 +100,13 @@ try {
         `${language} 页面缺少 ${candidate} 的 lang/hreflang`
       );
     }
+    assert.match(releaseHtml, /class="project-docs-sync sync-notice"/, `${language} 页面缺少同步说明`);
     assert.match(releaseHtml, /class="project-docs-sync import-source"/, `${language} 页面缺少可见来源信息`);
+    assert.match(
+      releaseHtml,
+      new RegExp(`${escapeRegExp(manifest.repository)}/blob/${manifest.commit}/docs/releases/`),
+      `${language} 页面缺少锁定 commit 的源文件链接`
+    );
     assert.match(
       releaseHtml,
       new RegExp(`${escapeRegExp(manifest.repository)}/commit/${manifest.commit}`),
@@ -120,7 +126,7 @@ try {
   assert.match(releaseArchiveHtml, /class="release-archive"/, "版本档案缺少可见版本列表");
   assert.match(releaseArchiveHtml, /class="project-docs-sync import-source"/, "版本档案缺少可见来源信息");
 
-  console.log("[docs:output-test] 通过：锚点、public PDF、六语 html lang 与可见来源信息均有效。");
+  console.log("[docs:output-test] 通过：锚点、public PDF、六语 html lang、同步说明与可见来源信息均有效。");
 } catch (error) {
   console.error(`[docs:output-test] ${error instanceof Error ? error.message : error}`);
   process.exitCode = 1;

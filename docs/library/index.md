@@ -6,7 +6,7 @@ outline: false
 
 # Library
 
-可以先进入一个分类，也可以从这里直接打开任意内容。
+<p class="lead">可以先进入一个分类，也可以从这里直接打开任意内容。</p>
 
 <div class="library-folders" aria-label="内容分类">
   <section class="library-folder" aria-labelledby="library-docs-title">
@@ -18,14 +18,14 @@ outline: false
     <div class="library-folder__entries">
       <a class="library-entry" href="/guide/getting-started">
         <span class="library-entry__content">
-          <strong>维护这个网站</strong>
+          <span class="library-entry__title">维护这个网站</span>
           <span>从本地编辑、构建检查到 GitHub Pages 发布。</span>
         </span>
         <span aria-hidden="true">→</span>
       </a>
       <a class="library-entry" href="/guide/writing-style">
         <span class="library-entry__content">
-          <strong>正文写作与排版规范</strong>
+          <span class="library-entry__title">正文写作与排版规范</span>
           <span>常用格式的写作规则与实际展示效果。</span>
         </span>
         <span aria-hidden="true">→</span>
@@ -42,14 +42,14 @@ outline: false
     <div class="library-folder__entries">
       <a class="library-entry" href="/notes/until-the-tower-falls">
         <span class="library-entry__content">
-          <strong>直到大厦崩塌：关于“赢”的谎言</strong>
-          <span>Here, for folks like us? Wrong city, wrong people.</span>
+          <span class="library-entry__title">直到大厦崩塌：关于“赢”的谎言</span>
+          <span>从《太阳》与《高塔》谈成功、传奇与幸存的幻灭。</span>
         </span>
         <span aria-hidden="true">→</span>
       </a>
       <a class="library-entry" href="/notes/why-this-site">
         <span class="library-entry__content">
-          <strong>为什么要有这个网站</strong>
+          <span class="library-entry__title">为什么要有这个网站</span>
           <span>给分散的文字与项目找一个长期入口。</span>
         </span>
         <span aria-hidden="true">→</span>
@@ -66,35 +66,35 @@ outline: false
     <div class="library-folder__entries">
       <a class="library-entry" href="/prompt-collection/rigorous-research-decision-assistant">
         <span class="library-entry__content">
-          <strong>复杂决策顾问</strong>
+          <span class="library-entry__title">复杂决策顾问</span>
           <span>澄清 · 权衡 · 行动方案</span>
         </span>
         <span aria-hidden="true">→</span>
       </a>
       <a class="library-entry" href="/prompt-collection/maximum-rigor-research-analysis-assistant">
         <span class="library-entry__content">
-          <strong>证据校准研究员</strong>
+          <span class="library-entry__title">证据校准研究员</span>
           <span>检索 · 验证 · 结论校准</span>
         </span>
         <span aria-hidden="true">→</span>
       </a>
       <a class="library-entry" href="/prompt-collection/learning-mode-tutor">
         <span class="library-entry__content">
-          <strong>学习模式导师</strong>
+          <span class="library-entry__title">学习模式导师</span>
           <span>引导 · 练习 · 巩固</span>
         </span>
         <span aria-hidden="true">→</span>
       </a>
       <a class="library-entry" href="/prompt-collection/smart-photo-retouching-interactive-doodle-overlays">
         <span class="library-entry__content">
-          <strong>智能修图与互动涂鸦叠加</strong>
+          <span class="library-entry__title">智能修图与互动涂鸦叠加</span>
           <span>图像编辑 · 涂鸦 · 社交媒体</span>
         </span>
         <span aria-hidden="true">→</span>
       </a>
       <a class="library-entry" href="/prompt-collection/hand-drawn-educational-infographic-generator">
         <span class="library-entry__content">
-          <strong>手绘教育信息图生成器</strong>
+          <span class="library-entry__title">手绘教育信息图生成器</span>
           <span>信息图 · 插画 · 视觉摘要</span>
         </span>
         <span aria-hidden="true">→</span>
@@ -111,21 +111,21 @@ outline: false
     <div class="library-folder__entries">
       <a class="library-entry" href="/excerpts/2026-07-17-01">
         <span class="library-entry__content">
-          <strong class="excerpt-preview">拜托你一直鲜活，keep learning，去思考原子……</strong>
+          <span class="library-entry__title excerpt-preview">拜托你一直鲜活，keep learning，去思考原子……</span>
           <span>2026.07.17</span>
         </span>
         <span aria-hidden="true">→</span>
       </a>
       <a class="library-entry" href="/excerpts/2026-07-17-02">
         <span class="library-entry__content">
-          <strong class="excerpt-preview">蝉真的是世界上最摇滚的生物了。一生大部分时间……</strong>
+          <span class="library-entry__title excerpt-preview">蝉真的是世界上最摇滚的生物了。一生大部分时间……</span>
           <span>2026.07.17</span>
         </span>
         <span aria-hidden="true">→</span>
       </a>
       <a class="library-entry" href="/excerpts/2026-07-17-03">
         <span class="library-entry__content">
-          <strong class="excerpt-preview">棋局结束时，国王与卒子归入同一盒中。</strong>
+          <span class="library-entry__title excerpt-preview">棋局结束时，国王与卒子归入同一盒中。</span>
           <span>2026.07.17</span>
         </span>
         <span aria-hidden="true">→</span>

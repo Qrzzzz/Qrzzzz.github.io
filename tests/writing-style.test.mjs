@@ -32,6 +32,7 @@ test("documents the common formats used in article content", () => {
     "提示块",
     "折叠内容与分隔线",
     "图片、图注与无障碍文本",
+    "同步内容与来源",
     "发布前检查"
   ]) {
     assert.match(writingStyle, new RegExp(`^## ${section}$`, "m"));
@@ -86,6 +87,9 @@ test("uses specific, publication-ready wording in every format example", () => {
   ]) {
     assert.doesNotMatch(writingStyle, placeholder);
   }
+
+  assert.match(writingStyle, /项目文档必须采用前一种方式/);
+  assert.match(writingStyle, /内容修改先进入上游/);
 });
 
 test("styles inline semantic formats for every VitePress document", () => {

@@ -17,10 +17,11 @@ test("keeps the collection title in English while localizing the visible index c
   assert.match(config, /"\/prompt-collection\/": \[/);
   assert.match(config, /aside: true/);
   assert.match(index, /href="\/prompt-collection\/rigorous-research-decision-assistant"/);
-  assert.match(index, />复杂决策顾问<\/strong>/);
-  assert.match(index, />证据校准研究员<\/strong>/);
+  assert.match(index, /class="content-index-title">复杂决策顾问<\/span>/);
+  assert.match(index, /class="content-index-title">证据校准研究员<\/span>/);
   assert.match(index, /href="\/prompt-collection\/learning-mode-tutor"/);
-  assert.match(index, />学习模式导师<\/strong>/);
+  assert.match(index, /class="content-index-title">学习模式导师<\/span>/);
+  assert.doesNotMatch(index, /<strong class="content-index-title"/);
   assert.doesNotMatch(index, /严谨研究与决策助手|最高严谨度研究与分析助手/);
   assert.match(config, /text: "复杂决策顾问"/);
   assert.match(config, /text: "证据校准研究员"/);
