@@ -51,9 +51,40 @@ test("documents the common formats used in article content", () => {
     "::: tip",
     "::: warning",
     "::: danger",
-    "::: details"
+    "<details>",
+    "<summary>展开查看移动端验收记录</summary>",
+    "<small>"
   ]) {
     assert.ok(writingStyle.includes(example), `规范页缺少格式示例：${example}`);
+  }
+
+  assert.doesNotMatch(
+    writingStyle,
+    /::: details/,
+    "折叠示例应沿用项目文章中的原生 details 样式，而不是提示卡样式"
+  );
+});
+
+test("uses specific, publication-ready wording in every format example", () => {
+  for (const example of [
+    "title: 为个人文档站新增全文搜索",
+    "发布前必须通过站内链接检查",
+    "[站点维护流程](/guide/getting-started)",
+    "展开查看移动端验收记录",
+    "| 验收项 | 结果与说明 |",
+    "手机端搜索面板打开后"
+  ]) {
+    assert.ok(writingStyle.includes(example), `规范页缺少细化示例：${example}`);
+  }
+
+  for (const placeholder of [
+    /^title: 页面标题$/m,
+    /description: 一句话说明本页的主要内容/,
+    /^- 先写结论$/m,
+    /好的格式不会抢走内容的声音/,
+    /这里放背景资料、完整输出或次要示例/
+  ]) {
+    assert.doesNotMatch(writingStyle, placeholder);
   }
 });
 
@@ -112,4 +143,12 @@ test("styles structured article content and live format demonstrations", () => {
     /\.vp-doc \.custom-block\.danger\s*\{[^}]*border-inline-start-color:\s*var\(--vp-c-danger-1\)/s
   );
   assert.match(styles, /\.vp-doc \.format-demo-label::after\s*\{/);
+  assert.match(
+    styles,
+    /\.vp-doc details\s*\{[^}]*border-block:\s*1px solid var\(--site-line\)[^}]*padding:\s*16px 0/s
+  );
+  assert.match(
+    styles,
+    /\.vp-doc details summary::marker\s*\{[^}]*color:\s*var\(--site-accent\)/s
+  );
 });
