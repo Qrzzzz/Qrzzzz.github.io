@@ -25,11 +25,23 @@ export const TARGET_CURSOR_SELECTOR = [
   ".cursor-target"
 ].join(",");
 
+export const READING_CURSOR_SELECTOR = [
+  ".VPDoc .content-container",
+  "[data-cursor-reading]"
+].join(",");
+
 export const FREE_CORNER_OFFSETS = Object.freeze([
   Object.freeze({ x: -18, y: -18 }),
   Object.freeze({ x: 6, y: -18 }),
   Object.freeze({ x: 6, y: 6 }),
   Object.freeze({ x: -18, y: 6 })
+]);
+
+export const READING_CORNER_OFFSETS = Object.freeze([
+  Object.freeze({ x: -6, y: -14 }),
+  Object.freeze({ x: -6, y: -14 }),
+  Object.freeze({ x: -6, y: 2 }),
+  Object.freeze({ x: -6, y: 2 })
 ]);
 
 function finiteNumber(value, fallback = 0) {
@@ -68,6 +80,16 @@ export function resolveCursorTarget(element, selector = TARGET_CURSOR_SELECTOR) 
   return null;
 }
 
+export function resolveReadingRegion(element, selector = READING_CURSOR_SELECTOR) {
+  let current = element;
+  while (current && current.nodeType === 1) {
+    if (current.hasAttribute?.("data-target-cursor")) return null;
+    if (current.matches?.(selector)) return current;
+    current = current.parentElement;
+  }
+  return null;
+}
+
 /**
  * A dependency-free version of the React Bits Target Cursor interaction.
  * The injectable browser boundary keeps geometry and lifecycle behavior testable.
@@ -77,6 +99,7 @@ export function createTargetCursorRuntime(options) {
   const targetWindow = options?.window ?? globalThis.window;
   const targetDocument = options?.document ?? globalThis.document;
   const selector = options?.targetSelector ?? TARGET_CURSOR_SELECTOR;
+  const readingSelector = options?.readingSelector ?? READING_CURSOR_SELECTOR;
 
   if (!cursor) throw new TypeError("TargetCursor requires a cursor element.");
   if (!targetWindow || !targetDocument) {
@@ -98,6 +121,7 @@ export function createTargetCursorRuntime(options) {
   let visible = false;
   let pressed = false;
   let activeTarget = null;
+  let activeReadingRegion = null;
   let previousTime = 0;
   let rotation = 0;
   let x = finiteNumber(targetWindow.innerWidth, 0) / 2;
@@ -114,9 +138,19 @@ export function createTargetCursorRuntime(options) {
     cursor.classList.toggle("is-targeting", Boolean(target));
   }
 
-  function targetAtPoint(clientX, clientY, fallbackTarget) {
+  function setReadingRegion(region) {
+    if (activeReadingRegion === region) return;
+    activeReadingRegion = region;
+    cursor.classList.toggle("is-reading", Boolean(region));
+  }
+
+  function elementsAtPoint(clientX, clientY, fallbackTarget) {
     const underPointer = targetDocument.elementFromPoint?.(clientX, clientY) ?? fallbackTarget;
-    return resolveCursorTarget(underPointer, selector);
+    const target = resolveCursorTarget(underPointer, selector);
+    return {
+      target,
+      readingRegion: target ? null : resolveReadingRegion(underPointer, readingSelector)
+    };
   }
 
   function scheduleFrame() {
@@ -132,13 +166,23 @@ export function createTargetCursorRuntime(options) {
     const elapsed = previousTime ? Math.min(48, Math.max(0, timestamp - previousTime)) : 16;
     previousTime = timestamp;
     const follow = reducedMotion ? 1 : 1 - Math.pow(0.7, elapsed / 16);
-    const cornerFollow = reducedMotion ? 1 : activeTarget ? 0.34 : 0.22;
+    const cornerFollow = reducedMotion
+      ? 1
+      : activeTarget
+        ? 0.34
+        : activeReadingRegion
+          ? 0.3
+          : 0.22;
     x = lerp(x, targetX, follow);
     y = lerp(y, targetY, follow);
     scale = lerp(scale, targetScale, reducedMotion ? 1 : 0.28);
 
-    if (!activeTarget && !reducedMotion) rotation = (rotation + elapsed * 0.18) % 360;
-    else rotation = 0;
+    if (!activeTarget && !activeReadingRegion && !reducedMotion) {
+      rotation = (rotation + elapsed * 0.18) % 360;
+    } else {
+      const restingRotation = Math.round(rotation / 360) * 360;
+      rotation = lerp(rotation, restingRotation, reducedMotion ? 1 : 0.2);
+    }
 
     let desiredCorners = FREE_CORNER_OFFSETS;
     if (activeTarget && activeTarget.isConnected !== false) {
@@ -146,6 +190,10 @@ export function createTargetCursorRuntime(options) {
       desiredCorners = targetCornerOffsets(rect, x, y);
     } else if (activeTarget) {
       setTarget(null);
+    } else if (activeReadingRegion && activeReadingRegion.isConnected !== false) {
+      desiredCorners = READING_CORNER_OFFSETS;
+    } else if (activeReadingRegion) {
+      setReadingRegion(null);
     }
 
     for (let index = 0; index < corners.length; index += 1) {
@@ -166,7 +214,9 @@ export function createTargetCursorRuntime(options) {
     targetX = finiteNumber(event.clientX, targetX);
     targetY = finiteNumber(event.clientY, targetY);
     visible = true;
-    setTarget(targetAtPoint(targetX, targetY, event.target));
+    const { target, readingRegion } = elementsAtPoint(targetX, targetY, event.target);
+    setTarget(target);
+    setReadingRegion(readingRegion);
     scheduleFrame();
   }
 
@@ -190,6 +240,7 @@ export function createTargetCursorRuntime(options) {
     if (event.relatedTarget) return;
     visible = false;
     setTarget(null);
+    setReadingRegion(null);
     handlePointerUp();
   }
 
@@ -229,7 +280,8 @@ export function createTargetCursorRuntime(options) {
     visible = false;
     pressed = false;
     activeTarget = null;
-    cursor.classList.remove("is-targeting", "is-pressed");
+    activeReadingRegion = null;
+    cursor.classList.remove("is-targeting", "is-reading", "is-pressed");
     cursor.style.opacity = "0";
     targetDocument.documentElement.classList.remove("has-target-cursor");
   }
@@ -260,6 +312,6 @@ export function createTargetCursorRuntime(options) {
   return {
     mount,
     destroy,
-    getState: () => ({ enabled, visible, pressed, activeTarget })
+    getState: () => ({ enabled, visible, pressed, activeTarget, activeReadingRegion })
   };
 }

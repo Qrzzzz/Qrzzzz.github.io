@@ -1,15 +1,24 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import test from "node:test";
 
 import {
   FINE_POINTER_QUERY,
   FREE_CORNER_OFFSETS,
+  READING_CORNER_OFFSETS,
+  READING_CURSOR_SELECTOR,
   REDUCED_MOTION_QUERY,
   TARGET_CURSOR_SELECTOR,
   createTargetCursorRuntime,
+  resolveReadingRegion,
   resolveCursorTarget,
   targetCornerOffsets
 } from "../docs/.vitepress/theme/targetCursorRuntime.mjs";
+
+const cursorComponent = readFileSync(
+  new URL("../docs/.vitepress/theme/TargetCursor.vue", import.meta.url),
+  "utf8"
+);
 
 class FakeClassList {
   values = new Set();
@@ -117,6 +126,24 @@ test("interactive selector covers native, ARIA, editor, and explicit controls", 
   }
 });
 
+test("reading selector covers the VitePress article column and explicit reading regions", () => {
+  assert.match(READING_CURSOR_SELECTOR, /\.VPDoc \.content-container/);
+  assert.match(READING_CURSOR_SELECTOR, /\[data-cursor-reading\]/);
+});
+
+test("renders the restrained translucent reading line and its reduced-motion fallback", () => {
+  assert.match(cursorComponent, /data-target-cursor-reading-line/);
+  assert.match(
+    cursorComponent,
+    /\.target-cursor__reading-line\s*\{[\s\S]*?width:\s*6px;[\s\S]*?height:\s*28px;[\s\S]*?background:\s*var\(--target-cursor-reading-color\)/s
+  );
+  assert.match(
+    cursorComponent,
+    /\.target-cursor\.is-reading \.target-cursor__reading-line\s*\{[\s\S]*?opacity:\s*0\.78/s
+  );
+  assert.match(cursorComponent, /@media \(prefers-reduced-motion: reduce\)/);
+});
+
 test("target geometry frames the outside edge of a control", () => {
   assert.deepEqual(
     targetCornerOffsets({ left: 100, top: 50, right: 220, bottom: 90 }, 140, 70),
@@ -133,9 +160,15 @@ test("target geometry frames the outside edge of a control", () => {
     { x: 6, y: 6 },
     { x: -18, y: 6 }
   ]);
+  assert.deepEqual(READING_CORNER_OFFSETS.map(({ x, y }) => ({ x, y })), [
+    { x: -6, y: -14 },
+    { x: -6, y: -14 },
+    { x: -6, y: 2 },
+    { x: -6, y: 2 }
+  ]);
 });
 
-test("target resolution selects the nearest matching ancestor and ignores the cursor itself", () => {
+test("target and reading resolution select the nearest matching ancestor and ignore the cursor itself", () => {
   const target = {
     nodeType: 1,
     parentElement: null,
@@ -157,16 +190,25 @@ test("target resolution selects the nearest matching ancestor and ignores the cu
 
   assert.equal(resolveCursorTarget(child), target);
   assert.equal(resolveCursorTarget(cursorChild), null);
+  assert.equal(resolveReadingRegion(child, "article"), target);
+  assert.equal(resolveReadingRegion(cursorChild, "article"), null);
 });
 
-test("runtime enables only for fine pointers, targets controls, presses, and cleans up", () => {
+test("runtime enables only for fine pointers, morphs between reading and targeting, presses, and cleans up", () => {
   const harness = createHarness();
+  const readingRegion = {
+    nodeType: 1,
+    parentElement: null,
+    isConnected: true,
+    hasAttribute: () => false,
+    matches: (selector) => selector === READING_CURSOR_SELECTOR
+  };
   const target = {
     nodeType: 1,
     parentElement: null,
     isConnected: true,
     hasAttribute: () => false,
-    matches: () => true,
+    matches: (selector) => selector === TARGET_CURSOR_SELECTOR,
     getBoundingClientRect: () => ({ left: 80, top: 40, right: 200, bottom: 84 })
   };
   harness.document.hoveredElement = target;
@@ -181,20 +223,35 @@ test("runtime enables only for fine pointers, targets controls, presses, and cle
   assert.equal(harness.rootClasses.contains("has-target-cursor"), true);
   assert.doesNotThrow(() => harness.runFrame(), "idle frames must not read a missing target");
 
+  harness.document.hoveredElement = readingRegion;
+  harness.window.dispatch("pointermove", {
+    clientX: 120,
+    clientY: 60,
+    pointerType: "mouse",
+    target: readingRegion
+  });
+  harness.runFrame(32);
+  assert.equal(runtime.getState().activeReadingRegion, readingRegion);
+  assert.equal(runtime.getState().activeTarget, null);
+  assert.equal(harness.cursor.classList.contains("is-reading"), true);
+
+  harness.document.hoveredElement = target;
   harness.window.dispatch("pointermove", {
     clientX: 120,
     clientY: 60,
     pointerType: "mouse",
     target
   });
-  harness.runFrame(32);
+  harness.runFrame(48);
   assert.equal(runtime.getState().activeTarget, target);
+  assert.equal(runtime.getState().activeReadingRegion, null);
   assert.equal(harness.cursor.classList.contains("is-targeting"), true);
+  assert.equal(harness.cursor.classList.contains("is-reading"), false);
   assert.equal(harness.cursor.style.opacity, "1");
   assert.match(harness.corners[0].style.transform, /^translate3d\(/);
 
   target.isConnected = false;
-  harness.runFrame(48);
+  harness.runFrame(64);
   assert.equal(runtime.getState().activeTarget, null, "removed route controls are released");
 
   harness.window.dispatch("pointerdown", { button: 0, pointerType: "mouse" });
