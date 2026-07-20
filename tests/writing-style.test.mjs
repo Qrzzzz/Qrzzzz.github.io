@@ -132,7 +132,7 @@ test("styles structured article content and live format demonstrations", () => {
   assert.match(styles, /\.vp-doc \.custom-block\.danger\s*\{/);
   assert.match(
     styles,
-    /\.vp-doc \.custom-block\s*\{[^}]*border:\s*0[^}]*border-radius:\s*10px[^}]*box-shadow:\s*inset 0 0 0 1px/s
+    /\.vp-doc \.custom-block,\s*\.vp-doc \.project-docs-sync\.sync-notice\s*\{[^}]*border:\s*0[^}]*border-radius:\s*10px[^}]*box-shadow:\s*inset 0 0 0 1px/s
   );
   assert.match(
     styles,
@@ -150,7 +150,15 @@ test("styles structured article content and live format demonstrations", () => {
     styles,
     /\.vp-doc \.custom-block\.danger\s*\{[^}]*--custom-block-accent:\s*var\(--vp-c-danger-1\)/s
   );
-  assert.match(styles, /\.vp-doc \.custom-block \.custom-block-title::before\s*\{/);
+  assert.match(
+    styles,
+    /\.vp-doc \.custom-block \.custom-block-title::before,\s*\.vp-doc \.project-docs-sync\.sync-notice \.sync-notice__title::before\s*\{/
+  );
+  assert.match(styles, /\.project-docs-sync:not\(\.sync-notice\)\s*\{/);
+  assert.doesNotMatch(
+    styles,
+    /\.project-docs-sync\.sync-notice\s*\{[^}]*border-inline-start:/s
+  );
   assert.match(styles, /\.vp-doc \.format-demo-label::after\s*\{/);
   assert.match(
     styles,
