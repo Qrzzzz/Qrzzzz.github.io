@@ -4,6 +4,9 @@ description: Here, for folks like us? Wrong city, wrong people.
 ---
 
 # 直到大厦崩塌：关于“赢”的谎言
+
+<p class="lead">有些游戏是让你赢的，而《赛博朋克 2077》是让你认清“赢”有多荒谬的。</p>
+
 ::: warning 剧透提示
 下文涉及《赛博朋克 2077》本体与《往日之影》的关键剧情和结局。
 :::
@@ -11,8 +14,6 @@ description: Here, for folks like us? Wrong city, wrong people.
 <blockquote class="article-epigraph" lang="en">
   <p>Here, for folks like us? Wrong city, wrong people.</p>
 </blockquote>
-
-<p class="lead">有些游戏是让你赢的，而《赛博朋克 2077》是让你认清“赢”有多荒谬的。</p>
 
 接触《赛博朋克》的第一周，解锁“石中剑”黑影车时，我特意在公司广场的金鱼全息投影下拍了好几张照片，配上一句 <span lang="en">“I LOVE NC”</span> 发了动态。那时的夜之城，在我眼前绚烂地绽开：街道上的 NPC 或吞云吐雾，或因 XBD 的精神刺激而抽搐；铺天盖地的商业广告包裹着摩天楼，仿佛也将这座城市所谓的阴暗面一并封存。底层市民的廉价消遣，看起来永远无法与 V 即将完成的宏大事业相提并论。
 
