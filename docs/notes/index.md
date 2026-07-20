@@ -13,7 +13,7 @@ description: 不设更新频率，只收录愿意回头再看的文字。
   <a class="content-index-row" href="/notes/until-the-tower-falls">
     <span class="content-index-meta">文章</span>
     <span class="content-index-title">直到大厦崩塌：关于“赢”的谎言</span>
-    <span class="content-index-summary">从《太阳》与《高塔》谈成功、传奇与幸存的幻灭。</span>
+    <span class="content-index-summary">Here, for folks like us? Wrong city, wrong people.</span>
   </a>
   <a class="content-index-row" href="/notes/why-this-site">
     <span class="content-index-meta">文章</span>

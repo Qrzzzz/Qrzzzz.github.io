@@ -43,7 +43,7 @@ outline: false
       <a class="library-entry" href="/notes/until-the-tower-falls">
         <span class="library-entry__content">
           <span class="library-entry__title">直到大厦崩塌：关于“赢”的谎言</span>
-          <span>从《太阳》与《高塔》谈成功、传奇与幸存的幻灭。</span>
+          <span>Here, for folks like us? Wrong city, wrong people.</span>
         </span>
         <span aria-hidden="true">→</span>
       </a>
