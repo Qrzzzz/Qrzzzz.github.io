@@ -19,21 +19,18 @@ async function toggleTheme(event: MouseEvent) {
   if (switching.value) return;
   switching.value = true;
   const targetIsDark = !isDark.value;
-  const point = event.detail > 0 ? { x: event.clientX, y: event.clientY } : undefined;
-  const supportsReveal = canAnimateThemeTransition(
+  const supportsFade = canAnimateThemeTransition(
     document,
     window,
     toggleButton.value
   );
-  if (!supportsReveal) document.documentElement.classList.add("theme-is-switching");
+  if (!supportsFade) document.documentElement.classList.add("theme-is-switching");
 
   try {
     await runThemeTransition({
       documentObject: document,
       windowObject: window,
       origin: toggleButton.value,
-      point,
-      targetIsDark,
       update: async () => {
         isDark.value = targetIsDark;
         await nextTick();
@@ -42,7 +39,7 @@ async function toggleTheme(event: MouseEvent) {
   } finally {
     window.clearTimeout(resetTimer);
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const resetDelay = reducedMotion ? 40 : supportsReveal ? 360 : 540;
+    const resetDelay = reducedMotion ? 40 : supportsFade ? 380 : 460;
     resetTimer = window.setTimeout(() => {
       switching.value = false;
       document.documentElement.classList.remove("theme-is-switching");
@@ -52,7 +49,11 @@ async function toggleTheme(event: MouseEvent) {
 
 onBeforeUnmount(() => {
   window.clearTimeout(resetTimer);
-  document.documentElement.classList.remove("theme-is-switching");
+  document.documentElement.classList.remove(
+    "theme-is-switching",
+    "theme-fade-out",
+    "theme-fade-in"
+  );
 });
 </script>
 
@@ -167,6 +168,10 @@ onBeforeUnmount(() => {
     background-color 250ms ease;
 }
 
+.theme-toggle.is-switching .theme-toggle__track {
+  animation: theme-toggle-spring 460ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
 .theme-toggle:hover .theme-toggle__track,
 .theme-toggle:focus-visible .theme-toggle__track {
   border-color: var(--site-accent);
@@ -188,7 +193,7 @@ onBeforeUnmount(() => {
     color 250ms ease,
     background-color 250ms ease,
     box-shadow 250ms ease,
-    transform 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    transform 420ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .theme-toggle.is-dark .theme-toggle__thumb {
@@ -212,8 +217,8 @@ onBeforeUnmount(() => {
   stroke-linejoin: round;
   stroke-width: 2;
   transition:
-    opacity 250ms ease,
-    transform 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    opacity 180ms ease,
+    transform 420ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .theme-toggle__sun {
@@ -251,6 +256,21 @@ onBeforeUnmount(() => {
   height: 18px;
   flex: 0 0 auto;
   fill: currentColor;
+}
+
+@keyframes theme-toggle-spring {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  38% {
+    transform: scale(0.94);
+  }
+
+  68% {
+    transform: scale(1.035);
+  }
 }
 
 @media (max-width: 767px) {

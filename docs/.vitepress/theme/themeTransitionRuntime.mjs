@@ -1,19 +1,7 @@
-export function getThemeRevealGeometry(rect, viewport, point) {
-  const x = Number.isFinite(point?.x) ? point.x : rect.left + rect.width / 2;
-  const y = Number.isFinite(point?.y) ? point.y : rect.top + rect.height / 2;
-  const radius = Math.hypot(
-    Math.max(x, viewport.width - x),
-    Math.max(y, viewport.height - y)
-  );
-
-  return { x, y, radius };
-}
-
 export function canAnimateThemeTransition(documentObject, windowObject, origin) {
   return Boolean(
     origin &&
-      typeof documentObject?.startViewTransition === "function" &&
-      typeof documentObject?.documentElement?.animate === "function" &&
+      documentObject?.documentElement &&
       !windowObject?.matchMedia?.("(prefers-reduced-motion: reduce)").matches
   );
 }
@@ -22,10 +10,8 @@ export async function runThemeTransition({
   documentObject,
   windowObject,
   origin,
-  point,
-  targetIsDark,
   update,
-  duration = 300
+  duration = 320
 }) {
   let didUpdate = false;
   const applyUpdate = async () => {
@@ -39,31 +25,42 @@ export async function runThemeTransition({
     return false;
   }
 
-  const rect = origin.getBoundingClientRect();
-  const { x, y, radius } = getThemeRevealGeometry(
-    rect,
-    {
-      width: windowObject.innerWidth,
-      height: windowObject.innerHeight
-    },
-    point
-  );
-  const clipPath = [
-    `circle(0px at ${x}px ${y}px)`,
-    `circle(${radius}px at ${x}px ${y}px)`
-  ];
+  const root = documentObject.documentElement;
+
+  if (
+    typeof documentObject.startViewTransition !== "function" ||
+    typeof root.animate !== "function"
+  ) {
+    root.classList.add("theme-fade-out");
+    await new Promise((resolve) => windowObject.setTimeout(resolve, duration * 0.45));
+    await applyUpdate();
+    root.classList.remove("theme-fade-out");
+    root.classList.add("theme-fade-in");
+    windowObject.setTimeout(() => {
+      root.classList.remove("theme-fade-in");
+    }, duration * 0.55);
+    return true;
+  }
 
   try {
     const transition = documentObject.startViewTransition(applyUpdate);
     await transition.ready;
-    documentObject.documentElement.animate(
-      {
-        clipPath: targetIsDark ? [...clipPath].reverse() : clipPath
-      },
+    root.animate(
+      { opacity: [1, 0] },
       {
         duration,
-        easing: "ease-in",
-        pseudoElement: `::view-transition-${targetIsDark ? "old" : "new"}(root)`
+        easing: "cubic-bezier(0.4, 0, 1, 1)",
+        fill: "both",
+        pseudoElement: "::view-transition-old(root)"
+      }
+    );
+    root.animate(
+      { opacity: [0, 1] },
+      {
+        duration,
+        easing: "cubic-bezier(0, 0, 0.2, 1)",
+        fill: "both",
+        pseudoElement: "::view-transition-new(root)"
       }
     );
     return true;

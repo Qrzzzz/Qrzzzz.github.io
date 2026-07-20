@@ -69,6 +69,10 @@ test("renders Library as a responsive editorial index", () => {
   );
   assert.match(
     styles,
+    /\.site-layout\[data-page-kind="library"\] \.aside-curtain\s*\{[^}]*display:\s*none/s
+  );
+  assert.match(
+    styles,
     /@media \(max-width: 767px\)[\s\S]*?\.library-folder,\s*\n\s*\.library-folder--wide\s*\{[^}]*grid-template-columns:\s*64px minmax\(0, 1fr\)/s
   );
 });

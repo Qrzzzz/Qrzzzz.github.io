@@ -25,14 +25,40 @@
   mix-blend-mode: normal;
 }
 
-::view-transition-old(root),
-.dark::view-transition-new(root) {
+::view-transition-old(root) {
   z-index: 1;
 }
 
-::view-transition-new(root),
-.dark::view-transition-old(root) {
-  z-index: 9999;
+::view-transition-new(root) {
+  z-index: 2;
+}
+
+html.theme-fade-out body {
+  animation: theme-page-fade-out 144ms cubic-bezier(0.4, 0, 1, 1) both;
+}
+
+html.theme-fade-in body {
+  animation: theme-page-fade-in 176ms cubic-bezier(0, 0, 0.2, 1) both;
+}
+
+@keyframes theme-page-fade-out {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes theme-page-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 html.theme-is-switching,
