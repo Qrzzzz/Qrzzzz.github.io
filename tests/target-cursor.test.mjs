@@ -10,6 +10,7 @@ import {
   REDUCED_MOTION_QUERY,
   TARGET_CURSOR_SELECTOR,
   createTargetCursorRuntime,
+  normalizeCornerRotation,
   resolveReadingRegion,
   resolveCursorTarget,
   targetCornerOffsets
@@ -119,7 +120,7 @@ test("interactive selector covers native, ARIA, editor, and explicit controls", 
     "[role='button']",
     "[role='option']",
     "[role='switch']",
-    "[tabindex]:not([tabindex='-1'])",
+    "[tabindex]:not([tabindex='-1']):not(pre)",
     "[data-cursor-target]"
   ]) {
     assert.match(TARGET_CURSOR_SELECTOR, new RegExp(contract.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
@@ -129,6 +130,29 @@ test("interactive selector covers native, ARIA, editor, and explicit controls", 
 test("reading selector covers the VitePress article column and explicit reading regions", () => {
   assert.match(READING_CURSOR_SELECTOR, /\.VPDoc \.content-container/);
   assert.match(READING_CURSOR_SELECTOR, /\[data-cursor-reading\]/);
+});
+
+test("keeps keyboard-scrollable code blocks in reading mode", () => {
+  assert.match(
+    TARGET_CURSOR_SELECTOR,
+    /\[tabindex\]:not\(\[tabindex='-1'\]\):not\(pre\)/
+  );
+
+  const readingRegion = {
+    nodeType: 1,
+    parentElement: null,
+    hasAttribute: () => false,
+    matches: (selector) => selector === READING_CURSOR_SELECTOR
+  };
+  const codeBlock = {
+    nodeType: 1,
+    parentElement: readingRegion,
+    hasAttribute: () => false,
+    matches: () => false
+  };
+
+  assert.equal(resolveCursorTarget(codeBlock), null);
+  assert.equal(resolveReadingRegion(codeBlock), readingRegion);
 });
 
 test("renders the restrained translucent reading line and its reduced-motion fallback", () => {
@@ -168,6 +192,24 @@ test("target geometry frames the outside edge of a control", () => {
   ]);
 });
 
+test("normalizes four equivalent corner orientations to the nearest quarter turn", () => {
+  for (const [rotation, expected] of [
+    [0, 0],
+    [44, 44],
+    [46, -44],
+    [89, -1],
+    [91, 1],
+    [174, -6],
+    [180, 0],
+    [269, -1],
+    [270, 0],
+    [359, -1],
+    [-46, 44]
+  ]) {
+    assert.equal(normalizeCornerRotation(rotation), expected);
+  }
+});
+
 test("target and reading resolution select the nearest matching ancestor and ignore the cursor itself", () => {
   const target = {
     nodeType: 1,
@@ -192,6 +234,50 @@ test("target and reading resolution select the nearest matching ancestor and ign
   assert.equal(resolveCursorTarget(cursorChild), null);
   assert.equal(resolveReadingRegion(child, "article"), target);
   assert.equal(resolveReadingRegion(cursorChild, "article"), null);
+});
+
+test("rebases free four-corner rotation before the corners frame a target", () => {
+  const harness = createHarness();
+  const target = {
+    nodeType: 1,
+    parentElement: null,
+    isConnected: true,
+    hasAttribute: () => false,
+    matches: (selector) => selector === TARGET_CURSOR_SELECTOR,
+    getBoundingClientRect: () => ({ left: 80, top: 40, right: 200, bottom: 84 })
+  };
+  const readRotation = () =>
+    Number(harness.cursor.style.transform.match(/rotate\(([-+0-9.e]+)deg\)/)?.[1] ?? 0);
+  const runtime = createTargetCursorRuntime({
+    cursor: harness.cursor,
+    window: harness.window,
+    document: harness.document
+  });
+
+  runtime.mount();
+  for (let index = 1; index <= 60; index += 1) {
+    harness.runFrame(index * 16);
+  }
+  const freeRotation = readRotation();
+  assert.ok(freeRotation > 160 && freeRotation < 180);
+
+  harness.document.hoveredElement = target;
+  harness.window.dispatch("pointermove", {
+    clientX: 120,
+    clientY: 60,
+    pointerType: "mouse",
+    target
+  });
+  harness.runFrame(61 * 16);
+  const firstTargetRotation = readRotation();
+  assert.ok(Math.abs(firstTargetRotation) <= 45);
+
+  for (let index = 62; index <= 70; index += 1) {
+    harness.runFrame(index * 16);
+  }
+  assert.ok(Math.abs(readRotation()) < Math.abs(firstTargetRotation));
+
+  runtime.destroy();
 });
 
 test("runtime enables only for fine pointers, morphs between reading and targeting, presses, and cleans up", () => {

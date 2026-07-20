@@ -20,7 +20,7 @@ export const TARGET_CURSOR_SELECTOR = [
   "[role='checkbox']",
   "[role='radio']",
   "[role='slider']",
-  "[tabindex]:not([tabindex='-1'])",
+  "[tabindex]:not([tabindex='-1']):not(pre)",
   "[data-cursor-target]",
   ".cursor-target"
 ].join(",");
@@ -50,6 +50,12 @@ function finiteNumber(value, fallback = 0) {
 
 function lerp(current, target, amount) {
   return current + (target - current) * amount;
+}
+
+export function normalizeCornerRotation(value) {
+  const rotation = finiteNumber(value, 0);
+  const equivalentRotation = rotation - Math.round(rotation / 90) * 90;
+  return Object.is(equivalentRotation, -0) ? 0 : equivalentRotation;
 }
 
 export function targetCornerOffsets(rect, cursorX, cursorY, borderWidth = 3, cornerSize = 12) {
@@ -144,6 +150,20 @@ export function createTargetCursorRuntime(options) {
     cursor.classList.toggle("is-reading", Boolean(region));
   }
 
+  function setMode(target, readingRegion) {
+    const wasFree = !activeTarget && !activeReadingRegion;
+    const entersStructuredMode = Boolean(target || readingRegion);
+
+    if (wasFree && entersStructuredMode) {
+      // The four free corners are visually identical every quarter turn.
+      // Rebase to the nearest equivalent orientation before they spread out.
+      rotation = normalizeCornerRotation(rotation);
+    }
+
+    setTarget(target);
+    setReadingRegion(readingRegion);
+  }
+
   function elementsAtPoint(clientX, clientY, fallbackTarget) {
     const underPointer = targetDocument.elementFromPoint?.(clientX, clientY) ?? fallbackTarget;
     const target = resolveCursorTarget(underPointer, selector);
@@ -178,10 +198,10 @@ export function createTargetCursorRuntime(options) {
     scale = lerp(scale, targetScale, reducedMotion ? 1 : 0.28);
 
     if (!activeTarget && !activeReadingRegion && !reducedMotion) {
-      rotation = (rotation + elapsed * 0.18) % 360;
+      rotation = (rotation + elapsed * 0.18 + 360) % 360;
     } else {
-      const restingRotation = Math.round(rotation / 360) * 360;
-      rotation = lerp(rotation, restingRotation, reducedMotion ? 1 : 0.2);
+      rotation = lerp(rotation, 0, reducedMotion ? 1 : 0.2);
+      if (Math.abs(rotation) < 0.001) rotation = 0;
     }
 
     let desiredCorners = FREE_CORNER_OFFSETS;
@@ -215,8 +235,7 @@ export function createTargetCursorRuntime(options) {
     targetY = finiteNumber(event.clientY, targetY);
     visible = true;
     const { target, readingRegion } = elementsAtPoint(targetX, targetY, event.target);
-    setTarget(target);
-    setReadingRegion(readingRegion);
+    setMode(target, readingRegion);
     scheduleFrame();
   }
 
@@ -239,8 +258,7 @@ export function createTargetCursorRuntime(options) {
   function handlePointerLeave(event) {
     if (event.relatedTarget) return;
     visible = false;
-    setTarget(null);
-    setReadingRegion(null);
+    setMode(null, null);
     handlePointerUp();
   }
 
