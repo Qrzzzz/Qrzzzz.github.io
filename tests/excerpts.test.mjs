@@ -17,7 +17,7 @@ test("adds 偶拾 as a fourth Library category with compact previews", () => {
   assert.match(library, /拜托你一直鲜活，keep learning，去思考原子……/);
   assert.match(library, /蝉真的是世界上最摇滚的生物了。一生大部分时间……/);
   assert.match(library, /棋局结束时，国王与卒子归入同一盒中。/);
-  assert.match(library, /我们走后，他们会给你们修学校和医院，会提高你们的工资……/);
+  assert.match(library, /记住，我们经过这里以后，当局才会想起你们的存在……/);
   assert.match(index, /class="content-index-row content-index-row--excerpt"/);
   assert.match(styles, /\.excerpt-preview\s*\{[\s\S]*?text-overflow: ellipsis;[\s\S]*?white-space: nowrap;/);
   assert.match(styles, /@media \(max-width: 767px\)[\s\S]*?\.excerpt-preview\s*\{[\s\S]*?-webkit-line-clamp: 2;[\s\S]*?white-space: normal;/);
@@ -38,8 +38,13 @@ test("keeps every excerpt in its own titleless Markdown page", () => {
   assert.match(third, /<figcaption>意大利谚语<\/figcaption>/);
   assert.match(third, /杜牧《送隐者一绝》/);
   assert.doesNotMatch(third, /^next: false$/m);
-  assert.match(fourth, /中文流传译文/);
-  assert.match(fourth, /未检得可追溯的西班牙语原文；网络流传署名为切·格瓦拉，出处待考。/);
+  assert.match(fourth, /<blockquote lang="es">/);
+  assert.match(fourth, /después de nuestro paso por aquí/);
+  assert.match(fourth, /原文直译/);
+  assert.match(fourth, /流传意译/);
+  assert.match(fourth, /Mi campaña con el Che/);
+  assert.match(fourth, /第 43—44 页/);
+  assert.match(fourth, /较可核验原文有所扩写/);
   assert.match(fourth, /^next: false$/m);
   assert.match(styles, /\.vp-doc \.excerpt-entry__heading\s*\{[\s\S]*?clip-path: inset\(50%\)/);
   assert.match(styles, /\.excerpt-renderings\s*\{[\s\S]*?grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);

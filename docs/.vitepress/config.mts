@@ -205,7 +205,7 @@ export default defineConfig({
               link: "/excerpts/2026-07-17-03"
             },
             {
-              text: "我们走后，他们会给你们修学校和医院……",
+              text: "记住，我们经过这里以后……",
               link: "/excerpts/2026-07-22-01"
             }
           ]

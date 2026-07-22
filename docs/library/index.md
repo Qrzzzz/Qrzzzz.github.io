@@ -146,7 +146,7 @@ outline: false
       </a>
       <a class="library-entry" href="/excerpts/2026-07-22-01">
         <span class="library-entry__content">
-          <span class="library-entry__title excerpt-preview">我们走后，他们会给你们修学校和医院，会提高你们的工资……</span>
+          <span class="library-entry__title excerpt-preview">记住，我们经过这里以后，当局才会想起你们的存在……</span>
           <span>2026.07.22</span>
         </span>
         <span aria-hidden="true">→</span>
