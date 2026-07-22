@@ -51,6 +51,10 @@ test("mounts a direct, non-customizable share image download on article and exce
   assert.match(component, /frontmatter\.value\.description/);
   assert.match(component, /\.vp-doc > p:not\(\.lead\)/);
   assert.match(component, /await import\("modern-screenshot"\)/);
+  assert.match(component, /await import\("qrcode"\)/);
+  assert.match(component, /toDataURL\(pageHref\.value/);
+  assert.match(component, /errorCorrectionLevel:\s*"M"/);
+  assert.match(component, /margin:\s*4/);
   assert.match(component, /document\.fonts\?\.ready/);
   assert.match(component, /width:\s*SHARE_IMAGE_FORMAT\.width/);
   assert.match(component, /height:\s*SHARE_IMAGE_FORMAT\.height/);
@@ -59,12 +63,18 @@ test("mounts a direct, non-customizable share image download on article and exce
   assert.match(component, /font:\s*false/);
   assert.match(component, /URL\.createObjectURL/);
   assert.match(component, /link\[rel="canonical"\]/);
+  assert.match(component, /class="share-image-card__qr"/);
+  assert.match(component, /ref="qrImage"/);
+  assert.match(component, /扫码阅读/);
   assert.match(component, /class="share-image-render-host" aria-hidden="true" inert/);
-  assert.match(component, /固定生成 3:4 竖幅 PNG/);
+  assert.match(component, /生成分享图/);
 
   assert.doesNotMatch(component, /role="dialog"|aria-modal="true"|share-image-backdrop/);
+  assert.doesNotMatch(component, /固定生成 3:4 竖幅 PNG|SHARE \/ 分享/);
+  assert.doesNotMatch(component, /share-image-entry__copy|share-image-entry__eyebrow/);
   assert.doesNotMatch(component, /<input|<textarea|<fieldset|v-model/);
   assert.doesNotMatch(component, /ClipboardItem|selectedArticleText|rememberSelection/);
   assert.doesNotMatch(component, /cardTheme|data-theme|SHARE_IMAGE_FORMATS/);
   assert.equal(packageJson.dependencies["modern-screenshot"], "^4.7.0");
+  assert.equal(packageJson.dependencies.qrcode, "^1.5.4");
 });

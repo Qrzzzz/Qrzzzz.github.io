@@ -15,8 +15,10 @@ const props = defineProps<{
 
 const { frontmatter, page } = useData();
 const card = ref<HTMLElement>();
+const qrImage = ref<HTMLImageElement>();
 const clientReady = ref(false);
 const rendering = ref(false);
+const qrCodeDataUrl = ref("");
 const shareExcerpt = ref("");
 const statusMessage = ref("");
 const statusTone = ref<"neutral" | "success" | "error">("neutral");
@@ -31,11 +33,14 @@ const cardExcerpt = computed(() =>
   normalizeShareText(shareExcerpt.value, SHARE_IMAGE_FORMAT.maxExcerptLength)
 );
 const pageLabel = computed(() => (props.pageKind === "excerpt" ? "EXCERPT / 偶拾" : "ARTICLE / 文章"));
-const pageUrl = computed(() => {
-  if (typeof window === "undefined") return "qrzzzz.github.io";
+const pageHref = computed(() => {
+  if (typeof window === "undefined") return "https://qrzzzz.github.io/";
   void page.value.relativePath;
   const canonical = document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.href;
-  const url = new URL(canonical || window.location.href);
+  return new URL(canonical || window.location.href).href;
+});
+const pageUrl = computed(() => {
+  const url = new URL(pageHref.value);
   return `${url.host}${url.pathname.replace(/\/$/, "") || "/"}`;
 });
 
@@ -54,6 +59,22 @@ function resolveExcerpt() {
 function setStatus(message: string, tone: "neutral" | "success" | "error" = "neutral") {
   statusMessage.value = message;
   statusTone.value = tone;
+}
+
+async function prepareQrCode() {
+  const { toDataURL } = await import("qrcode");
+  qrCodeDataUrl.value = await toDataURL(pageHref.value, {
+    errorCorrectionLevel: "M",
+    margin: 4,
+    width: 256,
+    color: {
+      dark: "#191816",
+      light: "#fffdf8"
+    }
+  });
+
+  await nextTick();
+  await qrImage.value?.decode();
 }
 
 async function renderCard() {
@@ -88,9 +109,10 @@ async function downloadImage() {
 
   rendering.value = true;
   shareExcerpt.value = resolveExcerpt();
-  setStatus("正在生成 3:4 高清图片…");
+  setStatus("正在生成…");
 
   try {
+    await prepareQrCode();
     const blob = await renderCard();
     downloadBlob(blob);
     setStatus("分享图已下载。", "success");
@@ -109,6 +131,7 @@ onMounted(() => {
 watch(
   () => page.value.relativePath,
   () => {
+    qrCodeDataUrl.value = "";
     shareExcerpt.value = "";
     setStatus("");
   }
@@ -117,23 +140,7 @@ watch(
 
 <template>
   <section class="share-image-entry" aria-label="文章分享">
-    <div>
-      <p class="share-image-entry__eyebrow">SHARE / 分享</p>
-      <p class="share-image-entry__copy">固定生成 3:4 竖幅 PNG，标题与摘录自动取自当前文章。</p>
-    </div>
     <div class="share-image-entry__actions">
-      <button
-        type="button"
-        class="share-image-entry__button"
-        :disabled="rendering"
-        :aria-busy="rendering"
-        @click="downloadImage"
-      >
-        <svg aria-hidden="true" viewBox="0 0 24 24">
-          <path d="M12 3v12m0 0-4.5-4.5M12 15l4.5-4.5M5 17v2a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-2" />
-        </svg>
-        {{ rendering ? "正在生成…" : "下载分享图" }}
-      </button>
       <p
         class="share-image-status"
         :class="`is-${statusTone}`"
@@ -142,6 +149,18 @@ watch(
       >
         {{ statusMessage }}
       </p>
+      <button
+        type="button"
+        class="share-image-entry__button"
+        :disabled="rendering"
+        :aria-busy="rendering"
+        @click="downloadImage"
+      >
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M5 5h14v14H5zM8 15l3-3 2 2 2-2 3 3M15.5 9h.01" />
+        </svg>
+        {{ rendering ? "生成中…" : "生成分享图" }}
+      </button>
     </div>
   </section>
 
@@ -160,8 +179,18 @@ watch(
           <p>{{ cardExcerpt }}</p>
         </div>
         <footer class="share-image-card__footer">
-          <span>{{ pageUrl }}</span>
-          <span aria-hidden="true">↗</span>
+          <span class="share-image-card__url">{{ pageUrl }}</span>
+          <figure class="share-image-card__qr">
+            <img
+              v-if="qrCodeDataUrl"
+              ref="qrImage"
+              :src="qrCodeDataUrl"
+              alt=""
+              width="84"
+              height="84"
+            />
+            <figcaption>扫码阅读</figcaption>
+          </figure>
         </footer>
       </article>
     </div>
@@ -172,58 +201,42 @@ watch(
 .share-image-entry {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 28px;
-  margin-top: 72px;
-  padding: 24px 0;
+  justify-content: flex-end;
+  margin-top: 48px;
+  padding-top: 10px;
   border-top: 1px solid var(--site-line);
-  border-bottom: 1px solid var(--site-line);
 }
 
 .share-image-entry p {
   margin: 0;
 }
 
-.share-image-entry__eyebrow {
-  color: var(--site-accent);
-  font-family: var(--site-font-mono);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-}
-
-.share-image-entry__copy {
-  margin-top: 6px !important;
-  color: var(--site-text-muted);
-  font-size: 14px;
-}
-
 .share-image-entry__actions {
-  display: grid;
-  flex: 0 0 auto;
-  justify-items: end;
-  gap: 7px;
+  display: flex;
+  min-height: 32px;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
 }
 
 .share-image-entry__button {
   appearance: none;
   display: inline-flex;
-  min-height: 42px;
+  min-height: 32px;
   align-items: center;
-  gap: 9px;
-  padding: 0 17px;
-  border: 1px solid var(--site-line-strong);
+  gap: 7px;
+  padding: 0 7px;
+  border: 0;
   background: transparent;
-  color: var(--site-text);
+  color: var(--site-text-muted);
   cursor: pointer;
   font: inherit;
-  font-size: 14px;
-  font-weight: 650;
-  transition: border-color 160ms ease, color 160ms ease, transform 160ms ease;
+  font-size: 13px;
+  font-weight: 600;
+  transition: color 160ms ease, transform 160ms ease;
 }
 
 .share-image-entry__button:hover:not(:disabled) {
-  border-color: var(--site-accent);
   color: var(--site-accent);
   transform: translateY(-1px);
 }
@@ -234,8 +247,8 @@ watch(
 }
 
 .share-image-entry__button svg {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   fill: none;
   stroke: currentColor;
   stroke-linecap: round;
@@ -244,7 +257,6 @@ watch(
 }
 
 .share-image-status {
-  min-height: 18px;
   color: var(--site-text-muted);
   font-size: 12px;
   text-align: right;
@@ -359,37 +371,51 @@ watch(
 
 .share-image-card__footer {
   min-width: 0;
-  padding-top: 16px;
+  align-items: end;
+  padding-top: 14px;
   border-top: 1px solid var(--card-line);
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 0;
 }
 
-.share-image-card__footer > span:first-child {
+.share-image-card__url {
   overflow: hidden;
+  padding-bottom: 4px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
+.share-image-card__qr {
+  display: grid;
+  flex: 0 0 auto;
+  justify-items: center;
+  gap: 5px;
+  margin: 0;
+}
+
+.share-image-card__qr img {
+  display: block;
+  width: 84px;
+  height: 84px;
+}
+
+.share-image-card__qr figcaption {
+  color: var(--card-muted);
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
 @media (max-width: 560px) {
-  .share-image-entry {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .share-image-entry__actions,
-  .share-image-entry__button {
+  .share-image-entry__actions {
     width: 100%;
-  }
-
-  .share-image-entry__button {
-    justify-content: center;
+    flex-wrap: wrap;
   }
 
   .share-image-status {
-    justify-self: stretch;
-    text-align: center;
+    margin-right: auto !important;
+    text-align: left;
   }
 }
 
