@@ -1,36 +1,12 @@
-export const SHARE_IMAGE_FORMATS = Object.freeze({
-  portrait: Object.freeze({
-    id: "portrait",
-    label: "竖版 4:5",
-    width: 540,
-    height: 675,
-    scale: 2,
-    maxTitleLength: 56,
-    maxExcerptLength: 150
-  }),
-  square: Object.freeze({
-    id: "square",
-    label: "方形 1:1",
-    width: 540,
-    height: 540,
-    scale: 2,
-    maxTitleLength: 48,
-    maxExcerptLength: 96
-  }),
-  wide: Object.freeze({
-    id: "wide",
-    label: "横版 1.91:1",
-    width: 600,
-    height: 315,
-    scale: 2,
-    maxTitleLength: 42,
-    maxExcerptLength: 72
-  })
+export const SHARE_IMAGE_FORMAT = Object.freeze({
+  id: "portrait-3x4",
+  label: "竖版 3:4",
+  width: 540,
+  height: 720,
+  scale: 2,
+  maxTitleLength: 56,
+  maxExcerptLength: 160
 });
-
-export function getShareImageFormat(value) {
-  return SHARE_IMAGE_FORMATS[value] ?? SHARE_IMAGE_FORMATS.portrait;
-}
 
 export function normalizeShareText(value, maxLength = Number.POSITIVE_INFINITY) {
   const normalized = String(value ?? "")
@@ -49,7 +25,7 @@ export function normalizeShareText(value, maxLength = Number.POSITIVE_INFINITY) 
   return `${clipped}…`;
 }
 
-export function createShareImageFilename(title, formatId = "portrait") {
+export function createShareImageFilename(title) {
   const safeTitle = String(title ?? "")
     .normalize("NFKC")
     .replace(/[<>:"/\\|?*\u0000-\u001f]/g, "-")
@@ -57,7 +33,6 @@ export function createShareImageFilename(title, formatId = "portrait") {
     .replace(/-+/g, "-")
     .replace(/^[.\s-]+|[.\s-]+$/g, "")
     .slice(0, 48);
-  const safeFormat = SHARE_IMAGE_FORMATS[formatId] ? formatId : "portrait";
 
-  return `${safeTitle || "article"}-${safeFormat}.png`;
+  return `${safeTitle || "article"}-3x4.png`;
 }
