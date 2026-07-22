@@ -171,7 +171,14 @@ test("frames every copyable prompt without altering its Markdown payload", () =>
   );
   assert.ok(promptPages.length > 0);
   for (const page of promptPages) {
-    assert.match(page.body, /<p class="lead">[\s\S]+?<\/p>\n\n::: tip 使用方式\n/);
-    assert.equal((page.body.match(/^```md$/gm) ?? []).length, 1, `${page.relativePath} 应保留一个可复制的 Markdown 提示词`);
+    assert.match(
+      page.body,
+      /<p class="lead">[^\n]+<\/p>\n\n## 提示词简介\n\n[^\n]+\n\n### 适用情境\n\n(?:- [^\n]+\n){3,}\n::: tip 使用方式\n/,
+      `${page.relativePath} 应在可复制提示词前说明提示词用途与适用情境`
+    );
+    assert.ok(
+      (page.body.match(/^```md$/gm) ?? []).length >= 1,
+      `${page.relativePath} 应保留至少一个可复制的 Markdown 提示词`
+    );
   }
 });

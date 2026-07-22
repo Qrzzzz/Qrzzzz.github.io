@@ -19,14 +19,48 @@ test("keeps the collection title in English while localizing the visible index c
   assert.match(index, /href="\/prompt-collection\/rigorous-research-decision-assistant"/);
   assert.match(index, /class="content-index-title">复杂决策顾问<\/span>/);
   assert.match(index, /class="content-index-title">证据校准研究员<\/span>/);
+  assert.match(index, /href="\/prompt-collection\/x-community-note-fact-checker"/);
+  assert.match(index, /class="content-index-title">X Community Note 事实核查助手<\/span>/);
+  assert.match(index, /href="\/prompt-collection\/chinese-wikipedia-entry-edit-review-assistant"/);
+  assert.match(index, /class="content-index-title">中文维基条目编辑与复核助手<\/span>/);
   assert.match(index, /href="\/prompt-collection\/learning-mode-tutor"/);
   assert.match(index, /class="content-index-title">学习模式导师<\/span>/);
   assert.doesNotMatch(index, /<strong class="content-index-title"/);
   assert.doesNotMatch(index, /严谨研究与决策助手|最高严谨度研究与分析助手/);
   assert.match(config, /text: "复杂决策顾问"/);
   assert.match(config, /text: "证据校准研究员"/);
+  assert.match(config, /text: "X Community Note 事实核查助手"/);
+  assert.match(config, /text: "中文维基条目编辑与复核助手"/);
   assert.match(config, /text: "学习模式导师"/);
   assert.doesNotMatch(config, /text: "(?:严谨研究与决策助手|最高严谨度研究与分析助手)"/);
+});
+
+test("preserves the two-stage Chinese Wikipedia editing and review boundary", () => {
+  const prompt = readFileSync(`${promptRoot}/chinese-wikipedia-entry-edit-review-assistant.md`, "utf8");
+  const editStage = prompt.indexOf("## 编辑阶段");
+  const reviewStage = prompt.indexOf("## 复核阶段");
+
+  assert.match(prompt, /^# 中文维基条目编辑与复核助手$/m);
+  assert.equal((prompt.match(/^```md$/gm) ?? []).length, 2);
+  assert.ok(editStage >= 0 && reviewStage > editStage, "编辑阶段应位于独立复核阶段之前");
+  assert.match(prompt, /本阶段只负责编辑，不进行最终链接可访问性或全文复核/);
+  assert.match(prompt, /请执行独立的“复核阶段”，不要擅自扩写或改变条目结构/);
+  assert.match(prompt, /实际访问全部外部链接并报告状态/);
+  assert.match(prompt, /检查维基语法、模板和参考文献能否正确解析/);
+  assert.match(prompt, /若无问题，也要明确说明已经检查的项目/);
+});
+
+test("preserves the Community Note fact-checking and submission gate", () => {
+  const prompt = readFileSync(`${promptRoot}/x-community-note-fact-checker.md`, "utf8");
+
+  assert.match(prompt, /^# X Community Note 事实核查助手$/m);
+  assert.match(prompt, /请明确说明“不建议写 Note”/);
+  assert.match(prompt, /Community Note 必须按照原帖主要语言来写/);
+  assert.match(prompt, /证据不足，暂不建议提交/);
+  assert.match(prompt, /权威、真实、可访问、非 404 的来源链接/);
+  assert.match(prompt, /如果无法找到足够权威且可访问的来源，请不要硬写 Note/);
+  assert.match(prompt, /- 是否建议提交 Community Note：/);
+  assert.match(prompt, /- 不确定性或仍需核验的地方：/);
 });
 
 test("preserves the learning-mode tutoring protocol", () => {

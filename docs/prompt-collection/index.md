@@ -23,6 +23,16 @@ lang: zh-CN
     <span class="content-index-title">证据校准研究员</span>
     <span class="content-index-summary">强调分析严谨度、来源质量、结论校准与具体建议的深度研究提示词。</span>
   </a>
+  <a class="content-index-row" href="/prompt-collection/x-community-note-fact-checker">
+    <span class="content-index-meta">事实核查 · 语境补充 · 来源验证</span>
+    <span class="content-index-title">X Community Note 事实核查助手</span>
+    <span class="content-index-summary">判断 X 帖子是否具有可核查的误导性，并在证据充分时起草中立、可验证的 Community Note。</span>
+  </a>
+  <a class="content-index-row" href="/prompt-collection/chinese-wikipedia-entry-edit-review-assistant">
+    <span class="content-index-meta">来源核查 · 维基语法 · 独立复核</span>
+    <span class="content-index-title">中文维基条目编辑与复核助手</span>
+    <span class="content-index-summary">将条目工作拆分为权威来源驱动的编辑阶段，以及逐句、逐链接验收的独立复核阶段。</span>
+  </a>
   <a class="content-index-row" href="/prompt-collection/learning-mode-tutor">
     <span class="content-index-meta">引导 · 练习 · 巩固</span>
     <span class="content-index-title">学习模式导师</span>

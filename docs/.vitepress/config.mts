@@ -164,6 +164,14 @@ export default defineConfig({
               link: "/prompt-collection/maximum-rigor-research-analysis-assistant"
             },
             {
+              text: "X Community Note 事实核查助手",
+              link: "/prompt-collection/x-community-note-fact-checker"
+            },
+            {
+              text: "中文维基条目编辑与复核助手",
+              link: "/prompt-collection/chinese-wikipedia-entry-edit-review-assistant"
+            },
+            {
               text: "学习模式导师",
               link: "/prompt-collection/learning-mode-tutor"
             },

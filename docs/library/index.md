@@ -78,6 +78,20 @@ outline: false
         </span>
         <span aria-hidden="true">→</span>
       </a>
+      <a class="library-entry" href="/prompt-collection/x-community-note-fact-checker">
+        <span class="library-entry__content">
+          <span class="library-entry__title">X Community Note 事实核查助手</span>
+          <span>事实核查 · 语境补充 · 来源验证</span>
+        </span>
+        <span aria-hidden="true">→</span>
+      </a>
+      <a class="library-entry" href="/prompt-collection/chinese-wikipedia-entry-edit-review-assistant">
+        <span class="library-entry__content">
+          <span class="library-entry__title">中文维基条目编辑与复核助手</span>
+          <span>来源核查 · 维基语法 · 独立复核</span>
+        </span>
+        <span aria-hidden="true">→</span>
+      </a>
       <a class="library-entry" href="/prompt-collection/learning-mode-tutor">
         <span class="library-entry__content">
           <span class="library-entry__title">学习模式导师</span>
