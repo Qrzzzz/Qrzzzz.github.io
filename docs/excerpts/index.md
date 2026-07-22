@@ -23,4 +23,8 @@ outline: false
     <time class="content-index-meta" datetime="2026-07-17">2026.07.17</time>
     <span class="content-index-title excerpt-preview">棋局结束时，国王与卒子归入同一盒中。</span>
   </a>
+  <a class="content-index-row content-index-row--excerpt" href="/excerpts/2026-07-22-01">
+    <time class="content-index-meta" datetime="2026-07-22">2026.07.22</time>
+    <span class="content-index-title excerpt-preview">我们走后，他们会给你们修学校和医院，会提高你们的工资……</span>
+  </a>
 </div>

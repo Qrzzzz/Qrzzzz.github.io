@@ -203,6 +203,10 @@ export default defineConfig({
             {
               text: "棋局结束时，国王与卒子……",
               link: "/excerpts/2026-07-17-03"
+            },
+            {
+              text: "我们走后，他们会给你们修学校和医院……",
+              link: "/excerpts/2026-07-22-01"
             }
           ]
         },
