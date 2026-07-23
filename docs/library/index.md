@@ -40,6 +40,13 @@ outline: false
       <a class="library-folder__all" href="/notes/">查看分类 →</a>
     </div>
     <div class="library-folder__entries">
+      <a class="library-entry" href="/notes/deepseek-restraint-and-ambition">
+        <span class="library-entry__content">
+          <span class="library-entry__title">一个“低占有欲”公司的巨大野心</span>
+          <span>克制、开源与低价如何服务一家公司的长期研究目标。</span>
+        </span>
+        <span aria-hidden="true">→</span>
+      </a>
       <a class="library-entry" href="/notes/until-the-tower-falls">
         <span class="library-entry__content">
           <span class="library-entry__title">直到大厦崩塌：关于“赢”的谎言</span>

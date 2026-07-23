@@ -142,6 +142,10 @@ export default defineConfig({
           items: [
             { text: "文章首页", link: "/notes/" },
             {
+              text: "一个“低占有欲”公司的巨大野心",
+              link: "/notes/deepseek-restraint-and-ambition"
+            },
+            {
               text: "直到大厦崩塌：关于“赢”的谎言",
               link: "/notes/until-the-tower-falls"
             },
