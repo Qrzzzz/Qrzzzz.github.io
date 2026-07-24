@@ -11,12 +11,13 @@ const first = readFileSync("docs/excerpts/2026-07-17-01.md", "utf8");
 const second = readFileSync("docs/excerpts/2026-07-17-02.md", "utf8");
 const third = readFileSync("docs/excerpts/2026-07-17-03.md", "utf8");
 const fourth = readFileSync("docs/excerpts/2026-07-22-01.md", "utf8");
+const fifth = readFileSync("docs/excerpts/2026-07-25-01.md", "utf8");
 
 test("uses shared data and compact previews for 偶拾", () => {
   assert.match(library, /<LibraryIndex \/>/);
   assert.match(index, /<CollectionIndex kind="excerpt" \/>/);
   assert.doesNotMatch(index, /class="content-index-row/);
-  for (const page of [first, second, third, fourth]) {
+  for (const page of [first, second, third, fourth, fifth]) {
     assert.match(page, /^collection: library$/m);
     assert.match(page, /^kind: excerpt$/m);
     assert.match(page, /^preview: .+$/m);
@@ -28,7 +29,7 @@ test("uses shared data and compact previews for 偶拾", () => {
 });
 
 test("keeps every excerpt in its own titleless Markdown page", () => {
-  for (const page of [first, second, third, fourth]) {
+  for (const page of [first, second, third, fourth, fifth]) {
     assert.doesNotMatch(page, /^#\s+/m);
     assert.match(page, /class="excerpt-entry__heading"/);
   }
@@ -49,6 +50,11 @@ test("keeps every excerpt in its own titleless Markdown page", () => {
   assert.match(fourth, /第 43—44 页/);
   assert.match(fourth, /较可核验原文有所扩写/);
   assert.doesNotMatch(fourth, /^next: false$/m);
+  assert.match(fifth, /我一直觉得，大家多少都在炒股。/);
+  assert.match(fifth, /城市发展 ETF/);
+  assert.match(fifth, /也无法设置止损。<\/p>/);
+  assert.match(fifth, /所有人都在参与资产轮盘/);
+  assert.doesNotMatch(fifth, /^next: false$/m);
   assert.match(styles, /\.vp-doc \.excerpt-entry__heading\s*\{[\s\S]*?clip-path: inset\(50%\)/);
   assert.match(styles, /\.excerpt-renderings\s*\{[\s\S]*?grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
 });

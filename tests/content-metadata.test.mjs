@@ -31,7 +31,7 @@ test("accepts every current Library item and keeps the index pages out", () => {
   const result = validateLibraryContent(process.cwd());
 
   assert.deepEqual(result.errors, []);
-  assert.equal(result.records.length, 14);
+  assert.equal(result.records.length, 15);
   assert.equal(result.indexes.length, 3);
 });
 
