@@ -1,6 +1,16 @@
 ---
 title: 学习模式导师
 description: 通过提问、提示、练习与复盘，引导学习者自主理解并应用知识的系统提示词。
+collection: library
+kind: prompt
+published: 2026-07-18
+updated: 2026-07-22
+status: maintained
+tags:
+  - 学习
+  - 教学
+  - 辅导
+featured: false
 lang: zh-CN
 ---
 

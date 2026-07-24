@@ -1,6 +1,16 @@
 ---
 title: 中文维基条目编辑与复核助手
 description: 用于分阶段编辑并独立复核中文维基条目源代码的双段提示词。
+collection: library
+kind: prompt
+published: 2026-07-22
+updated: 2026-07-22
+status: maintained
+tags:
+  - 维基百科
+  - 编辑
+  - 事实核查
+featured: false
 lang: zh-CN
 ---
 

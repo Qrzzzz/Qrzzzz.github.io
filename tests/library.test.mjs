@@ -1,78 +1,107 @@
 import assert from "node:assert/strict";
-import { readFileSync, readdirSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import test from "node:test";
 
 const library = readFileSync("docs/library/index.md", "utf8");
 const config = readFileSync("docs/.vitepress/config.mts", "utf8");
 const layout = readFileSync("docs/.vitepress/theme/Layout.vue", "utf8");
 const styles = readFileSync("docs/.vitepress/theme/styles/content.css", "utf8");
+const libraryIndex = readFileSync(
+  "docs/.vitepress/theme/components/LibraryIndex.vue",
+  "utf8"
+);
+const libraryToolbar = readFileSync(
+  "docs/.vitepress/theme/components/LibraryToolbar.vue",
+  "utf8"
+);
+const collectionIndex = readFileSync(
+  "docs/.vitepress/theme/components/CollectionIndex.vue",
+  "utf8"
+);
 
-function contentRoutes(directory) {
-  return readdirSync(`docs/${directory}`)
-    .filter((name) => name.endsWith(".md") && name !== "index.md")
-    .map((name) => `/${directory}/${name.slice(0, -3)}`);
-}
-
-test("merges the four content areas into one Library navigation entry", () => {
+test("defines four non-overlapping top-level navigation areas", () => {
   const nav = config.match(/nav:\s*\[([\s\S]*?)\],\s*\n\s*sidebar:/)?.[1] ?? "";
 
-  assert.match(config, /\{ text: "Library", link: "\/library\/" \}/);
-  assert.doesNotMatch(nav, /\{ text: "(?:文档|文章|提示词合集|偶拾)", link:/);
-  assert.match(library, /^# Library$/m);
-  assert.match(library, />文档<\/a><\/h2>/);
-  assert.match(library, />文章<\/a><\/h2>/);
-  assert.match(library, />Prompt Collection<\/a><\/h2>/);
-  assert.match(library, />偶拾<\/a><\/h2>/);
+  for (const entry of [
+    ['"文档"', '"/docs/"'],
+    ['"作品"', '"/works/"'],
+    ['"资料库"', '"/library/"'],
+    ['"关于"', '"/about"']
+  ]) {
+    assert.ok(
+      nav.includes(`text: ${entry[0]}`) && nav.includes(`link: ${entry[1]}`),
+      `顶部导航缺少 ${entry[0]}`
+    );
+  }
+  assert.match(
+    nav,
+    /\^\/projects\/\(\?!\[\^\/\]\+\/docs\(\?:\/\|\$\)\)/
+  );
+  assert.match(
+    nav,
+    /\^\/projects\/\[\^\/\]\+\/docs\(\?:\/\|\$\)/
+  );
+  assert.doesNotMatch(config, /siteIndexSidebar/);
 });
 
-test("uses the visible Library introduction as the page description", () => {
-  const frontmatterDescription = library.match(/^description:\s*(.+)$/m)?.[1];
-  const visibleDescription = library.match(
-    /^# Library\r?\n\r?\n<p class="lead">([^\r\n]+)<\/p>$/m
-  )?.[1];
+test("uses one generated Library source for the main and collection indexes", () => {
+  assert.match(library, /^title: 资料库$/m);
+  assert.match(library, /<LibraryIndex \/>/);
+  assert.doesNotMatch(library, /01 \/ DOCS|library-folder|href="\/notes\//);
+  assert.match(libraryIndex, /data as libraryItems/);
+  assert.match(libraryIndex, /title: "文章"/);
+  assert.match(libraryIndex, /title: "提示词"/);
+  assert.match(libraryIndex, /title: "偶拾"/);
+  assert.match(collectionIndex, /data as libraryItems/);
 
-  assert.ok(frontmatterDescription);
-  assert.equal(frontmatterDescription, visibleDescription);
-});
-
-test("links every document, article, prompt, and excerpt from the Library page", () => {
-  const routes = [
-    ...contentRoutes("guide"),
-    ...contentRoutes("notes"),
-    ...contentRoutes("prompt-collection"),
-    ...contentRoutes("excerpts")
-  ];
-
-  assert.ok(routes.length > 0);
-  for (const route of routes) {
-    assert.ok(library.includes(`href="${route}"`), `Library 缺少内容入口：${route}`);
+  for (const [file, kind] of [
+    ["docs/notes/index.md", "article"],
+    ["docs/prompt-collection/index.md", "prompt"],
+    ["docs/excerpts/index.md", "excerpt"]
+  ]) {
+    const source = readFileSync(file, "utf8");
+    assert.match(source, new RegExp(`<CollectionIndex kind="${kind}" \\/>`));
+    assert.doesNotMatch(source, /class="content-index-row"/);
   }
 });
 
-test("renders Library as a responsive editorial index", () => {
+test("implements searchable URL-backed filters and a clear empty state", () => {
+  assert.match(libraryToolbar, /type="search"/);
+  assert.match(libraryToolbar, /aria-pressed/);
+  assert.match(libraryIndex, /URLSearchParams\(window\.location\.search\)/);
+  assert.match(libraryIndex, /window\.history\[method\]/);
+  assert.match(libraryIndex, /window\.addEventListener\("popstate"/);
+  assert.match(libraryIndex, /没有找到相关内容/);
+  assert.match(libraryIndex, /清除筛选/);
+  assert.match(libraryIndex, /matchesLibraryItem\(item, query\.value\)/);
+});
+
+test("renders the Library as responsive categories and stable result rows", () => {
   assert.match(layout, /relativePath\.startsWith\("library\/"\)/);
   assert.match(library, /^outline: false$/m);
-  assert.match(config, /outline:\s*\{\s*label: "页面导航",\s*level: "deep"/s);
-  assert.match(library, /class="library-folder"/);
-  assert.match(library, /class="library-folder library-folder--wide"/);
-  assert.match(library, /class="library-entry__title"/);
-  assert.doesNotMatch(library, /<strong(?:\s|>)/);
-  assert.match(styles, /\.library-folders\s*\{[^}]*border-top:\s*1px solid var\(--site-line\)/s);
   assert.match(
     styles,
-    /\.library-folder\s*\{[^}]*display:\s*grid[^}]*grid-template-columns:\s*72px minmax\(210px, 240px\) minmax\(0, 1fr\)[^}]*border-bottom:\s*1px solid var\(--site-line\)[^}]*background:\s*transparent/s
-  );
-  assert.doesNotMatch(styles, /\.library-folder::before/);
-  assert.match(
-    styles,
-    /\.site-layout\[data-page-kind="library"\] \.vp-doc h1\s*\{[^}]*background-image:\s*none[^}]*-webkit-text-fill-color:\s*currentColor/s
+    /\.library-categories\s*\{[^}]*grid-template-columns:\s*repeat\(3, minmax\(0, 1fr\)\)/s
   );
   assert.match(
     styles,
-    /\.site-layout\[data-page-kind="library"\] \.aside-curtain\s*\{[^}]*display:\s*none/s
+    /@media \(max-width: 959px\)[\s\S]*?\.library-categories\s*\{[^}]*repeat\(2, minmax\(0, 1fr\)\)/s
   );
   assert.match(
     styles,
-    /@media \(max-width: 767px\)[\s\S]*?\.library-folder,\s*\n\s*\.library-folder--wide\s*\{[^}]*grid-template-columns:\s*64px minmax\(0, 1fr\)/s
+    /@media \(max-width: 639px\)[\s\S]*?\.library-categories\s*\{[^}]*minmax\(0, 1fr\)/s
+  );
+  assert.match(
+    styles,
+    /\.library-result\s*\{[^}]*grid-template-columns:\s*100px minmax\(220px, 1fr\) 120px/s
+  );
+  assert.match(
+    styles,
+    /\.library-result:hover,[\s\S]*?box-shadow:\s*inset 2px 0 0 var\(--site-accent\)/s
+  );
+  assert.doesNotMatch(styles, /padding-inline:\s*8px/);
+  assert.match(
+    styles,
+    /@media \(max-width: 639px\)[\s\S]*?\.library-result__date\s*\{[^}]*display:\s*none/s
   );
 });

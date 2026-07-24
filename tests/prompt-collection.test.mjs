@@ -4,35 +4,28 @@ import test from "node:test";
 
 const promptRoot = "docs/prompt-collection";
 
-test("keeps the collection title in English while localizing the visible index copy", () => {
+test("uses a localized collection index backed by shared Library data", () => {
   const index = readFileSync(`${promptRoot}/index.md`, "utf8");
   const config = readFileSync("docs/.vitepress/config.mts", "utf8");
 
-  assert.match(index, /^# Prompt Collection$/m);
-  assert.match(index, /^## 提示词$/m);
-  assert.match(index, /aria-label="提示词列表"/);
+  assert.match(index, /<p class="page-eyebrow">PROMPT COLLECTION<\/p>/);
+  assert.match(index, /^# 提示词$/m);
+  assert.match(index, /<CollectionIndex kind="prompt" \/>/);
   assert.doesNotMatch(index, /A growing library|Chinese-language|Research · Analysis/);
-  assert.match(config, /text: "Library", link: "\/library\/"/);
+  assert.match(config, /text: "资料库",\s*link: "\/library\/"/);
   assert.doesNotMatch(config, /text: "提示词合集", link: "\/prompt-collection\/"/);
-  assert.match(config, /"\/prompt-collection\/": \[/);
+  assert.doesNotMatch(config, /"\/prompt-collection\/": \[/);
   assert.match(config, /aside: true/);
-  assert.match(index, /href="\/prompt-collection\/rigorous-research-decision-assistant"/);
-  assert.match(index, /class="content-index-title">复杂决策顾问<\/span>/);
-  assert.match(index, /class="content-index-title">证据校准研究员<\/span>/);
-  assert.match(index, /href="\/prompt-collection\/x-community-note-fact-checker"/);
-  assert.match(index, /class="content-index-title">X Community Note 事实核查助手<\/span>/);
-  assert.match(index, /href="\/prompt-collection\/chinese-wikipedia-entry-edit-review-assistant"/);
-  assert.match(index, /class="content-index-title">中文维基条目编辑与复核助手<\/span>/);
-  assert.match(index, /href="\/prompt-collection\/learning-mode-tutor"/);
-  assert.match(index, /class="content-index-title">学习模式导师<\/span>/);
-  assert.doesNotMatch(index, /<strong class="content-index-title"/);
+  assert.doesNotMatch(index, /class="content-index-row"/);
   assert.doesNotMatch(index, /严谨研究与决策助手|最高严谨度研究与分析助手/);
-  assert.match(config, /text: "复杂决策顾问"/);
-  assert.match(config, /text: "证据校准研究员"/);
-  assert.match(config, /text: "X Community Note 事实核查助手"/);
-  assert.match(config, /text: "中文维基条目编辑与复核助手"/);
-  assert.match(config, /text: "学习模式导师"/);
-  assert.doesNotMatch(config, /text: "(?:严谨研究与决策助手|最高严谨度研究与分析助手)"/);
+
+  for (const name of readdirSync(promptRoot).filter(
+    (entry) => entry.endsWith(".md") && entry !== "index.md"
+  )) {
+    const prompt = readFileSync(`${promptRoot}/${name}`, "utf8");
+    assert.match(prompt, /^collection: library$/m);
+    assert.match(prompt, /^kind: prompt$/m);
+  }
 });
 
 test("preserves the two-stage Chinese Wikipedia editing and review boundary", () => {

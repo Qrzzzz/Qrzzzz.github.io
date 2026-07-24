@@ -1,4 +1,53 @@
 import { defineConfig } from "vitepress";
+import { fileURLToPath } from "node:url";
+import { collectLibraryRecords } from "../../scripts/check-content-metadata.mjs";
+
+const repositoryRoot = fileURLToPath(new URL("../..", import.meta.url));
+const { records: libraryRecords } = collectLibraryRecords(repositoryRoot);
+const libraryPager = new Map<
+  string,
+  {
+    prev: false | { text: string; link: string };
+    next: false | { text: string; link: string };
+  }
+>();
+
+for (const kind of ["article", "prompt", "excerpt"]) {
+  const items = libraryRecords
+    .filter((record) => record.frontmatter.kind === kind)
+    .sort((left, right) => {
+      const leftDate =
+        left.frontmatter.updated ?? left.frontmatter.published ?? "";
+      const rightDate =
+        right.frontmatter.updated ?? right.frontmatter.published ?? "";
+      const dateOrder = String(rightDate).localeCompare(String(leftDate));
+      return (
+        dateOrder ||
+        String(left.frontmatter.title).localeCompare(
+          String(right.frontmatter.title),
+          "zh-CN"
+        )
+      );
+    });
+
+  items.forEach((item, index) => {
+    const navigationItem = (target: (typeof items)[number] | undefined) =>
+      target
+        ? {
+            text:
+              target.frontmatter.kind === "excerpt"
+                ? String(target.frontmatter.preview)
+                : String(target.frontmatter.title),
+            link: target.url
+          }
+        : false;
+
+    libraryPager.set(item.relativePath, {
+      prev: navigationItem(items[index - 1]),
+      next: navigationItem(items[index + 1])
+    });
+  });
+}
 
 function pageLanguage(value: unknown, relativePath = "") {
   if (typeof value === "string" && /^[a-z]{2,3}(?:-[a-z0-9]+)*$/i.test(value)) {
@@ -11,24 +60,10 @@ function pageLanguage(value: unknown, relativePath = "") {
   return releaseLanguage ?? "zh-CN";
 }
 
-function siteIndexSidebar() {
-  return {
-    text: "站点内容",
-    items: [
-      { text: "Library", link: "/library/" },
-      { text: "文档", link: "/guide/" },
-      { text: "文章", link: "/notes/" },
-      { text: "Prompt Collection", link: "/prompt-collection/" },
-      { text: "偶拾", link: "/excerpts/" },
-      { text: "项目", link: "/projects/" }
-    ]
-  };
-}
-
 export default defineConfig({
   lang: "zh-CN",
   title: "Qrzzzz",
-  description: "Qrzzzz 的文档、文章与公开项目。",
+  description: "Qrzzzz 的项目文档、公开工具、长期文章与可复用资料库。",
 
   // 用户主页仓库部署在域名根目录。
   base: "/",
@@ -75,7 +110,13 @@ export default defineConfig({
     const socialTitle =
       pageTitle === "Qrzzzz" ? "Qrzzzz" : `${pageTitle} · Qrzzzz`;
     const socialDescription =
-      pageData.frontmatter.description || "Qrzzzz 的文档、文章与公开项目。";
+      pageData.frontmatter.description ||
+      "Qrzzzz 的项目文档、公开工具、长期文章与可复用资料库。";
+    const pager = libraryPager.get(pageData.relativePath.replaceAll("\\", "/"));
+    if (pager) {
+      pageData.frontmatter.prev = pager.prev;
+      pageData.frontmatter.next = pager.next;
+    }
 
     pageData.frontmatter.head ??= [];
     pageData.frontmatter.head.push(
@@ -119,115 +160,73 @@ export default defineConfig({
     siteTitle: "Qrzzzz",
 
     nav: [
-      { text: "项目", link: "/projects/" },
-      { text: "工具", link: "/tools/" },
-      { text: "Library", link: "/library/" }
+      {
+        text: "文档",
+        link: "/docs/",
+        activeMatch:
+          "^/(?:docs|guide)(?:/|$)|^/projects/[^/]+/docs(?:/|$)"
+      },
+      {
+        text: "作品",
+        link: "/works/",
+        activeMatch:
+          "^/(?:works|tools)(?:/|$)|^/projects/(?![^/]+/docs(?:/|$))"
+      },
+      {
+        text: "资料库",
+        link: "/library/",
+        activeMatch:
+          "^/(?:library|notes|prompt-collection|excerpts)(?:/|$)"
+      },
+      {
+        text: "关于",
+        link: "/about",
+        activeMatch: "^/about(?:/|$)"
+      }
     ],
 
     sidebar: {
       "/guide/": [
         {
-          text: "文档",
-          items: [
-            { text: "文档首页", link: "/guide/" },
-            { text: "维护这个网站", link: "/guide/getting-started" },
-            { text: "正文写作与排版规范", link: "/guide/writing-style" }
-          ]
+          text: "文档中心",
+          link: "/docs/"
         },
-        siteIndexSidebar()
-      ],
-      "/notes/": [
         {
-          text: "文章",
+          text: "维护者手册",
           items: [
-            { text: "文章首页", link: "/notes/" },
-            {
-              text: "一个“低占有欲”公司的巨大野心",
-              link: "/notes/deepseek-restraint-and-ambition"
-            },
-            {
-              text: "直到大厦崩塌：关于“赢”的谎言",
-              link: "/notes/until-the-tower-falls"
-            },
-            { text: "为什么要有这个网站", link: "/notes/why-this-site" }
+            { text: "手册首页", link: "/guide/" },
+            { text: "本地开发与发布", link: "/guide/getting-started" },
+            { text: "内容写作规范", link: "/guide/writing-style" }
           ]
-        },
-        siteIndexSidebar()
+        }
       ],
-      "/prompt-collection/": [
+      "/projects/lyrics-card-generator/docs/": [
         {
-          text: "Prompt Collection",
+          text: "Lyrics Card Generator",
           items: [
-            { text: "提示词首页", link: "/prompt-collection/" },
             {
-              text: "复杂决策顾问",
-              link: "/prompt-collection/rigorous-research-decision-assistant"
+              text: "文档首页",
+              link: "/projects/lyrics-card-generator/docs/"
             },
             {
-              text: "证据校准研究员",
-              link: "/prompt-collection/maximum-rigor-research-analysis-assistant"
+              text: "桌面端维护",
+              link: "/projects/lyrics-card-generator/docs/desktop/"
             },
             {
-              text: "X Community Note 事实核查助手",
-              link: "/prompt-collection/x-community-note-fact-checker"
+              text: "示例内容维护",
+              link: "/projects/lyrics-card-generator/docs/examples/"
             },
             {
-              text: "中文维基条目编辑与复核助手",
-              link: "/prompt-collection/chinese-wikipedia-entry-edit-review-assistant"
+              text: "版本说明",
+              link: "/projects/lyrics-card-generator/docs/releases/"
             },
             {
-              text: "学习模式导师",
-              link: "/prompt-collection/learning-mode-tutor"
-            },
-            {
-              text: "智能修图与互动涂鸦叠加",
-              link: "/prompt-collection/smart-photo-retouching-interactive-doodle-overlays"
-            },
-            {
-              text: "手绘教育信息图生成器",
-              link: "/prompt-collection/hand-drawn-educational-infographic-generator"
+              text: "v5.1.0 P0 implementation plan",
+              link:
+                "/projects/lyrics-card-generator/docs/v5.1.0-p0-implementation-plan/"
             }
           ]
-        },
-        siteIndexSidebar()
-      ],
-      "/excerpts/": [
-        {
-          text: "偶拾",
-          items: [
-            { text: "偶拾首页", link: "/excerpts/" },
-            {
-              text: "拜托你一直鲜活……",
-              link: "/excerpts/2026-07-17-01"
-            },
-            {
-              text: "蝉真的是世界上最摇滚的生物了……",
-              link: "/excerpts/2026-07-17-02"
-            },
-            {
-              text: "棋局结束时，国王与卒子……",
-              link: "/excerpts/2026-07-17-03"
-            },
-            {
-              text: "记住，我们经过这里以后……",
-              link: "/excerpts/2026-07-22-01"
-            }
-          ]
-        },
-        siteIndexSidebar()
-      ],
-      "/projects/": [
-        {
-          text: "项目",
-          items: [
-            { text: "项目首页", link: "/projects/" },
-            {
-              text: "Lyrics Card Generator",
-              link: "/projects/lyrics-card-generator/"
-            }
-          ]
-        },
-        siteIndexSidebar()
+        }
       ]
     },
     aside: true,

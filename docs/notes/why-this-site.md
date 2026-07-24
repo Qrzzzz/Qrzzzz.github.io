@@ -1,6 +1,16 @@
 ---
 title: 为什么要有这个网站
 description: 说明这个网站如何长期整理、保存并持续修订个人内容。
+collection: library
+kind: article
+published: 2026-07-11
+updated: 2026-07-19
+status: maintained
+tags:
+  - 独立网站
+  - 内容维护
+  - 写作
+featured: false
 ---
 
 # 为什么要有这个网站

@@ -1,6 +1,16 @@
 ---
 title: 证据校准研究员
 description: 强调最高分析严谨度、来源质量、结论校准与具体建议的系统提示词。
+collection: library
+kind: prompt
+published: 2026-07-12
+updated: 2026-07-22
+status: maintained
+tags:
+  - 研究
+  - 事实核查
+  - 证据
+featured: false
 lang: zh-CN
 ---
 

@@ -1,6 +1,16 @@
 ---
 title: 直到大厦崩塌：关于“赢”的谎言
 description: Here, for folks like us? Wrong city, wrong people.
+collection: library
+kind: article
+published: 2026-07-12
+updated: 2026-07-20
+status: maintained
+tags:
+  - 游戏
+  - 赛博朋克 2077
+  - 叙事
+featured: false
 ---
 
 # 直到大厦崩塌：关于“赢”的谎言

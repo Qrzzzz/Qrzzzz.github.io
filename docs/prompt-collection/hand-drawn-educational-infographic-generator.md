@@ -1,6 +1,16 @@
 ---
 title: 手绘教育信息图生成器
 description: 用于创作温暖手绘风单页教育信息图的提示词。
+collection: library
+kind: prompt
+published: 2026-07-12
+updated: 2026-07-22
+status: maintained
+tags:
+  - 信息图
+  - 插画
+  - 视觉摘要
+featured: false
 lang: zh-CN
 ---
 

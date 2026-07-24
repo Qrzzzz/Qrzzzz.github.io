@@ -7,12 +7,16 @@ const layout = readFileSync("docs/.vitepress/theme/Layout.vue", "utf8");
 const styles = readFileSync("docs/.vitepress/theme/styles/content.css", "utf8");
 const tokens = readFileSync("docs/.vitepress/theme/styles/tokens.css", "utf8");
 
-test("uses contextual sidebars for a three-column reading layout", () => {
+test("keeps contextual sidebars only for the current documentation set", () => {
   assert.match(tokens, /--vp-sidebar-width:\s*224px/);
   assert.match(config, /sidebar:\s*\{/);
-  for (const route of ["/guide/", "/notes/", "/prompt-collection/", "/excerpts/", "/projects/"]) {
+  for (const route of ["/guide/", "/projects/lyrics-card-generator/docs/"]) {
     assert.match(config, new RegExp(`"${route.replaceAll("/", "\\/")}": \\[`));
   }
+  for (const route of ["/notes/", "/prompt-collection/", "/excerpts/", "/projects/"]) {
+    assert.doesNotMatch(config, new RegExp(`"${route.replaceAll("/", "\\/")}": \\[`));
+  }
+  assert.doesNotMatch(config, /siteIndexSidebar/);
   assert.match(
     styles,
     /\.VPContent\.has-sidebar \.VPDoc\.has-aside \.content-container\s*\{\s*max-width:\s*100%/s

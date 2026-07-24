@@ -9,13 +9,14 @@ const writingStyle = readFileSync("docs/guide/writing-style.md", "utf8");
 const styles = readFileSync("docs/.vitepress/theme/styles/content.css", "utf8");
 
 test("publishes the writing style guide through every document entry point", () => {
-  assert.match(writingStyle, /^title: 正文写作与排版规范$/m);
+  assert.match(writingStyle, /^title: 内容写作规范$/m);
   assert.match(
     config,
-    /\{ text: "正文写作与排版规范", link: "\/guide\/writing-style" \}/
+    /\{ text: "内容写作规范", link: "\/guide\/writing-style" \}/
   );
   assert.match(guideIndex, /href="\/guide\/writing-style"/);
-  assert.match(library, /href="\/guide\/writing-style"/);
+  assert.doesNotMatch(library, /href="\/guide\/writing-style"/);
+  assert.match(readFileSync("docs/docs/index.md", "utf8"), /href="\/guide\/writing-style"/);
 });
 
 test("documents the common formats used in article content", () => {
