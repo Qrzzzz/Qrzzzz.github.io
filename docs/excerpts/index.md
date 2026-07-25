@@ -10,6 +10,6 @@ import CollectionIndex from "../.vitepress/theme/components/CollectionIndex.vue"
 
 # 偶拾
 
-<p class="lead">偶然读到一句话或一段文字，觉得值得再看，便在这里保留一则。</p>
+<p class="lead">偶然遇见。</p>
 
 <CollectionIndex kind="excerpt" />
