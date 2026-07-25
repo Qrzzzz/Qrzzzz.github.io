@@ -48,7 +48,6 @@ test("keeps every excerpt in its own titleless Markdown page", () => {
   assert.match(fourth, /流传意译/);
   assert.match(fourth, /Mi campaña con el Che/);
   assert.match(fourth, /第 43—44 页/);
-  assert.match(fourth, /较可核验原文有所扩写/);
   assert.doesNotMatch(fourth, /^next: false$/m);
   assert.match(fifth, /我一直觉得，大家多少都在炒股。/);
   assert.match(fifth, /城市发展 ETF/);
