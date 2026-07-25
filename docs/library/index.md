@@ -12,6 +12,6 @@ import LibraryIndex from "../.vitepress/theme/components/LibraryIndex.vue";
 
 # 资料库
 
-<p class="lead">长期保存的文章、提示词与偶拾。可以按类型浏览，也可以直接搜索。</p>
+<p class="lead">按类型浏览或直接搜索。</p>
 
 <LibraryIndex />
