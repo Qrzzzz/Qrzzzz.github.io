@@ -58,6 +58,22 @@ test("keeps every excerpt in its own titleless Markdown page", () => {
   assert.match(styles, /\.excerpt-renderings\s*\{[\s\S]*?grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
 });
 
+test("renders simple excerpts as standard body copy without an accent rail", () => {
+  assert.match(
+    styles,
+    /\.excerpt-entry\s*\{[^}]*max-width:\s*none;[^}]*border-inline-start:\s*0;[^}]*padding-inline-start:\s*0;[^}]*\}/
+  );
+  assert.match(styles, /\.vp-doc blockquote:not\(\.excerpt-quotation\) p/);
+  assert.match(
+    styles,
+    /\.vp-doc \.excerpt-entry > \.excerpt-quotation p\s*\{[^}]*margin:\s*18px 0;[^}]*font-size:\s*17px;[^}]*line-height:\s*1\.82;[^}]*\}/
+  );
+  assert.match(
+    styles,
+    /@media \(max-width: 767px\)[\s\S]*?\.vp-doc \.excerpt-entry > \.excerpt-quotation p\s*\{[^}]*font-size:\s*16px;[^}]*\}/
+  );
+});
+
 test("wires 偶拾 into the top-level Library area without a left sidebar", () => {
   assert.doesNotMatch(config, /"\/excerpts\/": \[/);
   assert.match(

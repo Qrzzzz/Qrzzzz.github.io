@@ -463,17 +463,17 @@
   color: var(--site-text-muted);
 }
 
-.vp-doc blockquote p {
+.vp-doc blockquote:not(.excerpt-quotation) p {
   color: inherit;
   font-size: 17px;
   line-height: 1.72;
 }
 
-.vp-doc blockquote > :first-child {
+.vp-doc blockquote:not(.excerpt-quotation) > :first-child {
   margin-top: 0;
 }
 
-.vp-doc blockquote > :last-child {
+.vp-doc blockquote:not(.excerpt-quotation) > :last-child {
   margin-bottom: 0;
 }
 
@@ -1277,10 +1277,10 @@
 }
 
 .excerpt-entry {
-  max-width: 34rem;
-  border-inline-start: 2px solid var(--site-accent);
-  margin: clamp(46px, 9vw, 88px) auto 72px;
-  padding-inline-start: clamp(20px, 4vw, 34px);
+  max-width: none;
+  border-inline-start: 0;
+  margin: clamp(46px, 9vw, 88px) 0 72px;
+  padding-inline-start: 0;
 }
 
 .vp-doc .excerpt-entry__heading {
@@ -1296,24 +1296,20 @@
   white-space: nowrap;
 }
 
-.vp-doc .excerpt-entry p {
-  margin: 0;
-  color: var(--site-text);
-  font-size: clamp(20px, 2.4vw, 26px);
-  letter-spacing: 0.01em;
-  line-height: 1.9;
-}
-
-.vp-doc .excerpt-entry p + p {
-  margin-top: 1.2em;
-}
-
 .vp-doc .excerpt-entry > .excerpt-quotation {
   border: 0;
   margin: 0;
   padding: 0;
   background: transparent;
   color: inherit;
+}
+
+.vp-doc .excerpt-entry > .excerpt-quotation p {
+  margin: 18px 0;
+  color: var(--site-text);
+  font-size: 17px;
+  letter-spacing: normal;
+  line-height: 1.82;
 }
 
 .excerpt-entry--parallel {
@@ -1750,6 +1746,10 @@
   .site-layout[data-page-kind="article"] .vp-doc > p {
     font-size: 16px;
     line-height: 1.82;
+  }
+
+  .vp-doc .excerpt-entry > .excerpt-quotation p {
+    font-size: 16px;
   }
 
   .docs-breadcrumb {
