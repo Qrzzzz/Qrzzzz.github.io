@@ -27,7 +27,7 @@ function sourcePage(url, frontmatter = {}) {
   };
 }
 
-test("normalizes all 16 Library records from one metadata source", () => {
+test("normalizes all 17 Library records from one metadata source", () => {
   const { records } = collectLibraryRecords(process.cwd());
   const items = normalizeLibraryPages(
     records.map(({ url, frontmatter }) => ({ url, frontmatter }))
@@ -40,8 +40,8 @@ test("normalizes all 16 Library records from one metadata source", () => {
   );
 
   assert.equal(items.length, records.length);
-  assert.deepEqual(counts, { article: 3, prompt: 7, excerpt: 6 });
-  assert.equal(items[0].updated, "2026-07-27");
+  assert.deepEqual(counts, { article: 3, prompt: 8, excerpt: 6 });
+  assert.equal(items[0].updated, "2026-07-28");
   assert.equal(new Set(items.map((item) => item.url)).size, items.length);
 });
 
