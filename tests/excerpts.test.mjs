@@ -14,12 +14,13 @@ const fourth = readFileSync("docs/excerpts/2026-07-22-01.md", "utf8");
 const fifth = readFileSync("docs/excerpts/2026-07-25-01.md", "utf8");
 const sixth = readFileSync("docs/excerpts/2026-07-27-01.md", "utf8");
 const seventh = readFileSync("docs/excerpts/2026-07-29-01.md", "utf8");
+const eighth = readFileSync("docs/excerpts/2026-07-29-02.md", "utf8");
 
 test("uses shared data and compact previews for 偶拾", () => {
   assert.match(library, /<LibraryIndex \/>/);
   assert.match(index, /<CollectionIndex kind="excerpt" \/>/);
   assert.doesNotMatch(index, /class="content-index-row/);
-  for (const page of [first, second, third, fourth, fifth, sixth, seventh]) {
+  for (const page of [first, second, third, fourth, fifth, sixth, seventh, eighth]) {
     assert.match(page, /^collection: library$/m);
     assert.match(page, /^kind: excerpt$/m);
     assert.match(page, /^preview: .+$/m);
@@ -31,7 +32,7 @@ test("uses shared data and compact previews for 偶拾", () => {
 });
 
 test("keeps every excerpt in its own titleless Markdown page", () => {
-  for (const page of [first, second, third, fourth, fifth, sixth, seventh]) {
+  for (const page of [first, second, third, fourth, fifth, sixth, seventh, eighth]) {
     assert.doesNotMatch(page, /^#\s+/m);
     assert.match(page, /class="excerpt-entry__heading"/);
   }
@@ -59,6 +60,9 @@ test("keeps every excerpt in its own titleless Markdown page", () => {
   assert.match(sixth, /你的沉默，究竟是在倾听另一个灵魂/);
   assert.match(sixth, /还是只是在为自我的声音等待空隙？/);
   assert.match(seventh, /不要寻找故土，要寻找沃土。/);
+  assert.match(eighth, /<blockquote class="excerpt-quotation" lang="en">/);
+  assert.match(eighth, /I plan to live Anthropically\./);
+  assert.match(eighth, /I'll just become a stupider version of myself\./);
   assert.match(styles, /\.vp-doc \.excerpt-entry__heading\s*\{[\s\S]*?clip-path: inset\(50%\)/);
   assert.match(styles, /\.excerpt-renderings\s*\{[\s\S]*?grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
 });
