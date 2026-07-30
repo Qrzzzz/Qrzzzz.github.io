@@ -55,9 +55,10 @@ test("keeps every excerpt in its own titleless Markdown page", () => {
   assert.match(fourth, /第 43—44 页/);
   assert.doesNotMatch(fourth, /^next: false$/m);
   assert.match(fifth, /我一直觉得，大家多少都在炒股。/);
-  assert.match(fifth, /城市发展 ETF/);
-  assert.match(fifth, /也无法设置止损。<\/p>/);
-  assert.match(fifth, /所有人都在参与资产轮盘/);
+  assert.match(fifth, /"城市发展"ETF/);
+  assert.match(fifth, /也没法设止损。<\/p>/);
+  assert.match(fifth, /谁都逃不过这场资产轮盘/);
+  assert.match(fifth, /有些仓位，我们管它叫人生。/);
   assert.doesNotMatch(fifth, /^next: false$/m);
   assert.match(sixth, /你的沉默，究竟是在倾听另一个灵魂/);
   assert.match(sixth, /还是只是在为自我的声音等待空隙？/);
