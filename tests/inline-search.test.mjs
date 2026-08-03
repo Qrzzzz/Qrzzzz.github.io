@@ -37,6 +37,27 @@ test("mounts an accessible inline search instead of the VitePress modal trigger"
   assert.match(siteStyles, /\.VPNavBarSearch\s*\{\s*display:\s*none;/s);
 });
 
+test("isolates the expanded search from overlapping navigation controls", () => {
+  const component = readFileSync("docs/.vitepress/theme/InlineSearch.vue", "utf8");
+  const navActions = readFileSync("docs/.vitepress/theme/NavActions.vue", "utf8");
+  const siteStyles = readFileSync("docs/.vitepress/theme/styles/site.css", "utf8");
+
+  assert.match(
+    component,
+    /\.inline-search-form\s*\{[^}]*background:\s*var\(--site-surface\)/s
+  );
+  assert.match(component, /@media \(max-width:\s*767\.98px\)/);
+  assert.match(navActions, /@media \(max-width:\s*767\.98px\)/);
+  assert.match(
+    siteStyles,
+    /\.VPNavBar:has\(\.InlineSiteSearch\.is-expanded\) \.VPNavBarMenu\s*\{[^}]*visibility:\s*hidden;[^}]*pointer-events:\s*none/s
+  );
+  assert.match(
+    siteStyles,
+    /@media \(max-width:\s*767\.98px\)[\s\S]*?\.VPNavBar:has\(\.InlineSiteSearch\.is-expanded\) \.VPNavBarTitle,[\s\S]*?\.NavActions,[\s\S]*?\.VPNavBarHamburger\s*\{[^}]*visibility:\s*hidden;[^}]*pointer-events:\s*none/s
+  );
+});
+
 test("uses the top navigation and native mobile screen without a sidebar drawer", () => {
   const layout = readFileSync("docs/.vitepress/theme/Layout.vue", "utf8");
   const siteStyles = readFileSync("docs/.vitepress/theme/styles/site.css", "utf8");
@@ -49,11 +70,11 @@ test("uses the top navigation and native mobile screen without a sidebar drawer"
   assert.match(layout, /aria-modal/);
   assert.match(
     siteStyles,
-    /@media \(max-width:\s*1079px\)\s*\{[^}]*\.VPNavBarHamburger\s*\{[^}]*display:\s*flex\s*!important/s
+    /@media \(max-width:\s*1079\.98px\)\s*\{[^}]*\.VPNavBarHamburger\s*\{[^}]*display:\s*flex\s*!important/s
   );
   assert.match(
     siteStyles,
-    /@media \(max-width:\s*1079px\)[\s\S]*?\.VPNavScreen\s*\{[^}]*display:\s*block\s*!important/
+    /@media \(max-width:\s*1079\.98px\)[\s\S]*?\.VPNavScreen\s*\{[^}]*display:\s*block\s*!important/
   );
   assert.doesNotMatch(tokens, /theme-fade-fallback|view-transition/);
 });

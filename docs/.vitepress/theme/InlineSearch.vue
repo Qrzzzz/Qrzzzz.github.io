@@ -368,7 +368,7 @@ onBeforeUnmount(() => {
   align-items: center;
   gap: 9px;
   padding: 0 6px;
-  background: transparent;
+  background: var(--site-surface);
   box-shadow: none;
 }
 
@@ -518,7 +518,7 @@ onBeforeUnmount(() => {
   }
 }
 
-@media (max-width: 767px) {
+@media (max-width: 767.98px) {
   .InlineSiteSearch {
     width: 44px;
     flex: 0 0 44px;

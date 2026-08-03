@@ -273,7 +273,7 @@ onBeforeUnmount(() => {
   }
 }
 
-@media (max-width: 767px) {
+@media (max-width: 767.98px) {
   .NavActions {
     gap: 6px;
     margin-left: 0;

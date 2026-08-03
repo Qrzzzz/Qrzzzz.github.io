@@ -160,6 +160,11 @@ html.theme-is-switching .site-layout :where(h1, h2, h3, p, a, button, strong, co
   box-shadow: none;
 }
 
+.VPNavBar:has(.InlineSiteSearch.is-expanded) .VPNavBarMenu {
+  visibility: hidden;
+  pointer-events: none;
+}
+
 .VPNavBar .VPNavBarMenuLink {
   position: relative;
   height: 44px;
@@ -588,7 +593,7 @@ button.VPSwitch.VPSwitchAppearance > .check {
   }
 }
 
-@media (max-width: 1079px) {
+@media (max-width: 1079.98px) {
   .VPNavBarHamburger {
     display: flex !important;
   }
@@ -598,13 +603,20 @@ button.VPSwitch.VPSwitchAppearance > .check {
   }
 }
 
-@media (max-width: 767px) {
+@media (max-width: 767.98px) {
   :root {
     --site-nav-height: 68px;
   }
 
   .VPNavBar {
     backdrop-filter: saturate(125%) blur(14px);
+  }
+
+  .VPNavBar:has(.InlineSiteSearch.is-expanded) .VPNavBarTitle,
+  .VPNavBar:has(.InlineSiteSearch.is-expanded) .NavActions,
+  .VPNavBar:has(.InlineSiteSearch.is-expanded) .VPNavBarHamburger {
+    visibility: hidden;
+    pointer-events: none;
   }
 
   .home-page {
