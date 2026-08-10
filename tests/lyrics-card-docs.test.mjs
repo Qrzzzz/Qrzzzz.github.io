@@ -72,12 +72,14 @@ function fixture() {
   const publicOutput = path.join(root, "public-output");
   mkdirSync(path.join(source, "releases"), { recursive: true });
   mkdirSync(path.join(source, "assets"), { recursive: true });
+  mkdirSync(path.join(source, "readme-assets/screenshots"), { recursive: true });
   writeFileSync(
     path.join(root, "README.md"),
     `<div align="center">\n\n# 🎧 Lyrics Card Generator\n\n### 生成可用于分享的高质感歌词分享卡片\n\n` +
     `**Windows desktop · High-quality export**\n\n` +
     `<p><a href="./README.en.md">English</a> · <a href="https://qrzzzz.github.io/lyrics-card-generator/">在线版</a></p>\n\n` +
     `</div>\n\n---\n\n<img src="./public/app-icon.png" alt="icon" align="right" />\n\n` +
+    `<img src="./docs/readme-assets/screenshots/step-3.zh-CN.webp" alt="localized layout" />\n\n` +
     `* 项目入口\n\n` +
     `## 下载\n\n[桌面文档](./docs/desktop.md) · [发布说明](./docs/releases/v1.0.0.zh-CN.md) · [许可证](./LICENSE)\n`
   );
@@ -104,6 +106,7 @@ function fixture() {
   writeReleaseSet(source, "v2.0.0");
   writeFileSync(path.join(source, "assets/demo.png"), "fixture");
   writeFileSync(path.join(source, "assets/manual.pdf"), "%PDF-1.4 fixture");
+  writeFileSync(path.join(source, "readme-assets/screenshots/step-3.zh-CN.webp"), "fixture");
   return { root, source, output, publicOutput };
 }
 
@@ -120,7 +123,7 @@ test("imports stable routes, links, assets and metadata", () => {
     assert.equal(manifest.schemaVersion, 2);
     assert.equal(manifest.contentFormat, CONTENT_FORMAT);
     assert.equal(manifest.markdownCount, 34);
-    assert.equal(manifest.assetCount, 2);
+    assert.equal(manifest.assetCount, 3);
     assert.deepEqual(manifest.projectPage, {
       source: "README.md",
       route: "/projects/lyrics-card-generator/",
@@ -130,7 +133,8 @@ test("imports stable routes, links, assets and metadata", () => {
       manifest.assets.map((entry) => entry.output),
       [
         "projects/lyrics-card-generator/docs/assets/demo.png",
-        "projects/lyrics-card-generator/docs/assets/manual.pdf"
+        "projects/lyrics-card-generator/docs/assets/manual.pdf",
+        "projects/lyrics-card-generator/docs/readme-assets/screenshots/step-3.zh-CN.webp"
       ]
     );
     assert.ok(manifest.routes.some((entry) => entry.route.endsWith("/desktop/")));
@@ -260,6 +264,7 @@ test("imports stable routes, links, assets and metadata", () => {
     assert.ok(!existsSync(path.join(output, "assets/demo.png")));
     assert.ok(existsSync(path.join(publicOutput, "assets/demo.png")));
     assert.ok(existsSync(path.join(publicOutput, "assets/manual.pdf")));
+    assert.ok(existsSync(path.join(publicOutput, "readme-assets/screenshots/step-3.zh-CN.webp")));
     const projectPage = readFileSync(path.join(root, "index.md"), "utf8");
     assert.match(projectPage, /^sourcePath: "README\.md"$/m);
     assert.match(projectPage, new RegExp(`^sourceCommit: "${SHA}"$`, "m"));
@@ -283,6 +288,7 @@ test("imports stable routes, links, assets and metadata", () => {
     assert.match(projectPage, new RegExp(`${UPSTREAM_REPOSITORY}/blob/${SHA}/README\.en\.md`));
     assert.match(projectPage, new RegExp(`${UPSTREAM_REPOSITORY}/blob/${SHA}/LICENSE`));
     assert.match(projectPage, new RegExp(`raw\.githubusercontent\.com/Qrzzzz/lyrics-card-generator/${SHA}/public/app-icon\.png`));
+    assert.match(projectPage, /\/projects\/lyrics-card-generator\/docs\/readme-assets\/screenshots\/step-3\.zh-CN\.webp/);
     assert.match(projectPage, /https:\/\/qrzzzz\.github\.io\/lyrics-card-generator\//);
     assert.doesNotMatch(projectPage, /<div align="center">/);
     const landing = readFileSync(path.join(output, "index.md"), "utf8");

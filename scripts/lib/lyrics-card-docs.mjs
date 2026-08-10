@@ -662,7 +662,7 @@ function rewriteLinks(content, context) {
   });
 }
 
-function rewriteProjectReadmeLinks(content, { commitSha, markdownBySource, errors }) {
+function rewriteProjectReadmeLinks(content, { commitSha, sourceRoot, markdownBySource, errors }) {
   const resolve = (rawTarget) => {
     const destination = splitDestination(rawTarget);
     const originalHref = destination.href;
@@ -688,12 +688,19 @@ function rewriteProjectReadmeLinks(content, { commitSha, markdownBySource, error
       const docsPath = resolved.slice("docs/".length);
       let markdown = markdownBySource.get(docsPath);
       if (!markdown && !path.posix.extname(docsPath)) markdown = markdownBySource.get(`${docsPath}.md`);
-      if (!markdown) {
-        errors.push(`README.md: 无法解析文档链接 ${originalHref}`);
-        return rawTarget;
+      if (markdown) {
+        destination.href = `${markdown.route}${tail}`;
+        return joinDestination(destination);
       }
-      destination.href = `${markdown.route}${tail}`;
-      return joinDestination(destination);
+
+      const assetPath = path.join(sourceRoot, ...docsPath.split("/"));
+      if (existsSync(assetPath) && statSync(assetPath).isFile()) {
+        destination.href = `${DOCS_ROUTE}${encodeRoutePath(docsPath)}${tail}`;
+        return joinDestination(destination);
+      }
+
+      errors.push(`README.md: 无法解析文档链接 ${originalHref}`);
+      return rawTarget;
     }
 
     const encodedPath = encodeRoutePath(resolved);
@@ -930,7 +937,7 @@ export function importLyricsCardDocs({
   const { body: projectReadmeBody } = withoutFrontmatter(rawProjectReadme);
   const rewrittenProjectReadme = rewriteProjectReadmeLinks(
     withoutReadmeAlignmentWrapper(projectReadmeBody),
-    { commitSha: resolvedSha, markdownBySource, errors }
+    { commitSha: resolvedSha, sourceRoot: absoluteSource, markdownBySource, errors }
   );
   const adaptedProjectReadme = adaptProjectReadme(rewrittenProjectReadme);
   const projectSyncNotice = createSyncNotice({
