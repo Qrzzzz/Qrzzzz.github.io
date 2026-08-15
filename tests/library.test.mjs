@@ -53,6 +53,7 @@ test("uses one generated Library source for the main and collection indexes", ()
   assert.match(libraryIndex, /title: "提示词"/);
   assert.match(libraryIndex, /title: "偶拾"/);
   assert.match(collectionIndex, /data as libraryItems/);
+  assert.match(collectionIndex, /v-if="item\.kind !== 'excerpt'"/);
 
   for (const [file, kind] of [
     ["docs/notes/index.md", "article"],
