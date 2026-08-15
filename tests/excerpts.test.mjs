@@ -18,6 +18,7 @@ const eighth = readFileSync("docs/excerpts/2026-07-29-02.md", "utf8");
 const ninth = readFileSync("docs/excerpts/2026-07-29-03.md", "utf8");
 const tenth = readFileSync("docs/excerpts/2026-07-29-04.md", "utf8");
 const eleventh = readFileSync("docs/excerpts/2026-08-15-01.md", "utf8");
+const twelfth = readFileSync("docs/excerpts/2026-08-16-01.md", "utf8");
 
 const excerptPages = [
   first,
@@ -30,7 +31,8 @@ const excerptPages = [
   eighth,
   ninth,
   tenth,
-  eleventh
+  eleventh,
+  twelfth
 ];
 
 test("uses shared data and compact previews for 偶拾", () => {
@@ -90,6 +92,12 @@ test("keeps every excerpt in its own titleless Markdown page", () => {
   assert.match(eleventh, /Take your fastest ship and brightest crew/);
   assert.match(eleventh, /chasing the escaping sun\./);
   assert.match(eleventh, /<footer>——电影<cite>《奥德赛》<\/cite><\/footer>/);
+  assert.match(twelfth, /预计到2020年，国际上微电子技术水平将发展到14纳米/);
+  assert.match(twelfth, /核心技术是买不到的，必须靠我们自己/);
+  assert.match(
+    twelfth,
+    /<footer>——江泽民，<cite>《努力把握微电子、软件和计算机产业的技术主动权》<\/cite>，2006 年 12 月 10 日；后收入<cite>《论中国信息技术产业发展》<\/cite><\/footer>/
+  );
   assert.match(styles, /\.vp-doc \.excerpt-entry__heading\s*\{[\s\S]*?clip-path: inset\(50%\)/);
   assert.match(styles, /\.excerpt-renderings\s*\{[\s\S]*?grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
 });
