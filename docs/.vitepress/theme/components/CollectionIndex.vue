@@ -41,7 +41,12 @@ const items = computed(() =>
         >
           {{ item.displayTitle }}
         </span>
-        <span class="library-result__summary">{{ item.description }}</span>
+        <span
+          v-if="item.kind !== 'excerpt'"
+          class="library-result__summary"
+        >
+          {{ item.description }}
+        </span>
       </span>
       <span class="library-result__date">
         <time :datetime="item.updated">{{ item.updated }}</time>
