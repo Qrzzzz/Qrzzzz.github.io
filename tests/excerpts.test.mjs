@@ -17,12 +17,27 @@ const seventh = readFileSync("docs/excerpts/2026-07-29-01.md", "utf8");
 const eighth = readFileSync("docs/excerpts/2026-07-29-02.md", "utf8");
 const ninth = readFileSync("docs/excerpts/2026-07-29-03.md", "utf8");
 const tenth = readFileSync("docs/excerpts/2026-07-29-04.md", "utf8");
+const eleventh = readFileSync("docs/excerpts/2026-08-15-01.md", "utf8");
+
+const excerptPages = [
+  first,
+  second,
+  third,
+  fourth,
+  fifth,
+  sixth,
+  seventh,
+  eighth,
+  ninth,
+  tenth,
+  eleventh
+];
 
 test("uses shared data and compact previews for 偶拾", () => {
   assert.match(library, /<LibraryIndex \/>/);
   assert.match(index, /<CollectionIndex kind="excerpt" \/>/);
   assert.doesNotMatch(index, /class="content-index-row/);
-  for (const page of [first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth]) {
+  for (const page of excerptPages) {
     assert.match(page, /^collection: library$/m);
     assert.match(page, /^kind: excerpt$/m);
     assert.match(page, /^preview: .+$/m);
@@ -34,7 +49,7 @@ test("uses shared data and compact previews for 偶拾", () => {
 });
 
 test("keeps every excerpt in its own titleless Markdown page", () => {
-  for (const page of [first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth]) {
+  for (const page of excerptPages) {
     assert.doesNotMatch(page, /^#\s+/m);
     assert.match(page, /class="excerpt-entry__heading"/);
   }
@@ -72,6 +87,9 @@ test("keeps every excerpt in its own titleless Markdown page", () => {
     /<footer>——章北海，出自刘慈欣<cite>《三体Ⅱ：黑暗森林》<\/cite><\/footer>/
   );
   assert.match(tenth, /不要听任何从小到大没有换过生活地点的长辈的话。/);
+  assert.match(eleventh, /Take your fastest ship and brightest crew/);
+  assert.match(eleventh, /chasing the escaping sun\./);
+  assert.match(eleventh, /<footer>——电影<cite>《奥德赛》<\/cite><\/footer>/);
   assert.match(styles, /\.vp-doc \.excerpt-entry__heading\s*\{[\s\S]*?clip-path: inset\(50%\)/);
   assert.match(styles, /\.excerpt-renderings\s*\{[\s\S]*?grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
 });
