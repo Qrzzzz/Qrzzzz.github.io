@@ -2,3 +2,7 @@
 @import "./styles/site.css";
 @import "./styles/content.css";
 @import "./styles/code.css";
+
+.site-layout[data-page-kind="article"] .vp-doc > .lead {
+  display: none;
+}
