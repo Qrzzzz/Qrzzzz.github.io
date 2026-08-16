@@ -42,7 +42,7 @@ const items = computed(() =>
           {{ item.displayTitle }}
         </span>
         <span
-          v-if="item.kind !== 'excerpt'"
+          v-if="item.kind === 'prompt'"
           class="library-result__summary"
         >
           {{ item.description }}
