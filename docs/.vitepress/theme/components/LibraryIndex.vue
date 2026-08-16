@@ -183,7 +183,12 @@ onBeforeUnmount(() => {
             >
               {{ item.displayTitle }}
             </span>
-            <span class="library-result__summary">{{ item.description }}</span>
+            <span
+              v-if="item.kind === 'prompt'"
+              class="library-result__summary"
+            >
+              {{ item.description }}
+            </span>
           </span>
           <span class="library-result__date">
             <time :datetime="item.updated">{{ item.updated }}</time>
