@@ -19,6 +19,7 @@ const ninth = readFileSync("docs/excerpts/2026-07-29-03.md", "utf8");
 const tenth = readFileSync("docs/excerpts/2026-07-29-04.md", "utf8");
 const eleventh = readFileSync("docs/excerpts/2026-08-15-01.md", "utf8");
 const twelfth = readFileSync("docs/excerpts/2026-08-16-01.md", "utf8");
+const thirteenth = readFileSync("docs/excerpts/2026-08-17-01.md", "utf8");
 
 const excerptPages = [
   first,
@@ -32,7 +33,8 @@ const excerptPages = [
   ninth,
   tenth,
   eleventh,
-  twelfth
+  twelfth,
+  thirteenth
 ];
 
 test("uses shared data and compact previews for 偶拾", () => {
@@ -97,6 +99,12 @@ test("keeps every excerpt in its own titleless Markdown page", () => {
   assert.match(
     twelfth,
     /<footer>江泽民，<cite>《努力把握微电子、软件和计算机产业的技术主动权》<\/cite>，2006 年 12 月 10 日；后收入<cite>《论中国信息技术产业发展》<\/cite><\/footer>/
+  );
+  assert.match(thirteenth, /Even if model capabilities were frozen at today’s level/);
+  assert.match(thirteenth, /we would expect major changes to occur in the world\./);
+  assert.match(
+    thirteenth,
+    /<footer>Anthropic Institute, <cite>When AI builds itself<\/cite><\/footer>/
   );
   assert.match(styles, /\.vp-doc \.excerpt-entry__heading\s*\{[\s\S]*?clip-path: inset\(50%\)/);
   assert.match(styles, /\.excerpt-renderings\s*\{[\s\S]*?grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
