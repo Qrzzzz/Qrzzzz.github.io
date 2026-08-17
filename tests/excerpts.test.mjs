@@ -104,7 +104,7 @@ test("keeps every excerpt in its own titleless Markdown page", () => {
   assert.match(thirteenth, /we would expect major changes to occur in the world\./);
   assert.match(
     thirteenth,
-    /<footer>Anthropic Institute, <cite>When AI builds itself<\/cite><\/footer>/
+    /<footer>Anthropic Institute, <cite>When AI builds itself<\/cite>, 2026<\/footer>/
   );
   assert.match(styles, /\.vp-doc \.excerpt-entry__heading\s*\{[\s\S]*?clip-path: inset\(50%\)/);
   assert.match(styles, /\.excerpt-renderings\s*\{[\s\S]*?grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
