@@ -41,7 +41,7 @@ test("normalizes all 25 Library records from one metadata source", () => {
 
   assert.equal(items.length, records.length);
   assert.deepEqual(counts, { article: 4, prompt: 8, excerpt: 13 });
-  assert.equal(items[0].updated, "2026-08-17");
+  assert.equal(items[0].updated, "2026-08-19");
   assert.equal(new Set(items.map((item) => item.url)).size, items.length);
 });
 

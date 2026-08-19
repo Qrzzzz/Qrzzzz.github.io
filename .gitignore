@@ -4,6 +4,12 @@ docs/.vitepress/cache/
 docs/projects/lyrics-card-generator/index.md
 docs/projects/lyrics-card-generator/docs/
 docs/public/projects/lyrics-card-generator/docs/
+docs/projects/lyrics-card-generator-android/index.md
+docs/projects/second-glow/index.md
+docs/projects/password-generator/index.md
+docs/projects/bili-downloader/index.md
+docs/projects/aegis-vault-mobile/index.md
+docs/projects/slop-infinity/index.md
 
 .external/
 .cache/
@@ -13,3 +19,4 @@ Thumbs.db
 
 .vscode/
 .idea/
+.playwright-cli/

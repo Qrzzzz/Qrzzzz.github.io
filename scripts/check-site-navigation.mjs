@@ -6,7 +6,12 @@ import { PRODUCTION_BASELINE } from "./lib/lyrics-card-docs.mjs";
 
 const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const outputRoot = path.resolve(repositoryRoot, process.argv[2] || "docs/.vitepress/dist");
-const independentlyDeployedPrefixes = ["/lyrics-card-generator/", "/password-generator/"];
+const independentlyDeployedPrefixes = [
+  "/AI-slop-site/",
+  "/lyrics-card-generator/",
+  "/password-generator/",
+  "/second-glow/"
+];
 
 function walk(directory) {
   return readdirSync(directory).flatMap((name) => {

@@ -74,16 +74,18 @@ test("preserves the Duolingo daily-quest completion and safety gates", () => {
   );
 
   assert.match(prompt, /^# Duolingo 延续连胜自动化任务$/m);
-  assert.match(prompt, /先读取今天三个任务的具体内容与当前进度/);
-  assert.match(prompt, /每完成一课，都返回或检查每日任务进度/);
-  assert.match(prompt, /全部完成后立即停止，不要多做课程/);
-  assert.match(prompt, /在该页面停留任务要求的完整时长/);
+  assert.match(prompt, /读取今天三个任务的名称和实时进度/);
+  assert.match(prompt, /每完成一课都重新检查 \/quests/);
+  assert.match(prompt, /全部完成后立即停止，不做额外课程/);
+  assert.match(prompt, /优先继续正常作答和完成课程，让时间自然累计/);
   assert.match(
     prompt,
-    /不要购买商品、消耗宝石、修改账号设置、切换课程或更改学习语言/
+    /不购买商品、不消耗宝石、不进入付费或传奇挑战，不修改账号设置，不切换课程或学习语言/
   );
-  assert.match(prompt, /停止操作并报告具体阻塞原因，不要尝试绕过/);
-  assert.match(prompt, /只有在任务页面明确显示三个每日任务均已完成后，才可以报告成功/);
+  assert.match(prompt, /关闭当前多邻国标签页，新建标签页并重新打开/);
+  assert.match(prompt, /完全关闭 Chrome，再重新启动 Chrome/);
+  assert.match(prompt, /停止并准确报告阻塞原因/);
+  assert.match(prompt, /只有实时 \/quests 页面明确显示三个每日任务均已完成，才可报告成功/);
 });
 
 test("marks every prompt body as Markdown inside its existing code block", () => {

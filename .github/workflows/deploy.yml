@@ -10,6 +10,7 @@ on:
   repository_dispatch:
     types:
       - lyrics-card-docs-updated
+      - project-docs-updated
   schedule:
     - cron: "23 3 * * *"
 
@@ -31,16 +32,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Checkout lyrics-card-generator docs
-        uses: actions/checkout@v7
-        with:
-          repository: Qrzzzz/lyrics-card-generator
-          ref: main
-          path: .external/lyrics-card-generator
-          sparse-checkout: |
-            docs
-          sparse-checkout-cone-mode: true
-
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
@@ -50,8 +41,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Import lyrics-card-generator docs
-        run: npm run docs:import
+      - name: Pull project documentation
+        run: npm run docs:pull
 
       - name: Test and validate imported docs
         run: |
