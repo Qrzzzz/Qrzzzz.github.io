@@ -120,7 +120,9 @@ test("uses the native always-visible page outline without custom folding", () =>
   assert.match(styles, /\.VPDocAsideOutline \.outline-link:hover::before,[\s\S]*?opacity:\s*1/);
   assert.doesNotMatch(tokens, /--site-menu-prelayer/);
   assert.match(styles, /\.back-to-top\.is-visible/);
-  assert.match(styles, /conic-gradient\(/);
+  assert.match(styles, /\.back-to-top\s*\{[\s\S]*?background:\s*var\(--site-surface\)/);
+  assert.match(styles, /\.page-progress\s*\{[\s\S]*?bottom:\s*0/);
+  assert.doesNotMatch(styles, /--back-top-progress|\.back-to-top__progress|conic-gradient\(/);
   assert.doesNotMatch(styles, /\.back-to-top[\s\S]*?box-shadow:\s*0\s+10px/);
 });
 

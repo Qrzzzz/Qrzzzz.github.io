@@ -9,10 +9,12 @@ let frame = 0;
 
 function updateScrollState() {
   frame = 0;
-  const scrollRange = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+  const scrollRange = document.documentElement.scrollHeight - window.innerHeight;
   const threshold = Math.min(760, Math.max(520, window.innerHeight * 0.72));
   visible.value = window.scrollY >= threshold;
-  progress.value = Math.min(1, Math.max(0, window.scrollY / scrollRange));
+  progress.value = scrollRange > 0
+    ? Math.min(1, Math.max(0, window.scrollY / scrollRange))
+    : 0;
 }
 
 function scheduleUpdate() {
@@ -63,6 +65,11 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
+  <div
+    class="page-progress"
+    :style="{ '--page-progress-scale': progress }"
+    aria-hidden="true"
+  />
   <button
     class="back-to-top"
     type="button"
@@ -72,15 +79,11 @@ onBeforeUnmount(() => {
     :aria-hidden="!visible"
     aria-label="回到页面顶部"
     title="回到页面顶部"
-    :style="{ '--back-top-progress': `${progress * 100}%` }"
     @click="returnToTop"
   >
     <span class="back-to-top__icon" aria-hidden="true">
       <span />
     </span>
-    <span class="back-to-top__label">回到顶部</span>
-    <span class="back-to-top__progress" aria-hidden="true">
-      {{ Math.round(progress * 100) }}%
-    </span>
+    <span class="back-to-top__label">顶部</span>
   </button>
 </template>

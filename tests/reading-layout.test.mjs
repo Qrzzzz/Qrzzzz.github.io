@@ -40,7 +40,11 @@ test("renders the largest document heading with the site two-color gradient", ()
   assert.match(styles, /@media \(forced-colors: active\)/);
 });
 
-test("starts the back-to-top progress ring at twelve o'clock", () => {
-  assert.match(styles, /conic-gradient\(\s*from 0deg,/s);
-  assert.doesNotMatch(styles, /conic-gradient\(\s*from -90deg,/s);
+test("separates the bottom reading progress from the surface back-to-top control", () => {
+  assert.match(styles, /\.back-to-top\s*\{[\s\S]*?background:\s*var\(--site-surface\)/);
+  assert.match(styles, /\.page-progress\s*\{[\s\S]*?bottom:\s*0[\s\S]*?height:\s*3px/);
+  assert.match(styles, /\.page-progress::after\s*\{[\s\S]*?background:\s*var\(--site-accent\)/);
+  assert.match(styles, /transform:\s*scaleX\(var\(--page-progress-scale, 0\)\)/);
+  assert.doesNotMatch(styles, /--back-top-progress|conic-gradient\(/);
+  assert.doesNotMatch(styles, /\.back-to-top__progress/);
 });
