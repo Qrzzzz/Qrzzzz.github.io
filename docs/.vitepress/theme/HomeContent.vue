@@ -33,7 +33,7 @@ import TextType from "./TextType.vue";
           这里收录 Qrzzzz 的公开项目、使用文档，以及不想交给信息流决定寿命的文章与资料。
         </p>
         <nav class="home-actions" aria-label="首页入口">
-          <a class="home-text-link" href="/docs/">查看文档</a>
+          <a class="home-text-link" href="/library/">资料库</a>
           <a class="home-text-link" href="/works/">浏览作品</a>
         </nav>
       </div>
