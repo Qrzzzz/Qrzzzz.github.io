@@ -20,6 +20,7 @@ const tenth = readFileSync("docs/excerpts/2026-07-29-04.md", "utf8");
 const eleventh = readFileSync("docs/excerpts/2026-08-15-01.md", "utf8");
 const twelfth = readFileSync("docs/excerpts/2026-08-16-01.md", "utf8");
 const thirteenth = readFileSync("docs/excerpts/2026-08-17-01.md", "utf8");
+const fourteenth = readFileSync("docs/excerpts/2026-08-21-01.md", "utf8");
 
 const excerptPages = [
   first,
@@ -34,7 +35,8 @@ const excerptPages = [
   tenth,
   eleventh,
   twelfth,
-  thirteenth
+  thirteenth,
+  fourteenth
 ];
 
 test("uses shared data and compact previews for 偶拾", () => {
@@ -106,6 +108,8 @@ test("keeps every excerpt in its own titleless Markdown page", () => {
     thirteenth,
     /<footer>Anthropic Institute, <cite>When AI builds itself<\/cite>, 2026<\/footer>/
   );
+  assert.match(fourteenth, /没有恶意的人被恶意砸中的时候，第一反应不是反击，而是想不通。/);
+  assert.match(fourteenth, /你不必反复纠结他们为什么那样，因为你不是那样的人。/);
   assert.match(styles, /\.vp-doc \.excerpt-entry__heading\s*\{[\s\S]*?clip-path: inset\(50%\)/);
   assert.match(styles, /\.excerpt-renderings\s*\{[\s\S]*?grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
 });
