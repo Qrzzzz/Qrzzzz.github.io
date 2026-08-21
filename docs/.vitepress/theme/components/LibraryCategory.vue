@@ -9,7 +9,6 @@ defineProps<{
   title: string;
   count: number;
   unit: string;
-  description: string;
   latest: LibraryItem[];
   action: string;
   href: string;
@@ -24,8 +23,6 @@ defineProps<{
         <p>{{ count }} {{ unit }}</p>
       </div>
     </header>
-
-    <p class="library-category__description">{{ description }}</p>
 
     <div class="library-category__latest">
       <span>最近</span>

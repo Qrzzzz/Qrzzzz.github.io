@@ -840,14 +840,6 @@
   font-size: 12px;
 }
 
-.library-category__description {
-  min-height: 4.8em;
-  margin: 20px 0 0 !important;
-  color: var(--site-text-muted) !important;
-  font-size: 14px !important;
-  line-height: 1.7 !important;
-}
-
 .library-category__latest {
   display: grid;
   gap: 10px;
@@ -1914,10 +1906,6 @@
   }
 
   .library-category {
-    min-height: 0;
-  }
-
-  .library-category__description {
     min-height: 0;
   }
 

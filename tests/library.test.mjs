@@ -52,6 +52,10 @@ test("uses one generated Library source for the main and collection indexes", ()
   assert.match(libraryIndex, /title: "文章"/);
   assert.match(libraryIndex, /title: "提示词"/);
   assert.match(libraryIndex, /title: "偶拾"/);
+  assert.match(libraryIndex, /slice\(0, 3\)/);
+  assert.doesNotMatch(libraryIndex, /description: "对技术、产品/);
+  assert.doesNotMatch(libraryIndex, /description: "经过整理/);
+  assert.doesNotMatch(libraryIndex, /description: "偶然遇见/);
   assert.match(collectionIndex, /data as libraryItems/);
   assert.match(collectionIndex, /v-if="item\.kind === 'prompt'"/);
   assert.match(libraryIndex, /v-if="item\.kind === 'prompt'"/);

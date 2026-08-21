@@ -20,7 +20,6 @@ const categories: Array<{
   kind: LibraryKind;
   title: string;
   unit: string;
-  description: string;
   action: string;
   href: string;
 }> = [
@@ -28,7 +27,6 @@ const categories: Array<{
     kind: "article",
     title: "文章",
     unit: "篇",
-    description: "对技术、产品、组织与个人观察的长期写作。",
     action: "查看全部文章",
     href: "/notes/"
   },
@@ -36,7 +34,6 @@ const categories: Array<{
     kind: "prompt",
     title: "提示词",
     unit: "份",
-    description: "经过整理、可以复制使用并持续修订的完整提示词。",
     action: "查看全部提示词",
     href: "/prompt-collection/"
   },
@@ -44,7 +41,6 @@ const categories: Array<{
     kind: "excerpt",
     title: "偶拾",
     unit: "则",
-    description: "偶然遇见、值得保留的句子与段落。",
     action: "查看全部偶拾",
     href: "/excerpts/"
   }
@@ -148,7 +144,7 @@ onBeforeUnmount(() => {
         :key="category.kind"
         v-bind="category"
         :count="itemsFor(category.kind).length"
-        :latest="itemsFor(category.kind).slice(0, 2)"
+        :latest="itemsFor(category.kind).slice(0, 3)"
       />
     </div>
 
