@@ -12,7 +12,7 @@ test("uses a localized collection index backed by shared Library data", () => {
   assert.match(index, /^# 提示词$/m);
   assert.match(index, /<CollectionIndex kind="prompt" \/>/);
   assert.doesNotMatch(index, /A growing library|Chinese-language|Research · Analysis/);
-  assert.match(config, /text: "资料库",\s*link: "\/library\/"/);
+  assert.match(config, /text: "Library",\s*link: "\/library\/"/);
   assert.doesNotMatch(config, /text: "提示词合集", link: "\/prompt-collection\/"/);
   assert.doesNotMatch(config, /"\/prompt-collection\/": \[/);
   assert.match(config, /aside: true/);

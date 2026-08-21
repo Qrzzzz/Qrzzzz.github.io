@@ -138,7 +138,7 @@ onBeforeUnmount(() => {
       </p>
     </header>
 
-    <div class="library-categories" aria-label="资料库分类">
+    <div class="library-categories" aria-label="Library 分类">
       <LibraryCategory
         v-for="category in categories"
         :key="category.kind"

@@ -63,7 +63,7 @@ function pageLanguage(value: unknown, relativePath = "") {
 export default defineConfig({
   lang: "zh-CN",
   title: "Qrzzzz",
-  description: "Qrzzzz 的项目文档、公开工具、长期文章与可复用资料库。",
+  description: "Qrzzzz 的项目文档、公开工具与长期文章，统一收录于 Library。",
 
   // 用户主页仓库部署在域名根目录。
   base: "/",
@@ -111,7 +111,7 @@ export default defineConfig({
       pageTitle === "Qrzzzz" ? "Qrzzzz" : `${pageTitle} · Qrzzzz`;
     const socialDescription =
       pageData.frontmatter.description ||
-      "Qrzzzz 的项目文档、公开工具、长期文章与可复用资料库。";
+      "Qrzzzz 的项目文档、公开工具与长期文章，统一收录于 Library。";
     const pager = libraryPager.get(pageData.relativePath.replaceAll("\\", "/"));
     if (pager) {
       pageData.frontmatter.prev = pager.prev;
@@ -173,7 +173,7 @@ export default defineConfig({
           "^/(?:works|tools)(?:/|$)|^/projects/(?![^/]+/docs(?:/|$))"
       },
       {
-        text: "资料库",
+        text: "Library",
         link: "/library/",
         activeMatch:
           "^/(?:library|notes|prompt-collection|excerpts)(?:/|$)"

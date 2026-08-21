@@ -134,7 +134,7 @@ test("wires 偶拾 into the top-level Library area without a left sidebar", () =
   assert.doesNotMatch(config, /"\/excerpts\/": \[/);
   assert.match(
     config,
-    /text: "资料库",[\s\S]*?\^\/\(\?:library\|notes\|prompt-collection\|excerpts\)/
+    /text: "Library",[\s\S]*?\^\/\(\?:library\|notes\|prompt-collection\|excerpts\)/
   );
   assert.match(layout, /relativePath\.startsWith\("excerpts\/"\)/);
   assert.match(styles, /data-page-kind="excerpt"/);

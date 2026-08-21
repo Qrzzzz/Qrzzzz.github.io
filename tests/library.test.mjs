@@ -25,7 +25,7 @@ test("defines four non-overlapping top-level navigation areas", () => {
   for (const entry of [
     ['"文档"', '"/docs/"'],
     ['"作品"', '"/works/"'],
-    ['"资料库"', '"/library/"'],
+    ['"Library"', '"/library/"'],
     ['"关于"', '"/about"']
   ]) {
     assert.ok(
@@ -45,7 +45,7 @@ test("defines four non-overlapping top-level navigation areas", () => {
 });
 
 test("uses one generated Library source for the main and collection indexes", () => {
-  assert.match(library, /^title: 资料库$/m);
+  assert.match(library, /^title: Library$/m);
   assert.match(library, /<LibraryIndex \/>/);
   assert.doesNotMatch(library, /01 \/ DOCS|library-folder|href="\/notes\//);
   assert.match(libraryIndex, /data as libraryItems/);

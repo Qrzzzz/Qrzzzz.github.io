@@ -27,7 +27,7 @@ function handleInput(event: Event) {
 <template>
   <div class="library-toolbar">
     <label class="library-search">
-      <span>搜索资料库</span>
+      <span>搜索 Library</span>
       <input
         type="search"
         :value="query"
