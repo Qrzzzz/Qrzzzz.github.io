@@ -129,13 +129,13 @@ function setShellLanguageParts() {
       ".VPSkipLink, .VPNav, .VPLocalNav, .VPFooter, .docs-breadcrumb"
     )
     .forEach((element) => {
-      element.lang = "zh-CN";
+      element.lang = "en";
       languageParts.add(element);
     });
 
   const textLabels = [
-    ["#main-nav-aria-label", "主导航"],
-    ["#doc-footer-aria-label", "翻页导航"]
+    ["#main-nav-aria-label", "Main navigation"],
+    ["#doc-footer-aria-label", "Pagination navigation"]
   ] as const;
   for (const [selector, text] of textLabels) {
     const element = document.querySelector<HTMLElement>(selector);
@@ -155,7 +155,7 @@ function setShellLanguageParts() {
         ariaLabel: hamburger.getAttribute("aria-label")
       });
     }
-    hamburger.setAttribute("aria-label", "移动导航");
+    hamburger.setAttribute("aria-label", "Mobile navigation");
   }
 }
 
@@ -200,8 +200,8 @@ function activateNavScreen(screen: HTMLElement, trigger: HTMLButtonElement) {
   navScreenTrigger = trigger;
   screen.setAttribute("role", "dialog");
   screen.setAttribute("aria-modal", "true");
-  screen.setAttribute("aria-label", "移动导航");
-  screen.lang = "zh-CN";
+  screen.setAttribute("aria-label", "Mobile navigation");
+  screen.lang = "en";
 
   document
     .querySelectorAll<HTMLElement>(
@@ -302,7 +302,7 @@ onBeforeUnmount(() => {
   window.removeEventListener("resize", syncNavigationAccessibility);
   deactivateNavScreen(false);
   for (const element of languageParts) {
-    if (element.lang === "zh-CN") element.removeAttribute("lang");
+    if (element.lang === "en") element.removeAttribute("lang");
   }
   languageParts.clear();
   for (const [element, state] of shellLabelState) {

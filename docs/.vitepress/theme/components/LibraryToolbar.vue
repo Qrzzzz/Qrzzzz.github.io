@@ -13,10 +13,10 @@ const emit = defineEmits<{
 }>();
 
 const filters: Array<{ value: LibraryKind | "all"; label: string }> = [
-  { value: "all", label: "全部" },
-  { value: "article", label: "文章" },
-  { value: "prompt", label: "提示词" },
-  { value: "excerpt", label: "偶拾" }
+  { value: "all", label: "All" },
+  { value: "article", label: "Articles" },
+  { value: "prompt", label: "Prompts" },
+  { value: "excerpt", label: "Excerpts" }
 ];
 
 function handleInput(event: Event) {
@@ -27,17 +27,17 @@ function handleInput(event: Event) {
 <template>
   <div class="library-toolbar">
     <label class="library-search">
-      <span>搜索 Library</span>
+      <span>Search the Library</span>
       <input
         type="search"
         :value="query"
-        placeholder="搜索标题、摘要或标签……"
+        placeholder="Search titles, summaries, or tags…"
         autocomplete="off"
         @input="handleInput"
       />
     </label>
 
-    <div class="library-toolbar__filters" aria-label="按内容类型筛选">
+    <div class="library-toolbar__filters" aria-label="Filter by content type">
       <button
         v-for="filter in filters"
         :key="filter.value"
@@ -52,7 +52,7 @@ function handleInput(event: Event) {
     </div>
 
     <p class="library-toolbar__count" aria-live="polite">
-      找到 {{ resultCount }} 项内容
+      {{ resultCount }} {{ resultCount === 1 ? "result" : "results" }}
     </p>
   </div>
 </template>

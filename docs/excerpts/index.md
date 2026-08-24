@@ -1,6 +1,7 @@
 ---
-title: 偶拾
-description: 偶然遇见，值得留下的句子与段落。
+title: Excerpts
+description: Sentences and passages encountered by chance and worth keeping.
+lang: en
 outline: false
 ---
 
@@ -8,8 +9,8 @@ outline: false
 import CollectionIndex from "../.vitepress/theme/components/CollectionIndex.vue";
 </script>
 
-# 偶拾
+# Excerpts
 
-<p class="lead">偶然遇见。</p>
+<p class="lead">Found by chance.</p>
 
 <CollectionIndex kind="excerpt" />

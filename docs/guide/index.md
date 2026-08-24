@@ -1,27 +1,28 @@
 ---
-title: 维护者手册
-description: Qrzzzz.github.io 的本地开发、发布与内容写作手册。
+title: Maintainer Handbook
+description: Local development, publishing, and writing guidance for Qrzzzz.github.io.
+lang: en
 ---
 
-# 维护者手册
+# Maintainer Handbook
 
-<p class="lead">这里整理 Qrzzzz.github.io 的本地开发、发布流程与内容写作规范。</p>
+<p class="lead">Local development, publishing workflows, and writing standards for Qrzzzz.github.io.</p>
 
-## 手册内容
+## Handbook contents
 
-<div class="content-index" aria-label="文档列表">
+<div class="content-index" aria-label="Handbook pages">
   <a class="content-index-row" href="/guide/getting-started">
-    <span class="content-index-meta">站点维护</span>
-    <span class="content-index-title">本地开发与发布</span>
-    <span class="content-index-summary">介绍本地编辑、构建检查和 GitHub Pages 发布流程。</span>
+    <span class="content-index-meta">Site maintenance</span>
+    <span class="content-index-title">Local development and publishing</span>
+    <span class="content-index-summary">Local editing, build validation, and the GitHub Pages publishing workflow.</span>
   </a>
   <a class="content-index-row" href="/guide/writing-style">
-    <span class="content-index-meta">内容规范</span>
-    <span class="content-index-title">内容写作规范</span>
-    <span class="content-index-summary">统一标题、段落、强调、引用、代码、表格等常用正文格式。</span>
+    <span class="content-index-meta">Content standards</span>
+    <span class="content-index-title">Writing style guide</span>
+    <span class="content-index-summary">Shared conventions for headings, paragraphs, emphasis, quotations, code, tables, and other common formats.</span>
   </a>
 </div>
 
-## 查找内容
+## Find content
 
-返回[文档中心](/docs/)可以查看产品文档，也可以使用右上角的站内搜索查找具体内容。
+Return to [Docs](/docs/) for product documentation, or use site search in the top bar to find a specific page.

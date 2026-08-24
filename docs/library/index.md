@@ -1,6 +1,7 @@
 ---
 title: Library
-description: 长期保存的文章、提示词与偶拾，可以按类型浏览或直接搜索。
+description: Articles, prompts, and excerpts kept for the long term, available to browse or search.
+lang: en
 outline: false
 ---
 
@@ -12,6 +13,6 @@ import LibraryIndex from "../.vitepress/theme/components/LibraryIndex.vue";
 
 # Library
 
-<p class="lead">按类型浏览或直接搜索。</p>
+<p class="lead">Browse by type or search directly.</p>
 
 <LibraryIndex />

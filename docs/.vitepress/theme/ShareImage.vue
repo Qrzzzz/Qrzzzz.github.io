@@ -25,14 +25,14 @@ const statusTone = ref<"neutral" | "success" | "error">("neutral");
 
 const cardTitle = computed(() =>
   normalizeShareText(
-    frontmatter.value.title || page.value.title || "未命名文章",
+    frontmatter.value.title || page.value.title || "Untitled article",
     SHARE_IMAGE_FORMAT.maxTitleLength
   )
 );
 const cardExcerpt = computed(() =>
   normalizeShareText(shareExcerpt.value, SHARE_IMAGE_FORMAT.maxExcerptLength)
 );
-const pageLabel = computed(() => (props.pageKind === "excerpt" ? "EXCERPT / 偶拾" : "ARTICLE / 文章"));
+const pageLabel = computed(() => (props.pageKind === "excerpt" ? "EXCERPT" : "ARTICLE"));
 const pageHref = computed(() => {
   if (typeof window === "undefined") return "https://qrzzzz.github.io/";
   void page.value.relativePath;
@@ -78,7 +78,7 @@ async function prepareQrCode() {
 }
 
 async function renderCard() {
-  if (!card.value) throw new Error("分享图尚未就绪");
+  if (!card.value) throw new Error("The share image is not ready yet");
 
   await nextTick();
   await document.fonts?.ready;
@@ -91,7 +91,7 @@ async function renderCard() {
     font: false,
     timeout: 15000
   });
-  if (!blob) throw new Error("浏览器没有返回图片数据");
+  if (!blob) throw new Error("The browser did not return image data");
   return blob;
 }
 
@@ -109,16 +109,16 @@ async function downloadImage() {
 
   rendering.value = true;
   shareExcerpt.value = resolveExcerpt();
-  setStatus("正在生成…");
+  setStatus("Generating…");
 
   try {
     await prepareQrCode();
     const blob = await renderCard();
     downloadBlob(blob);
-    setStatus("分享图已下载。", "success");
+    setStatus("Share image downloaded.", "success");
   } catch (error) {
     console.error(error);
-    setStatus("生成失败，请刷新页面后重试。", "error");
+    setStatus("Generation failed. Refresh the page and try again.", "error");
   } finally {
     rendering.value = false;
   }
@@ -139,7 +139,7 @@ watch(
 </script>
 
 <template>
-  <section class="share-image-entry" aria-label="文章分享">
+  <section class="share-image-entry" aria-label="Share this page">
     <div class="share-image-entry__actions">
       <p
         class="share-image-status"
@@ -159,7 +159,7 @@ watch(
         <svg aria-hidden="true" viewBox="0 0 24 24">
           <path d="M5 5h14v14H5zM8 15l3-3 2 2 2-2 3 3M15.5 9h.01" />
         </svg>
-        {{ rendering ? "生成中…" : "生成分享图" }}
+        {{ rendering ? "Generating…" : "Generate share image" }}
       </button>
     </div>
   </section>
@@ -189,7 +189,7 @@ watch(
               width="84"
               height="84"
             />
-            <figcaption>扫码阅读</figcaption>
+            <figcaption>Scan to read</figcaption>
           </figure>
         </footer>
       </article>

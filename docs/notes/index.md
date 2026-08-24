@@ -1,14 +1,15 @@
 ---
-title: 文章
-description: 不设更新频率，只收录愿意回头再看的文字。
+title: Articles
+description: Writing worth returning to, without a fixed publishing schedule.
+lang: en
 ---
 
 <script setup>
 import CollectionIndex from "../.vitepress/theme/components/CollectionIndex.vue";
 </script>
 
-# 文章
+# Articles
 
-<p class="lead">这里不设固定选题。遇到值得多写几句、也愿意回头再看的事，就单独留下一页。</p>
+<p class="lead">No fixed themes or schedule—just subjects worth exploring and returning to.</p>
 
 <CollectionIndex kind="article" />

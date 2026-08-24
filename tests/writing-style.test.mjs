@@ -12,7 +12,7 @@ test("publishes the writing style guide through every document entry point", () 
   assert.match(writingStyle, /^title: 内容写作规范$/m);
   assert.match(
     config,
-    /\{ text: "内容写作规范", link: "\/guide\/writing-style" \}/
+    /\{ text: "Writing style guide", link: "\/guide\/writing-style" \}/
   );
   assert.match(guideIndex, /href="\/guide\/writing-style"/);
   assert.doesNotMatch(library, /href="\/guide\/writing-style"/);

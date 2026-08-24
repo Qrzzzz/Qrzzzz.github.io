@@ -23,15 +23,15 @@ export type LibrarySourcePage = {
 };
 
 export const LIBRARY_KIND_LABELS: Record<LibraryKind, string> = {
-  article: "文章",
-  prompt: "提示词",
-  excerpt: "偶拾"
+  article: "Article",
+  prompt: "Prompt",
+  excerpt: "Excerpt"
 };
 
 export const LIBRARY_STATUS_LABELS: Record<LibraryStatus, string> = {
-  stable: "已定稿",
-  maintained: "持续修订",
-  archived: "已归档"
+  stable: "Final",
+  maintained: "Maintained",
+  archived: "Archived"
 };
 
 export function isLibraryKind(value: unknown): value is LibraryKind {

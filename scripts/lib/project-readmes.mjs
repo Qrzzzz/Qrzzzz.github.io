@@ -10,10 +10,10 @@ export const PROJECT_READMES = Object.freeze([
     slug: "lyrics-card-generator-android",
     repository: "Qrzzzz/lyrics-card-generator-android",
     title: "Lyrics Card Generator Android",
-    description: "在 Android 上制作高质感歌词分享卡片。",
-    summary: "网易云音乐导入、六步卡片编辑、离线实时预览和高清 PNG 导出。",
+    description: "Create polished lyric cards on Android.",
+    summary: "NetEase Cloud Music import, a six-step card editor, offline live preview, and high-resolution PNG export.",
     status: "released",
-    statusLabel: "正式发布 · Android",
+    statusLabel: "Released · Android",
     statusEvidence: "releases/latest",
     sourcePath: "README.md",
     homepage: "https://github.com/Qrzzzz/lyrics-card-generator-android/releases/latest"
@@ -22,10 +22,10 @@ export const PROJECT_READMES = Object.freeze([
     slug: "second-glow",
     repository: "Qrzzzz/second-glow",
     title: "Second Glow",
-    description: "将闲置手机变成低功耗常亮桌面屏。",
-    summary: "为横屏旧手机设计的常亮信息面板，展示时钟、天气、市场趋势和设备状态。",
+    description: "Turn an idle phone into a low-power, always-on desk display.",
+    summary: "A landscape dashboard for older phones, showing time, weather, markets, and device status.",
     status: "online",
-    statusLabel: "在线作品 · Web",
+    statusLabel: "Live · Web",
     statusEvidence: "Cyber StandBy Dashboard",
     sourcePath: "index.html",
     homepage: "https://qrzzzz.github.io/second-glow/",
@@ -34,11 +34,11 @@ export const PROJECT_READMES = Object.freeze([
   {
     slug: "password-generator",
     repository: "Qrzzzz/password-generator",
-    title: "密码规则生成器",
-    description: "按照目标网站的复杂规则生成并验证密码。",
-    summary: "支持字符类别、数量、位置、重复和禁止片段规则，生成与验证均在浏览器本地完成。",
+    title: "Password Rule Generator",
+    description: "Generate and validate passwords against complex site-specific rules.",
+    summary: "Supports character categories, counts, positions, repetition, and forbidden fragments; generation and validation stay in the browser.",
     status: "maintained",
-    statusLabel: "持续维护 · Web 工具",
+    statusLabel: "Maintained · Web tool",
     statusEvidence: "在线地址：<https://qrzzzz.github.io/password-generator/>",
     sourcePath: "README.md",
     homepage: "https://qrzzzz.github.io/password-generator/"
@@ -47,10 +47,10 @@ export const PROJECT_READMES = Object.freeze([
     slug: "bili-downloader",
     repository: "Qrzzzz/bili-downloader",
     title: "Bili Downloader Lite",
-    description: "本地运行的 Bilibili 视频下载工具。",
-    summary: "支持登录、分 P、清晰度选择、进度管理和失败重试，仅用于用户有权访问的内容。",
+    description: "A locally run Bilibili video downloader.",
+    summary: "Supports sign-in, multi-part videos, quality selection, progress tracking, and retries for content the user may access.",
     status: "stable",
-    statusLabel: "稳定版 1.1 · Windows",
+    statusLabel: "Stable 1.1 · Windows",
     statusEvidence: "当前稳定版本：**1.1**",
     sourcePath: "README.md",
     homepage: "https://github.com/Qrzzzz/bili-downloader/releases/latest"
@@ -59,10 +59,10 @@ export const PROJECT_READMES = Object.freeze([
     slug: "aegis-vault-mobile",
     repository: "Qrzzzz/AegisVaultMobile",
     title: "AegisVault Mobile",
-    description: "离线优先的 Android 文本加密与 Base64 工具。",
-    summary: "提供 AES-256-GCM 文本加密、Base64 编解码、中英双语界面和本地工作流。",
+    description: "An offline-first Android tool for text encryption and Base64.",
+    summary: "AES-256-GCM text encryption, Base64 encoding and decoding, bilingual UI, and local workflows.",
     status: "released",
-    statusLabel: "正式发布 · Android",
+    statusLabel: "Released · Android",
     statusEvidence: "releases/latest",
     sourcePath: "README.md",
     homepage: "https://github.com/Qrzzzz/AegisVaultMobile/releases/latest"
@@ -71,10 +71,10 @@ export const PROJECT_READMES = Object.freeze([
     slug: "slop-infinity",
     repository: "Qrzzzz/AI-slop-site",
     title: "SLOP∞",
-    description: "以完整前端工程反讽中文 AI 企业站表达的静态迷宫。",
-    summary: "一个故意极其丑陋、极其抽象，但工程结构正常且不收集数据的前端实验。",
+    description: "A static maze satirizing Chinese AI corporate-site language through a fully built frontend.",
+    summary: "A deliberately ugly and abstract frontend experiment with a conventional codebase and no data collection.",
     status: "online",
-    statusLabel: "在线实验 · Web",
+    statusLabel: "Live experiment · Web",
     statusEvidence: "GitHub Pages",
     sourcePath: "README.md",
     homepage: "https://qrzzzz.github.io/AI-slop-site/"
@@ -256,28 +256,28 @@ sourceCommit: ${escapeYaml(commitSha)}
 }
 
 function breadcrumb(project) {
-  return `<nav class="docs-breadcrumb" aria-label="面包屑" lang="zh-CN"><a href="/" lang="zh-CN">首页</a><span aria-hidden="true">/</span><a href="/projects/" lang="zh-CN">项目</a><span aria-hidden="true">/</span><span aria-current="page">${escapeHtml(project.title)}</span></nav>`;
+  return `<nav class="docs-breadcrumb" aria-label="Breadcrumb" lang="en"><a href="/" lang="en">Home</a><span aria-hidden="true">/</span><a href="/projects/" lang="en">Projects</a><span aria-hidden="true">/</span><span aria-current="page">${escapeHtml(project.title)}</span></nav>`;
 }
 
 function syncNotice(project, commitSha, hasReadme) {
   const repositoryUrl = `https://github.com/${project.repository}`;
   const sourceUrl = `${repositoryUrl}/blob/${commitSha}/${encodePath(project.sourcePath)}`;
   const explanation = hasReadme
-    ? `正文随源仓库中的 <a href="${sourceUrl}"><code>README.md</code></a> 更新。本站只在同步时改写相对链接并统一排版，不单独维护正文副本。`
-    : `源仓库目前没有 README；本页只根据锁定 commit 的 <a href="${sourceUrl}"><code>${escapeHtml(project.sourcePath)}</code></a>、在线入口和明确的项目摘要生成，不把补充介绍伪装成上游 README。`;
-  return `<aside class="project-docs-sync sync-notice" aria-label="同步说明" lang="zh-CN">
-  <strong class="sync-notice__title">${hasReadme ? "本页由上游同步" : "本页使用透明回退说明"}</strong>
+    ? `The content follows <a href="${sourceUrl}"><code>README.md</code></a> in the source repository. This site only rewrites relative links and adapts formatting during synchronization; it does not maintain a separate copy.`
+    : `The source repository does not currently contain a README. This page is generated only from the pinned <a href="${sourceUrl}"><code>${escapeHtml(project.sourcePath)}</code></a>, the live entry point, and an explicit project summary; supplemental copy is not presented as an upstream README.`;
+  return `<aside class="project-docs-sync sync-notice" aria-label="Synchronization notice" lang="en">
+  <strong class="sync-notice__title">${hasReadme ? "This page is synchronized from upstream" : "This page uses a transparent fallback"}</strong>
   <p>${explanation}</p>
 </aside>`;
 }
 
 function sourceInfo(project, commitSha, importedAt) {
   const repositoryUrl = `https://github.com/${project.repository}`;
-  return `<footer class="project-docs-sync import-source" aria-label="来源信息" lang="zh-CN">
-  <span>项目状态 <strong>${escapeHtml(project.statusLabel)}</strong></span>
-  <span>上游仓库 <a href="${repositoryUrl}">${escapeHtml(project.repository)}</a></span>
-  <span>上游 commit <a href="${repositoryUrl}/commit/${commitSha}"><code>${commitSha.slice(0, 8)}</code></a></span>
-  <span>同步时间 <time datetime="${escapeHtml(importedAt)}">${escapeHtml(importedAt)}</time></span>
+  return `<footer class="project-docs-sync import-source" aria-label="Source information" lang="en">
+  <span>Project status <strong>${escapeHtml(project.statusLabel)}</strong></span>
+  <span>Upstream repository <a href="${repositoryUrl}">${escapeHtml(project.repository)}</a></span>
+  <span>Upstream commit <a href="${repositoryUrl}/commit/${commitSha}"><code>${commitSha.slice(0, 8)}</code></a></span>
+  <span>Synced <time datetime="${escapeHtml(importedAt)}">${escapeHtml(importedAt)}</time></span>
 </footer>`;
 }
 
@@ -288,10 +288,10 @@ function fallbackBody(project) {
 
 ${escapeHtml(project.summary)}
 
-## 访问入口
+## Links
 
-- [打开在线作品](${project.homepage})
-- [查看源仓库](https://github.com/${project.repository})`;
+- [Open the live project](${project.homepage})
+- [View the source repository](https://github.com/${project.repository})`;
 }
 
 function readCommitSha(sourceRoot, explicitSha) {

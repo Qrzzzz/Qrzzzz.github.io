@@ -9,7 +9,7 @@ test("uses a localized collection index backed by shared Library data", () => {
   const config = readFileSync("docs/.vitepress/config.mts", "utf8");
 
   assert.match(index, /<p class="page-eyebrow">PROMPT COLLECTION<\/p>/);
-  assert.match(index, /^# 提示词$/m);
+  assert.match(index, /^# Prompts$/m);
   assert.match(index, /<CollectionIndex kind="prompt" \/>/);
   assert.doesNotMatch(index, /A growing library|Chinese-language|Research · Analysis/);
   assert.match(config, /text: "Library",\s*link: "\/library\/"/);
@@ -108,7 +108,7 @@ test("uses the native always-visible page outline without custom folding", () =>
 
   assert.match(config, /sidebar:\s*\{/);
   assert.match(config, /aside: true/);
-  assert.match(config, /outline:\s*\{\s*label: "页面导航",\s*level: "deep"/s);
+  assert.match(config, /outline:\s*\{\s*label: "On this page",\s*level: "deep"/s);
   assert.doesNotMatch(layout, /OutlineToggle|useLineOutline|#aside-outline-before/);
   assert.equal(existsSync("docs/.vitepress/theme/OutlineToggle.vue"), false);
   assert.equal(existsSync("docs/.vitepress/theme/useLineOutline.ts"), false);

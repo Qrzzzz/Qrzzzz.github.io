@@ -1,7 +1,7 @@
 ---
-title: 提示词
-description: 一个持续更新、可复用的写作、研究、编程与创意提示词合集。
-lang: zh-CN
+title: Prompts
+description: A maintained collection of reusable prompts for writing, research, programming, and creative work.
+lang: en
 ---
 
 <script setup>
@@ -10,10 +10,10 @@ import CollectionIndex from "../.vitepress/theme/components/CollectionIndex.vue"
 
 <p class="page-eyebrow">PROMPT COLLECTION</p>
 
-# 提示词
+# Prompts
 
-<p class="lead">这里收录我在写作、研究、编程与创意工作中使用的完整提示词，并会随实际使用持续修订。</p>
+<p class="lead">Complete prompts used in writing, research, programming, and creative work, revised through continued use.</p>
 
-每个提示词都单独保存，便于持续修订、重复使用和独立分享。
+Each prompt has its own page so it can be revised, reused, and shared independently.
 
 <CollectionIndex kind="prompt" />

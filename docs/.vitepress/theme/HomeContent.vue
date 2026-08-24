@@ -13,13 +13,13 @@ import TextType from "./TextType.vue";
       <h1
         id="home-title"
         class="home-title"
-        aria-label="我做工具，也写下为什么这样做。"
+        aria-label="I make tools, and write down why."
       >
         <span class="home-title-reserve" aria-hidden="true">
-          我做工具，也写下为什么这样做。_
+          I make tools, and write down why._
         </span>
         <TextType
-          text="我做工具，也写下为什么这样做。"
+          text="I make tools, and write down why."
           :typing-speed="90"
           :deleting-speed="45"
           :pause-duration="2600"
@@ -30,11 +30,11 @@ import TextType from "./TextType.vue";
       </h1>
       <div class="home-intro-copy">
         <p class="home-deck">
-          这里收录 Qrzzzz 的公开项目、使用文档，以及不想交给信息流决定寿命的文章与资料。
+          Public projects, practical documentation, and writing worth keeping beyond the feed.
         </p>
-        <nav class="home-actions" aria-label="首页入口">
+        <nav class="home-actions" aria-label="Featured destinations">
           <a class="home-text-link" href="/library/">Library</a>
-          <a class="home-text-link" href="/works/">浏览作品</a>
+          <a class="home-text-link" href="/works/">Explore the work</a>
         </nav>
       </div>
     </section>
@@ -44,9 +44,9 @@ import TextType from "./TextType.vue";
         <h2 id="home-author-heading">Cherry Chu</h2>
       </header>
       <div>
-        <nav class="home-author-links" aria-label="作者相关链接">
-          <a class="home-text-link" href="/about">关于这个站点</a>
-          <a class="home-text-link" href="https://github.com/Qrzzzz">在 GitHub 上找到我</a>
+        <nav class="home-author-links" aria-label="About the author">
+          <a class="home-text-link" href="/about">About this site</a>
+          <a class="home-text-link" href="https://github.com/Qrzzzz">Find me on GitHub</a>
         </nav>
       </div>
     </section>

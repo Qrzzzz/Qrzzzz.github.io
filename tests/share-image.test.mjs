@@ -20,7 +20,7 @@ test("uses one fixed 3:4 share image format and a stable filename", () => {
   assert.equal(Object.isFrozen(SHARE_IMAGE_FORMAT), true);
   assert.deepEqual(SHARE_IMAGE_FORMAT, {
     id: "portrait-3x4",
-    label: "竖版 3:4",
+    label: "Portrait 3:4",
     width: 540,
     height: 720,
     scale: 2,
@@ -65,9 +65,9 @@ test("mounts a direct, non-customizable share image download on article and exce
   assert.match(component, /link\[rel="canonical"\]/);
   assert.match(component, /class="share-image-card__qr"/);
   assert.match(component, /ref="qrImage"/);
-  assert.match(component, /扫码阅读/);
+  assert.match(component, /Scan to read/);
   assert.match(component, /class="share-image-render-host" aria-hidden="true" inert/);
-  assert.match(component, /生成分享图/);
+  assert.match(component, /Generate share image/);
 
   assert.doesNotMatch(component, /role="dialog"|aria-modal="true"|share-image-backdrop/);
   assert.doesNotMatch(component, /固定生成 3:4 竖幅 PNG|SHARE \/ 分享/);

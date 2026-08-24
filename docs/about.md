@@ -1,17 +1,18 @@
 ---
-title: 关于
-description: 说明这个网站收录的内容、维护方式与相关项目入口。
+title: About
+description: What this site contains, how it is maintained, and where to find related projects.
+lang: en
 ---
 
-# 关于
+# About
 
-<p class="lead">这里是 Cherry Chu 的公开文档与作品站，用于长期维护项目文档、公开工具、文章、提示词与偶拾。</p>
+<p class="lead">Cherry Chu's public documentation and work, maintained as a long-term home for projects, tools, articles, prompts, and excerpts.</p>
 
-## 内容与维护
+## Content and maintenance
 
-站内内容按主题组织，不依赖发布时间排序。文章与文档会随实际使用持续修订；项目页面则在保留来源信息的前提下，与对应的上游仓库同步。
+Content is organized by subject rather than publication date. Articles and documentation evolve through continued use; project pages stay synchronized with their upstream repositories while preserving source information.
 
-## 相关链接
+## Links
 
-- [Cherry Chu 的 GitHub 主页](https://github.com/Qrzzzz)
-- [Lyrics Card Generator 源仓库](https://github.com/Qrzzzz/lyrics-card-generator)
+- [Cherry Chu on GitHub](https://github.com/Qrzzzz)
+- [Lyrics Card Generator repository](https://github.com/Qrzzzz/lyrics-card-generator)

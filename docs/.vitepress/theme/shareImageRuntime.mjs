@@ -1,6 +1,6 @@
 export const SHARE_IMAGE_FORMAT = Object.freeze({
   id: "portrait-3x4",
-  label: "竖版 3:4",
+  label: "Portrait 3:4",
   width: 540,
   height: 720,
   scale: 2,

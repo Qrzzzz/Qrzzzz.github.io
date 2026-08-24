@@ -25,23 +25,23 @@ const categories: Array<{
 }> = [
   {
     kind: "article",
-    title: "文章",
-    unit: "篇",
-    action: "查看全部文章",
+    title: "Articles",
+    unit: "items",
+    action: "View all articles",
     href: "/notes/"
   },
   {
     kind: "prompt",
-    title: "提示词",
-    unit: "份",
-    action: "查看全部提示词",
+    title: "Prompts",
+    unit: "items",
+    action: "View all prompts",
     href: "/prompt-collection/"
   },
   {
     kind: "excerpt",
-    title: "偶拾",
-    unit: "则",
-    action: "查看全部偶拾",
+    title: "Excerpts",
+    unit: "items",
+    action: "View all excerpts",
     href: "/excerpts/"
   }
 ];
@@ -131,14 +131,14 @@ onBeforeUnmount(() => {
   <div class="library-index">
     <header class="library-header">
       <p class="library-stats">
-        共 {{ libraryItems.length }} 项内容
+        {{ libraryItems.length }} items
         <template v-if="latestUpdated">
-          · 最近更新于 <time :datetime="latestUpdated">{{ latestUpdated }}</time>
+          · Last updated <time :datetime="latestUpdated">{{ latestUpdated }}</time>
         </template>
       </p>
     </header>
 
-    <div class="library-categories" aria-label="Library 分类">
+    <div class="library-categories" aria-label="Library categories">
       <LibraryCategory
         v-for="category in categories"
         :key="category.kind"
@@ -149,7 +149,7 @@ onBeforeUnmount(() => {
     </div>
 
     <section class="library-results-section" aria-labelledby="library-results-title">
-      <h2 id="library-results-title">全部内容</h2>
+      <h2 id="library-results-title">All items</h2>
       <LibraryToolbar
         :query="query"
         :active-kind="activeKind"
@@ -164,7 +164,7 @@ onBeforeUnmount(() => {
           :key="item.url"
           class="library-result"
           :href="item.url"
-          :aria-label="`打开${item.displayTitle}`"
+          :aria-label="`Open ${item.displayTitle}`"
         >
           <span class="library-result__meta">
             {{ LIBRARY_KIND_LABELS[item.kind] }}
@@ -194,9 +194,9 @@ onBeforeUnmount(() => {
       </div>
 
       <div v-else class="library-empty" role="status">
-        <h3>没有找到相关内容</h3>
-        <p>尝试更换关键词，或清除当前分类筛选。</p>
-        <button type="button" @click="clearFilters">清除筛选</button>
+        <h3>No results found</h3>
+        <p>Try another search term or clear the current filters.</p>
+        <button type="button" @click="clearFilters">Clear filters</button>
       </div>
     </section>
   </div>

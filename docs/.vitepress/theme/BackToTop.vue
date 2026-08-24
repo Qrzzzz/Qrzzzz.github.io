@@ -77,13 +77,13 @@ onBeforeUnmount(() => {
     :disabled="!visible"
     :tabindex="visible ? 0 : -1"
     :aria-hidden="!visible"
-    aria-label="回到页面顶部"
-    title="回到页面顶部"
+    aria-label="Back to top"
+    title="Back to top"
     @click="returnToTop"
   >
     <span class="back-to-top__icon" aria-hidden="true">
       <span />
     </span>
-    <span class="back-to-top__label">顶部</span>
+    <span class="back-to-top__label">Top</span>
   </button>
 </template>

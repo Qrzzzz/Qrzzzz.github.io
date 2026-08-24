@@ -20,7 +20,7 @@ const items = computed(() =>
   <div
     v-if="items.length"
     class="library-results collection-index"
-    :aria-label="`${LIBRARY_KIND_LABELS[kind]}列表`"
+    :aria-label="`${LIBRARY_KIND_LABELS[kind]} list`"
   >
     <a
       v-for="item in items"
@@ -54,5 +54,5 @@ const items = computed(() =>
       </span>
     </a>
   </div>
-  <p v-else class="library-empty">当前分类还没有内容。</p>
+  <p v-else class="library-empty">There is nothing in this collection yet.</p>
 </template>

@@ -1,16 +1,17 @@
 ---
-title: 工具
-description: 不要求登录、不上传内容，直接在浏览器中运行的工具。
+title: Tools
+description: Browser-based tools that require no sign-in and upload no content.
+lang: en
 ---
 
-# 工具
+# Tools
 
-<p class="lead">这些工具不要求登录，也不上传输入内容；打开页面后即可在浏览器中使用。</p>
+<p class="lead">These tools require no sign-in and do not upload your input; open the page and use them directly in the browser.</p>
 
-<div class="content-index" aria-label="工具列表">
+<div class="content-index" aria-label="Tool list">
   <a class="content-index-row" href="https://qrzzzz.github.io/password-generator/" target="_self">
-    <span class="content-index-meta">01 · 系统级安全随机 · 完全本地</span>
-    <span class="content-index-title">密码规则生成器</span>
-    <span class="content-index-summary">按照长度、字符类别、允许符号、首尾位置和重复规则，生成符合目标网站要求的密码。</span>
+    <span class="content-index-meta">01 · Cryptographically secure · Fully local</span>
+    <span class="content-index-title">Password Rule Generator</span>
+    <span class="content-index-summary">Generate passwords that satisfy a target site's length, character, symbol, position, and repetition rules.</span>
   </a>
 </div>

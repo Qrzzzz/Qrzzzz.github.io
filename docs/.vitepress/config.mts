@@ -63,7 +63,7 @@ function pageLanguage(value: unknown, relativePath = "") {
 export default defineConfig({
   lang: "zh-CN",
   title: "Qrzzzz",
-  description: "Qrzzzz 的项目文档、公开工具与长期文章，统一收录于 Library。",
+  description: "Qrzzzz's project documentation, public tools, and long-form writing, collected in one Library.",
 
   // 用户主页仓库部署在域名根目录。
   base: "/",
@@ -111,7 +111,7 @@ export default defineConfig({
       pageTitle === "Qrzzzz" ? "Qrzzzz" : `${pageTitle} · Qrzzzz`;
     const socialDescription =
       pageData.frontmatter.description ||
-      "Qrzzzz 的项目文档、公开工具与长期文章，统一收录于 Library。";
+      "Qrzzzz's project documentation, public tools, and long-form writing, collected in one Library.";
     const pager = libraryPager.get(pageData.relativePath.replaceAll("\\", "/"));
     if (pager) {
       pageData.frontmatter.prev = pager.prev;
@@ -153,7 +153,7 @@ export default defineConfig({
 
   markdown: {
     lineNumbers: false,
-    codeCopyButtonTitle: "复制代码"
+    codeCopyButtonTitle: "Copy code"
   },
 
   themeConfig: {
@@ -161,13 +161,13 @@ export default defineConfig({
 
     nav: [
       {
-        text: "文档",
+        text: "Docs",
         link: "/docs/",
         activeMatch:
           "^/(?:docs|guide)(?:/|$)|^/projects/[^/]+/docs(?:/|$)"
       },
       {
-        text: "作品",
+        text: "Works",
         link: "/works/",
         activeMatch:
           "^/(?:works|tools)(?:/|$)|^/projects/(?![^/]+/docs(?:/|$))"
@@ -179,7 +179,7 @@ export default defineConfig({
           "^/(?:library|notes|prompt-collection|excerpts)(?:/|$)"
       },
       {
-        text: "关于",
+        text: "About",
         link: "/about",
         activeMatch: "^/about(?:/|$)"
       }
@@ -188,15 +188,15 @@ export default defineConfig({
     sidebar: {
       "/guide/": [
         {
-          text: "文档中心",
+          text: "Documentation",
           link: "/docs/"
         },
         {
-          text: "维护者手册",
+          text: "Maintainer handbook",
           items: [
-            { text: "手册首页", link: "/guide/" },
-            { text: "本地开发与发布", link: "/guide/getting-started" },
-            { text: "内容写作规范", link: "/guide/writing-style" }
+            { text: "Handbook home", link: "/guide/" },
+            { text: "Local development and publishing", link: "/guide/getting-started" },
+            { text: "Writing style guide", link: "/guide/writing-style" }
           ]
         }
       ],
@@ -205,19 +205,19 @@ export default defineConfig({
           text: "Lyrics Card Generator",
           items: [
             {
-              text: "文档首页",
+              text: "Documentation home",
               link: "/projects/lyrics-card-generator/docs/"
             },
             {
-              text: "桌面端维护",
+              text: "Desktop maintenance",
               link: "/projects/lyrics-card-generator/docs/desktop/"
             },
             {
-              text: "示例内容维护",
+              text: "Example content maintenance",
               link: "/projects/lyrics-card-generator/docs/examples/"
             },
             {
-              text: "版本说明",
+              text: "Release notes",
               link: "/projects/lyrics-card-generator/docs/releases/"
             },
             {
@@ -243,22 +243,22 @@ export default defineConfig({
       options: {
         translations: {
           button: {
-            buttonText: "搜索全站内容…",
-            buttonAriaLabel: "搜索全站内容"
+            buttonText: "Search the site…",
+            buttonAriaLabel: "Search the site"
           },
           modal: {
-            displayDetails: "显示详细结果",
-            resetButtonTitle: "清除搜索",
-            backButtonTitle: "关闭搜索",
-            noResultsText: "没有找到相关内容",
+            displayDetails: "Display detailed results",
+            resetButtonTitle: "Clear search",
+            backButtonTitle: "Close search",
+            noResultsText: "No results found",
             footer: {
-              selectText: "打开",
-              selectKeyAriaLabel: "回车键",
-              navigateText: "切换",
-              navigateUpKeyAriaLabel: "向上箭头",
-              navigateDownKeyAriaLabel: "向下箭头",
-              closeText: "关闭",
-              closeKeyAriaLabel: "Esc 键"
+              selectText: "Open",
+              selectKeyAriaLabel: "Enter key",
+              navigateText: "Navigate",
+              navigateUpKeyAriaLabel: "Up arrow",
+              navigateDownKeyAriaLabel: "Down arrow",
+              closeText: "Close",
+              closeKeyAriaLabel: "Escape key"
             }
           }
         }
@@ -266,35 +266,35 @@ export default defineConfig({
     },
 
     outline: {
-      label: "页面导航",
+      label: "On this page",
       level: "deep"
     },
 
     docFooter: {
-      prev: "上一篇",
-      next: "下一篇"
+      prev: "Previous",
+      next: "Next"
     },
 
     lastUpdated: {
-      text: "更新于"
+      text: "Updated"
     },
 
     editLink: {
       pattern:
         "https://github.com/Qrzzzz/Qrzzzz.github.io/edit/main/docs/:path",
-      text: "编辑这页"
+      text: "Edit this page"
     },
 
     footer: {
-      message: '<a href="/about">关于 Cherry Chu</a> · 写清楚，留得住。',
+      message: '<a href="/about">About Cherry Chu</a> · Written clearly, kept for the long term.',
       copyright: "© 2026 Qrzzzz"
     },
 
-    darkModeSwitchLabel: "外观",
-    lightModeSwitchTitle: "切换到浅色模式",
-    darkModeSwitchTitle: "切换到深色模式",
-    sidebarMenuLabel: "目录",
-    returnToTopLabel: "回到顶部",
-    skipToContentLabel: "跳到正文"
+    darkModeSwitchLabel: "Appearance",
+    lightModeSwitchTitle: "Switch to light theme",
+    darkModeSwitchTitle: "Switch to dark theme",
+    sidebarMenuLabel: "Menu",
+    returnToTopLabel: "Return to top",
+    skipToContentLabel: "Skip to content"
   }
 });

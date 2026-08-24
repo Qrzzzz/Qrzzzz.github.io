@@ -176,7 +176,7 @@ onBeforeUnmount(() => {
       ref="trigger"
       type="button"
       class="inline-search-trigger"
-      aria-label="搜索全站内容"
+      aria-label="Search the site"
       aria-haspopup="listbox"
       @click="openSearch"
     >
@@ -184,7 +184,7 @@ onBeforeUnmount(() => {
         <circle cx="11" cy="11" r="6.5" />
         <path d="m16 16 4 4" />
       </svg>
-      <span class="inline-search-placeholder">搜索全站内容…</span>
+      <span class="inline-search-placeholder">Search the site…</span>
       <kbd>Ctrl K</kbd>
     </button>
 
@@ -193,14 +193,14 @@ onBeforeUnmount(() => {
         <circle cx="11" cy="11" r="6.5" />
         <path d="m16 16 4 4" />
       </svg>
-      <label class="visually-hidden" for="inline-site-search-input">搜索全站内容</label>
+      <label class="visually-hidden" for="inline-site-search-input">Search the site</label>
       <input
         id="inline-site-search-input"
         ref="input"
         v-model="query"
         type="search"
         role="combobox"
-        aria-label="搜索全站内容"
+        aria-label="Search the site"
         aria-autocomplete="list"
         :aria-controls="query && results.length ? 'inline-search-results' : undefined"
         :aria-expanded="Boolean(query)"
@@ -210,7 +210,7 @@ onBeforeUnmount(() => {
         autocorrect="off"
         enterkeyhint="go"
         maxlength="64"
-        placeholder="输入关键词搜索…"
+        placeholder="Type to search…"
         spellcheck="false"
         @keydown="handleInputKeydown"
       />
@@ -218,7 +218,7 @@ onBeforeUnmount(() => {
         v-if="query"
         type="button"
         class="inline-search-action"
-        aria-label="清除搜索"
+        aria-label="Clear search"
         @click="clearQuery"
       >
         ×
@@ -226,7 +226,7 @@ onBeforeUnmount(() => {
       <button
         type="button"
         class="inline-search-action inline-search-close"
-        aria-label="关闭搜索"
+        aria-label="Close search"
         @click="closeSearch(true)"
       >
         Esc
@@ -234,12 +234,12 @@ onBeforeUnmount(() => {
     </form>
 
     <div v-if="expanded && query" class="inline-search-panel">
-      <p v-if="loading" class="inline-search-state">正在准备搜索…</p>
+      <p v-if="loading" class="inline-search-state">Preparing search…</p>
       <ul
         v-else-if="results.length"
         id="inline-search-results"
         role="listbox"
-        aria-label="搜索结果"
+        aria-label="Search results"
       >
         <li
           v-for="(result, index) in results"
@@ -263,7 +263,7 @@ onBeforeUnmount(() => {
           </a>
         </li>
       </ul>
-      <p v-else class="inline-search-state">没有找到“{{ query }}”</p>
+      <p v-else class="inline-search-state">No results for “{{ query }}”</p>
     </div>
   </div>
 </template>

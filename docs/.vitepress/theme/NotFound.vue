@@ -6,7 +6,7 @@ import FuzzyText from "./FuzzyText.vue";
 <template>
   <main class="site-not-found" aria-labelledby="not-found-title">
     <p class="site-not-found__eyebrow">ERROR / PAGE NOT FOUND</p>
-    <h1 id="not-found-title" class="visually-hidden">404 · 页面未找到</h1>
+    <h1 id="not-found-title" class="visually-hidden">404 · Page not found</h1>
     <div class="site-not-found__visual">
       <FuzzyText
         text="404"
@@ -19,8 +19,8 @@ import FuzzyText from "./FuzzyText.vue";
       />
     </div>
     <div class="site-not-found__footer">
-      <p>这个页面不存在，或已被移动到新的位置。</p>
-      <a :href="withBase('/')">返回首页 <span aria-hidden="true">↗</span></a>
+      <p>This page does not exist, or it has moved to a new location.</p>
+      <a :href="withBase('/')">Return home <span aria-hidden="true">↗</span></a>
     </div>
   </main>
 </template>

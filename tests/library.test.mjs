@@ -23,14 +23,14 @@ test("defines four non-overlapping top-level navigation areas", () => {
   const nav = config.match(/nav:\s*\[([\s\S]*?)\],\s*\n\s*sidebar:/)?.[1] ?? "";
 
   for (const entry of [
-    ['"文档"', '"/docs/"'],
-    ['"作品"', '"/works/"'],
+    ['"Docs"', '"/docs/"'],
+    ['"Works"', '"/works/"'],
     ['"Library"', '"/library/"'],
-    ['"关于"', '"/about"']
+    ['"About"', '"/about"']
   ]) {
     assert.ok(
       nav.includes(`text: ${entry[0]}`) && nav.includes(`link: ${entry[1]}`),
-      `顶部导航缺少 ${entry[0]}`
+      `Top navigation is missing ${entry[0]}`
     );
   }
   assert.match(
@@ -49,9 +49,9 @@ test("uses one generated Library source for the main and collection indexes", ()
   assert.match(library, /<LibraryIndex \/>/);
   assert.doesNotMatch(library, /01 \/ DOCS|library-folder|href="\/notes\//);
   assert.match(libraryIndex, /data as libraryItems/);
-  assert.match(libraryIndex, /title: "文章"/);
-  assert.match(libraryIndex, /title: "提示词"/);
-  assert.match(libraryIndex, /title: "偶拾"/);
+  assert.match(libraryIndex, /title: "Articles"/);
+  assert.match(libraryIndex, /title: "Prompts"/);
+  assert.match(libraryIndex, /title: "Excerpts"/);
   assert.match(libraryIndex, /slice\(0, 3\)/);
   assert.doesNotMatch(libraryIndex, /description: "对技术、产品/);
   assert.doesNotMatch(libraryIndex, /description: "经过整理/);
@@ -77,8 +77,8 @@ test("implements searchable URL-backed filters and a clear empty state", () => {
   assert.match(libraryIndex, /URLSearchParams\(window\.location\.search\)/);
   assert.match(libraryIndex, /window\.history\[method\]/);
   assert.match(libraryIndex, /window\.addEventListener\("popstate"/);
-  assert.match(libraryIndex, /没有找到相关内容/);
-  assert.match(libraryIndex, /清除筛选/);
+  assert.match(libraryIndex, /No results found/);
+  assert.match(libraryIndex, /Clear filters/);
   assert.match(libraryIndex, /matchesLibraryItem\(item, query\.value\)/);
 });
 

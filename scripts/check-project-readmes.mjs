@@ -55,10 +55,10 @@ try {
     if (!page.includes(`https://github.com/${project.repository}/commit/${entry.commit}`)) {
       failures.push(`${project.slug} 没有链接到锁定的上游 commit。`);
     }
-    if (project.readmeFallback && !page.includes("源仓库目前没有 README")) {
+    if (project.readmeFallback && !page.includes("The source repository does not currently contain a README")) {
       failures.push(`${project.slug} 没有透明说明 README 缺失状态。`);
     }
-    if (!project.readmeFallback && !page.includes("本页由上游同步")) {
+    if (!project.readmeFallback && !page.includes("This page is synchronized from upstream")) {
       failures.push(`${project.slug} 没有声明 README 同步关系。`);
     }
 

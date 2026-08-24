@@ -39,22 +39,22 @@ const LANGUAGE_NAMES = {
   es: "Español",
   fr: "Français",
   ja: "日本語",
-  "zh-CN": "简体中文",
-  "zh-TW": "繁體中文"
+  "zh-CN": "Simplified Chinese",
+  "zh-TW": "Traditional Chinese"
 };
 const RELEASE_LANGUAGES = ["zh-CN", "zh-TW", "en", "fr", "ja", "es"];
 const RELEASE_LANGUAGE_SET = new Set(RELEASE_LANGUAGES);
 const RELEASE_NAV_LABELS = {
-  "zh-CN": (version) => `${version} 的版本语言`,
-  "zh-TW": (version) => `${version} 的版本語言`,
+  "zh-CN": (version) => `Languages for ${version}`,
+  "zh-TW": (version) => `Languages for ${version}`,
   en: (version) => `Languages for ${version}`,
   fr: (version) => `Langues de ${version}`,
   ja: (version) => `${version} の言語`,
   es: (version) => `Idiomas de ${version}`
 };
 const SOURCE_INFO_COPY = {
-  "zh-CN": { label: "来源信息", repository: "上游仓库", commit: "上游 commit", synced: "同步时间" },
-  "zh-TW": { label: "來源資訊", repository: "上游儲存庫", commit: "上游 commit", synced: "同步時間" },
+  "zh-CN": { label: "Source information", repository: "Upstream repository", commit: "Upstream commit", synced: "Synced" },
+  "zh-TW": { label: "Source information", repository: "Upstream repository", commit: "Upstream commit", synced: "Synced" },
   en: { label: "Source information", repository: "Upstream repository", commit: "Upstream commit", synced: "Synced" },
   fr: { label: "Informations sur la source", repository: "Dépôt en amont", commit: "Commit en amont", synced: "Synchronisation" },
   ja: { label: "出典情報", repository: "上流リポジトリ", commit: "上流 commit", synced: "同期日時" },
@@ -62,16 +62,16 @@ const SOURCE_INFO_COPY = {
 };
 const SYNC_NOTICE_COPY = {
   "zh-CN": {
-    label: "同步说明",
-    title: "本页由上游同步",
-    beforeSource: "正文随源仓库中的",
-    afterSource: "更新。本站只在导入时转换链接、补充导航并统一排版，不单独维护副本；内容修改请先提交到上游。"
+    label: "Synchronization notice",
+    title: "This page is synchronized from upstream",
+    beforeSource: "The content follows",
+    afterSource: "in the source repository. During import, this site only rewrites links, adds navigation, and adapts formatting; it does not maintain a separate copy. Make content changes upstream first."
   },
   "zh-TW": {
-    label: "同步說明",
-    title: "本頁由上游同步",
-    beforeSource: "正文隨來源儲存庫中的",
-    afterSource: "更新。本站只在匯入時轉換連結、補充導覽並統一排版，不另行維護副本；內容修改請先提交至上游。"
+    label: "Synchronization notice",
+    title: "This page is synchronized from upstream",
+    beforeSource: "The content follows",
+    afterSource: "in the source repository. During import, this site only rewrites links, adds navigation, and adapts formatting; it does not maintain a separate copy. Make content changes upstream first."
   },
   en: {
     label: "Synchronization notice",
@@ -289,15 +289,15 @@ function createReleaseArchive(versions) {
     }).filter(Boolean);
     return `  <li class="release-archive__row">
     <strong class="release-archive__version">${escapeHtml(version)}</strong>
-    <nav class="release-archive__languages" aria-label="${escapeHtml(`${version} 的语言版本`)}" lang="zh-CN">
+    <nav class="release-archive__languages" aria-label="${escapeHtml(`Languages for ${version}`)}" lang="en">
       ${links.join("\n      ")}
     </nav>
   </li>`;
   });
 
-  return `<p class="release-archive__summary">已从上游同步 <strong>${sortedVersions.length}</strong> 个版本、<strong>${releaseCount}</strong> 篇多语言版本说明。</p>
+  return `<p class="release-archive__summary">Synchronized <strong>${releaseCount}</strong> release notes across <strong>${sortedVersions.length}</strong> versions from upstream.</p>
 
-<ol class="release-archive" aria-label="全部版本说明" lang="zh-CN">
+<ol class="release-archive" aria-label="All release notes" lang="en">
 ${rows.join("\n")}
 </ol>`;
 }
@@ -312,7 +312,7 @@ function demoteFirstHeading(content) {
 }
 
 function createReleaseIndex(content, archive) {
-  return `# 版本说明\n\n${archive}\n\n${demoteFirstHeading(content).trimStart()}`;
+  return `# Release notes\n\n${archive}\n\n${demoteFirstHeading(content).trimStart()}`;
 }
 
 function createReleaseLanguageNav(versions, version, currentLanguage) {
@@ -331,13 +331,15 @@ function createReleaseLanguageNav(versions, version, currentLanguage) {
       : "";
   }).filter(Boolean);
   const label = RELEASE_NAV_LABELS[currentLanguage]?.(version) ?? RELEASE_NAV_LABELS["zh-CN"](version);
-  return `<nav class="release-language-nav" aria-label="${escapeHtml(label)}" lang="${currentLanguage}">${links.join("\n  ")}</nav>`;
+  const labelLanguage = currentLanguage === "zh-CN" || currentLanguage === "zh-TW" ? "en" : currentLanguage;
+  return `<nav class="release-language-nav" aria-label="${escapeHtml(label)}" lang="${labelLanguage}">${links.join("\n  ")}</nav>`;
 }
 
 function createSourceInfo({ commitSha, importedAt, language = "zh-CN" }) {
   const copy = SOURCE_INFO_COPY[language] ?? SOURCE_INFO_COPY["zh-CN"];
+  const copyLanguage = language === "zh-CN" || language === "zh-TW" ? "en" : language;
   const shortSha = commitSha.slice(0, 8);
-  return `<footer class="project-docs-sync import-source" aria-label="${escapeHtml(copy.label)}" lang="${language}">
+  return `<footer class="project-docs-sync import-source" aria-label="${escapeHtml(copy.label)}" lang="${copyLanguage}">
   <span>${escapeHtml(copy.repository)} <a href="${UPSTREAM_REPOSITORY}">Qrzzzz/lyrics-card-generator</a></span>
   <span>${escapeHtml(copy.commit)} <a href="${UPSTREAM_REPOSITORY}/commit/${commitSha}"><code>${shortSha}</code></a></span>
   <span>${escapeHtml(copy.synced)} <time datetime="${escapeHtml(importedAt)}">${escapeHtml(importedAt)}</time></span>
@@ -346,9 +348,10 @@ function createSourceInfo({ commitSha, importedAt, language = "zh-CN" }) {
 
 function createSyncNotice({ commitSha, sourcePath, language = "zh-CN" }) {
   const copy = SYNC_NOTICE_COPY[language] ?? SYNC_NOTICE_COPY["zh-CN"];
+  const copyLanguage = language === "zh-CN" || language === "zh-TW" ? "en" : language;
   const upstreamPath = sourcePath === "README.md" ? sourcePath : `docs/${sourcePath}`;
   const sourceUrl = `${UPSTREAM_REPOSITORY}/blob/${commitSha}/${encodeRoutePath(upstreamPath)}`;
-  return `<aside class="project-docs-sync sync-notice" aria-label="${escapeHtml(copy.label)}" lang="${language}">
+  return `<aside class="project-docs-sync sync-notice" aria-label="${escapeHtml(copy.label)}" lang="${copyLanguage}">
   <strong class="sync-notice__title">${escapeHtml(copy.title)}</strong>
   <p>${escapeHtml(copy.beforeSource)} <a href="${sourceUrl}"><code>${escapeHtml(upstreamPath)}</code></a> ${escapeHtml(copy.afterSource)}</p>
 </aside>`;
@@ -396,9 +399,9 @@ function firstHeading(content) {
 }
 
 function fallbackTitle(sourcePath) {
-  if (sourcePath === "desktop.md") return "桌面端维护";
-  if (sourcePath === "examples.md") return "示例内容维护";
-  if (sourcePath === "releases/README.md") return "版本说明";
+  if (sourcePath === "desktop.md") return "Desktop maintenance";
+  if (sourcePath === "examples.md") return "Example content maintenance";
+  if (sourcePath === "releases/README.md") return "Release notes";
   const basename = path.posix.basename(sourcePath, ".md");
   const match = basename.match(/^(v[^.]+(?:\.[^.]+){2})\.(.+)$/);
   if (match) return `${match[1]} · ${LANGUAGE_NAMES[match[2]] ?? match[2]}`;
@@ -435,15 +438,15 @@ function inferredPageLanguage({ body, upstreamFrontmatter, sourcePath }) {
 
 function breadcrumb(sourcePath, currentTitle, pageLanguage = "zh-CN") {
   const items = [
-    ["首页", "/", "zh-CN"],
-    ["项目", "/projects/", "zh-CN"],
+    ["Home", "/", "en"],
+    ["Projects", "/projects/", "en"],
     ["lyrics-card-generator", "/projects/lyrics-card-generator/", "en"],
-    ["项目文档", DOCS_ROUTE, "zh-CN"]
+    ["Project documentation", DOCS_ROUTE, "en"]
   ];
   if (sourcePath) items.push([currentTitle, null, pageLanguage]);
   else items[items.length - 1][1] = null;
 
-  return `<nav class="docs-breadcrumb" aria-label="面包屑" lang="zh-CN">${items
+  return `<nav class="docs-breadcrumb" aria-label="Breadcrumb" lang="en">${items
     .map(([label, link, language]) => link
       ? `<a href="${link}" lang="${language}">${escapeHtml(label)}</a>`
       : `<span aria-current="page" lang="${language}">${escapeHtml(label)}</span>`)
@@ -451,9 +454,9 @@ function breadcrumb(sourcePath, currentTitle, pageLanguage = "zh-CN") {
 }
 
 function breadcrumbTitle(sourcePath, pageTitle, pageLanguage = "zh-CN") {
-  if (sourcePath === "desktop.md") return pageLanguage === "en" ? "Desktop maintenance" : "桌面端维护";
-  if (sourcePath === "examples.md") return "示例内容维护";
-  if (sourcePath === "releases/README.md") return "版本说明";
+  if (sourcePath === "desktop.md") return "Desktop maintenance";
+  if (sourcePath === "examples.md") return "Example content maintenance";
+  if (sourcePath === "releases/README.md") return "Release notes";
   return pageTitle;
 }
 
@@ -793,7 +796,7 @@ sourceCommit: ${escapeYaml(commitSha)}
 }
 
 function projectBreadcrumb() {
-  return `<nav class="docs-breadcrumb" aria-label="面包屑" lang="zh-CN"><a href="/" lang="zh-CN">首页</a><span aria-hidden="true">/</span><a href="/projects/" lang="zh-CN">项目</a><span aria-hidden="true">/</span><span aria-current="page" lang="en">lyrics-card-generator</span></nav>`;
+  return `<nav class="docs-breadcrumb" aria-label="Breadcrumb" lang="en"><a href="/" lang="en">Home</a><span aria-hidden="true">/</span><a href="/projects/" lang="en">Projects</a><span aria-hidden="true">/</span><span aria-current="page" lang="en">lyrics-card-generator</span></nav>`;
 }
 
 function frontmatter({ title, description, sourcePath, commitSha, upstreamFrontmatter, lang }) {
@@ -833,49 +836,49 @@ function readCommitSha(sourceRoot, explicitSha) {
 function createLanding({ commitSha, importedAt, releaseCount, supplementalDocs }) {
   const shortSha = commitSha.slice(0, 8);
   const supplementalSection = supplementalDocs.length
-    ? `## 其他维护文档
+    ? `## Additional maintenance documents
 
-下列入口根据当前上游文件自动生成；上游新增或移除文档后，本站会在下一次同步时一并更新。
+These entries are generated from the current upstream files and update with the next synchronization when documents are added or removed.
 
-<div class="content-index" aria-label="其他同步维护文档">
+<div class="content-index" aria-label="Additional synchronized maintenance documents">
 ${supplementalDocs.map((entry) => `  <a class="content-index-row" href="${entry.route}">
-    <span class="content-index-meta">${escapeHtml(LANGUAGE_NAMES[entry.language] ?? entry.language)} · 同步文档</span>
+    <span class="content-index-meta">${escapeHtml(LANGUAGE_NAMES[entry.language] ?? entry.language)} · Synchronized document</span>
     <span class="content-index-title" lang="${entry.language}">${escapeHtml(entry.title)}</span>
-    <span class="content-index-summary">来源：<code>${escapeHtml(entry.source)}</code></span>
+    <span class="content-index-summary">Source: <code>${escapeHtml(entry.source)}</code></span>
   </a>`).join("\n")}
 </div>
 
 `
     : "";
   return `---
-title: 项目文档
-description: lyrics-card-generator 从源仓库同步的公开维护文档和版本资料。
-lang: zh-CN
+title: Project Documentation
+description: Public maintenance documentation and release materials synchronized from the lyrics-card-generator source repository.
+lang: en
 editLink: false
 lastUpdated: false
 contentFormat: ${escapeYaml(CONTENT_FORMAT)}
 ---
 
-${breadcrumb("", "项目文档")}
+${breadcrumb("", "Project documentation", "en")}
 
-# 项目文档
+# Project Documentation
 
-<p class="lead">这里集中展示该项目从源仓库同步的公开维护文档和版本资料。</p>
+<p class="lead">Public maintenance documentation and release materials synchronized from the source repository.</p>
 
-<p class="project-docs-owner">所属项目：<a href="/projects/lyrics-card-generator/"><strong>lyrics-card-generator</strong></a></p>
+<p class="project-docs-owner">Project: <a href="/projects/lyrics-card-generator/"><strong>lyrics-card-generator</strong></a></p>
 
 <div class="project-docs-grid">
-  <a class="project-docs-card" href="${DOCS_ROUTE}desktop/"><span class="project-docs-card__title">桌面端维护</span><span class="project-docs-card__summary">桌面架构、开发命令与发布检查。</span></a>
-  <a class="project-docs-card" href="${DOCS_ROUTE}examples/"><span class="project-docs-card__title">示例内容维护</span><span class="project-docs-card__summary">示例歌曲内容的维护流程与约束。</span></a>
-  <a class="project-docs-card" href="${DOCS_ROUTE}releases/"><span class="project-docs-card__title">版本说明</span><span class="project-docs-card__summary">${releaseCount} 篇多语言、多版本发布资料。</span></a>
+  <a class="project-docs-card" href="${DOCS_ROUTE}desktop/"><span class="project-docs-card__title">Desktop maintenance</span><span class="project-docs-card__summary">Desktop architecture, development commands, and release checks.</span></a>
+  <a class="project-docs-card" href="${DOCS_ROUTE}examples/"><span class="project-docs-card__title">Example content maintenance</span><span class="project-docs-card__summary">Maintenance workflows and constraints for example songs.</span></a>
+  <a class="project-docs-card" href="${DOCS_ROUTE}releases/"><span class="project-docs-card__title">Release notes</span><span class="project-docs-card__summary">${releaseCount} notes across multiple versions and languages.</span></a>
 </div>
 
-${supplementalSection}## 同步信息
+${supplementalSection}## Synchronization details
 
 <div class="project-docs-sync">
-  <span>文档源 <a href="${UPSTREAM_REPOSITORY}/tree/main/docs">Qrzzzz/lyrics-card-generator / docs</a></span>
-  <span>上游 commit <a href="${UPSTREAM_REPOSITORY}/commit/${commitSha}"><code>${shortSha}</code></a></span>
-  <span>最近同步 <time datetime="${importedAt}">${importedAt}</time></span>
+  <span>Documentation source <a href="${UPSTREAM_REPOSITORY}/tree/main/docs">Qrzzzz/lyrics-card-generator / docs</a></span>
+  <span>Upstream commit <a href="${UPSTREAM_REPOSITORY}/commit/${commitSha}"><code>${shortSha}</code></a></span>
+  <span>Last synchronized <time datetime="${importedAt}">${importedAt}</time></span>
 </div>
 `;
 }
@@ -972,7 +975,7 @@ export function importLyricsCardDocs({
     const { body, upstreamFrontmatter } = withoutFrontmatter(raw);
     const release = releaseIdentity(entry.sourcePath);
     const title = entry.sourcePath === "releases/README.md"
-      ? "版本说明"
+      ? "Release notes"
       : firstHeading(body) || fallbackTitle(entry.sourcePath);
     const pageLanguage = release?.language ?? inferredPageLanguage({
       body,

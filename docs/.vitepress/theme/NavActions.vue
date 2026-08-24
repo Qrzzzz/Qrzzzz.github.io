@@ -12,7 +12,7 @@ const switching = ref(false);
 let resetTimer = 0;
 
 const toggleLabel = computed(() =>
-  isDark.value ? "切换到浅色模式" : "切换到深色模式"
+  isDark.value ? "Switch to light theme" : "Switch to dark theme"
 );
 
 async function toggleTheme(event: MouseEvent) {
@@ -58,7 +58,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="NavActions" role="group" aria-label="站点工具">
+  <div class="NavActions" role="group" aria-label="Site tools">
     <button
       ref="toggleButton"
       type="button"
@@ -90,7 +90,7 @@ onBeforeUnmount(() => {
       href="https://github.com/Qrzzzz"
       target="_blank"
       rel="noreferrer noopener"
-      aria-label="在 GitHub 上查看 Qrzzzz（新窗口打开）"
+      aria-label="View Qrzzzz on GitHub (opens in a new window)"
       title="GitHub"
     >
       <svg aria-hidden="true" viewBox="0 0 24 24">

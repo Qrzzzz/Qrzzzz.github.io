@@ -14,8 +14,8 @@ const SHA = "a".repeat(40);
 const IMPORTED_AT = "2026-07-11T00:00:00.000Z";
 const RELEASE_LANGUAGES = ["zh-CN", "zh-TW", "en", "fr", "ja", "es"];
 const LANGUAGE_NAMES = {
-  "zh-CN": "简体中文",
-  "zh-TW": "繁體中文",
+  "zh-CN": "Simplified Chinese",
+  "zh-TW": "Traditional Chinese",
   en: "English",
   fr: "Français",
   ja: "日本語",
@@ -30,21 +30,22 @@ const LANGUAGE_PREFIXES = {
   es: "Idiomas:"
 };
 const RELEASE_NAV_LABELS = {
-  "zh-CN": (version) => `${version} 的版本语言`,
-  "zh-TW": (version) => `${version} 的版本語言`,
+  "zh-CN": (version) => `Languages for ${version}`,
+  "zh-TW": (version) => `Languages for ${version}`,
   en: (version) => `Languages for ${version}`,
   fr: (version) => `Langues de ${version}`,
   ja: (version) => `${version} の言語`,
   es: (version) => `Idiomas de ${version}`
 };
 const SYNC_NOTICE_TITLES = {
-  "zh-CN": "本页由上游同步",
-  "zh-TW": "本頁由上游同步",
+  "zh-CN": "This page is synchronized from upstream",
+  "zh-TW": "This page is synchronized from upstream",
   en: "This page is synchronized from upstream",
   fr: "Cette page est synchronisée depuis le dépôt source",
   ja: "このページは上流リポジトリと同期しています",
   es: "Esta página se sincroniza desde el repositorio de origen"
 };
+const shellLanguage = (language) => language === "zh-CN" || language === "zh-TW" ? "en" : language;
 
 function writeReleaseSet(source, version) {
   for (const language of RELEASE_LANGUAGES) {
@@ -162,13 +163,13 @@ test("imports stable routes, links, assets and metadata", () => {
     );
     assert.match(desktop, /it does not maintain a separate copy\. Make content changes upstream first\./);
     assert.match(desktop, /aria-current="page" lang="en">Desktop maintenance<\/span>/);
-    assert.match(desktop, />项目文档<\/a>/);
+    assert.match(desktop, />Project documentation<\/a>/);
     const maintenancePlan = readFileSync(path.join(output, "maintenance-plan/index.md"), "utf8");
     assert.match(maintenancePlan, /^lang: "en"$/m);
     assert.match(maintenancePlan, /This page is synchronized from upstream/);
     const examples = readFileSync(path.join(output, "examples/index.md"), "utf8");
     assert.match(examples, /^lang: "zh-CN"$/m);
-    assert.match(examples, /本页由上游同步/);
+    assert.match(examples, /This page is synchronized from upstream/);
 
     for (const language of RELEASE_LANGUAGES) {
       const release = readFileSync(path.join(output, `releases/v1.0.0.${language}/index.md`), "utf8");
@@ -177,7 +178,7 @@ test("imports stable routes, links, assets and metadata", () => {
       assert.match(release, new RegExp(`sourcePath: "docs/releases/v1\\.0\\.0\\.${language}\\.md"`));
       assert.match(release, new RegExp(`sourceCommit: "${SHA}"`));
       assert.match(release, new RegExp(`^contentFormat: "${CONTENT_FORMAT}"$`, "m"));
-      assert.match(release, /<nav class="docs-breadcrumb" aria-label="面包屑" lang="zh-CN">/);
+      assert.match(release, /<nav class="docs-breadcrumb" aria-label="Breadcrumb" lang="en">/);
       assert.match(
         release,
         new RegExp(`<span aria-current="page" lang="${language}">[^<]+<\\/span>`)
@@ -185,7 +186,7 @@ test("imports stable routes, links, assets and metadata", () => {
       const navigation = release.match(/<nav class="release-language-nav"[^>]*>[\s\S]*?<\/nav>/)?.[0];
       assert.ok(navigation, `${language} release should contain a language navigation`);
       assert.ok(navigation.includes(`aria-label="${RELEASE_NAV_LABELS[language]("v1.0.0")}"`));
-      assert.ok(navigation.includes(`lang="${language}"`));
+      assert.ok(navigation.includes(`lang="${shellLanguage(language)}"`));
       assert.equal((navigation.match(/class="release-language-nav__link"/g) ?? []).length, 6);
       assert.equal((navigation.match(/aria-current="page"/g) ?? []).length, 1);
       const currentLink = navigation.match(/<a\b[^>]*aria-current="page"[^>]*>/)?.[0];
@@ -196,14 +197,14 @@ test("imports stable routes, links, assets and metadata", () => {
       }
       const syncNotice = release.match(/<aside class="project-docs-sync sync-notice"[\s\S]*?<\/aside>/)?.[0];
       assert.ok(syncNotice, `${language} release should explain the synchronization model`);
-      assert.ok(syncNotice.includes(`lang="${language}"`));
+      assert.ok(syncNotice.includes(`lang="${shellLanguage(language)}"`));
       assert.ok(syncNotice.includes(SYNC_NOTICE_TITLES[language]));
       assert.ok(syncNotice.includes(`${UPSTREAM_REPOSITORY}/blob/${SHA}/docs/releases/v1.0.0.${language}.md`));
       assert.ok(release.indexOf("# v1.0.0") < release.indexOf("release-language-nav"));
       assert.ok(release.indexOf("release-language-nav") < release.indexOf("sync-notice"));
       const sourceInfo = release.match(/<footer class="project-docs-sync import-source"[\s\S]*?<\/footer>/)?.[0];
       assert.ok(sourceInfo, `${language} release should expose visible source information`);
-      assert.ok(sourceInfo.includes(`lang="${language}"`));
+      assert.ok(sourceInfo.includes(`lang="${shellLanguage(language)}"`));
       assert.ok(sourceInfo.includes(`href="${UPSTREAM_REPOSITORY}"`));
       assert.ok(sourceInfo.includes(`href="${UPSTREAM_REPOSITORY}/commit/${SHA}"`));
       assert.ok(sourceInfo.includes(`<code>${SHA.slice(0, 8)}</code>`));
@@ -231,13 +232,13 @@ test("imports stable routes, links, assets and metadata", () => {
     assert.match(englishRelease, /^customFlag: retained$/m);
     assert.doesNotMatch(englishRelease, /^Languages?:/m);
     const releaseIndex = readFileSync(path.join(output, "releases/index.md"), "utf8");
-    assert.match(releaseIndex, /^title: "版本说明"$/m);
-    assert.match(releaseIndex, /^# 版本说明$/m);
+    assert.match(releaseIndex, /^title: "Release notes"$/m);
+    assert.match(releaseIndex, /^# Release notes$/m);
     assert.match(releaseIndex, /^## 多语言发布说明规范$/m);
     assert.doesNotMatch(releaseIndex, /^# 多语言发布说明规范$/m);
     assert.match(releaseIndex, /class="release-archive__summary"/);
-    assert.match(releaseIndex, /已从上游同步 <strong>5<\/strong> 个版本、<strong>30<\/strong> 篇/);
-    assert.match(releaseIndex, /<ol class="release-archive" aria-label="全部版本说明" lang="zh-CN">/);
+    assert.match(releaseIndex, /Synchronized <strong>30<\/strong> release notes across <strong>5<\/strong> versions from upstream/);
+    assert.match(releaseIndex, /<ol class="release-archive" aria-label="All release notes" lang="en">/);
     assert.equal((releaseIndex.match(/class="release-archive__row"/g) ?? []).length, 5);
     assert.equal((releaseIndex.match(/class="release-archive__version"/g) ?? []).length, 5);
     const archiveLanguageGroups = releaseIndex.match(/<nav class="release-archive__languages"[^>]*>[\s\S]*?<\/nav>/g) ?? [];
@@ -245,7 +246,7 @@ test("imports stable routes, links, assets and metadata", () => {
     for (const group of archiveLanguageGroups) {
       assert.equal((group.match(/class="release-archive__language"/g) ?? []).length, 6);
       assert.equal((group.match(/aria-current="page"/g) ?? []).length, 0);
-      assert.ok(group.includes('lang="zh-CN"'));
+      assert.ok(group.includes('lang="en"'));
     }
     assert.equal((releaseIndex.match(/class="release-archive__language"/g) ?? []).length, 30);
     assert.doesNotMatch(releaseIndex, /^\|\s*版本\s*\|/m);
@@ -292,10 +293,10 @@ test("imports stable routes, links, assets and metadata", () => {
     assert.match(projectPage, /https:\/\/qrzzzz\.github\.io\/lyrics-card-generator\//);
     assert.doesNotMatch(projectPage, /<div align="center">/);
     const landing = readFileSync(path.join(output, "index.md"), "utf8");
-    assert.match(landing, /^title: 项目文档$/m);
+    assert.match(landing, /^title: Project Documentation$/m);
     assert.match(landing, new RegExp(`^contentFormat: "${CONTENT_FORMAT}"$`, "m"));
-    assert.match(landing, /^# 项目文档$/m);
-    assert.match(landing, /<p class="lead">这里集中展示该项目从源仓库同步的公开维护文档和版本资料。<\/p>/);
+    assert.match(landing, /^# Project Documentation$/m);
+    assert.match(landing, /<p class="lead">Public maintenance documentation and release materials synchronized from the source repository.<\/p>/);
     assert.doesNotMatch(landing, /发布文档/);
     assert.match(landing, /href="\/projects\/lyrics-card-generator\/docs\/maintenance-plan\/"/);
     assert.match(landing, /class="content-index-title" lang="en">Maintenance plan<\/span>/);
