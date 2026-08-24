@@ -5,7 +5,7 @@ export const SHARE_IMAGE_FORMAT = Object.freeze({
   height: 720,
   scale: 2,
   maxTitleLength: 56,
-  maxExcerptLength: 160
+  maxExcerptLength: 200
 });
 
 export function normalizeShareText(value, maxLength = Number.POSITIVE_INFINITY) {
@@ -23,6 +23,24 @@ export function normalizeShareText(value, maxLength = Number.POSITIVE_INFINITY) 
     .join("")
     .replace(/[\s，、；：,;:—-]+$/u, "");
   return `${clipped}…`;
+}
+
+export function resolveShareExcerpt(
+  bodyFragments,
+  fallbackDescription = "",
+  maxLength = SHARE_IMAGE_FORMAT.maxExcerptLength
+) {
+  const bodyText = normalizeShareText(
+    Array.from(bodyFragments ?? [])
+      .map((fragment) =>
+        typeof fragment === "string" ? fragment : fragment?.textContent ?? ""
+      )
+      .filter(Boolean)
+      .join(" "),
+    maxLength
+  );
+
+  return bodyText || normalizeShareText(fallbackDescription, maxLength);
 }
 
 export function createShareImageFilename(title) {

@@ -4,7 +4,8 @@ import test from "node:test";
 import {
   SHARE_IMAGE_FORMAT,
   createShareImageFilename,
-  normalizeShareText
+  normalizeShareText,
+  resolveShareExcerpt
 } from "../docs/.vitepress/theme/shareImageRuntime.mjs";
 
 const layout = readFileSync("docs/.vitepress/theme/Layout.vue", "utf8");
@@ -16,6 +17,22 @@ test("normalizes article text without leaking layout whitespace", () => {
   assert.equal(normalizeShareText("这是一个需要截断的长句，后面还有内容", 10), "这是一个需要截断的…");
 });
 
+test("prefers the first 200 characters of body copy over the page description", () => {
+  const firstParagraph = "正文第一段".repeat(10);
+  const secondParagraph = "这是第二段，应该在第一段不足时接续。".repeat(12);
+  const excerpt = resolveShareExcerpt(
+    [firstParagraph, { textContent: secondParagraph }],
+    "标题下方的小注释不应优先出现"
+  );
+
+  assert.equal(Array.from(excerpt).length, 200);
+  assert.equal(excerpt.startsWith("正文第一段"), true);
+  assert.match(excerpt, /这是第二段/);
+  assert.equal(excerpt.endsWith("…"), true);
+  assert.doesNotMatch(excerpt, /小注释/);
+  assert.equal(resolveShareExcerpt([], "仅在没有正文时使用摘要"), "仅在没有正文时使用摘要");
+});
+
 test("uses one fixed 3:4 share image format and a stable filename", () => {
   assert.equal(Object.isFrozen(SHARE_IMAGE_FORMAT), true);
   assert.deepEqual(SHARE_IMAGE_FORMAT, {
@@ -25,7 +42,7 @@ test("uses one fixed 3:4 share image format and a stable filename", () => {
     height: 720,
     scale: 2,
     maxTitleLength: 56,
-    maxExcerptLength: 160
+    maxExcerptLength: 200
   });
   assert.deepEqual(
     [SHARE_IMAGE_FORMAT.width * SHARE_IMAGE_FORMAT.scale, SHARE_IMAGE_FORMAT.height * SHARE_IMAGE_FORMAT.scale],
@@ -49,7 +66,10 @@ test("mounts a direct, non-customizable share image download on article and exce
   assert.match(component, /:aria-busy="rendering"/);
   assert.match(component, /shareExcerpt\.value = resolveExcerpt\(\)/);
   assert.match(component, /frontmatter\.value\.description/);
+  assert.match(component, /document\.querySelectorAll<HTMLElement>/);
   assert.match(component, /\.vp-doc > p:not\(\.lead\)/);
+  assert.match(component, /\.vp-doc \.excerpt-entry blockquote p/);
+  assert.match(component, /resolveShareExcerpt\(bodyFragments, frontmatter\.value\.description\)/);
   assert.match(component, /await import\("modern-screenshot"\)/);
   assert.match(component, /await import\("qrcode"\)/);
   assert.match(component, /toDataURL\(pageHref\.value/);
@@ -61,6 +81,10 @@ test("mounts a direct, non-customizable share image download on article and exce
   assert.match(component, /scale:\s*SHARE_IMAGE_FORMAT\.scale/);
   assert.match(component, /backgroundColor:\s*"#f5f1e8"/);
   assert.match(component, /font:\s*false/);
+  assert.match(
+    component,
+    /\.share-image-card__content p\s*\{[\s\S]*?font-size:\s*20px;[\s\S]*?line-height:\s*1\.55;[\s\S]*?-webkit-line-clamp:\s*10;/
+  );
   assert.match(component, /URL\.createObjectURL/);
   assert.match(component, /link\[rel="canonical"\]/);
   assert.match(component, /class="share-image-card__qr"/);

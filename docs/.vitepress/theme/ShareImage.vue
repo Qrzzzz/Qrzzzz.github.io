@@ -4,7 +4,8 @@ import { useData } from "vitepress";
 import {
   SHARE_IMAGE_FORMAT,
   createShareImageFilename,
-  normalizeShareText
+  normalizeShareText,
+  resolveShareExcerpt
 } from "./shareImageRuntime.mjs";
 
 type PageKind = "article" | "excerpt";
@@ -45,15 +46,17 @@ const pageUrl = computed(() => {
 });
 
 function resolveExcerpt() {
-  const description = frontmatter.value.description;
-  if (typeof description === "string" && description.trim()) {
-    return normalizeShareText(description);
-  }
-
-  const firstParagraph = document.querySelector<HTMLElement>(
-    ".vp-doc > p:not(.lead), .vp-doc .excerpt-quotation p"
+  const bodyFragments = document.querySelectorAll<HTMLElement>(
+    [
+      ".vp-doc > p:not(.lead)",
+      ".vp-doc > blockquote > p",
+      ".vp-doc > ul > li",
+      ".vp-doc > ol > li",
+      ".vp-doc .excerpt-entry blockquote p",
+      ".vp-doc .excerpt-entry > p"
+    ].join(", ")
   );
-  return normalizeShareText(firstParagraph?.textContent);
+  return resolveShareExcerpt(bodyFragments, frontmatter.value.description);
 }
 
 function setStatus(message: string, tone: "neutral" | "success" | "error" = "neutral") {
@@ -361,12 +364,12 @@ watch(
   overflow: hidden;
   margin: 0;
   color: var(--card-text);
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 520;
   letter-spacing: -0.02em;
-  line-height: 1.65;
+  line-height: 1.55;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 8;
+  -webkit-line-clamp: 10;
 }
 
 .share-image-card__footer {
