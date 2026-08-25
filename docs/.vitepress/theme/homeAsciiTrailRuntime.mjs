@@ -114,7 +114,7 @@ export function createHomeAsciiTrailRuntime(options) {
       ? Math.min(48, Math.max(0, timestamp - previousTime))
       : 16;
     previousTime = timestamp;
-    const decay = Math.pow(0.905, elapsed / 16);
+    const decay = Math.pow(0.925, elapsed / 16);
 
     context.clearRect(0, 0, width, height);
     configureContext();
@@ -126,7 +126,7 @@ export function createHomeAsciiTrailRuntime(options) {
         continue;
       }
 
-      context.globalAlpha = Math.min(0.5, 0.04 + cell.energy * 0.46);
+      context.globalAlpha = Math.min(0.62, 0.08 + cell.energy * 0.54);
       context.fillText(
         asciiTrailGlyph(cell.energy, cell.direction),
         cell.x,
@@ -165,7 +165,7 @@ export function createHomeAsciiTrailRuntime(options) {
     );
     const minimumRow = Math.max(0, Math.floor((y - radius) / CELL_HEIGHT));
     const maximumRow = Math.ceil((Math.min(height, y + radius)) / CELL_HEIGHT);
-    const speedBoost = 0.9 + speed / 200;
+    const speedBoost = 0.98 + speed / 160;
 
     for (let row = minimumRow; row <= maximumRow; row += 1) {
       const cellY = row * CELL_HEIGHT + CELL_HEIGHT / 2;
@@ -174,7 +174,7 @@ export function createHomeAsciiTrailRuntime(options) {
         const distance = Math.hypot(cellX - x, cellY - y);
         if (distance >= radius) continue;
 
-        const falloff = Math.pow(1 - distance / radius, 1.45);
+        const falloff = Math.pow(1 - distance / radius, 1.2);
         const energy = Math.min(1, falloff * speedBoost);
         const key = row * columns + column;
         const cell = cells.get(key);

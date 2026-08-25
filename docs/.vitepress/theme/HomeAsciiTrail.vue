@@ -59,13 +59,13 @@ onBeforeUnmount(() => {
   display: block;
   width: 100%;
   height: 100%;
-  opacity: 0.58;
+  opacity: 0.62;
   pointer-events: none;
   user-select: none;
 }
 
 .dark .home-ascii-trail {
-  opacity: 0.64;
+  opacity: 0.68;
 }
 
 @media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) {
