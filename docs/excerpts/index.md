@@ -13,4 +13,5 @@ import CollectionIndex from "../.vitepress/theme/components/CollectionIndex.vue"
 
 <p class="lead">Found by chance.</p>
 
+<!-- excerpt-attribution-rule: footer, figcaption, and cite attributions must not begin with a dash. -->
 <CollectionIndex kind="excerpt" />

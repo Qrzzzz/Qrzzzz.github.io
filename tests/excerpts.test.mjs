@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import test from "node:test";
 
 const config = readFileSync("docs/.vitepress/config.mts", "utf8");
@@ -23,6 +23,9 @@ const thirteenth = readFileSync("docs/excerpts/2026-08-17-01.md", "utf8");
 const fourteenth = readFileSync("docs/excerpts/2026-08-21-01.md", "utf8");
 const fifteenth = readFileSync("docs/excerpts/2026-08-21-02.md", "utf8");
 const sixteenth = readFileSync("docs/excerpts/2026-08-24-01.md", "utf8");
+const seventeenth = readFileSync("docs/excerpts/2026-08-24-02.md", "utf8");
+const eighteenth = readFileSync("docs/excerpts/2026-08-24-03.md", "utf8");
+const nineteenth = readFileSync("docs/excerpts/2026-08-25-01.md", "utf8");
 
 const excerptPages = [
   first,
@@ -40,8 +43,18 @@ const excerptPages = [
   thirteenth,
   fourteenth,
   fifteenth,
-  sixteenth
+  sixteenth,
+  seventeenth,
+  eighteenth,
+  nineteenth
 ];
+
+const excerptSources = readdirSync("docs/excerpts", { withFileTypes: true })
+  .filter((entry) => entry.isFile() && /^\d{4}-\d{2}-\d{2}-\d{2}\.md$/.test(entry.name))
+  .map((entry) => ({
+    name: entry.name,
+    source: readFileSync(`docs/excerpts/${entry.name}`, "utf8")
+  }));
 
 test("uses shared data and compact previews for 偶拾", () => {
   assert.match(library, /<LibraryIndex \/>/);
@@ -94,12 +107,12 @@ test("keeps every excerpt in its own titleless Markdown page", () => {
   assert.match(ninth, /我第一次为无神论者感到一些遗憾/);
   assert.match(
     ninth,
-    /<footer>——章北海，出自刘慈欣<cite>《三体Ⅱ：黑暗森林》<\/cite><\/footer>/
+    /<footer>章北海，出自刘慈欣<cite>《三体Ⅱ：黑暗森林》<\/cite><\/footer>/
   );
   assert.match(tenth, /不要听任何从小到大没有换过生活地点的长辈的话。/);
   assert.match(eleventh, /Take your fastest ship and brightest crew/);
   assert.match(eleventh, /chasing the escaping sun\./);
-  assert.match(eleventh, /<footer>— Film <cite>The Odyssey<\/cite><\/footer>/);
+  assert.match(eleventh, /<footer>Film <cite>The Odyssey<\/cite><\/footer>/);
   assert.match(twelfth, /预计到2020年，国际上微电子技术水平将发展到14纳米/);
   assert.match(twelfth, /核心技术是买不到的，必须靠我们自己/);
   assert.match(
@@ -118,8 +131,32 @@ test("keeps every excerpt in its own titleless Markdown page", () => {
   assert.match(sixteenth, /多和健谈的人一起吃麦当劳/);
   assert.match(sixteenth, /<footer>麦当劳中国<\/footer>/);
   assert.doesNotMatch(sixteenth, /<footer>[^<]*[—–-]/);
+  assert.match(nineteenth, /<blockquote lang="de">/);
+  assert.match(nineteenth, /Und verloren sei uns der Tag, wo nicht Ein Mal getanzt wurde!/);
+  assert.match(nineteenth, /<h2>流传意译<\/h2>/);
+  assert.match(nineteenth, /每一个不曾起舞的日子都是对生命的辜负。/);
+  assert.match(nineteenth, /Von alten und neuen Tafeln<\/a>）第 23 节/);
   assert.match(styles, /\.vp-doc \.excerpt-entry__heading\s*\{[\s\S]*?clip-path: inset\(50%\)/);
   assert.match(styles, /\.excerpt-renderings\s*\{[\s\S]*?grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
+});
+
+test("keeps every excerpt attribution free of leading dashes", () => {
+  assert.match(index, /excerpt-attribution-rule:[^\n]*must not begin with a dash/);
+
+  const attributionPattern = /<(footer|figcaption|cite)\b[^>]*>([\s\S]*?)<\/\1>/g;
+  const leadingDashPattern = /^(?:—|–|-|&mdash;|&ndash;|&#8212;|&#x2014;)/i;
+
+  for (const { name, source } of excerptSources) {
+    for (const match of source.matchAll(attributionPattern)) {
+      const [, element, body] = match;
+      const visibleText = body.replace(/<[^>]+>/g, "").trimStart();
+      assert.doesNotMatch(
+        visibleText,
+        leadingDashPattern,
+        `${name} 的 <${element}> 出处不得以破折号开头`
+      );
+    }
+  }
 });
 
 test("renders simple excerpts as standard body copy without an accent rail", () => {
@@ -135,6 +172,21 @@ test("renders simple excerpts as standard body copy without an accent rail", () 
   assert.match(
     styles,
     /@media \(max-width: 767px\)[\s\S]*?\.vp-doc \.excerpt-entry > \.excerpt-quotation p\s*\{[^}]*font-size:\s*16px;[^}]*\}/
+  );
+});
+
+test("renders a single translation across the full excerpt width", () => {
+  assert.match(
+    eighteenth,
+    /class="excerpt-renderings excerpt-renderings--single" aria-label="中文翻译"/
+  );
+  assert.match(
+    nineteenth,
+    /class="excerpt-renderings excerpt-renderings--single" aria-label="中文表达"/
+  );
+  assert.match(
+    styles,
+    /\.excerpt-renderings--single\s*\{[^}]*grid-template-columns:\s*minmax\(0, 1fr\);[^}]*\}/
   );
 });
 
