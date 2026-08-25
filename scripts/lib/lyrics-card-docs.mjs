@@ -629,6 +629,11 @@ function createResolver({ sourceRoot, sourcePath, markdownBySource, directoryInd
       return rawTarget;
     }
 
+    if (resolved.toLowerCase() === "readme.md") {
+      destination.href = `${DOCS_ROUTE}${tail}`;
+      return joinDestination(destination);
+    }
+
     let markdown = markdownBySource.get(resolved);
     if (!markdown && !path.posix.extname(resolved)) markdown = markdownBySource.get(`${resolved}.md`);
     if (!markdown) markdown = directoryIndexes.get(resolved.replace(/\/$/, ""));
@@ -689,6 +694,10 @@ function rewriteProjectReadmeLinks(content, { commitSha, sourceRoot, markdownByS
 
     if (resolved.startsWith("docs/")) {
       const docsPath = resolved.slice("docs/".length);
+      if (docsPath.toLowerCase() === "readme.md") {
+        destination.href = `${DOCS_ROUTE}${tail}`;
+        return joinDestination(destination);
+      }
       let markdown = markdownBySource.get(docsPath);
       if (!markdown && !path.posix.extname(docsPath)) markdown = markdownBySource.get(`${docsPath}.md`);
       if (markdown) {
@@ -912,7 +921,12 @@ export function importLyricsCardDocs({
     throw new Error(`上游 commit SHA 无效：${resolvedSha}`);
   }
 
-  const markdownFiles = files.filter((file) => file.toLowerCase().endsWith(".md"));
+  // The site owns DOCS_ROUTE as a generated landing page. An upstream
+  // docs/README.md is that directory's index, so importing it as a second page
+  // would collide with the generated landing while adding no distinct route.
+  const markdownFiles = files.filter(
+    (file) => file.toLowerCase().endsWith(".md") && file.toLowerCase() !== "readme.md"
+  );
   const assetFiles = files.filter((file) => !file.toLowerCase().endsWith(".md"));
   const markdownBySource = new Map();
   const directoryIndexes = new Map();

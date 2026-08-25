@@ -82,11 +82,16 @@ function fixture() {
     `</div>\n\n---\n\n<img src="./public/app-icon.png" alt="icon" align="right" />\n\n` +
     `<img src="./docs/readme-assets/screenshots/step-3.zh-CN.webp" alt="localized layout" />\n\n` +
     `* 项目入口\n\n` +
-    `## 下载\n\n[桌面文档](./docs/desktop.md) · [发布说明](./docs/releases/v1.0.0.zh-CN.md) · [许可证](./LICENSE)\n`
+    `## 下载\n\n[文档索引](./docs/README.md) · [桌面文档](./docs/desktop.md) · ` +
+    `[发布说明](./docs/releases/v1.0.0.zh-CN.md) · [许可证](./LICENSE)\n`
+  );
+  writeFileSync(
+    path.join(source, "README.md"),
+    "# Documentation index\n\n[Desktop](./desktop.md) · [Maintenance](./maintenance-plan.md)\n"
   );
   writeFileSync(
     path.join(source, "desktop.md"),
-    "---\nlang: en\n---\n\n# Desktop\n\n* Desktop entry  \n\n[Examples](./examples.md)\n\n![Image](./assets/demo.png)\n\n[Maintenance manual](./assets/manual.pdf)\n\n<details><summary>Show desktop maintenance notes</summary>Content</details>\n"
+    "---\nlang: en\n---\n\n# Desktop\n\n* Desktop entry  \n\n[Documentation index](./README.md) · [Examples](./examples.md)\n\n![Image](./assets/demo.png)\n\n[Maintenance manual](./assets/manual.pdf)\n\n<details><summary>Show desktop maintenance notes</summary>Content</details>\n"
   );
   writeFileSync(
     path.join(source, "examples.md"),
@@ -140,8 +145,11 @@ test("imports stable routes, links, assets and metadata", () => {
     );
     assert.ok(manifest.routes.some((entry) => entry.route.endsWith("/desktop/")));
     assert.ok(manifest.routes.some((entry) => entry.route.endsWith("/releases/v1.0.0.en/")));
+    assert.ok(!manifest.routes.some((entry) => entry.source === "docs/README.md"));
     const desktop = readFileSync(path.join(output, "desktop/index.md"), "utf8");
     assert.match(desktop, /\/projects\/lyrics-card-generator\/docs\/examples\//);
+    assert.match(desktop, /\[Documentation index\]\(\/projects\/lyrics-card-generator\/docs\/\)/);
+    assert.doesNotMatch(desktop, /\/projects\/lyrics-card-generator\/docs\/README\.md/);
     assert.match(desktop, /\/projects\/lyrics-card-generator\/docs\/assets\/demo\.png/);
     assert.match(desktop, /\/projects\/lyrics-card-generator\/docs\/assets\/manual\.pdf/);
     assert.match(desktop, /^contentFormat: "site-writing-style@1"$/m);
@@ -271,6 +279,8 @@ test("imports stable routes, links, assets and metadata", () => {
     assert.match(projectPage, new RegExp(`^sourceCommit: "${SHA}"$`, "m"));
     assert.match(projectPage, new RegExp(`^contentFormat: "${CONTENT_FORMAT}"$`, "m"));
     assert.match(projectPage, /# 🎧 Lyrics Card Generator/);
+    assert.match(projectPage, /\[文档索引\]\(\/projects\/lyrics-card-generator\/docs\/\)/);
+    assert.doesNotMatch(projectPage, /\/projects\/lyrics-card-generator\/docs\/README\.md/);
     assert.match(projectPage, /<p class="lead">生成可用于分享的高质感歌词分享卡片<\/p>/);
     assert.match(projectPage, /<p class="project-readme-summary">Windows desktop · High-quality export<\/p>/);
     assert.doesNotMatch(projectPage, /^\*\*Windows desktop/m);

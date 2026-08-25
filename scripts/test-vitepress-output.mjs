@@ -85,7 +85,9 @@ try {
 
   const manifest = generatedManifest(path.join(repositoryRoot, "docs/projects/lyrics-card-generator/docs"));
   for (const language of releaseLanguages) {
-    const release = manifest.routes.find((entry) => entry.source?.endsWith(`.${language}.md`));
+    const release = manifest.routes.find(
+      (entry) => entry.source?.startsWith("docs/releases/") && entry.source.endsWith(`.${language}.md`)
+    );
     assert.ok(release, `导入清单缺少 ${language} Release Note`);
     const releaseOutput = routeHtml(release.route);
     assert.ok(existsSync(releaseOutput), `验收构建缺少 ${language} Release Note HTML`);
