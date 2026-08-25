@@ -147,6 +147,10 @@ test("pointer movement deposits a demand-driven fading field", () => {
   });
   assert.equal(harness.canvas.dataset.asciiTrailState, "running");
   assert.ok(harness.runtime.getState().activeCells > 0);
+  assert.ok(
+    harness.runtime.getState().activeCells < 80,
+    "the pointer field should remain compact"
+  );
   assert.equal(harness.frames.size, 1);
 
   harness.runFrame();
@@ -154,6 +158,10 @@ test("pointer movement deposits a demand-driven fading field", () => {
   assert.ok(glyphs.has("o"));
   assert.ok(glyphs.has(">"));
   assert.ok(glyphs.has("-"));
+  assert.ok(
+    Math.max(...harness.context.draws.map((draw) => draw.alpha)) <= 0.5,
+    "the canvas should keep a restrained peak opacity"
+  );
 
   let timestamp = 32;
   while (harness.frames.size && timestamp < 3000) {
@@ -163,6 +171,7 @@ test("pointer movement deposits a demand-driven fading field", () => {
   assert.equal(harness.frames.size, 0);
   assert.equal(harness.runtime.getState().activeCells, 0);
   assert.equal(harness.canvas.dataset.asciiTrailState, "idle");
+  assert.ok(timestamp < 1600, "the trail should clear promptly after pointer movement");
 });
 
 test("touch, coarse pointers, reduced motion, and hidden pages stay inactive", () => {

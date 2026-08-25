@@ -5,8 +5,8 @@ export const HOME_ASCII_TRAIL_REDUCED_MOTION_QUERY =
 const CELL_WIDTH = 18;
 const CELL_HEIGHT = 24;
 const MIN_ENERGY = 0.025;
-const CORE_THRESHOLD = 0.7;
-const DIRECTION_THRESHOLD = 0.31;
+const CORE_THRESHOLD = 0.54;
+const DIRECTION_THRESHOLD = 0.2;
 
 function finiteNumber(value, fallback = 0) {
   return Number.isFinite(value) ? value : fallback;
@@ -114,7 +114,7 @@ export function createHomeAsciiTrailRuntime(options) {
       ? Math.min(48, Math.max(0, timestamp - previousTime))
       : 16;
     previousTime = timestamp;
-    const decay = Math.pow(0.94, elapsed / 16);
+    const decay = Math.pow(0.905, elapsed / 16);
 
     context.clearRect(0, 0, width, height);
     configureContext();
@@ -126,7 +126,7 @@ export function createHomeAsciiTrailRuntime(options) {
         continue;
       }
 
-      context.globalAlpha = Math.min(0.72, 0.1 + cell.energy * 0.62);
+      context.globalAlpha = Math.min(0.5, 0.04 + cell.energy * 0.46);
       context.fillText(
         asciiTrailGlyph(cell.energy, cell.direction),
         cell.x,
@@ -157,7 +157,7 @@ export function createHomeAsciiTrailRuntime(options) {
     previousX = x;
     previousY = y;
 
-    const radius = Math.min(168, 112 + speed * 1.4);
+    const radius = Math.min(100, 70 + speed * 0.72);
     const minimumColumn = Math.max(0, Math.floor((x - radius) / CELL_WIDTH));
     const maximumColumn = Math.min(
       columns - 1,
@@ -165,7 +165,7 @@ export function createHomeAsciiTrailRuntime(options) {
     );
     const minimumRow = Math.max(0, Math.floor((y - radius) / CELL_HEIGHT));
     const maximumRow = Math.ceil((Math.min(height, y + radius)) / CELL_HEIGHT);
-    const speedBoost = 0.92 + speed / 100;
+    const speedBoost = 0.9 + speed / 200;
 
     for (let row = minimumRow; row <= maximumRow; row += 1) {
       const cellY = row * CELL_HEIGHT + CELL_HEIGHT / 2;
@@ -174,7 +174,7 @@ export function createHomeAsciiTrailRuntime(options) {
         const distance = Math.hypot(cellX - x, cellY - y);
         if (distance >= radius) continue;
 
-        const falloff = Math.pow(1 - distance / radius, 0.72);
+        const falloff = Math.pow(1 - distance / radius, 1.45);
         const energy = Math.min(1, falloff * speedBoost);
         const key = row * columns + column;
         const cell = cells.get(key);
