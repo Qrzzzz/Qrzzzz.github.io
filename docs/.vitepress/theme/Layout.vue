@@ -13,6 +13,7 @@ import TargetCursor from "./TargetCursor.vue";
 const { Layout } = DefaultTheme;
 const { frontmatter, isDark, page } = useData();
 const HomeGrainient = defineAsyncComponent(() => import("./HomeGrainient.vue"));
+const HomeAsciiTrail = defineAsyncComponent(() => import("./HomeAsciiTrail.vue"));
 const clientReady = ref(false);
 
 type PageKind =
@@ -325,6 +326,7 @@ onBeforeUnmount(() => {
     :data-page-language="pageLanguage"
   >
     <HomeGrainient v-if="clientReady && hasGrainientBackground" />
+    <HomeAsciiTrail v-if="clientReady && pageKind === 'home'" />
 
     <Layout>
       <template #nav-bar-content-before>

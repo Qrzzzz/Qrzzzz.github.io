@@ -19,6 +19,10 @@
   background: transparent;
 }
 
+.site-layout[data-page-kind="home"] > .Layout {
+  z-index: 2;
+}
+
 ::view-transition-old(root),
 ::view-transition-new(root) {
   animation: none;
