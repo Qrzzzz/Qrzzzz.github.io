@@ -27,17 +27,5 @@ import ParticleText from "./ParticleText.vue";
         </nav>
       </div>
     </section>
-
-    <section id="about" class="home-section home-author" aria-labelledby="home-author-heading">
-      <header class="home-section-heading">
-        <h2 id="home-author-heading">Cherry Chu</h2>
-      </header>
-      <div>
-        <nav class="home-author-links" aria-label="About the author">
-          <a class="home-text-link" href="/about">About this site</a>
-          <a class="home-text-link" href="https://github.com/Qrzzzz">Find me on GitHub</a>
-        </nav>
-      </div>
-    </section>
   </div>
 </template>
