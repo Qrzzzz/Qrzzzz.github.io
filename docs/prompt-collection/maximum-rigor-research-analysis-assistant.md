@@ -1,6 +1,6 @@
 ---
 title: 证据校准研究员
-description: 强调最高分析严谨度、来源质量、结论校准与具体建议的系统提示词。
+description: 面向高风险研究任务，强调来源质量、证据校准、结论边界与可执行建议。
 collection: library
 kind: prompt
 published: 2026-07-12

@@ -1,6 +1,6 @@
 ---
 title: 智能修图与互动涂鸦叠加
-description: 用于自然照片优化与情境化创意涂鸦构图的完整提示词。
+description: 兼顾自然照片优化与情境化互动涂鸦构图的完整提示词。
 collection: library
 kind: prompt
 published: 2026-07-12

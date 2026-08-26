@@ -26,22 +26,22 @@ const categories: Array<{
   {
     kind: "article",
     title: "Articles",
-    unit: "items",
-    action: "View all articles",
+    unit: "entries",
+    action: "Browse all articles",
     href: "/notes/"
   },
   {
     kind: "prompt",
     title: "Prompts",
-    unit: "items",
-    action: "View all prompts",
+    unit: "entries",
+    action: "Browse all prompts",
     href: "/prompt-collection/"
   },
   {
     kind: "excerpt",
     title: "Excerpts",
-    unit: "items",
-    action: "View all excerpts",
+    unit: "entries",
+    action: "Browse all excerpts",
     href: "/excerpts/"
   }
 ];
@@ -131,7 +131,7 @@ onBeforeUnmount(() => {
   <div class="library-index">
     <header class="library-header">
       <p class="library-stats">
-        {{ libraryItems.length }} items
+        {{ libraryItems.length }} entries
         <template v-if="latestUpdated">
           · Last updated <time :datetime="latestUpdated">{{ latestUpdated }}</time>
         </template>
@@ -149,7 +149,7 @@ onBeforeUnmount(() => {
     </div>
 
     <section class="library-results-section" aria-labelledby="library-results-title">
-      <h2 id="library-results-title">All items</h2>
+      <h2 id="library-results-title">Search and browse</h2>
       <LibraryToolbar
         :query="query"
         :active-kind="activeKind"
@@ -195,7 +195,7 @@ onBeforeUnmount(() => {
 
       <div v-else class="library-empty" role="status">
         <h3>No results found</h3>
-        <p>Try another search term or clear the current filters.</p>
+        <p>Try a different term or remove the current filters.</p>
         <button type="button" @click="clearFilters">Clear filters</button>
       </div>
     </section>

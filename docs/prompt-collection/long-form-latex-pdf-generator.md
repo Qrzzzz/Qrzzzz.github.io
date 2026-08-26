@@ -1,6 +1,6 @@
 ---
 title: 长篇 LaTeX PDF 一次成型生成器
-description: 用于自主选题、资料核验、LaTeX 排版并直接生成长篇 PDF 成品的综合提示词。
+description: 从自主选题和资料核验到 LaTeX 排版，一次生成长篇 PDF 成品。
 collection: library
 kind: prompt
 published: 2026-08-20

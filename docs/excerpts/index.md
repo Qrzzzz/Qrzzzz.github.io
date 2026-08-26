@@ -1,6 +1,6 @@
 ---
 title: Excerpts
-description: Sentences and passages encountered by chance and worth keeping.
+description: A collection of sentences and passages worth remembering.
 lang: en
 outline: false
 ---
@@ -11,7 +11,7 @@ import CollectionIndex from "../.vitepress/theme/components/CollectionIndex.vue"
 
 # Excerpts
 
-<p class="lead">Found by chance.</p>
+<p class="lead">Lines and passages found by chance, kept here for later.</p>
 
 <!-- excerpt-attribution-rule: footer, figcaption, and cite attributions must not begin with a dash. -->
 <CollectionIndex kind="excerpt" />

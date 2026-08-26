@@ -158,7 +158,15 @@ export function validateLibraryRecords(records, indexes = []) {
     if (!isNonEmptyText(frontmatter.title)) {
       errors.push(`${relativePath} 缺少 title。`);
     }
-    if (!isNonEmptyText(frontmatter.description)) {
+    if (
+      frontmatter.kind === "article" &&
+      Object.hasOwn(frontmatter, "description")
+    ) {
+      errors.push(`${relativePath} 是文章，不应提供 description。`);
+    } else if (
+      frontmatter.kind !== "article" &&
+      !isNonEmptyText(frontmatter.description)
+    ) {
       errors.push(`${relativePath} 缺少 description。`);
     }
     if (!ISO_DATE.test(frontmatter.published ?? "")) {

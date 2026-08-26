@@ -1,6 +1,6 @@
 ---
 title: 复杂决策顾问
-description: 用于细致澄清、证据研究、明确判断与可执行回答的系统提示词。
+description: 用于复杂决策，覆盖需求澄清、证据研究、明确判断与行动建议。
 collection: library
 kind: prompt
 published: 2026-07-12

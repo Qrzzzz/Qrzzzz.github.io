@@ -25,7 +25,7 @@ defineProps<{
     </header>
 
     <div class="library-category__latest">
-      <span>Latest</span>
+      <span>Latest additions</span>
       <ul>
         <li v-for="item in latest" :key="item.url">
           <a :href="item.url">{{ item.displayTitle }}</a>

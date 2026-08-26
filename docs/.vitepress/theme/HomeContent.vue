@@ -14,11 +14,11 @@ import ParticleText from "./ParticleText.vue";
       </h1>
       <div class="home-intro-copy">
         <p class="home-deck">
-          Public projects, practical documentation, and writing worth keeping beyond the feed.
+          Projects I build, documentation I maintain, and writing I want to find again.
         </p>
-        <nav class="home-actions" aria-label="Featured destinations">
-          <a class="home-text-link" href="/library/">Library</a>
-          <a class="home-text-link" href="/works/">Explore the work</a>
+        <nav class="home-actions" aria-label="Primary destinations">
+          <a class="home-text-link" href="/library/">Browse the Library</a>
+          <a class="home-text-link" href="/works/">View the projects</a>
         </nav>
       </div>
     </section>

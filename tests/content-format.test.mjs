@@ -79,21 +79,29 @@ const pages = markdownFiles().map(parsePage);
 const home = pages.find((page) => page.relativePath === "index.md");
 const contentPages = pages.filter((page) => page !== home);
 
-test("keeps every hand-written page on the same title, summary and lead contract", () => {
+test("keeps hand-written pages on their category-specific metadata and lead contract", () => {
   assert.ok(home);
   assert.equal(frontmatterValue(home.frontmatter, "layout"), "home");
 
   for (const page of contentPages) {
     const title = frontmatterValue(page.frontmatter, "title");
     const description = frontmatterValue(page.frontmatter, "description");
+    const omitsDescription =
+      (page.relativePath.startsWith("notes/") && page.relativePath !== "notes/index.md") ||
+      page.relativePath === "guide/getting-started.md" ||
+      page.relativePath === "guide/writing-style.md";
     assert.ok(title, `${page.relativePath} 缺少 title`);
-    assert.ok(description, `${page.relativePath} 缺少 description`);
-    assert.match(
-      description,
-      /(?:[。！？.!?]|……)$/,
-      `${page.relativePath} 的 description 应使用一句完整的话`
-    );
-    assert.doesNotMatch(description, /\s\|\s/, `${page.relativePath} 的 description 不应使用标签式片段`);
+    if (omitsDescription) {
+      assert.equal(description, "", `${page.relativePath} 不应提供 description`);
+    } else {
+      assert.ok(description, `${page.relativePath} 缺少 description`);
+      assert.match(
+        description,
+        /(?:[。！？.!?]|……)$/,
+        `${page.relativePath} 的 description 应使用一句完整的话`
+      );
+      assert.doesNotMatch(description, /\s\|\s/, `${page.relativePath} 的 description 不应使用标签式片段`);
+    }
 
     const unfenced = outsideFences(page.body);
     const markdownH1 = unfenced.match(/^#\s+(.+)$/gm) ?? [];

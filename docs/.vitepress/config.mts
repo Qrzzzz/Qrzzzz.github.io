@@ -63,7 +63,7 @@ function pageLanguage(value: unknown, relativePath = "") {
 export default defineConfig({
   lang: "zh-CN",
   title: "Qrzzzz",
-  description: "Qrzzzz's project documentation, public tools, and long-form writing, collected in one Library.",
+  description: "Projects, tools, documentation, and writing by Cherry Chu.",
 
   // 用户主页仓库部署在域名根目录。
   base: "/",
@@ -111,7 +111,7 @@ export default defineConfig({
       pageTitle === "Qrzzzz" ? "Qrzzzz" : `${pageTitle} · Qrzzzz`;
     const socialDescription =
       pageData.frontmatter.description ||
-      "Qrzzzz's project documentation, public tools, and long-form writing, collected in one Library.";
+      "Projects, tools, documentation, and writing by Cherry Chu.";
     const pager = libraryPager.get(pageData.relativePath.replaceAll("\\", "/"));
     if (pager) {
       pageData.frontmatter.prev = pager.prev;
@@ -286,7 +286,7 @@ export default defineConfig({
     },
 
     footer: {
-      message: '<a href="/about">About Cherry Chu</a> · Written clearly, kept for the long term.',
+      message: '<a href="/about">Cherry Chu</a> · Projects, notes, and working documentation.',
       copyright: "© 2026 Qrzzzz"
     },
 

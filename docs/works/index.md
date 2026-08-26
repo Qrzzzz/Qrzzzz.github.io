@@ -1,13 +1,13 @@
 ---
 title: Works
-description: Public projects and tools maintained by Qrzzzz.
+description: Projects and small tools built and maintained by Cherry Chu.
 lang: en
 outline: false
 ---
 
 # Works
 
-<p class="lead">Public projects and tools that can be used independently or returned to over time.</p>
+<p class="lead">Things I build for real use and keep working after the first release.</p>
 
 <section class="hub-section" aria-labelledby="works-projects-title">
   <header class="hub-section__header">
@@ -18,42 +18,42 @@ outline: false
     <article class="hub-entry">
       <div class="hub-entry__body">
         <h3>Lyrics Card Generator</h3>
-        <p>Import song information, edit lyrics and translations, and export polished share images.</p>
+        <p>Turn imported song metadata, lyrics, and translations into shareable lyric cards.</p>
       </div>
       <a class="hub-entry__action" href="/projects/lyrics-card-generator/">View project</a>
     </article>
     <article class="hub-entry">
       <div class="hub-entry__body">
         <h3>Lyrics Card Generator Android</h3>
-        <p>Import songs, edit lyric cards, and export high-resolution PNGs offline on Android.</p>
+        <p>Create and export lyric cards offline on Android, with NetEase Cloud Music import and live preview.</p>
       </div>
       <a class="hub-entry__action" href="/projects/lyrics-card-generator-android/">View project</a>
     </article>
     <article class="hub-entry">
       <div class="hub-entry__body">
         <h3>Second Glow</h3>
-        <p>Turn an idle phone into an always-on display for time, weather, markets, and device status.</p>
+        <p>Turn an idle phone into a low-power dashboard for time, weather, markets, and device status.</p>
       </div>
       <a class="hub-entry__action" href="/projects/second-glow/">View project</a>
     </article>
     <article class="hub-entry">
       <div class="hub-entry__body">
         <h3>Bili Downloader Lite</h3>
-        <p>A local Windows downloader with sign-in, multi-part videos, quality selection, and retries.</p>
+        <p>Download accessible Bilibili videos on Windows, with sign-in, multi-part handling, quality selection, and retries.</p>
       </div>
       <a class="hub-entry__action" href="/projects/bili-downloader/">View project</a>
     </article>
     <article class="hub-entry">
       <div class="hub-entry__body">
         <h3>AegisVault Mobile</h3>
-        <p>An offline-first Android tool for text encryption and Base64 encoding and decoding.</p>
+        <p>Encrypt text with AES-256-GCM or encode it as Base64, entirely offline on Android.</p>
       </div>
       <a class="hub-entry__action" href="/projects/aegis-vault-mobile/">View project</a>
     </article>
     <article class="hub-entry">
       <div class="hub-entry__body">
         <h3>SLOP∞</h3>
-        <p>A static maze that satirizes Chinese AI corporate-site language through a fully built frontend.</p>
+        <p>A deliberately overbuilt parody of Chinese AI corporate websites, with no backend or data collection.</p>
       </div>
       <a class="hub-entry__action" href="/projects/slop-infinity/">View project</a>
     </article>
@@ -69,7 +69,7 @@ outline: false
     <article class="hub-entry">
       <div class="hub-entry__body">
         <h3>Password Rule Generator</h3>
-        <p>Generate passwords that meet a target site's character, length, and position rules.</p>
+        <p>Generate and validate passwords against a site's exact character, position, and repetition rules—all in the browser.</p>
       </div>
       <a class="hub-entry__action" href="/projects/password-generator/">View project</a>
     </article>

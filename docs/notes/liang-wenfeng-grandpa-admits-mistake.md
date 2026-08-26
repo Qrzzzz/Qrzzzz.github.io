@@ -1,6 +1,5 @@
 ---
 title: 梁文锋爷爷认错
-description: 以 DeepSeek V4 Flash 的虚构发布为背景，戏仿一则熟悉的“爷爷认错”叙事。
 collection: library
 kind: article
 published: 2026-08-03

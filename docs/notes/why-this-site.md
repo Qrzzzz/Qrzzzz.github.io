@@ -1,6 +1,5 @@
 ---
 title: 为什么要有这个网站
-description: 说明这个网站如何长期整理、保存并持续修订个人内容。
 collection: library
 kind: article
 published: 2026-07-11

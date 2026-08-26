@@ -1,6 +1,5 @@
 ---
 title: 本地开发与发布
-description: 在本地编辑、检查并发布 Qrzzzz.github.io。
 ---
 
 # 本地开发与发布

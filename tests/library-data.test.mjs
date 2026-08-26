@@ -16,7 +16,6 @@ function sourcePage(url, frontmatter = {}) {
       collection: "library",
       kind: "article",
       title: "示例",
-      description: "示例摘要",
       published: "2026-07-01",
       updated: "2026-07-01",
       status: "maintained",
@@ -51,6 +50,7 @@ test("uses excerpt previews as display titles without changing their page titles
       kind: "excerpt",
       title: "偶拾 · 2026-07-17 · 03",
       preview: "棋局结束时，国王与卒子归入同一盒中。",
+      description: "偶然遇见，值得留下的一段文字。",
       status: "stable"
     })
   );
@@ -81,7 +81,7 @@ test("sorts by updated date descending and then title in zh-CN order", () => {
   );
 });
 
-test("matches title, description, excerpt preview, tags, and content type", () => {
+test("matches available descriptions, excerpt previews, tags, and content type", () => {
   const excerpt = normalizeLibraryItem(
     sourcePage("/excerpt", {
       kind: "excerpt",
@@ -95,7 +95,6 @@ test("matches title, description, excerpt preview, tags, and content type", () =
   const article = normalizeLibraryItem(
     sourcePage("/article", {
       title: "一个“低占有欲”公司的巨大野心",
-      description: "从组织边界讨论克制、开源与长期研究。",
       tags: ["AI", "DeepSeek"]
     })
   );
@@ -104,7 +103,8 @@ test("matches title, description, excerpt preview, tags, and content type", () =
   assert.equal(matchesLibraryItem(excerpt, "人生"), true);
   assert.equal(matchesLibraryItem(excerpt, "偶拾"), true);
   assert.equal(matchesLibraryItem(article, "DeepSeek"), true);
-  assert.equal(matchesLibraryItem(article, "长期研究"), true);
+  assert.equal(Object.hasOwn(article, "description"), false);
+  assert.equal(matchesLibraryItem(article, "长期研究"), false);
   assert.equal(matchesLibraryItem(article, "不存在"), false);
 });
 

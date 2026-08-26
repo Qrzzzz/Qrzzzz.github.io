@@ -9,7 +9,7 @@ export type LibraryItem = {
   kind: LibraryKind;
   title: string;
   displayTitle: string;
-  description: string;
+  description?: string;
   published: string;
   updated: string;
   status: LibraryStatus;
@@ -87,6 +87,10 @@ export function normalizeLibraryItem(page: LibrarySourcePage): LibraryItem {
 
   const preview =
     typeof frontmatter.preview === "string" ? frontmatter.preview.trim() : "";
+  const description =
+    frontmatter.kind === "article"
+      ? undefined
+      : requiredText(frontmatter.description, "description");
 
   return {
     url: requiredText(page.url, "url"),
@@ -94,7 +98,7 @@ export function normalizeLibraryItem(page: LibrarySourcePage): LibraryItem {
     title,
     displayTitle:
       frontmatter.kind === "excerpt" && preview ? preview : title,
-    description: requiredText(frontmatter.description, "description"),
+    ...(description ? { description } : {}),
     published,
     updated,
     status: frontmatter.status,
@@ -127,7 +131,7 @@ export function matchesLibraryItem(item: LibraryItem, query: string) {
   return [
     item.title,
     item.displayTitle,
-    item.description,
+    item.description ?? "",
     item.kind,
     LIBRARY_KIND_LABELS[item.kind],
     ...item.tags

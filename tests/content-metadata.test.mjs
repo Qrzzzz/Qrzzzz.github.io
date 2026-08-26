@@ -16,7 +16,6 @@ function record(overrides = {}) {
       collection: "library",
       kind: "article",
       title: "示例文章",
-      description: "用于验证元数据。",
       published: "2026-07-01",
       updated: "2026-07-02",
       status: "maintained",
@@ -97,6 +96,23 @@ test("reports excerpt previews, duplicate URLs, and archived featured items", ()
   assert.match(message, /已归档，不能设为 featured/);
   assert.match(message, /重复 URL/);
   assert.match(message, /分类首页，不能加入 Library 内容列表/);
+});
+
+test("forbids article descriptions while requiring them for other Library kinds", () => {
+  const articleWithDescription = record({
+    description: "文章摘要不应继续存在。"
+  });
+  const promptWithoutDescription = record({ kind: "prompt" });
+  promptWithoutDescription.relativePath = "prompt-collection/example.md";
+  promptWithoutDescription.expectedKind = "prompt";
+
+  const message = validateLibraryRecords([
+    articleWithDescription,
+    promptWithoutDescription
+  ]).join("\n");
+
+  assert.match(message, /文章，不应提供 description/);
+  assert.match(message, /prompt-collection\/example\.md 缺少 description/);
 });
 
 test("wires the metadata check into the complete validation chain", () => {

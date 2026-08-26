@@ -1,6 +1,6 @@
 ---
 title: Library
-description: Articles, prompts, and excerpts kept for the long term, available to browse or search.
+description: Articles, prompts, and excerpts collected for browsing, search, and reuse.
 lang: en
 outline: false
 ---
@@ -13,6 +13,6 @@ import LibraryIndex from "../.vitepress/theme/components/LibraryIndex.vue";
 
 # Library
 
-<p class="lead">Browse by type or search directly.</p>
+<p class="lead">Search the whole collection, or start with a content type.</p>
 
 <LibraryIndex />

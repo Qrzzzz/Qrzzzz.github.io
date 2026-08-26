@@ -1,6 +1,6 @@
 ---
 title: Articles
-description: Writing worth returning to, without a fixed publishing schedule.
+description: Essays and notes on technology, products, games, and other subjects under examination.
 lang: en
 ---
 
@@ -10,6 +10,6 @@ import CollectionIndex from "../.vitepress/theme/components/CollectionIndex.vue"
 
 # Articles
 
-<p class="lead">No fixed themes or schedule—just subjects worth exploring and returning to.</p>
+<p class="lead">Essays and notes on whatever holds my attention—without a publishing schedule.</p>
 
 <CollectionIndex kind="article" />

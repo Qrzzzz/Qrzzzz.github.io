@@ -54,5 +54,5 @@ const items = computed(() =>
       </span>
     </a>
   </div>
-  <p v-else class="library-empty">There is nothing in this collection yet.</p>
+  <p v-else class="library-empty">No entries have been added to this collection yet.</p>
 </template>

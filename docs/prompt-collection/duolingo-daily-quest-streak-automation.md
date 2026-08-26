@@ -1,6 +1,6 @@
 ---
 title: Duolingo 延续连胜自动化任务
-description: 使用已登录的本机 Chrome 完成当天三项多邻国每日任务，并在全部核验完成后停止的浏览器自动化提示词。
+description: 在已登录的本机 Chrome 中完成当天三项 Duolingo 每日任务，并在逐项核验后停止的浏览器自动化提示词。
 collection: library
 kind: prompt
 published: 2026-07-28

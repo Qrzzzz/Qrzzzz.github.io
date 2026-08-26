@@ -1,6 +1,6 @@
 ---
 title: Prompts
-description: A maintained collection of reusable prompts for writing, research, programming, and creative work.
+description: Reusable prompts for research, writing, automation, and visual work.
 lang: en
 ---
 
@@ -12,8 +12,8 @@ import CollectionIndex from "../.vitepress/theme/components/CollectionIndex.vue"
 
 # Prompts
 
-<p class="lead">Complete prompts used in writing, research, programming, and creative work, revised through continued use.</p>
+<p class="lead">Complete prompts kept as reusable working documents and revised through use.</p>
 
-Each prompt has its own page so it can be revised, reused, and shared independently.
+Each prompt lives on its own page for easier revision, reuse, and sharing.
 
 <CollectionIndex kind="prompt" />

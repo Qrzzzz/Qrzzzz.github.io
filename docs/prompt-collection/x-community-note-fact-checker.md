@@ -1,6 +1,6 @@
 ---
 title: X Community Note 事实核查助手
-description: 用于判断 X 帖子是否值得提交 Community Note，并基于可靠来源起草中立附注的事实核查提示词。
+description: 判断 X 帖子是否需要 Community Note，并根据可靠来源起草中立、可核验的附注。
 collection: library
 kind: prompt
 published: 2026-07-22

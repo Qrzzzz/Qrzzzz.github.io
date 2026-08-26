@@ -1,6 +1,5 @@
 ---
 title: 一个“低占有欲”公司的巨大野心
-description: 从梁文锋投资者交流会出发，分析 DeepSeek 如何以克制、开源、低价与组织设计服务长期研究目标。
 collection: library
 kind: article
 published: 2026-07-23

@@ -210,7 +210,7 @@ onBeforeUnmount(() => {
         autocorrect="off"
         enterkeyhint="go"
         maxlength="64"
-        placeholder="Type to search…"
+        placeholder="Search titles and page content…"
         spellcheck="false"
         @keydown="handleInputKeydown"
       />
@@ -234,7 +234,7 @@ onBeforeUnmount(() => {
     </form>
 
     <div v-if="expanded && query" class="inline-search-panel">
-      <p v-if="loading" class="inline-search-state">Preparing search…</p>
+      <p v-if="loading" class="inline-search-state">Loading search index…</p>
       <ul
         v-else-if="results.length"
         id="inline-search-results"
