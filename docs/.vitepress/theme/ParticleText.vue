@@ -39,8 +39,8 @@ const props = withDefaults(
     scatter: 150,
     gatherDuration: 1450,
     stagger: 360,
-    pointerRepel: 34,
-    repelRadius: 112,
+    pointerRepel: 58,
+    repelRadius: 132,
     idleDrift: 0.5
   }
 );
@@ -145,8 +145,8 @@ function draw(now: number) {
     context.shadowColor = getComputedStyle(container.value!).getPropertyValue("--site-accent").trim();
   }
 
-  pointer.smoothX += (pointer.x - pointer.smoothX) * 0.18;
-  pointer.smoothY += (pointer.y - pointer.smoothY) * 0.18;
+  pointer.smoothX += (pointer.x - pointer.smoothX) * 0.28;
+  pointer.smoothY += (pointer.y - pointer.smoothY) * 0.28;
   let complete = true;
 
   particles.forEach((particle) => {
@@ -174,13 +174,13 @@ function draw(now: number) {
       const deltaY = baseY - pointer.smoothY;
       const distance = Math.hypot(deltaX, deltaY);
       if (distance > 0 && distance < props.repelRadius) {
-        const force = Math.pow(1 - distance / props.repelRadius, 2) * props.pointerRepel;
+        const force = Math.pow(1 - distance / props.repelRadius, 1.65) * props.pointerRepel;
         baseX += (deltaX / distance) * force;
         baseY += (deltaY / distance) * force;
       }
     }
 
-    const follow = reducedMotion ? 1 : 0.22;
+    const follow = reducedMotion ? 1 : pointer.active && !gathering ? 0.32 : 0.22;
     particle.x += (baseX - particle.x) * follow;
     particle.y += (baseY - particle.y) * follow;
     context.globalAlpha = clamp(0.35 + progress * 0.65, 0, 1);
@@ -341,7 +341,8 @@ function queueSample() {
 }
 
 function handlePointerMove(event: PointerEvent) {
-  const rect = canvas.value?.getBoundingClientRect();
+  if (event.pointerType === "touch") return;
+  const rect = container.value?.getBoundingClientRect();
   if (!rect) return;
   pointer.x = event.clientX - rect.left;
   pointer.y = event.clientY - rect.top;
@@ -378,9 +379,9 @@ onMounted(async () => {
   pageVisible = !document.hidden;
 
   reduceMotionQuery.addEventListener("change", handleReducedMotionChange);
-  targetCanvas.addEventListener("pointerenter", handlePointerMove);
-  targetCanvas.addEventListener("pointermove", handlePointerMove);
-  targetCanvas.addEventListener("pointerleave", handlePointerLeave);
+  element.addEventListener("pointerenter", handlePointerMove);
+  element.addEventListener("pointermove", handlePointerMove);
+  element.addEventListener("pointerleave", handlePointerLeave);
   document.addEventListener("visibilitychange", handleVisibilityChange);
 
   resizeObserver = new ResizeObserver(queueSample);
@@ -401,9 +402,9 @@ onBeforeUnmount(() => {
   intersectionObserver?.disconnect();
   themeObserver?.disconnect();
   reduceMotionQuery?.removeEventListener("change", handleReducedMotionChange);
-  canvas.value?.removeEventListener("pointerenter", handlePointerMove);
-  canvas.value?.removeEventListener("pointermove", handlePointerMove);
-  canvas.value?.removeEventListener("pointerleave", handlePointerLeave);
+  container.value?.removeEventListener("pointerenter", handlePointerMove);
+  container.value?.removeEventListener("pointermove", handlePointerMove);
+  container.value?.removeEventListener("pointerleave", handlePointerLeave);
   document.removeEventListener("visibilitychange", handleVisibilityChange);
   if (animationFrame !== null) window.cancelAnimationFrame(animationFrame);
   if (resizeFrame !== null) window.cancelAnimationFrame(resizeFrame);

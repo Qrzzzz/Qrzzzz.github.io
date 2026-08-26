@@ -131,8 +131,8 @@ test("mounts direct animated theme and GitHub actions in the top bar", () => {
   assert.match(layout, /#nav-bar-content-after/);
   assert.match(layout, /<NavActions\s*\/>/);
   assert.match(layout, /#nav-bar-title-before/);
-  assert.match(layout, /class="site-brand-mark"[^>]*>Q\//);
-  assert.match(layout, /class="site-brand-context"[^>]*>tools \/ notes/);
+  assert.match(layout, /class="site-brand-mark"[^>]*>Q\\/);
+  assert.doesNotMatch(layout, /site-brand-context|tools \/ notes/);
   assert.match(component, /@click="toggleTheme"/);
   assert.match(component, /targetIsDark/);
   assert.match(component, /role="switch"/);
@@ -144,10 +144,11 @@ test("mounts direct animated theme and GitHub actions in the top bar", () => {
   assert.match(component, /theme-toggle__sun/);
   assert.match(component, /theme-toggle__moon/);
   assert.doesNotMatch(component, /<select|<details/);
-  assert.match(siteStyles, /\.VPNavBarTitle \.title\s*\{[^}]*grid-template-columns:\s*34px auto[^}]*height:\s*52px/s);
+  assert.match(siteStyles, /\.VPNavBarTitle \.title\s*\{[^}]*width:\s*34px[^}]*height:\s*52px/s);
   assert.match(siteStyles, /\.site-brand-mark\s*\{[^}]*background:\s*var\(--site-accent\)[^}]*font-family:\s*var\(--site-font-mono\)/s);
-  assert.match(siteStyles, /\.VPNavBar\s*\{[^}]*background:\s*var\(--site-nav-bg\)[^}]*backdrop-filter:\s*none/s);
-  assert.match(siteStyles, /\.site-layout\[data-page-kind="home"\] \.VPNavBar\.home\.top,[\s\S]*?\.site-layout\[data-page-kind="library"\] \.VPNavBar\.top\s*\{[^}]*background:\s*transparent/s);
+  assert.match(siteStyles, /\.VPNavBar::before\s*\{[^}]*backdrop-filter:\s*saturate\(135%\) blur\(22px\)[^}]*mask-image:\s*linear-gradient\(to bottom/s);
+  assert.match(siteStyles, /\.VPNavBar::after\s*\{[^}]*backdrop-filter:\s*saturate\(118%\) blur\(8px\)[^}]*mask-image:\s*linear-gradient\(to bottom/s);
+  assert.doesNotMatch(siteStyles, /data-page-kind="home"[^}]*\.VPNavBar\.home\.top/);
   assert.match(siteStyles, /\.VPNavBarMenu\s*\{[^}]*border:\s*0[^}]*background:\s*transparent/s);
   assert.match(siteStyles, /\.VPNavBar \.VPNavBarMenuLink::after\s*\{[^}]*width:\s*4px[^}]*border-radius:\s*50%/s);
   assert.match(component, /\.NavActions\s*\{[^}]*border-left:\s*1px solid var\(--site-line\)/s);

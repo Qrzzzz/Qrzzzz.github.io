@@ -330,10 +330,7 @@ onBeforeUnmount(() => {
 
     <Layout>
       <template #nav-bar-title-before>
-        <span class="site-brand-mark" aria-hidden="true">Q/</span>
-      </template>
-      <template #nav-bar-title-after>
-        <span class="site-brand-context" aria-hidden="true">tools / notes</span>
+        <span class="site-brand-mark" aria-hidden="true">Q\</span>
       </template>
       <template #nav-bar-content-before>
         <InlineSearch />
