@@ -5,11 +5,6 @@ import ParticleText from "./ParticleText.vue";
 <template>
   <div class="home-page">
     <section class="home-intro" aria-labelledby="home-title">
-      <p class="home-byline">
-        <span>Qrzzzz</span>
-        <span aria-hidden="true">/</span>
-        <span>Works &amp; writing</span>
-      </p>
       <h1
         id="home-title"
         class="home-title"
