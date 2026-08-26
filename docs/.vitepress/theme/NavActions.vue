@@ -104,113 +104,83 @@ onBeforeUnmount(() => {
 .NavActions {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-left: 18px;
+  gap: 4px;
+  margin-left: 12px;
+  padding-left: 12px;
+  border-left: 1px solid var(--site-line);
 }
 
 .theme-toggle,
 .nav-github {
   position: relative;
-  height: 44px;
+  width: 40px;
+  height: 40px;
   border: 0;
-  border-radius: 0;
+  border-radius: 8px;
   background: transparent;
   box-shadow: none;
   color: var(--site-text-muted);
-  transition: color 160ms ease;
+  transition: background-color 160ms ease, color 160ms ease;
 }
 
+.theme-toggle:hover,
 .nav-github:hover {
-  background: transparent;
+  background: var(--site-surface-subtle);
   color: var(--site-accent);
 }
 
 .nav-github::after {
-  position: absolute;
-  right: 0;
-  bottom: 4px;
-  left: 0;
-  height: 2px;
-  background: var(--site-accent);
-  content: "";
-  opacity: 0;
-  transform: scaleX(0);
-  transform-origin: left center;
-  transition: opacity 160ms ease, transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.nav-github:hover::after,
-.nav-github:focus-visible::after {
-  opacity: 1;
-  transform: scaleX(1);
+  display: none;
+  content: none;
 }
 
 .theme-toggle {
   display: grid;
-  width: 44px;
-  flex: 0 0 44px;
+  flex: 0 0 40px;
   place-items: center;
   padding: 0;
-  border-radius: 999px;
   cursor: pointer;
 }
 
 .theme-toggle__track {
   position: relative;
   display: block;
-  width: 40px;
-  height: 22px;
-  border: 1px solid var(--site-line-strong);
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--site-text) 8%, transparent);
-  transition:
-    border-color 250ms ease,
-    background-color 250ms ease;
-}
-
-.theme-toggle.is-switching .theme-toggle__track {
-  animation: theme-toggle-spring 460ms cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.theme-toggle:hover .theme-toggle__track,
-.theme-toggle:focus-visible .theme-toggle__track {
-  border-color: var(--site-accent);
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
 }
 
 .theme-toggle__thumb {
   position: absolute;
-  top: 1px;
-  left: 1px;
-  display: block;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: var(--site-surface);
-  box-shadow: 0 1px 3px color-mix(in srgb, #111214 20%, transparent);
+  inset: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 7px;
+  background: transparent;
+  box-shadow: none;
   color: var(--site-text-muted);
-  transform: translateX(0);
   transition:
     color 250ms ease,
-    background-color 250ms ease,
-    box-shadow 250ms ease,
-    transform 420ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .theme-toggle.is-dark .theme-toggle__thumb {
   color: var(--site-accent);
-  transform: translateX(18px);
+  transform: rotate(8deg);
 }
 
 .theme-toggle__icon {
   position: absolute;
-  inset: 3px;
+  inset: 9px;
 }
 
 .theme-toggle__icon svg {
   position: absolute;
   inset: 0;
-  width: 12px;
-  height: 12px;
+  width: 14px;
+  height: 14px;
   fill: none;
   stroke: currentColor;
   stroke-linecap: round;
@@ -218,7 +188,7 @@ onBeforeUnmount(() => {
   stroke-width: 2;
   transition:
     opacity 180ms ease,
-    transform 420ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .theme-toggle__sun {
@@ -243,8 +213,7 @@ onBeforeUnmount(() => {
 
 .nav-github {
   display: inline-flex;
-  width: 44px;
-  flex: 0 0 44px;
+  flex: 0 0 40px;
   align-items: center;
   justify-content: center;
   padding: 0;
@@ -258,25 +227,11 @@ onBeforeUnmount(() => {
   fill: currentColor;
 }
 
-@keyframes theme-toggle-spring {
-  0%,
-  100% {
-    transform: scale(1);
-  }
-
-  38% {
-    transform: scale(0.94);
-  }
-
-  68% {
-    transform: scale(1.035);
-  }
-}
-
 @media (max-width: 767.98px) {
   .NavActions {
-    gap: 6px;
-    margin-left: 0;
+    gap: 2px;
+    margin-left: 6px;
+    padding-left: 6px;
   }
 }
 

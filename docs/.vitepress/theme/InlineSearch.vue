@@ -273,9 +273,9 @@ onBeforeUnmount(() => {
   position: relative;
   z-index: 12;
   display: flex;
-  width: 248px;
-  flex: 0 1 248px;
-  min-width: 44px;
+  width: 232px;
+  flex: 0 1 232px;
+  min-width: 40px;
   margin-right: 8px;
   transition: width 220ms cubic-bezier(0.2, 0.8, 0.2, 1), flex-basis 220ms ease;
 }
@@ -289,47 +289,33 @@ onBeforeUnmount(() => {
 .inline-search-form {
   position: relative;
   width: 100%;
-  height: 44px;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
+  height: 40px;
+  border: 1px solid var(--site-line);
+  border-radius: 9px;
+  background: var(--site-surface-subtle);
   color: var(--site-text-muted);
+  transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease;
 }
 
 .inline-search-trigger {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 0 6px;
+  gap: 9px;
+  padding: 0 10px;
   text-align: left;
-  transition: color 160ms ease;
 }
 
 .inline-search-trigger::after,
 .inline-search-form::after {
-  position: absolute;
-  right: 6px;
-  bottom: 4px;
-  left: 6px;
-  height: 2px;
-  background: var(--site-accent);
-  content: "";
-  opacity: 0;
-  transform: scaleX(0);
-  transform-origin: left center;
-  transition: opacity 160ms ease, transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  display: none;
+  content: none;
 }
 
 .inline-search-trigger:hover,
 .inline-search-trigger:focus-visible {
-  color: var(--site-accent);
-}
-
-.inline-search-trigger:hover::after,
-.inline-search-trigger:focus-visible::after,
-.inline-search-form::after {
-  opacity: 1;
-  transform: scaleX(1);
+  border-color: var(--site-line-strong);
+  background: var(--site-surface);
+  color: var(--site-text);
 }
 
 .inline-search-trigger svg,
@@ -354,10 +340,10 @@ onBeforeUnmount(() => {
 
 .inline-search-trigger kbd {
   flex: 0 0 auto;
-  padding: 0;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
+  padding: 2px 5px;
+  border: 1px solid var(--site-line);
+  border-radius: 5px;
+  background: var(--site-surface);
   color: var(--site-text-faint);
   font-family: var(--site-font-mono);
   font-size: 11px;
@@ -367,7 +353,8 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   gap: 9px;
-  padding: 0 6px;
+  padding: 0 10px;
+  border-color: var(--site-line-strong);
   background: var(--site-surface);
   box-shadow: none;
 }
@@ -520,14 +507,16 @@ onBeforeUnmount(() => {
 
 @media (max-width: 767.98px) {
   .InlineSiteSearch {
-    width: 44px;
-    flex: 0 0 44px;
+    width: 40px;
+    flex: 0 0 40px;
     margin-right: 0;
   }
 
   .inline-search-trigger {
     justify-content: center;
     padding: 0;
+    border-color: transparent;
+    background: transparent;
   }
 
   .inline-search-placeholder,

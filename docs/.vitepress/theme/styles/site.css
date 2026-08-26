@@ -75,6 +75,7 @@ html.theme-is-switching .inline-search-trigger,
 html.theme-is-switching .inline-search-form,
 html.theme-is-switching .theme-toggle,
 html.theme-is-switching .nav-github,
+html.theme-is-switching .site-brand-mark,
 html.theme-is-switching .site-layout :where(h1, h2, h3, p, a, button, strong, code) {
   transition-property: background-color, border-color, box-shadow, color, fill, stroke;
   transition-duration: 440ms;
@@ -82,9 +83,19 @@ html.theme-is-switching .site-layout :where(h1, h2, h3, p, a, button, strong, co
 }
 
 .VPNavBar {
-  border-bottom: 1px solid color-mix(in srgb, var(--site-line) 82%, transparent);
+  border-bottom: 1px solid var(--site-line);
   background: var(--site-nav-bg);
-  backdrop-filter: saturate(145%) blur(20px);
+  backdrop-filter: none;
+}
+
+.site-layout[data-page-kind="home"] .VPNavBar.home.top,
+.site-layout[data-page-kind="library"] .VPNavBar.top {
+  border-bottom-color: transparent;
+  background: transparent;
+}
+
+.VPNavBar > .divider {
+  display: none;
 }
 
 .VPNavBar .container {
@@ -97,7 +108,7 @@ html.theme-is-switching .site-layout :where(h1, h2, h3, p, a, button, strong, co
 }
 
 .VPNavBar .content-body {
-  gap: 6px;
+  gap: 0;
 }
 
 .VPNavBarTitle {
@@ -107,56 +118,74 @@ html.theme-is-switching .site-layout :where(h1, h2, h3, p, a, button, strong, co
 }
 
 .VPNavBarTitle .title {
-  position: relative;
+  display: grid;
+  grid-template-columns: 34px auto;
+  grid-template-rows: 1fr 1fr;
   width: auto;
-  height: 44px;
-  min-height: 44px;
-  gap: 0;
-  padding-inline: 4px;
+  height: 52px;
+  min-height: 52px;
+  column-gap: 10px;
+  padding-right: 10px;
   border-bottom: 0;
   color: var(--site-text);
   font-family: var(--site-font-sans);
-  font-size: 22px;
-  font-weight: 780;
-  letter-spacing: -0.045em;
   line-height: 1;
-  transition: color 160ms ease;
+  text-decoration: none;
 }
 
-.VPNavBarTitle .title::before {
-  display: none;
-  content: none;
+.VPNavBarTitle .title > span:not(.site-brand-mark):not(.site-brand-context) {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: end;
+  font-size: 14px;
+  font-weight: 760;
+  letter-spacing: 0.055em;
+  line-height: 1;
+  text-transform: uppercase;
 }
 
-.VPNavBarTitle .title::after {
-  position: absolute;
-  right: 4px;
-  bottom: 4px;
-  left: 4px;
-  height: 2px;
+.site-brand-mark {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  grid-column: 1;
+  grid-row: 1 / 3;
+  align-self: center;
+  place-items: center;
+  border-radius: 7px;
   background: var(--site-accent);
-  content: "";
-  opacity: 0;
-  transform: scaleX(0);
-  transform-origin: left center;
-  transition: opacity 160ms ease, transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  color: var(--site-accent-ink);
+  font-family: var(--site-font-mono);
+  font-size: 12px;
+  font-weight: 760;
+  letter-spacing: -0.08em;
+  line-height: 1;
+  transition: background-color 160ms ease;
 }
 
-.VPNavBarTitle .title:hover,
-.VPNavBarTitle .title:focus-visible {
-  color: var(--site-accent);
+.site-brand-context {
+  grid-column: 2;
+  grid-row: 2;
+  align-self: start;
+  margin-top: 4px;
+  color: var(--site-text-faint);
+  font-family: var(--site-font-mono);
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.11em;
+  line-height: 1;
+  text-transform: uppercase;
 }
 
-.VPNavBarTitle .title:hover::after,
-.VPNavBarTitle .title:focus-visible::after {
-  opacity: 1;
-  transform: scaleX(1);
+.VPNavBarTitle .title:hover .site-brand-mark,
+.VPNavBarTitle .title:focus-visible .site-brand-mark {
+  background: var(--site-accent-hover);
 }
 
 .VPNavBarMenu {
   align-items: center;
-  height: 44px;
-  gap: 10px;
+  height: 40px;
+  gap: 2px;
   padding: 0;
   border: 0;
   border-radius: 0;
@@ -171,42 +200,43 @@ html.theme-is-switching .site-layout :where(h1, h2, h3, p, a, button, strong, co
 
 .VPNavBar .VPNavBarMenuLink {
   position: relative;
-  height: 44px;
-  min-height: 44px;
-  padding: 0 16px;
+  height: 40px;
+  min-height: 40px;
+  padding: 0 13px;
   border-radius: 0;
   color: var(--site-text-muted);
-  font-size: 15px;
-  font-weight: 680;
-  letter-spacing: 0;
-  line-height: 44px;
+  font-size: 13px;
+  font-weight: 650;
+  letter-spacing: 0.015em;
+  line-height: 40px;
   transition: color 160ms ease;
 }
 
 .VPNavBar .VPNavBarMenuLink::after {
   position: absolute;
-  right: 16px;
-  bottom: 4px;
-  left: 16px;
-  height: 2px;
+  bottom: 1px;
+  left: 50%;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
   background: var(--site-accent);
   content: "";
   opacity: 0;
-  transform: scaleX(0);
-  transform-origin: left center;
-  transition: opacity 160ms ease, transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  transform: translate(-50%, 2px);
+  transition: opacity 160ms ease, transform 160ms ease;
 }
 
 .VPNavBar .VPNavBarMenuLink:hover,
 .VPNavBar .VPNavBarMenuLink.active {
   background: transparent;
-  color: var(--site-accent);
+  color: var(--site-text);
 }
 
 .VPNavBar .VPNavBarMenuLink:hover::after,
-.VPNavBar .VPNavBarMenuLink:focus-visible::after {
+.VPNavBar .VPNavBarMenuLink:focus-visible::after,
+.VPNavBar .VPNavBarMenuLink.active::after {
   opacity: 1;
-  transform: scaleX(1);
+  transform: translate(-50%, 0);
 }
 
 .VPNavBarSearch {
@@ -222,7 +252,7 @@ html.theme-is-switching .site-layout :where(h1, h2, h3, p, a, button, strong, co
 }
 
 .VPNavBar .content {
-  gap: 6px;
+  gap: 0;
 }
 
 .VPNav .VPSocialLink,
@@ -385,25 +415,14 @@ button.VPSwitch.VPSwitchAppearance > .check {
   grid-column: 1 / 7;
   grid-row: 2;
   align-self: center;
-  max-width: 10.5ch;
+  width: 100%;
+  height: clamp(172px, 16vw, 224px);
   margin: 0;
   color: var(--site-text);
   font-size: clamp(58px, 7.5vw, 96px);
   font-weight: 720;
   letter-spacing: -0.045em;
-  line-height: 1.03;
-  text-wrap: balance;
-}
-
-.home-title-reserve {
-  display: block;
-  visibility: hidden;
-}
-
-.home-title > .text-type {
-  position: absolute;
-  inset: 0;
-  display: block;
+  line-height: 0.9;
 }
 
 :lang(zh-CN) .home-title,
@@ -576,6 +595,7 @@ button.VPSwitch.VPSwitchAppearance > .check {
 
   .home-title {
     grid-column: 1 / 7;
+    height: 154px;
     font-size: clamp(52px, 6.5vw, 60px);
   }
 
@@ -609,11 +629,23 @@ button.VPSwitch.VPSwitchAppearance > .check {
 
 @media (max-width: 767.98px) {
   :root {
-    --site-nav-height: 68px;
+    --site-nav-height: 64px;
   }
 
   .VPNavBar {
-    backdrop-filter: saturate(125%) blur(14px);
+    backdrop-filter: none;
+  }
+
+  .VPNavBarTitle .title {
+    display: flex;
+    height: 48px;
+    min-height: 48px;
+    padding-right: 0;
+  }
+
+  .VPNavBarTitle .title > span:not(.site-brand-mark),
+  .site-brand-context {
+    display: none;
   }
 
   .VPNavBar:has(.InlineSiteSearch.is-expanded) .VPNavBarTitle,
@@ -638,9 +670,10 @@ button.VPSwitch.VPSwitchAppearance > .check {
   }
 
   .home-title {
-    max-width: 9ch;
+    width: min(100%, 8ch);
+    height: 142px;
     font-size: clamp(48px, 14vw, 64px);
-    line-height: 1.05;
+    line-height: 0.9;
   }
 
   .home-intro-copy {
@@ -673,15 +706,10 @@ button.VPSwitch.VPSwitchAppearance > .check {
 
 @media (max-width: 479px) {
   .home-title {
+    height: 118px;
     font-size: 48px;
   }
 
-}
-
-/* Home accent path */
-
-.home-title .text-type__cursor {
-  color: var(--site-spark-primary);
 }
 
 .home-actions .home-text-link {

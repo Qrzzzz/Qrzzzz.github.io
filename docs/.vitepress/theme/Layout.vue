@@ -329,6 +329,12 @@ onBeforeUnmount(() => {
     <HomeAsciiTrail v-if="clientReady && pageKind === 'home'" />
 
     <Layout>
+      <template #nav-bar-title-before>
+        <span class="site-brand-mark" aria-hidden="true">Q/</span>
+      </template>
+      <template #nav-bar-title-after>
+        <span class="site-brand-context" aria-hidden="true">tools / notes</span>
+      </template>
       <template #nav-bar-content-before>
         <InlineSearch />
       </template>
