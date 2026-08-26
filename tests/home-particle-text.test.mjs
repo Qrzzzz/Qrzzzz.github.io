@@ -21,5 +21,6 @@ test("renders the homepage name as accessible multiline particle text", () => {
   assert.match(particleText, /repelRadius:\s*132/);
   assert.match(particleText, /element\.addEventListener\("pointermove", handlePointerMove\)/);
   assert.match(particleText, /class="particle-text__fallback" aria-hidden="true"/);
-  assert.match(siteStyles, /\.home-title\s*\{[^}]*height:\s*clamp\(172px, 16vw, 224px\)/s);
+  assert.match(siteStyles, /\.home-title\s*\{[^}]*grid-column:\s*1 \/ 8[^}]*height:\s*clamp\(250px, 21\.5vw, 330px\)[^}]*font-size:\s*clamp\(96px, 11vw, 160px\)/s);
+  assert.match(siteStyles, /\.home-author\s*\{[^}]*margin-top:\s*0/s);
 });

@@ -150,7 +150,7 @@ html.theme-is-switching .site-layout :where(h1, h2, h3, p, a, button, strong, co
 .VPNavBarTitle .title {
   position: relative;
   display: flex;
-  width: 34px;
+  width: 50px;
   height: 52px;
   min-height: 52px;
   padding: 0;
@@ -174,26 +174,26 @@ html.theme-is-switching .site-layout :where(h1, h2, h3, p, a, button, strong, co
 }
 
 .site-brand-mark {
-  display: grid;
-  width: 34px;
-  height: 34px;
+  display: flex;
+  width: 50px;
+  height: 44px;
   align-self: center;
-  flex: 0 0 34px;
-  place-items: center;
-  border-radius: 7px;
-  background: var(--site-accent);
-  color: var(--site-accent-ink);
+  flex: 0 0 50px;
+  align-items: center;
+  background: transparent;
+  color: var(--site-accent);
   font-family: var(--site-font-mono);
-  font-size: 12px;
-  font-weight: 760;
-  letter-spacing: -0.12em;
+  font-size: 22px;
+  font-weight: 780;
+  letter-spacing: -0.16em;
   line-height: 1;
-  transition: background-color 160ms ease;
+  transition: color 160ms ease;
 }
 
 .VPNavBarTitle .title:hover .site-brand-mark,
 .VPNavBarTitle .title:focus-visible .site-brand-mark {
-  background: var(--site-accent-hover);
+  background: transparent;
+  color: var(--site-accent-hover);
 }
 
 .VPNavBarMenu {
@@ -411,13 +411,13 @@ button.VPSwitch.VPSwitchAppearance > .check {
   grid-template-columns: repeat(12, minmax(0, 1fr));
   align-content: start;
   column-gap: 22px;
-  padding: 64px 0 68px;
+  padding: 42px 0 48px;
 }
 
 .home-byline {
   grid-column: 1 / -1;
   grid-row: 1;
-  margin: 0 0 30px;
+  margin: 0 0 22px;
   color: var(--site-text-muted);
   font-size: 13px;
   font-weight: 650;
@@ -426,14 +426,14 @@ button.VPSwitch.VPSwitchAppearance > .check {
 
 .home-title {
   position: relative;
-  grid-column: 1 / 7;
+  grid-column: 1 / 8;
   grid-row: 2;
   align-self: center;
   width: 100%;
-  height: clamp(172px, 16vw, 224px);
+  height: clamp(250px, 21.5vw, 330px);
   margin: 0;
   color: var(--site-text);
-  font-size: clamp(58px, 7.5vw, 96px);
+  font-size: clamp(96px, 11vw, 160px);
   font-weight: 720;
   letter-spacing: -0.045em;
   line-height: 0.9;
@@ -452,7 +452,7 @@ button.VPSwitch.VPSwitchAppearance > .check {
   align-self: center;
   flex-direction: column;
   min-width: 0;
-  padding-block: 24px;
+  padding-block: 12px;
 }
 
 .home-deck {
@@ -528,7 +528,7 @@ button.VPSwitch.VPSwitchAppearance > .check {
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
   gap: 22px;
-  margin-top: auto;
+  margin-top: 0;
   border-top: 1px solid var(--site-line);
   padding: 44px 0 0;
 }
@@ -609,8 +609,8 @@ button.VPSwitch.VPSwitchAppearance > .check {
 
   .home-title {
     grid-column: 1 / 7;
-    height: 154px;
-    font-size: clamp(52px, 6.5vw, 60px);
+    height: 190px;
+    font-size: clamp(64px, 8vw, 78px);
   }
 
   .home-intro-copy {
@@ -676,22 +676,22 @@ button.VPSwitch.VPSwitchAppearance > .check {
   .home-intro {
     display: block;
     min-height: 0;
-    padding: 60px 0 54px;
+    padding: 42px 0 42px;
   }
 
   .home-byline {
-    margin-bottom: 30px;
+    margin-bottom: 22px;
   }
 
   .home-title {
-    width: min(100%, 8ch);
-    height: 142px;
-    font-size: clamp(48px, 14vw, 64px);
+    width: min(100%, 9ch);
+    height: 162px;
+    font-size: clamp(56px, 16vw, 72px);
     line-height: 0.9;
   }
 
   .home-intro-copy {
-    margin-top: 32px;
+    margin-top: 24px;
     padding: 0;
   }
 
@@ -720,8 +720,8 @@ button.VPSwitch.VPSwitchAppearance > .check {
 
 @media (max-width: 479px) {
   .home-title {
-    height: 118px;
-    font-size: 48px;
+    height: 142px;
+    font-size: 58px;
   }
 
 }
