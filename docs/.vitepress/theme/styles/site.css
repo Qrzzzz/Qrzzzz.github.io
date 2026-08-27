@@ -470,7 +470,7 @@ button.VPSwitch.VPSwitchAppearance > .check {
   flex-wrap: wrap;
   gap: 12px;
   margin-top: clamp(14px, 2.4vh, 22px);
-  margin-left: clamp(6px, 0.8vw, 14px);
+  margin-left: clamp(72px, 9vw, 116px);
 }
 
 .home-text-link {
@@ -621,7 +621,7 @@ button.VPSwitch.VPSwitchAppearance > .check {
 .home-actions .home-text-link {
   flex: 0 0 auto;
   min-height: 56px;
-  padding-inline: 24px;
+  padding-inline: 18px;
   border: 1px solid var(--site-line-strong);
   border-radius: 8px;
   background: var(--site-surface-subtle);
