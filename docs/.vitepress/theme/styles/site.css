@@ -438,24 +438,21 @@ button.VPSwitch.VPSwitchAppearance > .check {
 
 .home-intro {
   position: relative;
-  display: grid;
+  display: flex;
   flex: 1;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  align-content: center;
-  column-gap: 22px;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
   padding: clamp(48px, 7vh, 74px) 0;
 }
 
 .home-title {
   position: relative;
-  grid-column: 1 / 8;
-  grid-row: 2;
-  align-self: center;
   width: 100%;
-  height: clamp(320px, 27vw, 440px);
+  height: clamp(160px, 15vw, 250px);
   margin: 0;
   color: var(--site-text);
-  font-size: clamp(120px, 14.5vw, 220px);
+  font-size: clamp(104px, 11vw, 180px);
   font-weight: 720;
   letter-spacing: -0.045em;
   line-height: 0.9;
@@ -467,31 +464,13 @@ button.VPSwitch.VPSwitchAppearance > .check {
   letter-spacing: -0.012em;
 }
 
-.home-intro-copy {
-  display: flex;
-  grid-column: 8 / -1;
-  grid-row: 2;
-  align-self: center;
-  flex-direction: column;
-  min-width: 0;
-  padding-block: 12px;
-}
-
-.home-deck {
-  max-width: 660px;
-  margin: 0;
-  color: var(--site-text-muted);
-  font-size: clamp(22px, 2.2vw, 28px);
-  line-height: 1.56;
-  text-wrap: balance;
-}
-
 .home-actions {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   gap: 12px;
-  margin-top: 26px;
+  margin-top: clamp(14px, 2.4vh, 22px);
+  margin-left: clamp(6px, 0.8vw, 14px);
 }
 
 .home-text-link {
@@ -551,16 +530,6 @@ button.VPSwitch.VPSwitchAppearance > .check {
 @media (max-width: 959px) {
   .home-page {
     padding-inline: 28px;
-  }
-
-  .home-title {
-    grid-column: 1 / 7;
-    height: 220px;
-    font-size: clamp(72px, 9vw, 88px);
-  }
-
-  .home-intro-copy {
-    grid-column: 7 / -1;
   }
 
 }
@@ -628,33 +597,25 @@ button.VPSwitch.VPSwitchAppearance > .check {
   }
 
   .home-title {
-    width: min(100%, 9ch);
-    height: 174px;
-    font-size: clamp(62px, 17vw, 76px);
+    width: 100%;
+    height: 112px;
+    font-size: clamp(56px, 15.5vw, 66px);
     line-height: 0.9;
   }
 
-  .home-intro-copy {
-    margin-top: 24px;
-    padding: 0;
-  }
-
-  .home-deck {
-    font-size: 19px;
-  }
-
   .home-actions {
-    margin-top: 20px;
+    gap: 10px;
+    margin-top: 16px;
+    margin-left: 6px;
   }
 
 }
 
 @media (max-width: 479px) {
   .home-title {
-    height: 156px;
-    font-size: 64px;
+    height: 104px;
+    font-size: clamp(52px, 15vw, 60px);
   }
-
 }
 
 .home-actions .home-text-link {
@@ -666,6 +627,7 @@ button.VPSwitch.VPSwitchAppearance > .check {
   background: var(--site-surface-subtle);
   font-size: 16px;
   line-height: 1;
+  white-space: nowrap;
   transition:
     transform 140ms ease,
     border-color 140ms ease,
@@ -696,4 +658,19 @@ button.VPSwitch.VPSwitchAppearance > .check {
   border-color: var(--site-accent-hover);
   background: var(--site-accent-hover);
   color: var(--site-accent-ink);
+}
+
+@media (max-width: 479px) {
+  .home-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .home-actions .home-text-link {
+    width: 200px;
+    min-height: 48px;
+    justify-content: space-between;
+    padding-inline: 18px;
+    font-size: 14px;
+  }
 }

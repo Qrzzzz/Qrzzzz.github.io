@@ -10,17 +10,12 @@ import ParticleText from "./ParticleText.vue";
         class="home-title"
         aria-label="Cherry Chu"
       >
-        <ParticleText text="Cherry&#10;Chu" />
+        <ParticleText text="Cherry Chu" />
       </h1>
-      <div class="home-intro-copy">
-        <p class="home-deck">
-          Projects I build, documentation I maintain, and writing I want to find again.
-        </p>
-        <nav class="home-actions" aria-label="Primary destinations">
-          <a class="home-text-link" href="/library/">Browse the Library</a>
-          <a class="home-text-link" href="/works/">View the projects</a>
-        </nav>
-      </div>
+      <nav class="home-actions" aria-label="Primary destinations">
+        <a class="home-text-link" href="/library/">Browse the Library</a>
+        <a class="home-text-link" href="/works/">View the projects</a>
+      </nav>
     </section>
   </div>
 </template>
