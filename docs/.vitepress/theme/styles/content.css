@@ -1329,6 +1329,10 @@
   line-height: 1.82;
 }
 
+.vp-doc .excerpt-entry > .excerpt-quotation footer {
+  text-align: right;
+}
+
 .excerpt-entry--parallel {
   max-width: 46rem;
   border-inline-start: 0;

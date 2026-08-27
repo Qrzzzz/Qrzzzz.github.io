@@ -178,6 +178,10 @@ test("renders simple excerpts as standard body copy without an accent rail", () 
   );
   assert.match(
     styles,
+    /\.vp-doc \.excerpt-entry > \.excerpt-quotation footer\s*\{[^}]*text-align:\s*right;[^}]*\}/
+  );
+  assert.match(
+    styles,
     /@media \(max-width: 767px\)[\s\S]*?\.vp-doc \.excerpt-entry > \.excerpt-quotation p\s*\{[^}]*font-size:\s*16px;[^}]*\}/
   );
 });
