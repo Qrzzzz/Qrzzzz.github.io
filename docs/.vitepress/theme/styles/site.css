@@ -431,7 +431,7 @@ button.VPSwitch.VPSwitchAppearance > .check {
   display: flex;
   flex: 1;
   flex-direction: column;
-  width: min(100%, 1564px);
+  width: min(100%, var(--site-max));
   margin: 0 auto;
   padding: 0 32px;
 }

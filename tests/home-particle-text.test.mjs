@@ -28,7 +28,7 @@ test("renders the homepage name as accessible single-line particle text", () => 
   assert.match(particleText, /class="particle-text__fallback" aria-hidden="true"/);
   assert.match(siteStyles, /\.home-intro\s*\{[^}]*display:\s*flex[^}]*flex:\s*1[^}]*align-items:\s*flex-start[^}]*justify-content:\s*center/s);
   assert.doesNotMatch(siteStyles, /\.home-byline(?:\s|[>{.:#])/);
-  assert.match(siteStyles, /\.home-page\s*\{[^}]*width:\s*min\(100%, 1564px\)/s);
+  assert.match(siteStyles, /\.home-page\s*\{[^}]*width:\s*min\(100%, var\(--site-max\)\)/s);
   assert.match(siteStyles, /\.home-title\s*\{[^}]*width:\s*100%[^}]*height:\s*clamp\(160px, 15vw, 250px\)[^}]*font-size:\s*clamp\(104px, 11vw, 180px\)/s);
   assert.match(siteStyles, /\.home-actions\s*\{[^}]*align-items:\s*center[^}]*margin-top:\s*clamp\(14px, 2\.4vh, 22px\)[^}]*margin-left:\s*clamp\(6px, 0\.8vw, 14px\)/s);
   assert.doesNotMatch(siteStyles, /\.home-intro-copy(?:\s|[>{.:#])|\.home-deck(?:\s|[>{.:#])/);
