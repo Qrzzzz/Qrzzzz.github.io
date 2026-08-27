@@ -35,6 +35,8 @@
   --site-font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI Variable", "Segoe UI",
     "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC",
     "Noto Sans SC", sans-serif;
+  --site-font-brand: "Arial Black", "Avenir Next Heavy", "Segoe UI Black",
+    var(--site-font-sans);
   --site-font-mono: ui-monospace, "SFMono-Regular", "Cascadia Code", "Roboto Mono",
     Consolas, "Liberation Mono", monospace;
 

@@ -145,7 +145,7 @@ test("mounts direct animated theme and GitHub actions in the top bar", () => {
   assert.match(component, /theme-toggle__moon/);
   assert.doesNotMatch(component, /<select|<details/);
   assert.match(siteStyles, /\.VPNavBarTitle \.title\s*\{[^}]*width:\s*50px[^}]*height:\s*52px/s);
-  assert.match(siteStyles, /\.site-brand-mark\s*\{[^}]*background:\s*transparent[^}]*color:\s*var\(--site-accent\)[^}]*font-family:\s*var\(--site-font-mono\)[^}]*font-size:\s*22px/s);
+  assert.match(siteStyles, /\.site-brand-mark\s*\{[^}]*background:\s*transparent[^}]*color:\s*var\(--site-accent\)[^}]*font-family:\s*var\(--site-font-brand\)[^}]*font-size:\s*23px[^}]*font-weight:\s*900[^}]*letter-spacing:\s*-0\.04em/s);
   assert.match(siteStyles, /\.VPNavBar::before\s*\{[^}]*backdrop-filter:\s*saturate\(135%\) blur\(22px\)[^}]*mask-image:\s*linear-gradient\(to bottom/s);
   assert.match(siteStyles, /\.VPNavBar::after\s*\{[^}]*backdrop-filter:\s*saturate\(118%\) blur\(8px\)[^}]*mask-image:\s*linear-gradient\(to bottom/s);
   assert.doesNotMatch(siteStyles, /data-page-kind="home"[^}]*\.VPNavBar\.home\.top/);

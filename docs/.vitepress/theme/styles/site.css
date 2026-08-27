@@ -182,10 +182,10 @@ html.theme-is-switching .site-layout :where(h1, h2, h3, p, a, button, strong, co
   align-items: center;
   background: transparent;
   color: var(--site-accent);
-  font-family: var(--site-font-mono);
-  font-size: 22px;
-  font-weight: 780;
-  letter-spacing: -0.16em;
+  font-family: var(--site-font-brand);
+  font-size: 23px;
+  font-weight: 900;
+  letter-spacing: -0.04em;
   line-height: 1;
   transition: color 160ms ease;
 }
