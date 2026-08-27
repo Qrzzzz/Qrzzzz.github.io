@@ -135,7 +135,14 @@ test("keeps every excerpt in its own titleless Markdown page", () => {
   assert.match(nineteenth, /Und verloren sei uns der Tag, wo nicht Ein Mal getanzt wurde!/);
   assert.match(nineteenth, /<h2>流传意译<\/h2>/);
   assert.match(nineteenth, /每一个不曾起舞的日子都是对生命的辜负。/);
-  assert.match(nineteenth, /Von alten und neuen Tafeln<\/a>）第 23 节/);
+  assert.match(
+    nineteenth,
+    /<figcaption lang="de">Friedrich Nietzsche, <cite>Also sprach Zarathustra<\/cite>, Dritter Teil, „<a [^>]+>Von alten und neuen Tafeln<\/a>“, § 23<\/figcaption>/
+  );
+  assert.match(
+    nineteenth,
+    /<cite>弗里德里希·尼采《查拉图斯特拉如是说》，第三部〈论旧榜与新榜〉第 23 节<\/cite>/
+  );
   assert.match(styles, /\.vp-doc \.excerpt-entry__heading\s*\{[\s\S]*?clip-path: inset\(50%\)/);
   assert.match(styles, /\.excerpt-renderings\s*\{[\s\S]*?grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
 });
@@ -187,6 +194,14 @@ test("renders a single translation across the full excerpt width", () => {
   assert.match(
     styles,
     /\.excerpt-renderings--single\s*\{[^}]*grid-template-columns:\s*minmax\(0, 1fr\);[^}]*\}/
+  );
+  assert.match(
+    styles,
+    /\.vp-doc \.excerpt-source figcaption\s*\{[^}]*text-align:\s*right;[^}]*\}/
+  );
+  assert.match(
+    styles,
+    /\.vp-doc \.excerpt-rendering cite\s*\{[^}]*text-align:\s*right;[^}]*\}/
   );
 });
 

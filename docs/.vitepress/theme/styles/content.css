@@ -1366,6 +1366,7 @@
   font-size: 11px;
   letter-spacing: 0.04em;
   line-height: 1.6;
+  text-align: right;
 }
 
 .excerpt-renderings {
@@ -1406,6 +1407,7 @@
   color: var(--site-text-muted);
   font-size: 13px;
   font-style: normal;
+  text-align: right;
 }
 
 .project-docs-sync:not(.sync-notice) {
