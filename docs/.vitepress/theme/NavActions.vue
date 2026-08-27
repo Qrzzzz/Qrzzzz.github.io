@@ -124,9 +124,11 @@ onBeforeUnmount(() => {
 }
 
 .theme-toggle:hover,
-.nav-github:hover {
-  background: var(--site-surface-subtle);
-  color: var(--site-accent);
+.theme-toggle:focus-visible,
+.nav-github:hover,
+.nav-github:focus-visible {
+  background: var(--site-accent-soft);
+  color: var(--site-accent-hover);
 }
 
 .nav-github::after {
@@ -160,7 +162,7 @@ onBeforeUnmount(() => {
   border-radius: 7px;
   background: transparent;
   box-shadow: none;
-  color: var(--site-text-muted);
+  color: inherit;
   transition:
     color 250ms ease,
     transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
@@ -169,6 +171,11 @@ onBeforeUnmount(() => {
 .theme-toggle.is-dark .theme-toggle__thumb {
   color: var(--site-accent);
   transform: rotate(8deg);
+}
+
+.theme-toggle:hover .theme-toggle__thumb,
+.theme-toggle:focus-visible .theme-toggle__thumb {
+  color: var(--site-accent-hover);
 }
 
 .theme-toggle__icon {

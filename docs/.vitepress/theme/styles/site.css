@@ -130,7 +130,29 @@ html.theme-is-switching .site-layout :where(h1, h2, h3, p, a, button, strong, co
 
 .VPNavBar .container {
   position: relative;
-  max-width: 1500px;
+  max-width: calc(var(--site-max) + 64px);
+}
+
+@media (min-width: 960px) {
+  .site-layout .VPNavBar.has-sidebar > .wrapper {
+    padding: 0 32px;
+  }
+
+  .site-layout .VPNavBar.has-sidebar .container {
+    max-width: calc(var(--site-max) + 64px);
+  }
+
+  .site-layout .VPNavBar.has-sidebar .container > .title {
+    position: static;
+    width: auto;
+    height: calc(var(--vp-nav-height) - 1px);
+    padding: 0;
+  }
+
+  .site-layout .VPNavBar.has-sidebar .content {
+    position: static;
+    padding: 0;
+  }
 }
 
 .VPNavBar .content {
@@ -149,16 +171,20 @@ html.theme-is-switching .site-layout :where(h1, h2, h3, p, a, button, strong, co
 
 .VPNavBarTitle .title {
   position: relative;
-  display: flex;
-  width: 50px;
-  height: 52px;
-  min-height: 52px;
+  display: grid;
+  width: 40px;
+  height: 40px;
+  min-height: 40px;
+  place-items: center;
   padding: 0;
   border-bottom: 0;
+  border-radius: 8px;
+  background: transparent;
   color: var(--site-text);
   font-family: var(--site-font-sans);
   line-height: 1;
   text-decoration: none;
+  transition: background-color 160ms ease;
 }
 
 .VPNavBarTitle .title > span:not(.site-brand-mark) {
@@ -174,12 +200,11 @@ html.theme-is-switching .site-layout :where(h1, h2, h3, p, a, button, strong, co
 }
 
 .site-brand-mark {
-  display: flex;
-  width: 50px;
-  height: 44px;
-  align-self: center;
-  flex: 0 0 50px;
-  align-items: center;
+  display: grid;
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  place-items: center;
   background: transparent;
   color: var(--site-accent);
   font-family: var(--site-font-brand);
@@ -187,7 +212,13 @@ html.theme-is-switching .site-layout :where(h1, h2, h3, p, a, button, strong, co
   font-weight: 900;
   letter-spacing: -0.04em;
   line-height: 1;
+  transform: translateY(-1px);
   transition: color 160ms ease;
+}
+
+.VPNavBarTitle .title:hover,
+.VPNavBarTitle .title:focus-visible {
+  background: var(--site-accent-soft);
 }
 
 .VPNavBarTitle .title:hover .site-brand-mark,
@@ -572,8 +603,8 @@ button.VPSwitch.VPSwitchAppearance > .check {
 
   .VPNavBarTitle .title {
     display: flex;
-    height: 48px;
-    min-height: 48px;
+    height: 40px;
+    min-height: 40px;
     padding-right: 0;
   }
 
