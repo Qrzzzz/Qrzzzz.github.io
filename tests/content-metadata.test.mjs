@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
+import path from "node:path";
 import test from "node:test";
 import {
   parseFrontmatterDocument,
@@ -28,10 +29,22 @@ function record(overrides = {}) {
 
 test("accepts every current Library item and keeps the index pages out", () => {
   const result = validateLibraryContent(process.cwd());
+  const markdownFiles = ["notes", "prompt-collection", "excerpts"].flatMap((directory) =>
+    readdirSync(`docs/${directory}`, { recursive: true })
+      .filter((file) => file.endsWith(".md"))
+      .map((file) => `${directory}/${file.replaceAll("\\", "/")}`)
+  );
 
   assert.deepEqual(result.errors, []);
-  assert.equal(result.records.length, 33);
-  assert.equal(result.indexes.length, 3);
+  assert.ok(markdownFiles.length > 0);
+  assert.deepEqual(
+    result.records.map((record) => record.relativePath).sort(),
+    markdownFiles.filter((file) => path.basename(file) !== "index.md").sort()
+  );
+  assert.deepEqual(
+    result.indexes.map((record) => record.relativePath).sort(),
+    markdownFiles.filter((file) => path.basename(file) === "index.md").sort()
+  );
 });
 
 test("parses scalar and list frontmatter fields", () => {

@@ -33,7 +33,6 @@ test("imports a README into a commit-bound in-site project page", () => {
     summary: "Demo summary.",
     status: "stable",
     statusLabel: "稳定版",
-    statusEvidence: "Demo tagline",
     sourcePath: "README.md",
     homepage: "https://example.com"
   };
@@ -41,7 +40,7 @@ test("imports a README into a commit-bound in-site project page", () => {
     const entry = importProjectReadme({ project, sourceRoot: root, outputRoot: output, commitSha: SHA, importedAt: IMPORTED_AT });
     const page = readFileSync(output, "utf8");
     assert.equal(entry.sourceMode, "readme");
-    assert.equal(entry.statusEvidence, "Demo tagline");
+    assert.equal(entry.status, "stable");
     assert.match(page, new RegExp(`^contentFormat: "${CONTENT_FORMAT}"$`, "m"));
     assert.match(page, new RegExp(`^sourceCommit: "${SHA}"$`, "m"));
     assert.match(page, /This page is synchronized from upstream/);
@@ -82,7 +81,7 @@ test("preserves the full upstream README layout while pinning relative links", a
     "",
     "## ✨ Features",
     "",
-    `* ${project.statusEvidence}`,
+    "* BiliDownloader.v2.3.exe",
     "* Line one  ",
     "  Line two",
     "",
@@ -141,7 +140,6 @@ test("uses an explicit, non-README fallback only while README is absent", () => 
     summary: "Demo summary.",
     status: "online",
     statusLabel: "在线作品",
-    statusEvidence: "<title>Demo</title>",
     sourcePath: "index.html",
     homepage: "https://example.com",
     readmeFallback: true
@@ -164,25 +162,33 @@ test("uses an explicit, non-README fallback only while README is absent", () => 
   }
 });
 
-test("fails when upstream no longer supports the configured status label", () => {
+test("imports new releases and rewritten README copy without pinning a version label", () => {
   const root = fixture();
   const output = path.join(root, "output/index.md");
-  const project = {
-    slug: "demo",
-    repository: "Qrzzzz/demo",
-    title: "Demo Project",
-    description: "Demo description.",
-    summary: "Demo summary.",
-    status: "stable",
-    statusLabel: "稳定版",
-    statusEvidence: "Current stable version: 2.0",
-    sourcePath: "README.md",
-    homepage: "https://example.com"
-  };
+  const project = PROJECT_READMES.find((entry) => entry.slug === "bili-downloader");
   try {
+    for (const source of [
+      "# Bili Downloader\n\nDownload BiliDownloader.v9.0.exe.\n",
+      "# Bili Downloader\n\nThe download section has moved.\n"
+    ]) {
+      writeFileSync(path.join(root, "README.md"), source);
+      const entry = importProjectReadme({ project, sourceRoot: root, outputRoot: output, commitSha: SHA, importedAt: IMPORTED_AT });
+      const page = readFileSync(output, "utf8");
+      assert.ok(page.includes(source.trim()));
+      assert.equal(entry.statusLabel, "Stable · Windows");
+      assert.equal(entry.commit, SHA);
+      assert.doesNotMatch(page, /Stable 2\.3/);
+    }
+
+    // Relaxing prose checks must not bypass source identity or missing-file errors.
     assert.throws(
-      () => importProjectReadme({ project, sourceRoot: root, outputRoot: output, commitSha: SHA, importedAt: IMPORTED_AT }),
-      /已不再包含状态依据/
+      () => importProjectReadme({ project, sourceRoot: root, outputRoot: output, commitSha: "invalid" }),
+      /commit SHA 无效/
+    );
+    rmSync(path.join(root, "README.md"));
+    assert.throws(
+      () => importProjectReadme({ project, sourceRoot: root, outputRoot: output, commitSha: SHA }),
+      /缺少 README\.md/
     );
   } finally {
     rmSync(root, { recursive: true, force: true });

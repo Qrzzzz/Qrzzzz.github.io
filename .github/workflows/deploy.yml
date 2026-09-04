@@ -48,10 +48,12 @@ jobs:
         run: |
           npm run docs:test
           npm run docs:check
-          npm run docs:output-test
 
       - name: Build with VitePress
         run: npm run docs:build
+
+      - name: Test production output and isolated fixtures
+        run: npm run docs:output-test
 
       - name: Validate routes and Pages boundary
         run: npm run docs:check -- --dist

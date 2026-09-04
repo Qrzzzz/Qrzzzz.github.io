@@ -26,21 +26,16 @@ function sourcePage(url, frontmatter = {}) {
   };
 }
 
-test("normalizes all 33 Library records from one metadata source", () => {
+test("normalizes every Library record without losing or reclassifying content", () => {
   const { records } = collectLibraryRecords(process.cwd());
   const items = normalizeLibraryPages(
     records.map(({ url, frontmatter }) => ({ url, frontmatter }))
   );
-  const counts = Object.fromEntries(
-    ["article", "prompt", "excerpt"].map((kind) => [
-      kind,
-      items.filter((item) => item.kind === kind).length
-    ])
-  );
-
   assert.equal(items.length, records.length);
-  assert.deepEqual(counts, { article: 4, prompt: 10, excerpt: 19 });
-  assert.equal(items[0].updated, "2026-09-04");
+  assert.deepEqual(
+    items.map((item) => [item.url, item.kind]).sort(),
+    records.map((record) => [record.url, record.expectedKind]).sort()
+  );
   assert.equal(new Set(items.map((item) => item.url)).size, items.length);
 });
 

@@ -5,6 +5,7 @@ import path from "node:path";
 export const CONTENT_FORMAT = "site-writing-style@1";
 export const MANIFEST_PATH = ".cache/project-readmes-manifest.json";
 
+// Site-maintained, version-independent labels; release details come from the upstream README.
 export const PROJECT_READMES = Object.freeze([
   {
     slug: "lyrics-card-generator-android",
@@ -14,7 +15,6 @@ export const PROJECT_READMES = Object.freeze([
     summary: "Create and export lyric cards offline on Android, with NetEase Cloud Music import and live preview.",
     status: "released",
     statusLabel: "Released · Android",
-    statusEvidence: "releases/latest",
     sourcePath: "README.md",
     homepage: "https://github.com/Qrzzzz/lyrics-card-generator-android/releases/latest"
   },
@@ -26,7 +26,6 @@ export const PROJECT_READMES = Object.freeze([
     summary: "Turn an idle phone into a low-power dashboard for time, weather, markets, and device status.",
     status: "online",
     statusLabel: "Live · Web",
-    statusEvidence: "Cyber StandBy Dashboard",
     sourcePath: "index.html",
     homepage: "https://qrzzzz.github.io/second-glow/",
     readmeFallback: true
@@ -39,7 +38,6 @@ export const PROJECT_READMES = Object.freeze([
     summary: "Generate and validate passwords against a site's exact character, position, and repetition rules—all in the browser.",
     status: "maintained",
     statusLabel: "Maintained · Web tool",
-    statusEvidence: "在线地址：<https://qrzzzz.github.io/password-generator/>",
     sourcePath: "README.md",
     homepage: "https://qrzzzz.github.io/password-generator/"
   },
@@ -50,8 +48,7 @@ export const PROJECT_READMES = Object.freeze([
     description: "Download accessible Bilibili videos locally on Windows.",
     summary: "Download accessible Bilibili videos on Windows, with sign-in, multi-part handling, quality selection, and retries.",
     status: "stable",
-    statusLabel: "Stable 2.3 · Windows",
-    statusEvidence: "BiliDownloader.v2.3.exe",
+    statusLabel: "Stable · Windows",
     sourcePath: "README.md",
     preserveReadmeFormatting: true,
     homepage: "https://github.com/Qrzzzz/bili-downloader/releases/latest"
@@ -64,7 +61,6 @@ export const PROJECT_READMES = Object.freeze([
     summary: "Encrypt text with AES-256-GCM or encode it as Base64, entirely offline on Android.",
     status: "released",
     statusLabel: "Released · Android",
-    statusEvidence: "releases/latest",
     sourcePath: "README.md",
     homepage: "https://github.com/Qrzzzz/AegisVaultMobile/releases/latest"
   },
@@ -76,7 +72,6 @@ export const PROJECT_READMES = Object.freeze([
     summary: "A deliberately overbuilt parody of Chinese AI corporate websites, with no backend or data collection.",
     status: "online",
     statusLabel: "Live experiment · Web",
-    statusEvidence: "GitHub Pages",
     sourcePath: "README.md",
     homepage: "https://qrzzzz.github.io/AI-slop-site/"
   }
@@ -314,12 +309,6 @@ export function importProjectReadme({ project, sourceRoot, outputRoot, commitSha
   const sourceFile = path.join(absoluteSource, ...project.sourcePath.split("/"));
   if (!existsSync(sourceFile)) throw new Error(`${project.repository} 缺少 ${project.sourcePath}。`);
   const rawSource = readFileSync(sourceFile, "utf8");
-  if (project.statusEvidence && !rawSource.includes(project.statusEvidence)) {
-    throw new Error(
-      `${project.repository} 的 ${project.sourcePath} 已不再包含状态依据：${project.statusEvidence}。` +
-      "请重新核对项目状态后再更新站内标签。"
-    );
-  }
   const hasReadme = !project.readmeFallback;
   let body;
   if (hasReadme) {
@@ -355,7 +344,6 @@ export function importProjectReadme({ project, sourceRoot, outputRoot, commitSha
     sourceMode: hasReadme ? "readme" : "fallback",
     status: project.status,
     statusLabel: project.statusLabel,
-    statusEvidence: project.statusEvidence,
     homepage: project.homepage,
     commit: resolvedSha
   };

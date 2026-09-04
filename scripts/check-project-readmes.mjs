@@ -35,9 +35,8 @@ try {
     if (!/^[0-9a-f]{40}$/i.test(entry.commit)) failures.push(`${project.slug} 的 commit SHA 无效。`);
     if (entry.sourcePath !== project.sourcePath) failures.push(`${project.slug} 的来源文件不正确。`);
     if (entry.status !== project.status || entry.statusLabel !== project.statusLabel) {
-      failures.push(`${project.slug} 没有保留经 README 核对的项目状态。`);
+      failures.push(`${project.slug} 没有保留站内维护的项目状态。`);
     }
-    if (entry.statusEvidence !== project.statusEvidence) failures.push(`${project.slug} 没有记录项目状态依据。`);
     const expectedMode = project.readmeFallback ? "fallback" : "readme";
     if (entry.sourceMode !== expectedMode) failures.push(`${project.slug} 的同步模式不正确。`);
 
@@ -95,7 +94,7 @@ try {
     console.error(`[projects:check] 失败（${failures.length} 项）：\n- ${failures.join("\n- ")}`);
     process.exit(1);
   }
-  console.log(`[projects:check] 通过：${entries.length} 个项目页均锁定 README/回退来源与状态${checkDist ? "，构建路由完整" : ""}。`);
+  console.log(`[projects:check] 通过：${entries.length} 个项目页均锁定 README/回退来源并保留站内状态${checkDist ? "，构建路由完整" : ""}。`);
 } catch (error) {
   console.error(`[projects:check] ${error instanceof Error ? error.message : error}`);
   process.exit(1);

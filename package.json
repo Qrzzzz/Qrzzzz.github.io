@@ -5,7 +5,7 @@
   "type": "module",
   "description": "Source for the Qrzzzz personal site.",
   "scripts": {
-    "check": "npm run docs:test && npm run docs:content-check && npm run docs:check && npm run docs:output-test && npm run docs:build && npm run docs:navigation-test && npm run docs:check -- --dist",
+    "check": "npm run docs:test && npm run docs:content-check && npm run docs:check && npm run docs:build && npm run docs:output-test && npm run docs:navigation-test && npm run docs:check -- --dist",
     "docs:pull": "node scripts/pull-project-docs.mjs",
     "docs:import": "node scripts/import-lyrics-card-docs.mjs",
     "docs:check": "node scripts/check-project-docs.mjs",

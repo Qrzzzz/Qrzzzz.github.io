@@ -1,22 +1,19 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
 import { generatedManifest } from "./lib/lyrics-card-docs.mjs";
 
 const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const markdownFixture = path.join(repositoryRoot, "docs/__vitepress-output-test.md");
-const publicFixtureRoot = path.join(repositoryRoot, "docs/public/__vitepress-output-test");
-const publicFixture = path.join(publicFixtureRoot, "manual.pdf");
-const outputRoot = path.join(repositoryRoot, ".cache/vitepress-output-test");
-const outputHtml = path.join(outputRoot, "__vitepress-output-test.html");
-const outputPdf = path.join(outputRoot, "__vitepress-output-test/manual.pdf");
+const outputRoot = path.join(repositoryRoot, "docs/.vitepress/dist");
+const cacheRoot = path.join(repositoryRoot, ".cache");
 const excerptHtml = path.join(outputRoot, "excerpts/2026-07-17-03.html");
 const vitepressBin = path.join(repositoryRoot, "node_modules/vitepress/bin/vitepress.js");
 const pdfFixture = "%PDF-1.4\n% VitePress public attachment fixture\n";
 const releaseLanguages = ["zh-CN", "zh-TW", "en", "fr", "ja", "es"];
+let fixtureRoot;
 
 function routeHtml(route) {
   const relative = route.replace(/^\/+|\/+$/g, "");
@@ -28,10 +25,24 @@ function escapeRegExp(value) {
 }
 
 try {
-  rmSync(outputRoot, { recursive: true, force: true });
+  assert.ok(existsSync(path.join(outputRoot, "index.html")), "请先运行 npm run docs:build，再验收生产构建产物。");
+  mkdirSync(cacheRoot, { recursive: true });
+  fixtureRoot = mkdtempSync(path.join(cacheRoot, "vitepress-output-test-"));
+  const fixtureConfigRoot = path.join(fixtureRoot, ".vitepress");
+  const fixtureOutput = path.join(fixtureConfigRoot, "dist");
+  const publicFixtureRoot = path.join(fixtureRoot, "public/__vitepress-output-test");
+  const siteConfigImport = path.relative(fixtureConfigRoot, path.join(repositoryRoot, "docs/.vitepress/config.mts")).replaceAll("\\", "/");
+  mkdirSync(fixtureConfigRoot, { recursive: true });
+  // Share the real Markdown settings without loading the full site's pages or theme.
+  writeFileSync(
+    path.join(fixtureConfigRoot, "config.mts"),
+    `import siteConfig from ${JSON.stringify(siteConfigImport)};\n` +
+    `export default { lang: siteConfig.lang, base: siteConfig.base, markdown: siteConfig.markdown };\n`,
+    "utf8"
+  );
   mkdirSync(publicFixtureRoot, { recursive: true });
   writeFileSync(
-    markdownFixture,
+    path.join(fixtureRoot, "index.md"),
     `# 锚点与附件验收
 
 [中文标题](#中文标题) · [第二个重复标题](#重复-1) · [下载 PDF](/__vitepress-output-test/manual.pdf)
@@ -44,17 +55,19 @@ try {
 `,
     "utf8"
   );
-  writeFileSync(publicFixture, pdfFixture, "utf8");
+  writeFileSync(path.join(publicFixtureRoot, "manual.pdf"), pdfFixture, "utf8");
 
-  const build = spawnSync(process.execPath, [vitepressBin, "build", "docs", "--outDir", outputRoot], {
+  const build = spawnSync(process.execPath, [vitepressBin, "build", fixtureRoot], {
     cwd: repositoryRoot,
     encoding: "utf8",
     stdio: ["ignore", "pipe", "pipe"]
   });
   if (build.error || build.status !== 0) {
-    throw new Error(`VitePress 验收构建失败：\n${build.stderr || build.stdout || build.error}`);
+    throw new Error(`VitePress 单页样例构建失败：\n${build.stderr || build.stdout || build.error}`);
   }
 
+  const outputHtml = path.join(fixtureOutput, "index.html");
+  const outputPdf = path.join(fixtureOutput, "__vitepress-output-test/manual.pdf");
   assert.ok(existsSync(outputHtml), "验收构建缺少 HTML 页面");
   const html = readFileSync(outputHtml, "utf8");
   assert.match(html, /id="中文标题"/, "中文标题锚点不稳定");
@@ -128,12 +141,13 @@ try {
   assert.match(releaseArchiveHtml, /class="release-archive"/, "版本档案缺少可见版本列表");
   assert.match(releaseArchiveHtml, /class="project-docs-sync import-source"/, "版本档案缺少可见来源信息");
 
-  console.log("[docs:output-test] 通过：锚点、public PDF、六语 html lang、同步说明与可见来源信息均有效。");
+  console.log("[docs:output-test] 通过：独立单页样例的锚点与 public PDF 有效；生产产物的六语 html lang、偶拾排版、同步说明与可见来源信息均有效。");
 } catch (error) {
   console.error(`[docs:output-test] ${error instanceof Error ? error.message : error}`);
   process.exitCode = 1;
 } finally {
-  rmSync(markdownFixture, { force: true });
-  rmSync(publicFixtureRoot, { recursive: true, force: true });
-  rmSync(outputRoot, { recursive: true, force: true });
+  if (fixtureRoot) {
+    assert.equal(path.dirname(path.resolve(fixtureRoot)), cacheRoot, "样例清理路径必须位于本站 .cache 内。");
+    rmSync(fixtureRoot, { recursive: true, force: true });
+  }
 }
