@@ -26,6 +26,7 @@ const sixteenth = readFileSync("docs/excerpts/2026-08-24-01.md", "utf8");
 const seventeenth = readFileSync("docs/excerpts/2026-08-24-02.md", "utf8");
 const eighteenth = readFileSync("docs/excerpts/2026-08-24-03.md", "utf8");
 const nineteenth = readFileSync("docs/excerpts/2026-08-25-01.md", "utf8");
+const twentieth = readFileSync("docs/excerpts/2026-09-04-01.md", "utf8");
 
 const excerptPages = [
   first,
@@ -46,7 +47,8 @@ const excerptPages = [
   sixteenth,
   seventeenth,
   eighteenth,
-  nineteenth
+  nineteenth,
+  twentieth
 ];
 
 const excerptSources = readdirSync("docs/excerpts", { withFileTypes: true })
@@ -145,6 +147,28 @@ test("keeps every excerpt in its own titleless Markdown page", () => {
   );
   assert.match(styles, /\.vp-doc \.excerpt-entry__heading\s*\{[\s\S]*?clip-path: inset\(50%\)/);
   assert.match(styles, /\.excerpt-renderings\s*\{[\s\S]*?grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
+});
+
+test("preserves the Tim Cook report and formats its source as an excerpt attribution", () => {
+  assert.match(twentieth, /<blockquote class="excerpt-quotation" lang="en">/);
+  const paragraphs = [...twentieth.matchAll(/<p>([\s\S]*?)<\/p>/g)].map((match) => match[1]);
+  assert.equal(paragraphs.length, 6);
+  assert.match(paragraphs[0], /^That shareholder proposal was rejected by Apple's shareholders, receiving just 2\.95 percent of the vote\./);
+  assert.match(paragraphs[1], /Apple plans on having 100 percent of its power come from green sources/);
+  assert.match(paragraphs[2], /commit right then and there to doing only those things that were profitable\./);
+  assert.match(paragraphs[3], /a return on investment \(ROI\) was not the primary consideration on such issues\./);
+  assert.equal(
+    paragraphs[4],
+    '<strong>“When we work on making our devices accessible by the blind,” he said, “I don\'t consider the bloody ROI.”</strong> He said that the same thing about environmental issues, worker safety, and other areas where Apple is a leader.'
+  );
+  assert.match(paragraphs[5], /the usual metered and controlled way he speaks\.$/);
+  assert.match(
+    twentieth,
+    /<footer>Bryan Chaffin, <cite><a href="https:\/\/www\.macobserver\.com\/news\/tim-cook-rejects-ncppr-politics\/">“Tim Cook Soundly Rejects Politics of the NCPPR, Suggests Group Sell Apple's Stock”<\/a><\/cite>, <cite>The Mac Observer<\/cite>, February 28, 2014\./
+  );
+  assert.match(twentieth, /<span lang="zh-CN">报道背景：Apple Inc\. 2014 年度股东大会问答环节。/);
+  assert.match(twentieth, /ROI 并非所有决策的首要标准。<\/span><\/footer>/);
+  assert.doesNotMatch(twentieth, /utm_source=|&#x20;|\*\*出处\*\*/);
 });
 
 test("keeps every excerpt attribution free of leading dashes", () => {
