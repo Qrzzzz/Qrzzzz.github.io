@@ -50,9 +50,10 @@ export const PROJECT_READMES = Object.freeze([
     description: "Download accessible Bilibili videos locally on Windows.",
     summary: "Download accessible Bilibili videos on Windows, with sign-in, multi-part handling, quality selection, and retries.",
     status: "stable",
-    statusLabel: "Stable 1.1 · Windows",
-    statusEvidence: "当前稳定版本：**1.1**",
+    statusLabel: "Stable 2.3 · Windows",
+    statusEvidence: "BiliDownloader.v2.3.exe",
     sourcePath: "README.md",
+    preserveReadmeFormatting: true,
     homepage: "https://github.com/Qrzzzz/bili-downloader/releases/latest"
   },
   {
@@ -262,8 +263,11 @@ function breadcrumb(project) {
 function syncNotice(project, commitSha, hasReadme) {
   const repositoryUrl = `https://github.com/${project.repository}`;
   const sourceUrl = `${repositoryUrl}/blob/${commitSha}/${encodePath(project.sourcePath)}`;
+  const readmeHandling = project.preserveReadmeFormatting
+    ? "preserves the upstream content and formatting, rewriting only relative links"
+    : "rewrites relative links and adapts formatting";
   const explanation = hasReadme
-    ? `The content follows <a href="${sourceUrl}"><code>README.md</code></a> in the source repository. This site only rewrites relative links and adapts formatting during synchronization; it does not maintain a separate copy.`
+    ? `The content follows <a href="${sourceUrl}"><code>README.md</code></a> in the source repository. This site ${readmeHandling} during synchronization; it does not maintain a separate copy.`
     : `The source repository does not currently contain a README. This page is generated only from the pinned <a href="${sourceUrl}"><code>${escapeHtml(project.sourcePath)}</code></a>, the live entry point, and an explicit project summary; supplemental copy is not presented as an upstream README.`;
   return `<aside class="project-docs-sync sync-notice" aria-label="Synchronization notice" lang="en">
   <strong class="sync-notice__title">${hasReadme ? "This page is synchronized from upstream" : "This page uses a transparent fallback"}</strong>
@@ -319,9 +323,10 @@ export function importProjectReadme({ project, sourceRoot, outputRoot, commitSha
   const hasReadme = !project.readmeFallback;
   let body;
   if (hasReadme) {
-    body = withoutAlignmentWrapper(withoutFrontmatter(rawSource));
-    body = normalizeReadme(rewriteReadmeLinks(body, { repository: project.repository, commitSha: resolvedSha }));
-    body = adaptReadmeHeader(body, project);
+    body = rewriteReadmeLinks(withoutFrontmatter(rawSource), { repository: project.repository, commitSha: resolvedSha });
+    if (!project.preserveReadmeFormatting) {
+      body = adaptReadmeHeader(normalizeReadme(withoutAlignmentWrapper(body)), project);
+    }
   } else {
     const readmePath = path.join(absoluteSource, "README.md");
     if (existsSync(readmePath)) {
@@ -330,8 +335,12 @@ export function importProjectReadme({ project, sourceRoot, outputRoot, commitSha
     body = fallbackBody(project);
   }
 
+  const notice = syncNotice(project, resolvedSha, hasReadme);
+  const content = hasReadme && project.preserveReadmeFormatting
+    ? `${body.trim()}\n\n${notice}`
+    : insertAfterLead(body, notice).trim();
   const page = `${frontmatter(project, resolvedSha)}\n\n${breadcrumb(project)}\n\n` +
-    `${insertAfterLead(body, syncNotice(project, resolvedSha, hasReadme)).trim()}\n\n` +
+    `${content}\n\n` +
     `${sourceInfo(project, resolvedSha, importedAt)}\n`;
   const absoluteOutput = path.resolve(outputRoot);
   mkdirSync(path.dirname(absoluteOutput), { recursive: true });

@@ -3,7 +3,8 @@ import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "nod
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
-import { CONTENT_FORMAT, importProjectReadme } from "../scripts/lib/project-readmes.mjs";
+import { createMarkdownRenderer } from "vitepress";
+import { CONTENT_FORMAT, PROJECT_READMES, importProjectReadme } from "../scripts/lib/project-readmes.mjs";
 
 const SHA = "b".repeat(40);
 const IMPORTED_AT = "2026-08-19T00:00:00.000Z";
@@ -48,6 +49,81 @@ test("imports a README into a commit-bound in-site project page", () => {
     assert.match(page, new RegExp(`github\.com/Qrzzzz/demo/blob/${SHA}/README\.en\.md`));
     assert.match(page, /^- Item$/m);
     assert.match(page, new RegExp(`github\.com/Qrzzzz/demo/commit/${SHA}`));
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("preserves the full upstream README layout while pinning relative links", async () => {
+  const root = fixture();
+  const output = path.join(root, "output/index.md");
+  const project = { ...PROJECT_READMES.find((entry) => entry.slug === "bili-downloader") };
+  const source = [
+    '<div align="center">',
+    "",
+    "# 📺 Original heading",
+    "",
+    "### Original tagline",
+    "",
+    "**Original summary**",
+    "",
+    '<p><a href="./docs/releases/v2.3.md">Release notes</a> · <a href="#features">Features</a></p>',
+    "",
+    "![Platform](https://img.shields.io/badge/Platform-Windows-blue)",
+    "![Preview](./assets/preview.png)",
+    "",
+    "</div>",
+    "",
+    "---",
+    "",
+    "> Original notice",
+    "",
+    '<a id="features"></a>',
+    "",
+    "## ✨ Features",
+    "",
+    `* ${project.statusEvidence}`,
+    "* Line one  ",
+    "  Line two",
+    "",
+    "| Format | Output |",
+    "| --- | --- |",
+    "| Video | MP4 |",
+    "",
+    "<details>",
+    "<summary><strong>Build commands</strong></summary>",
+    "",
+    "```powershell",
+    ".\\build.ps1 -Clean -OneFile",
+    "# [Example](./do-not-rewrite.md)",
+    "```",
+    "",
+    "</details>"
+  ].join("\n");
+  try {
+    assert.equal(project.preserveReadmeFormatting, true);
+    writeFileSync(path.join(root, "README.md"), source.replaceAll("\n", "\r\n"));
+    importProjectReadme({ project, sourceRoot: root, outputRoot: output, commitSha: SHA, importedAt: IMPORTED_AT });
+    const page = readFileSync(output, "utf8");
+    const expected = source
+      .replace('./docs/releases/v2.3.md', `https://github.com/${project.repository}/blob/${SHA}/docs/releases/v2.3.md`)
+      .replace('./assets/preview.png', `https://raw.githubusercontent.com/${project.repository}/${SHA}/assets/preview.png`);
+    assert.ok(page.includes(expected), "Upstream content and formatting must be unchanged apart from relative links");
+    assert.doesNotMatch(page, /<p class="lead">/);
+    assert.match(page, /preserves the upstream content and formatting/);
+    assert.ok(page.indexOf('class="project-docs-sync sync-notice"') > page.indexOf("</details>"));
+
+    const markdown = await createMarkdownRenderer("docs");
+    const html = markdown.render(expected);
+    assert.match(html, /<div align="center">\s*<h1[^>]*>📺 Original heading/);
+    assert.match(html, /<h3[^>]*>Original tagline/);
+    assert.match(html, /<strong>Original summary<\/strong>/);
+    assert.match(html, /<img[^>]+alt="Platform"/);
+    assert.match(html, /<a id="features"><\/a>/);
+    assert.match(html, /Line one<br\s*\/?>/);
+    assert.match(html, /<table[\s\S]*<td>MP4<\/td>/);
+    assert.match(html, /<details>\s*<summary><strong>Build commands<\/strong><\/summary>\s*<div class="language-powershell/);
+    assert.match(html, /<pre[^>]*>[\s\S]*<code>/);
   } finally {
     rmSync(root, { recursive: true, force: true });
   }

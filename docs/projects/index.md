@@ -30,7 +30,7 @@ lang: en
     <span class="content-index-summary">Generate and validate passwords against a site's exact character, position, and repetition rules—all in the browser.</span>
   </a>
   <a class="content-index-row" href="/projects/bili-downloader/">
-    <span class="content-index-meta">Stable 1.1 · Windows</span>
+    <span class="content-index-meta">Stable 2.3 · Windows</span>
     <span class="content-index-title">Bili Downloader Lite</span>
     <span class="content-index-summary">Download accessible Bilibili videos on Windows, with sign-in, multi-part handling, quality selection, and retries.</span>
   </a>

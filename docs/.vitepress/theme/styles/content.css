@@ -1458,6 +1458,11 @@
   margin: 28px 0;
 }
 
+.project-readme-page .vp-doc [align="center"] img {
+  display: inline-block;
+  vertical-align: middle;
+}
+
 .vp-doc .project-readme-summary {
   margin: -8px 0 26px;
   color: var(--site-text-muted);

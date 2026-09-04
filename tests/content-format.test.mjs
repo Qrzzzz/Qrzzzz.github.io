@@ -2,11 +2,15 @@ import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 import test from "node:test";
+import { PROJECT_READMES } from "../scripts/lib/project-readmes.mjs";
 
 const contentRoot = path.resolve("docs");
 const excludedPrefixes = [
   ".vitepress/",
   "projects/lyrics-card-generator/",
+  // Preserved upstream layouts are covered by the README import/render tests.
+  ...PROJECT_READMES.filter((project) => project.preserveReadmeFormatting)
+    .map((project) => `projects/${project.slug}/`),
   "public/"
 ];
 
