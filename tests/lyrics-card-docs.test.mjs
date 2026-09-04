@@ -232,6 +232,7 @@ test("imports stable routes, links, assets and metadata", () => {
       );
       assert.match(imported, new RegExp(`^contentFormat: "${CONTENT_FORMAT}"$`, "m"));
       assert.match(imported, /<aside class="project-docs-sync sync-notice"/);
+      assert.match(imported, /<p class="sync-notice__title">[^<]+<\/p>/);
       assert.match(imported, /<\/footer>\n$/);
     }
 
@@ -249,6 +250,7 @@ test("imports stable routes, links, assets and metadata", () => {
     assert.match(releaseIndex, /<ol class="release-archive" aria-label="All release notes" lang="en">/);
     assert.equal((releaseIndex.match(/class="release-archive__row"/g) ?? []).length, 5);
     assert.equal((releaseIndex.match(/class="release-archive__version"/g) ?? []).length, 5);
+    assert.equal((releaseIndex.match(/<span class="release-archive__version">[^<]+<\/span>/g) ?? []).length, 5);
     const archiveLanguageGroups = releaseIndex.match(/<nav class="release-archive__languages"[^>]*>[\s\S]*?<\/nav>/g) ?? [];
     assert.equal(archiveLanguageGroups.length, 5);
     for (const group of archiveLanguageGroups) {
@@ -258,9 +260,9 @@ test("imports stable routes, links, assets and metadata", () => {
     }
     assert.equal((releaseIndex.match(/class="release-archive__language"/g) ?? []).length, 30);
     assert.doesNotMatch(releaseIndex, /^\|\s*版本\s*\|/m);
-    assert.ok(releaseIndex.indexOf("v2.0.0</strong>") < releaseIndex.indexOf("v2.0.0-rc.10</strong>"));
-    assert.ok(releaseIndex.indexOf("v2.0.0-rc.10</strong>") < releaseIndex.indexOf("v2.0.0-rc.2</strong>"));
-    assert.ok(releaseIndex.indexOf("v2.0.0-rc.2</strong>") < releaseIndex.indexOf("v1.10.0</strong>"));
+    assert.ok(releaseIndex.indexOf("v2.0.0</span>") < releaseIndex.indexOf("v2.0.0-rc.10</span>"));
+    assert.ok(releaseIndex.indexOf("v2.0.0-rc.10</span>") < releaseIndex.indexOf("v2.0.0-rc.2</span>"));
+    assert.ok(releaseIndex.indexOf("v2.0.0-rc.2</span>") < releaseIndex.indexOf("v1.10.0</span>"));
     assert.ok(releaseIndex.indexOf("v2.0.0") < releaseIndex.indexOf("v1.10.0"));
     assert.ok(releaseIndex.indexOf("v1.10.0") < releaseIndex.indexOf("v1.0.0"));
     assert.ok(releaseIndex.indexOf("release-archive") < releaseIndex.indexOf("## 多语言发布说明规范"));

@@ -288,7 +288,7 @@ function createReleaseArchive(versions) {
         : "";
     }).filter(Boolean);
     return `  <li class="release-archive__row">
-    <strong class="release-archive__version">${escapeHtml(version)}</strong>
+    <span class="release-archive__version">${escapeHtml(version)}</span>
     <nav class="release-archive__languages" aria-label="${escapeHtml(`Languages for ${version}`)}" lang="en">
       ${links.join("\n      ")}
     </nav>
@@ -352,7 +352,7 @@ function createSyncNotice({ commitSha, sourcePath, language = "zh-CN" }) {
   const upstreamPath = sourcePath === "README.md" ? sourcePath : `docs/${sourcePath}`;
   const sourceUrl = `${UPSTREAM_REPOSITORY}/blob/${commitSha}/${encodeRoutePath(upstreamPath)}`;
   return `<aside class="project-docs-sync sync-notice" aria-label="${escapeHtml(copy.label)}" lang="${copyLanguage}">
-  <strong class="sync-notice__title">${escapeHtml(copy.title)}</strong>
+  <p class="sync-notice__title">${escapeHtml(copy.title)}</p>
   <p>${escapeHtml(copy.beforeSource)} <a href="${sourceUrl}"><code>${escapeHtml(upstreamPath)}</code></a> ${escapeHtml(copy.afterSource)}</p>
 </aside>`;
 }

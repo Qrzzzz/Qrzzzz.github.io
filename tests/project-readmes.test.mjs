@@ -44,6 +44,7 @@ test("imports a README into a commit-bound in-site project page", () => {
     assert.match(page, new RegExp(`^contentFormat: "${CONTENT_FORMAT}"$`, "m"));
     assert.match(page, new RegExp(`^sourceCommit: "${SHA}"$`, "m"));
     assert.match(page, /This page is synchronized from upstream/);
+    assert.match(page, /<p class="sync-notice__title">This page is synchronized from upstream<\/p>/);
     assert.match(page, new RegExp(`raw\.githubusercontent\.com/Qrzzzz/demo/${SHA}/assets/preview\.png`));
     assert.match(page, new RegExp(`github\.com/Qrzzzz/demo/blob/${SHA}/README\.en\.md`));
     assert.match(page, /^- Item$/m);
@@ -150,6 +151,7 @@ test("uses an explicit, non-README fallback only while README is absent", () => 
     assert.equal(entry.sourceMode, "fallback");
     assert.match(page, /The source repository does not currently contain a README/);
     assert.match(page, /This page uses a transparent fallback/);
+    assert.match(page, /<p class="sync-notice__title">This page uses a transparent fallback<\/p>/);
     assert.match(page, /Demo summary\./);
 
     writeFileSync(path.join(root, "README.md"), "# Newly added");

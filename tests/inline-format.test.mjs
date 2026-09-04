@@ -2,10 +2,12 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 import { createMarkdownRenderer } from "vitepress";
+import { inlineEmphasisPlugin } from "../docs/.vitepress/markdown/inline-emphasis.mjs";
 
 const note = readFileSync("docs/notes/until-the-tower-falls.md", "utf8");
 const styles = readFileSync("docs/.vitepress/theme/styles/content.css", "utf8");
 const tokens = readFileSync("docs/.vitepress/theme/styles/tokens.css", "utf8");
+const markdown = createMarkdownRenderer("docs", { config: inlineEmphasisPlugin });
 
 test("ties bold and inline-code treatments to the active accent", () => {
   for (const token of [
@@ -19,7 +21,11 @@ test("ties bold and inline-code treatments to the active accent", () => {
 
   assert.match(
     styles,
-    /\.vp-doc strong\s*\{[^}]*var\(--site-accent-soft\)[^}]*color:\s*var\(--site-emphasis-text\)[^}]*font-weight:\s*750/s
+    /\.vp-doc strong\s*\{\s*background:\s*none;\s*color:\s*var\(--site-emphasis-text\);\s*font-weight:\s*750;\s*\}/s
+  );
+  assert.match(
+    styles,
+    /\.vp-doc \.text-emphasis\s*\{[^}]*display:\s*inline;[^}]*var\(--site-accent-soft\)[^}]*box-decoration-break:\s*clone/s
   );
   assert.match(
     styles,
@@ -35,9 +41,33 @@ test("renders the final Night City sentence as bold before Chinese punctuation",
   assert.ok(finalParagraph, "missing the final Night City paragraph");
   assert.match(finalParagraph, /^\*\*夜之城没有王，只有结构\*\*。而你/);
 
-  const markdown = await createMarkdownRenderer("docs");
-  const html = markdown.render(finalParagraph);
+  const html = (await markdown).render(finalParagraph);
 
-  assert.match(html, /<strong>夜之城没有王，只有结构<\/strong>。而你/);
+  assert.match(html, /<strong><span class="text-emphasis">夜之城没有王，只有结构<\/span><\/strong>。而你/);
   assert.doesNotMatch(html, /\*\*/);
+});
+
+test("keeps links, inline code, nested emphasis, and line breaks inside the text layer", async () => {
+  const html = (await markdown).render(
+    "**包含[链接](/guide/)和 `code`、*轻微强调* 的重点<br>仍属于同一段重点**。"
+  );
+  assert.match(html, /<strong><span class="text-emphasis">包含<a href="\/guide\/">链接<\/a>/);
+  assert.match(html, /<code>code<\/code>、<em>轻微强调<\/em>/);
+  assert.match(html, /<br>仍属于同一段重点<\/span><\/strong>。/);
+  assert.equal((html.match(/class="text-emphasis"/g) ?? []).length, 1);
+});
+
+test("does not decorate raw HTML labels or code examples", async () => {
+  const html = (await markdown).render([
+    '<strong class="future-component-title">Future component</strong>',
+    "",
+    "`**literal emphasis**`",
+    "",
+    "```html",
+    "<strong>Example</strong>",
+    "```"
+  ].join("\n"));
+  assert.match(html, /<strong class="future-component-title">Future component<\/strong>/);
+  assert.match(html, /<code>\*\*literal emphasis\*\*<\/code>/);
+  assert.doesNotMatch(html, /class="text-emphasis"/);
 });

@@ -1,6 +1,7 @@
 import { defineConfig } from "vitepress";
 import { fileURLToPath } from "node:url";
 import { collectLibraryRecords } from "../../scripts/check-content-metadata.mjs";
+import { inlineEmphasisPlugin } from "./markdown/inline-emphasis.mjs";
 
 const repositoryRoot = fileURLToPath(new URL("../..", import.meta.url));
 const { records: libraryRecords } = collectLibraryRecords(repositoryRoot);
@@ -153,7 +154,8 @@ export default defineConfig({
 
   markdown: {
     lineNumbers: false,
-    codeCopyButtonTitle: "Copy code"
+    codeCopyButtonTitle: "Copy code",
+    config: inlineEmphasisPlugin
   },
 
   themeConfig: {

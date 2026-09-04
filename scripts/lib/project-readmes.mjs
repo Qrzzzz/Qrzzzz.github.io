@@ -265,7 +265,7 @@ function syncNotice(project, commitSha, hasReadme) {
     ? `The content follows <a href="${sourceUrl}"><code>README.md</code></a> in the source repository. This site ${readmeHandling} during synchronization; it does not maintain a separate copy.`
     : `The source repository does not currently contain a README. This page is generated only from the pinned <a href="${sourceUrl}"><code>${escapeHtml(project.sourcePath)}</code></a>, the live entry point, and an explicit project summary; supplemental copy is not presented as an upstream README.`;
   return `<aside class="project-docs-sync sync-notice" aria-label="Synchronization notice" lang="en">
-  <strong class="sync-notice__title">${hasReadme ? "This page is synchronized from upstream" : "This page uses a transparent fallback"}</strong>
+  <p class="sync-notice__title">${hasReadme ? "This page is synchronized from upstream" : "This page uses a transparent fallback"}</p>
   <p>${explanation}</p>
 </aside>`;
 }

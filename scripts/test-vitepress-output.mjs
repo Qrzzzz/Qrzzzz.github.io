@@ -52,6 +52,12 @@ try {
 ## 重复
 
 ## 重复
+
+## 行内强调
+
+**包含[链接](/)和行内代码的重点**。
+
+<strong class="future-component-title">Component title</strong>
 `,
     "utf8"
   );
@@ -75,6 +81,8 @@ try {
   assert.match(html, /id="重复-1"/, "第二个重复标题没有唯一锚点");
   assert.match(html, /href="#中文标题"/, "中文标题链接未指向实际锚点");
   assert.match(html, /href="#重复-1"/, "重复标题链接未指向第二个实际锚点");
+  assert.match(html, /<strong><span class="text-emphasis">包含<a href="\/">链接<\/a>和行内代码的重点<\/span><\/strong>/, "生产 Markdown 配置未生成行内强调层");
+  assert.match(html, /<strong class="future-component-title">Component title<\/strong>/, "普通 HTML 组件标题不应自动添加荧光层");
   assert.ok(existsSync(outputPdf), "public PDF 没有进入最终构建产物");
   assert.equal(readFileSync(outputPdf, "utf8"), pdfFixture, "最终 PDF 内容与 public 源文件不一致");
 
@@ -116,6 +124,7 @@ try {
       );
     }
     assert.match(releaseHtml, /class="project-docs-sync sync-notice"/, `${language} 页面缺少同步说明`);
+    assert.match(releaseHtml, /<p class="sync-notice__title">[^<]+<\/p>/, `${language} 同步标题不应使用正文强调标签`);
     assert.match(releaseHtml, /class="project-docs-sync import-source"/, `${language} 页面缺少可见来源信息`);
     assert.match(
       releaseHtml,
@@ -139,9 +148,11 @@ try {
   assert.ok(releaseArchive, "导入清单缺少版本档案");
   const releaseArchiveHtml = readFileSync(routeHtml(releaseArchive.route), "utf8");
   assert.match(releaseArchiveHtml, /class="release-archive"/, "版本档案缺少可见版本列表");
+  assert.match(releaseArchiveHtml, /<span class="release-archive__version">[^<]+<\/span>/, "版本号应使用独立组件标签");
+  assert.doesNotMatch(releaseArchiveHtml, /<strong class="(?:sync-notice__title|release-archive__version)"/, "组件标签重新使用了正文强调结构");
   assert.match(releaseArchiveHtml, /class="project-docs-sync import-source"/, "版本档案缺少可见来源信息");
 
-  console.log("[docs:output-test] 通过：独立单页样例的锚点与 public PDF 有效；生产产物的六语 html lang、偶拾排版、同步说明与可见来源信息均有效。");
+  console.log("[docs:output-test] 通过：独立样例的锚点、public PDF 与行内强调有效；生产产物的六语 html lang、偶拾排版、同步说明、版本号与可见来源信息均有效。");
 } catch (error) {
   console.error(`[docs:output-test] ${error instanceof Error ? error.message : error}`);
   process.exitCode = 1;

@@ -387,6 +387,14 @@
 }
 
 .vp-doc strong {
+  background: none;
+  color: var(--site-emphasis-text);
+  font-weight: 750;
+}
+
+/* Only the inline text layer paints emphasis; component boxes stay unpainted. */
+.vp-doc .text-emphasis {
+  display: inline;
   padding-inline: 0.03em;
   background:
     linear-gradient(
@@ -394,8 +402,6 @@
       var(--site-accent-soft) 0 34%,
       transparent 34%
     );
-  color: var(--site-emphasis-text);
-  font-weight: 750;
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
 }
