@@ -114,7 +114,10 @@ test("keeps every excerpt in its own titleless Markdown page", () => {
   assert.match(tenth, /不要听任何从小到大没有换过生活地点的长辈的话。/);
   assert.match(eleventh, /Take your fastest ship and brightest crew/);
   assert.match(eleventh, /chasing the escaping sun\./);
-  assert.match(eleventh, /<footer>Film <cite>The Odyssey<\/cite><\/footer>/);
+  assert.match(
+    eleventh,
+    /<footer>Film <cite><a href="https:\/\/www\.odysseymovie\.com\/">The Odyssey<\/a><\/cite><\/footer>/
+  );
   assert.match(twelfth, /预计到2020年，国际上微电子技术水平将发展到14纳米/);
   assert.match(twelfth, /核心技术是买不到的，必须靠我们自己/);
   assert.match(
@@ -125,7 +128,7 @@ test("keeps every excerpt in its own titleless Markdown page", () => {
   assert.match(thirteenth, /we would expect major changes to occur in the world\./);
   assert.match(
     thirteenth,
-    /<footer>Anthropic Institute, <cite>When AI builds itself<\/cite>, 2026<\/footer>/
+    /<footer>Anthropic Institute, <cite><a href="https:\/\/www\.anthropic\.com\/institute\/recursive-self-improvement">When AI builds itself<\/a><\/cite>, 2026<\/footer>/
   );
   assert.match(fourteenth, /没有恶意的人被恶意砸中的时候，第一反应不是反击，而是想不通。/);
   assert.match(fourteenth, /你不必反复纠结他们为什么那样，因为你不是那样的人。/);
