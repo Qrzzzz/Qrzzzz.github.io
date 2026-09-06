@@ -164,10 +164,10 @@ test("preserves the Tim Cook report and formats its source as an excerpt attribu
   assert.match(paragraphs[5], /the usual metered and controlled way he speaks\.$/);
   assert.match(
     twentieth,
-    /<footer>Bryan Chaffin, <cite><a href="https:\/\/www\.macobserver\.com\/news\/tim-cook-rejects-ncppr-politics\/">“Tim Cook Soundly Rejects Politics of the NCPPR, Suggests Group Sell Apple's Stock”<\/a><\/cite>, <cite>The Mac Observer<\/cite>, February 28, 2014\./
+    /<footer>Bryan Chaffin, <cite><a href="https:\/\/www\.macobserver\.com\/news\/tim-cook-rejects-ncppr-politics\/">“Tim Cook Soundly Rejects Politics of the NCPPR, Suggests Group Sell Apple's Stock”<\/a><\/cite>, <cite>The Mac Observer<\/cite>, February 28, 2014\.<\/footer>/
   );
-  assert.match(twentieth, /<span lang="zh-CN">报道背景：Apple Inc\. 2014 年度股东大会问答环节。/);
-  assert.match(twentieth, /ROI 并非所有决策的首要标准。<\/span><\/footer>/);
+  assert.doesNotMatch(twentieth, /报道背景：Apple Inc\. 2014 年度股东大会问答环节。/);
+  assert.doesNotMatch(twentieth, /ROI 并非所有决策的首要标准。/);
   assert.doesNotMatch(twentieth, /utm_source=|&#x20;|\*\*出处\*\*/);
 });
 
