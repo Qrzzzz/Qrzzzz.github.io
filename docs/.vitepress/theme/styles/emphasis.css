@@ -19,13 +19,10 @@
   font-weight: 750;
 }
 
-/* The padding grows the stroke beyond the glyphs; the matching negative
- * margin keeps the effective inline width equal to the previous treatment.
- */
+/* Retain the existing inline geometry; only the paint changes. */
 .vp-doc .text-emphasis {
   display: inline;
-  margin-inline: -0.03em;
-  padding-inline: 0.06em;
+  padding-inline: 0.03em;
   background:
     linear-gradient(
       178deg,
@@ -51,7 +48,6 @@
   }
 
   .vp-doc .text-emphasis {
-    margin-inline: 0;
     padding-inline: 0;
     background: none;
   }

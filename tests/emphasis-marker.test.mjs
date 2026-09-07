@@ -29,7 +29,7 @@ test("keeps marker color independent from the active theme accent", () => {
   );
 });
 
-test("paints markdown emphasis without changing semantic strong layout", () => {
+test("paints markdown emphasis while retaining the existing inline geometry", () => {
   const strong = ruleBody(".vp-doc strong");
   const marker = ruleBody(".vp-doc .text-emphasis");
 
@@ -38,8 +38,8 @@ test("paints markdown emphasis without changing semantic strong layout", () => {
   assert.match(strong, /font-weight:\s*750/);
 
   assert.match(marker, /display:\s*inline/);
-  assert.match(marker, /margin-inline:\s*-0\.03em/);
-  assert.match(marker, /padding-inline:\s*0\.06em/);
+  assert.match(marker, /padding-inline:\s*0\.03em/);
+  assert.doesNotMatch(marker, /margin-inline/);
   assert.match(marker, /var\(--site-marker-fill\)/);
   assert.match(marker, /var\(--site-marker-edge\)/);
   assert.match(marker, /box-decoration-break:\s*clone/);
