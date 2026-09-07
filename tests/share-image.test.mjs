@@ -1,104 +1,79 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
-import {
-  SHARE_IMAGE_FORMAT,
-  createShareImageFilename,
-  normalizeShareText,
-  resolveShareExcerpt
-} from "../docs/.vitepress/theme/shareImageRuntime.mjs";
+import { createMarkdownRenderer } from "vitepress";
+const markdown = await createMarkdownRenderer(process.cwd());
+import { parseHTML } from "linkedom";
+import { SHARE_IMAGE_FORMAT, createShareImageFilename, extractLongformContent, measureLongformHeight } from "../docs/.vitepress/theme/shareImageRuntime.mjs";
 
-const layout = readFileSync("docs/.vitepress/theme/Layout.vue", "utf8");
 const component = readFileSync("docs/.vitepress/theme/ShareImage.vue", "utf8");
-const packageJson = JSON.parse(readFileSync("package.json", "utf8"));
+const fixture = readFileSync("tests/fixtures/share-image-longform.md", "utf8");
+function source(html) {
+  return parseHTML(`<html><head><base href="https://qrzzzz.github.io/notes/test"></head><body><div class="vp-doc">${html}</div></body></html>`).document.querySelector(".vp-doc");
+}
 
-test("normalizes article text without leaking layout whitespace", () => {
-  assert.equal(normalizeShareText("  一段\n\n  自动提取的\t文字  "), "一段 自动提取的 文字");
-  assert.equal(normalizeShareText("这是一个需要截断的长句，后面还有内容", 10), "这是一个需要截断的…");
+test("exports complete Markdown structure, including text well beyond 200 characters", () => {
+  const input = source(markdown.render(fixture));
+  input.querySelectorAll(".header-anchor, button, .lang").forEach(node => node.remove());
+  const result = extractLongformContent(input);
+  const output = source(result.html);
+  assert.equal(result.title, input.querySelector("h1").textContent.trim());
+  assert.equal(output.querySelector("h1"), null);
+  assert.ok(output.textContent.length > 500);
+  assert.match(output.textContent, /LONGFORM_END_全文保留/);
+  for (const tag of ["h2", "h3", "p", "blockquote", "ul", "ol", "li", "hr", "pre", "code", "strong", "a"]) {
+    assert.equal(output.querySelectorAll(tag).length, input.querySelectorAll(tag).length, tag);
+  }
+  assert.equal(output.querySelector("ol").getAttribute("start"), "3");
+  assert.equal(output.querySelector("pre").textContent, input.querySelector("pre").textContent);
+  input.querySelector("h1").remove();
+  assert.equal(output.textContent, input.textContent);
 });
 
-test("prefers the first 200 characters of body copy over the page description", () => {
-  const firstParagraph = "正文第一段".repeat(10);
-  const secondParagraph = "这是第二段，应该在第一段不足时接续。".repeat(12);
-  const excerpt = resolveShareExcerpt(
-    [firstParagraph, { textContent: secondParagraph }],
-    "标题下方的小注释不应优先出现"
-  );
-
-  assert.equal(Array.from(excerpt).length, 200);
-  assert.equal(excerpt.startsWith("正文第一段"), true);
-  assert.match(excerpt, /这是第二段/);
-  assert.equal(excerpt.endsWith("…"), true);
-  assert.doesNotMatch(excerpt, /小注释/);
-  assert.equal(resolveShareExcerpt([], "仅在没有正文时使用摘要"), "仅在没有正文时使用摘要");
+test("unwraps VitePress highlighting, keeps nested excerpt content and additional h1 headings", () => {
+  const input = source('<article><h1>标题<a class="header-anchor">#</a></h1><p class="lead">导语</p><h1>正文一级标题</h1><figure><blockquote><p>完整引用</p></blockquote><figcaption>出处</figcaption></figure><div class="language-js"><button>复制</button><span class="lang">js</span><pre><code><span class="line">  const x = 1;</span>\n<span class="line">  x++;</span></code></pre></div></article>');
+  const result = extractLongformContent(input);
+  const output = source(result.html);
+  assert.equal(result.title, "标题");
+  assert.equal(output.querySelector("h1").textContent, "正文一级标题");
+  assert.equal(output.querySelector("pre").textContent, "  const x = 1;\n  x++;");
+  assert.match(output.textContent, /导语/);
+  assert.match(output.textContent, /出处/);
+  assert.doesNotMatch(result.html, /header-anchor|button|class=|复制/);
+  assert.ok(input.querySelector("button"), "source is never mutated");
 });
 
-test("uses one fixed 3:4 share image format and a stable filename", () => {
-  assert.equal(Object.isFrozen(SHARE_IMAGE_FORMAT), true);
-  assert.deepEqual(SHARE_IMAGE_FORMAT, {
-    id: "portrait-3x4",
-    label: "Portrait 3:4",
-    width: 540,
-    height: 720,
-    scale: 2,
-    maxTitleLength: 56,
-    maxExcerptLength: 200
-  });
-  assert.deepEqual(
-    [SHARE_IMAGE_FORMAT.width * SHARE_IMAGE_FORMAT.scale, SHARE_IMAGE_FORMAT.height * SHARE_IMAGE_FORMAT.scale],
-    [1080, 1440]
-  );
-  assert.equal(
-    createShareImageFilename('直到大厦崩塌：关于“赢”的谎言'),
-    "直到大厦崩塌-关于“赢”的谎言-3x4.png"
-  );
+test("does not carry executable HTML, page controls or source styles into v-html", () => {
+  const result = extractLongformContent(source('<script>alert(1)</script><p onclick="bad()" style="display:none">正文<img src="javascript:bad()" onerror="bad()" alt="图"><a href="javascript:bad()">链接</a></p><div data-share-image-exclude>排除</div>'), "后备标题");
+  assert.equal(result.title, "后备标题");
+  assert.doesNotMatch(result.html, /script|onclick|onerror|style=|javascript:|排除/);
+  assert.match(result.html, /正文/);
+  assert.throws(() => extractLongformContent(null), /unavailable/);
 });
 
-test("mounts a direct, non-customizable share image download on article and excerpt pages", () => {
-  assert.match(layout, /import ShareImage from "\.\/ShareImage\.vue"/);
-  assert.match(layout, /pageKind\.value === "article" \|\| pageKind\.value === "excerpt"/);
-  assert.match(layout, /!relativePath\.endsWith\("index\.md"\)/);
-  assert.match(layout, /#doc-footer-before/);
+test("measures natural longform height instead of fixing a 720px canvas", () => {
+  assert.deepEqual(SHARE_IMAGE_FORMAT, { id: "longform", width: 540, scale: 2 });
+  assert.equal(measureLongformHeight({ scrollHeight: 2480, getBoundingClientRect: () => ({ height: 2479.5 }) }), 2480);
+  assert.equal(measureLongformHeight({ scrollHeight: 500, getBoundingClientRect: () => ({ height: 500.4 }) }), 501);
+  assert.equal(createShareImageFilename('文章/标题'), "文章-标题-longform.png");
+  assert.match(component, /height: measureLongformHeight\(element\)/);
+  assert.match(component, /scale: SHARE_IMAGE_FORMAT.scale/);
+  assert.match(component, /v-html="exportContent.html"/);
+  assert.match(component, /导出全文长图/);
+  assert.match(component, /document.fonts\?\.ready/);
+  assert.match(component, /image.decode\(\)/);
+  assert.match(component, /current !== generation/);
+  assert.doesNotMatch(component, /line-clamp|maxExcerptLength|shareExcerpt|resolveExcerpt|share-image-card|720px|3x4/);
+});
+
+
+test("keeps one direct accessible export on article and excerpt pages", () => {
+  const layout = readFileSync("docs/.vitepress/theme/Layout.vue", "utf8");
   assert.match(layout, /<ShareImage/);
-
-  assert.match(component, /@click="downloadImage"/);
+  assert.match(layout, /pageKind.value === "article" \|\| pageKind.value === "excerpt"/);
   assert.match(component, /:disabled="rendering"/);
   assert.match(component, /:aria-busy="rendering"/);
-  assert.match(component, /shareExcerpt\.value = resolveExcerpt\(\)/);
-  assert.match(component, /frontmatter\.value\.description/);
-  assert.match(component, /document\.querySelectorAll<HTMLElement>/);
-  assert.match(component, /\.vp-doc > p:not\(\.lead\)/);
-  assert.match(component, /\.vp-doc \.excerpt-entry blockquote p/);
-  assert.match(component, /resolveShareExcerpt\(bodyFragments, frontmatter\.value\.description\)/);
-  assert.match(component, /await import\("modern-screenshot"\)/);
-  assert.match(component, /await import\("qrcode"\)/);
-  assert.match(component, /toDataURL\(pageHref\.value/);
-  assert.match(component, /errorCorrectionLevel:\s*"M"/);
-  assert.match(component, /margin:\s*4/);
-  assert.match(component, /document\.fonts\?\.ready/);
-  assert.match(component, /width:\s*SHARE_IMAGE_FORMAT\.width/);
-  assert.match(component, /height:\s*SHARE_IMAGE_FORMAT\.height/);
-  assert.match(component, /scale:\s*SHARE_IMAGE_FORMAT\.scale/);
-  assert.match(component, /backgroundColor:\s*"#f5f1e8"/);
-  assert.match(component, /font:\s*false/);
-  assert.match(
-    component,
-    /\.share-image-card__content p\s*\{[\s\S]*?font-size:\s*20px;[\s\S]*?line-height:\s*1\.55;[\s\S]*?-webkit-line-clamp:\s*10;/
-  );
-  assert.match(component, /URL\.createObjectURL/);
-  assert.match(component, /link\[rel="canonical"\]/);
-  assert.match(component, /class="share-image-card__qr"/);
-  assert.match(component, /ref="qrImage"/);
-  assert.match(component, /Scan to read/);
-  assert.match(component, /class="share-image-render-host" aria-hidden="true" inert/);
-  assert.match(component, /Generate share image/);
-
-  assert.doesNotMatch(component, /role="dialog"|aria-modal="true"|share-image-backdrop/);
-  assert.doesNotMatch(component, /固定生成 3:4 竖幅 PNG|SHARE \/ 分享/);
-  assert.doesNotMatch(component, /share-image-entry__copy|share-image-entry__eyebrow/);
-  assert.doesNotMatch(component, /<input|<textarea|<fieldset|v-model/);
-  assert.doesNotMatch(component, /ClipboardItem|selectedArticleText|rememberSelection/);
-  assert.doesNotMatch(component, /cardTheme|data-theme|SHARE_IMAGE_FORMATS/);
-  assert.equal(packageJson.dependencies["modern-screenshot"], "^4.7.0");
-  assert.equal(packageJson.dependencies.qrcode, "^1.5.4");
+  assert.match(component, /aria-live="polite"/);
+  assert.match(component, /aria-hidden="true" inert/);
+  assert.match(component, /exportContent.value = undefined/);
 });

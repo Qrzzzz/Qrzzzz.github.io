@@ -1,199 +1,105 @@
 <script setup lang="ts">
-import { computed, nextTick, onMounted, ref, watch } from "vue";
+import { nextTick, onBeforeUnmount, ref, watch } from "vue";
 import { useData } from "vitepress";
-import {
-  SHARE_IMAGE_FORMAT,
-  createShareImageFilename,
-  normalizeShareText,
-  resolveShareExcerpt
-} from "./shareImageRuntime.mjs";
+import { SHARE_IMAGE_FORMAT, createShareImageFilename, extractLongformContent, measureLongformHeight } from "./shareImageRuntime.mjs";
 
-type PageKind = "article" | "excerpt";
-
-const props = defineProps<{
-  pageKind: PageKind;
-}>();
-
+defineProps<{ pageKind: "article" | "excerpt" }>();
 const { frontmatter, page } = useData();
-const card = ref<HTMLElement>();
-const qrImage = ref<HTMLImageElement>();
-const clientReady = ref(false);
+const longform = ref<HTMLElement>();
 const rendering = ref(false);
+const exportContent = ref<{ title: string; html: string; href: string }>();
 const qrCodeDataUrl = ref("");
-const shareExcerpt = ref("");
 const statusMessage = ref("");
 const statusTone = ref<"neutral" | "success" | "error">("neutral");
+let generation = 0;
 
-const cardTitle = computed(() =>
-  normalizeShareText(
-    frontmatter.value.title || page.value.title || "Untitled article",
-    SHARE_IMAGE_FORMAT.maxTitleLength
-  )
-);
-const cardExcerpt = computed(() =>
-  normalizeShareText(shareExcerpt.value, SHARE_IMAGE_FORMAT.maxExcerptLength)
-);
-const pageLabel = computed(() => (props.pageKind === "excerpt" ? "EXCERPT" : "ARTICLE"));
-const pageHref = computed(() => {
-  if (typeof window === "undefined") return "https://qrzzzz.github.io/";
-  void page.value.relativePath;
-  const canonical = document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.href;
-  return new URL(canonical || window.location.href).href;
-});
-const pageUrl = computed(() => {
-  const url = new URL(pageHref.value);
-  return `${url.host}${url.pathname.replace(/\/$/, "") || "/"}`;
-});
-
-function resolveExcerpt() {
-  const bodyFragments = document.querySelectorAll<HTMLElement>(
-    [
-      ".vp-doc > p:not(.lead)",
-      ".vp-doc > blockquote > p",
-      ".vp-doc > ul > li",
-      ".vp-doc > ol > li",
-      ".vp-doc .excerpt-entry blockquote p",
-      ".vp-doc .excerpt-entry > p"
-    ].join(", ")
-  );
-  return resolveShareExcerpt(bodyFragments, frontmatter.value.description);
+function resetExport() {
+  generation++;
+  rendering.value = false;
+  exportContent.value = undefined;
+  qrCodeDataUrl.value = "";
+  statusMessage.value = "";
 }
-
-function setStatus(message: string, tone: "neutral" | "success" | "error" = "neutral") {
-  statusMessage.value = message;
-  statusTone.value = tone;
-}
-
-async function prepareQrCode() {
-  const { toDataURL } = await import("qrcode");
-  qrCodeDataUrl.value = await toDataURL(pageHref.value, {
-    errorCorrectionLevel: "M",
-    margin: 4,
-    width: 256,
-    color: {
-      dark: "#191816",
-      light: "#fffdf8"
-    }
-  });
-
-  await nextTick();
-  await qrImage.value?.decode();
-}
-
-async function renderCard() {
-  if (!card.value) throw new Error("The share image is not ready yet");
-
-  await nextTick();
-  await document.fonts?.ready;
-  const { domToBlob } = await import("modern-screenshot");
-  const blob = await domToBlob(card.value, {
-    backgroundColor: "#f5f1e8",
-    width: SHARE_IMAGE_FORMAT.width,
-    height: SHARE_IMAGE_FORMAT.height,
-    scale: SHARE_IMAGE_FORMAT.scale,
-    font: false,
-    timeout: 15000
-  });
-  if (!blob) throw new Error("The browser did not return image data");
-  return blob;
-}
-
-function downloadBlob(blob: Blob) {
-  const url = URL.createObjectURL(blob);
-  const anchor = document.createElement("a");
-  anchor.download = createShareImageFilename(cardTitle.value);
-  anchor.href = url;
-  anchor.click();
-  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
-}
+watch(() => page.value.relativePath, resetExport);
+onBeforeUnmount(resetExport);
 
 async function downloadImage() {
   if (rendering.value) return;
-
+  const current = ++generation;
   rendering.value = true;
-  shareExcerpt.value = resolveExcerpt();
-  setStatus("Generating…");
-
+  statusMessage.value = "正在生成全文长图…";
+  statusTone.value = "neutral";
   try {
-    await prepareQrCode();
-    const blob = await renderCard();
-    downloadBlob(blob);
-    setStatus("Share image downloaded.", "success");
+    const content = extractLongformContent(document.querySelector(".vp-doc"), frontmatter.value.title || page.value.title);
+    const canonical = document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.href;
+    const href = new URL(canonical || window.location.href);
+    href.hash = "";
+    exportContent.value = { ...content, href: href.href };
+    const [{ toDataURL }, { domToBlob }] = await Promise.all([import("qrcode"), import("modern-screenshot")]);
+    const qr = await toDataURL(href.href, { errorCorrectionLevel: "M", margin: 4, width: 256, color: { dark: "#191816", light: "#fffdf8" } });
+    if (current !== generation) return;
+    qrCodeDataUrl.value = qr;
+    await nextTick();
+    await document.fonts?.ready;
+    const element = longform.value;
+    if (!element || current !== generation) return;
+    await Promise.all(Array.from(element.querySelectorAll("img")).map(image => image.decode()));
+    if (current !== generation) return;
+    const blob = await domToBlob(element, {
+      backgroundColor: "#f5f1e8",
+      width: SHARE_IMAGE_FORMAT.width,
+      height: measureLongformHeight(element),
+      scale: SHARE_IMAGE_FORMAT.scale,
+      font: false,
+      timeout: 15000
+    });
+    if (current !== generation) return;
+    if (!blob || !blob.size) throw new Error("The browser did not return image data");
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.download = createShareImageFilename(content.title);
+    anchor.href = url;
+    anchor.click();
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+    statusMessage.value = "全文长图已下载。";
+    statusTone.value = "success";
   } catch (error) {
+    if (current !== generation) return;
     console.error(error);
-    setStatus("Generation failed. Refresh the page and try again.", "error");
+    statusMessage.value = "全文长图生成失败，请重试。文章过长或图片加载失败时，浏览器可能无法导出。";
+    statusTone.value = "error";
   } finally {
-    rendering.value = false;
+    if (current === generation) {
+      rendering.value = false;
+      exportContent.value = undefined;
+      qrCodeDataUrl.value = "";
+    }
   }
 }
-
-onMounted(() => {
-  clientReady.value = true;
-});
-
-watch(
-  () => page.value.relativePath,
-  () => {
-    qrCodeDataUrl.value = "";
-    shareExcerpt.value = "";
-    setStatus("");
-  }
-);
 </script>
 
 <template>
-  <section class="share-image-entry" aria-label="Share this page">
+  <section class="share-image-entry" aria-label="导出全文长图">
     <div class="share-image-entry__actions">
-      <p
-        class="share-image-status"
-        :class="`is-${statusTone}`"
-        role="status"
-        aria-live="polite"
-      >
-        {{ statusMessage }}
-      </p>
-      <button
-        type="button"
-        class="share-image-entry__button"
-        :disabled="rendering"
-        :aria-busy="rendering"
-        @click="downloadImage"
-      >
-        <svg aria-hidden="true" viewBox="0 0 24 24">
-          <path d="M5 5h14v14H5zM8 15l3-3 2 2 2-2 3 3M15.5 9h.01" />
-        </svg>
-        {{ rendering ? "Generating…" : "Generate share image" }}
+      <p class="share-image-status" :class="`is-${statusTone}`" role="status" aria-live="polite">{{ statusMessage }}</p>
+      <button type="button" class="share-image-entry__button" :disabled="rendering" :aria-busy="rendering" @click="downloadImage">
+        <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 5h14v14H5zM8 15l3-3 2 2 2-2 3 3M15.5 9h.01" /></svg>
+        {{ rendering ? "正在生成…" : "导出全文长图" }}
       </button>
     </div>
   </section>
-
   <Teleport to="body">
-    <div v-if="clientReady" class="share-image-render-host" aria-hidden="true" inert>
-      <article ref="card" class="share-image-card">
-        <header class="share-image-card__header">
-          <span class="share-image-card__brand">Qrzzzz</span>
-          <span>{{ pageLabel }}</span>
+    <div v-if="exportContent" class="share-image-render-host" aria-hidden="true" inert>
+      <article ref="longform" class="share-image-longform" :style="{ width: `${SHARE_IMAGE_FORMAT.width}px` }">
+        <header class="share-image-longform__header">
+          <span class="share-image-longform__brand">Qrzzzz · 全文阅读</span>
+          <h1>{{ exportContent.title }}</h1>
         </header>
-        <div class="share-image-card__content">
-          <h3>{{ cardTitle }}</h3>
-          <div class="share-image-card__rule">
-            <span />
-          </div>
-          <p>{{ cardExcerpt }}</p>
-        </div>
-        <footer class="share-image-card__footer">
-          <span class="share-image-card__url">{{ pageUrl }}</span>
-          <figure class="share-image-card__qr">
-            <img
-              v-if="qrCodeDataUrl"
-              ref="qrImage"
-              :src="qrCodeDataUrl"
-              alt=""
-              width="84"
-              height="84"
-            />
-            <figcaption>Scan to read</figcaption>
-          </figure>
+        <!-- Only the allowlisted semantic DOM from extractLongformContent is rendered. -->
+        <div class="share-image-longform__body" v-html="exportContent.html" />
+        <footer class="share-image-longform__footer">
+          <span class="share-image-longform__url">{{ exportContent.href }}</span>
+          <figure><img v-if="qrCodeDataUrl" :src="qrCodeDataUrl" alt="" width="84" height="84" /><figcaption>扫码阅读原文</figcaption></figure>
         </footer>
       </article>
     </div>
@@ -273,143 +179,48 @@ watch(
   color: #d14343;
 }
 
-.share-image-render-host {
-  position: fixed;
-  z-index: -1;
-  top: 0;
-  left: -10000px;
-  width: 540px;
-  height: 720px;
-  pointer-events: none;
-}
 
-.share-image-card {
-  --card-bg: #f5f1e8;
-  --card-text: #191816;
-  --card-muted: #666157;
-  --card-line: #c9c1b4;
-  --card-accent: #d92d16;
-  position: relative;
-  isolation: isolate;
+.share-image-render-host { position: absolute; top: 0; left: -10000px; pointer-events: none; }
+.share-image-longform {
   box-sizing: border-box;
-  display: grid;
-  width: 540px;
-  height: 720px;
-  overflow: hidden;
-  padding: 46px 48px 40px;
-  background: var(--card-bg);
-  color: var(--card-text);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI Variable", "Segoe UI",
-    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
-  grid-template-rows: auto minmax(0, 1fr) auto;
+  padding: 44px 40px 32px;
+  background: #f5f1e8;
+  color: #191816;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: 17px;
+  line-height: 1.85;
+  overflow-wrap: anywhere;
 }
-
-.share-image-card__header,
-.share-image-card__footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-  color: var(--card-muted);
-  font-family: ui-monospace, "SFMono-Regular", "Cascadia Code", Consolas, monospace;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-}
-
-.share-image-card__brand {
-  color: var(--card-accent);
-  font-size: 16px;
-  letter-spacing: -0.035em;
-}
-
-.share-image-card__content {
-  display: flex;
-  min-height: 0;
-  flex-direction: column;
-  justify-content: center;
-  padding: 30px 0 24px;
-}
-
-.share-image-card h3 {
-  margin: 0;
-  color: var(--card-text);
-  font-size: 42px;
-  font-weight: 780;
-  letter-spacing: -0.055em;
-  line-height: 1.16;
-}
-
-.share-image-card__rule {
-  display: flex;
-  align-items: center;
-  margin: 24px 0 22px;
-}
-
-.share-image-card__rule::before {
-  width: 42px;
-  height: 4px;
-  background: var(--card-accent);
-  content: "";
-}
-
-.share-image-card__rule span {
-  height: 1px;
-  flex: 1;
-  background: var(--card-line);
-}
-
-.share-image-card__content p {
-  display: -webkit-box;
-  overflow: hidden;
-  margin: 0;
-  color: var(--card-text);
-  font-size: 20px;
-  font-weight: 520;
-  letter-spacing: -0.02em;
-  line-height: 1.55;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 10;
-}
-
-.share-image-card__footer {
-  min-width: 0;
-  align-items: end;
-  padding-top: 14px;
-  border-top: 1px solid var(--card-line);
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0;
-}
-
-.share-image-card__url {
-  overflow: hidden;
-  padding-bottom: 4px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.share-image-card__qr {
-  display: grid;
-  flex: 0 0 auto;
-  justify-items: center;
-  gap: 5px;
-  margin: 0;
-}
-
-.share-image-card__qr img {
-  display: block;
-  width: 84px;
-  height: 84px;
-}
-
-.share-image-card__qr figcaption {
-  color: var(--card-muted);
-  font-size: 8px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-}
-
+.share-image-longform__header { margin-bottom: 32px; padding-bottom: 24px; border-bottom: 2px solid #c9c1b4; }
+.share-image-longform__brand { color: #a33424; font-size: 13px; letter-spacing: .08em; }
+.share-image-longform__header h1 { margin: 18px 0 0; font-size: 32px; line-height: 1.4; font-weight: 750; }
+.share-image-longform__body :deep(h1) { font-size: 28px; }
+.share-image-longform__body :deep(h2) { font-size: 24px; }
+.share-image-longform__body :deep(h3) { font-size: 20px; }
+.share-image-longform__body :deep(:is(h1,h2,h3,h4,h5,h6)) { margin: 32px 0 14px; line-height: 1.5; font-weight: 700; }
+.share-image-longform__body :deep(p) { margin: 0 0 18px; }
+.share-image-longform__body :deep(blockquote) { margin: 22px 0; border-left: 3px solid #a33424; padding: 4px 0 4px 18px; color: #514b43; }
+.share-image-longform__body :deep(blockquote > :last-child) { margin-bottom: 0; }
+.share-image-longform__body :deep(:is(ul,ol)) { margin: 16px 0 22px; padding-left: 26px; }
+.share-image-longform__body :deep(ul) { list-style: disc; }
+.share-image-longform__body :deep(ol) { list-style: decimal; }
+.share-image-longform__body :deep(li) { margin: 8px 0; }
+.share-image-longform__body :deep(li > :is(ul,ol)) { margin: 6px 0; }
+.share-image-longform__body :deep(hr) { margin: 28px 0; border: 0; border-top: 1px solid #c9c1b4; }
+.share-image-longform__body :deep(code) { font-family: "Cascadia Code", Consolas, monospace; font-size: .85em; background: #e8e2d7; border-radius: 3px; padding: 2px 4px; }
+.share-image-longform__body :deep(pre) { margin: 22px 0; padding: 16px; background: #e8e2d7; border-radius: 6px; white-space: pre-wrap; overflow-wrap: anywhere; tab-size: 2; line-height: 1.65; }
+.share-image-longform__body :deep(pre code) { padding: 0; background: transparent; white-space: inherit; }
+.share-image-longform__body :deep(a) { color: #913d2d; text-decoration: underline; }
+.share-image-longform__body :deep(img) { display: block; max-width: 100%; height: auto; margin: 18px auto; }
+.share-image-longform__body :deep(figure) { margin: 22px 0; }
+.share-image-longform__body :deep(:is(figcaption,cite)) { font-size: 14px; color: #666157; }
+.share-image-longform__body :deep(table) { width: 100%; table-layout: fixed; border-collapse: collapse; margin: 22px 0; font-size: 14px; }
+.share-image-longform__body :deep(:is(th,td)) { border: 1px solid #c9c1b4; padding: 8px; }
+.share-image-longform__footer { display: flex; align-items: end; gap: 24px; margin-top: 36px; padding-top: 20px; border-top: 1px solid #c9c1b4; color: #666157; font-size: 11px; }
+.share-image-longform__url { flex: 1; min-width: 0; }
+.share-image-longform__footer figure { flex: 0 0 84px; margin: 0; text-align: center; }
+.share-image-longform__footer img { display: block; }
+.share-image-longform__footer figcaption { margin-top: 5px; font-size: 10px; }
 @media (max-width: 560px) {
   .share-image-entry__actions {
     width: 100%;
