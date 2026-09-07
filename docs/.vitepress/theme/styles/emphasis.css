@@ -1,7 +1,9 @@
-/* Markdown strong marker
+/* Markdown and excerpt strong marker
  *
- * Keep the painted layer on .text-emphasis rather than <strong> itself so
- * prose decoration cannot leak into component labels or layout boxes.
+ * Markdown strong text gets a dedicated .text-emphasis paint layer. Excerpts
+ * are hand-authored semantic HTML, so only <strong> inside .excerpt-entry
+ * opts into the same marker treatment. Other component <strong> boxes remain
+ * unpainted.
  */
 :root {
   --site-marker-fill: rgba(255, 226, 72, 0.58);
@@ -20,7 +22,8 @@
 }
 
 /* Retain the existing inline geometry; only the paint changes. */
-.vp-doc .text-emphasis {
+.vp-doc .text-emphasis,
+.vp-doc .excerpt-entry strong {
   display: inline;
   padding-inline: 0.03em;
   background:
@@ -47,7 +50,8 @@
     color: CanvasText;
   }
 
-  .vp-doc .text-emphasis {
+  .vp-doc .text-emphasis,
+  .vp-doc .excerpt-entry strong {
     padding-inline: 0;
     background: none;
   }
