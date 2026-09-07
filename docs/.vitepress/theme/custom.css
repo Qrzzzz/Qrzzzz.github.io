@@ -2,6 +2,7 @@
 @import "./styles/site.css";
 @import "./styles/content.css";
 @import "./styles/code.css";
+@import "./styles/emphasis.css";
 
 .site-layout[data-page-kind="article"] .lead {
   display: none !important;
