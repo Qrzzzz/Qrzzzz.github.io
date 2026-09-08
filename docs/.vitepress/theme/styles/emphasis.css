@@ -32,7 +32,7 @@
       var(--site-marker-fill) calc(100% - 0.16em),
       transparent calc(100% - 0.16em)
     );
-  background-size: 100% 60%;
+  background-size: 100% 50%;
   background-position: center 58%;
   background-repeat: no-repeat;
   box-decoration-break: clone;
