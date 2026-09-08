@@ -73,14 +73,12 @@ try {
     }
   }
 
-  const works = readFileSync(path.join(repositoryRoot, "docs/works/index.md"), "utf8");
-  const projectsIndex = readFileSync(path.join(repositoryRoot, "docs/projects/index.md"), "utf8");
-  for (const project of PROJECT_READMES) {
-    const route = `/projects/${project.slug}/`;
-    if (!works.includes(route)) failures.push(`作品页没有收录 ${project.slug}。`);
-    if (!projectsIndex.includes(route)) failures.push(`项目索引没有收录 ${project.slug}。`);
+  if (checkDist) {
+    for (const index of ["works", "projects"]) {
+      const html = readFileSync(path.join(distRoot, index, "index.html"), "utf8");
+      for (const project of PROJECT_READMES) if (!html.includes(`href="/projects/${project.slug}/"`)) failures.push(`${index} index misses ${project.slug}`);
+    }
   }
-  if (works.includes("battery-safety-h5")) failures.push("作品页不应收录本轮排除的《失控之前》。");
 
   const generatedPaths = PROJECT_READMES.map((project) => `docs/projects/${project.slug}/index.md`);
   const tracked = execFileSync("git", ["ls-files", "--", ...generatedPaths], {

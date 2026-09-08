@@ -171,6 +171,7 @@ async function initialize() {
   }
 
   function draw(timestamp = 0) {
+    if (!context || !target) return;
     if (cancelled || timestamp - lastFrame < frameDuration) {
       if (!cancelled) animationFrame = window.requestAnimationFrame(draw);
       return;
@@ -214,6 +215,7 @@ async function initialize() {
   }
 
   function pointerInside(clientX: number, clientY: number) {
+    if (!target) return false;
     const rect = target.getBoundingClientRect();
     const scaleX = target.width / rect.width;
     const scaleY = target.height / rect.height;

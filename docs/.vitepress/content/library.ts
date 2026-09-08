@@ -1,3 +1,4 @@
+import { isCalendarDate } from "./frontmatter.mjs";
 export const LIBRARY_KINDS = ["article", "prompt", "excerpt"] as const;
 export const LIBRARY_STATUSES = ["stable", "maintained", "archived"] as const;
 
@@ -58,7 +59,7 @@ function normalizeDate(value: unknown, field: string) {
   }
 
   const text = requiredText(value, field);
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(text)) {
+  if (!isCalendarDate(text)) {
     throw new TypeError(`Library 内容的 ${field} 必须使用 YYYY-MM-DD 格式。`);
   }
   return text;

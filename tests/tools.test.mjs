@@ -1,12 +1,8 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
 import test from "node:test";
-
-const tools = readFileSync("docs/tools/index.md", "utf8");
-
-test("opens the independently deployed password generator outside the VitePress router", () => {
-  assert.match(
-    tools,
-    /href="https:\/\/qrzzzz\.github\.io\/password-generator\/" target="_self"/
-  );
+import { PROJECTS } from "../docs/.vitepress/content/projects.mjs";
+test("keeps the independent tool in the shared catalog", () => {
+  const tools = PROJECTS.filter(project => project.kind === "tool");
+  assert.equal(tools.length, 1);
+  assert.equal(tools[0].homepage, "https://qrzzzz.github.io/password-generator/");
 });

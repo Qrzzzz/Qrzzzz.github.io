@@ -1,3 +1,5 @@
+import { mkdtempSync } from "node:fs";
+import { replaceStagedPaths, removeStage } from "./staged-output.mjs";
 import { execFileSync } from "node:child_process";
 import {
   cpSync,
@@ -892,7 +894,7 @@ ${supplementalSection}## Synchronization details
 `;
 }
 
-export function importLyricsCardDocs({
+function importLyricsCardDocsInto({
   sourceRoot,
   outputRoot = path.resolve(GENERATED_ROOT),
   publicOutputRoot = path.resolve(GENERATED_PUBLIC_ROOT),
@@ -1110,4 +1112,28 @@ export function generatedManifest(outputRoot = path.resolve(GENERATED_ROOT)) {
     throw new Error(`未找到导入清单：${manifestPath}。请先运行 npm run docs:pull。`);
   }
   return JSON.parse(readFileSync(manifestPath, "utf8"));
+}
+
+export function importLyricsCardDocs(options) {
+  const output = path.resolve(options.outputRoot ?? GENERATED_ROOT);
+  const publicOutput = path.resolve(options.publicOutputRoot ?? GENERATED_PUBLIC_ROOT);
+  const projectOutput = path.join(path.dirname(output), "index.md");
+  const parent = path.dirname(output);
+  const source = path.resolve(options.sourceRoot);
+  for (const target of [output, publicOutput, projectOutput]) {
+    if (source === target || source.startsWith(target + path.sep) || target.startsWith(source + path.sep)) throw new Error("Import output overlaps its source");
+  }
+  mkdirSync(parent, { recursive: true });
+  const stage = mkdtempSync(path.join(parent, ".import-"));
+  try {
+    const stagedDocs = path.join(stage, "project/docs");
+    const stagedPublic = path.join(stage, "assets");
+    const manifest = importLyricsCardDocsInto({ ...options, outputRoot: stagedDocs, publicOutputRoot: stagedPublic });
+    replaceStagedPaths([
+      { source: stagedDocs, target: output },
+      { source: stagedPublic, target: publicOutput },
+      { source: path.join(stage, "project/index.md"), target: projectOutput }
+    ]);
+    return manifest;
+  } finally { removeStage(stage, parent); }
 }

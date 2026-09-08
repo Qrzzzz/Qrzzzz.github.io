@@ -5,7 +5,7 @@
   "type": "module",
   "description": "Source for the Qrzzzz personal site.",
   "scripts": {
-    "check": "npm run docs:test && npm run docs:content-check && npm run docs:check && npm run docs:build && npm run docs:output-test && npm run docs:navigation-test && npm run docs:check -- --dist",
+    "check": "npm run docs:typecheck && npm run docs:test && npm run docs:content-check && npm run docs:check && npm run docs:build && npm run docs:output-test && npm run docs:navigation-test && npm run docs:check -- --dist && npm run docs:provenance",
     "docs:pull": "node scripts/pull-project-docs.mjs",
     "docs:import": "node scripts/import-lyrics-card-docs.mjs",
     "docs:check": "node scripts/check-project-docs.mjs",
@@ -15,7 +15,12 @@
     "docs:navigation-test": "node scripts/check-site-navigation.mjs",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
-    "docs:preview": "vitepress preview docs"
+    "docs:preview": "vitepress preview docs",
+    "docs:typecheck": "vue-tsc --noEmit",
+    "docs:audit": "npm audit --audit-level=moderate",
+    "docs:refresh": "node scripts/pull-project-docs.mjs --refresh",
+    "docs:provenance": "node scripts/write-build-provenance.mjs",
+    "docs:e2e": "playwright test"
   },
   "engines": {
     "node": ">=24 <25"
@@ -26,8 +31,20 @@
     "qrcode": "^1.5.4"
   },
   "devDependencies": {
+    "@playwright/test": "1.63.0",
+    "@types/node": "^24.0.0",
+    "@types/qrcode": "^1.5.6",
     "linkedom": "^0.18.13",
     "minisearch": "^7.2.0",
-    "vitepress": "1.6.4"
+    "typescript": "~5.9.3",
+    "vitepress": "1.6.4",
+    "vue": "^3.5.39",
+    "vue-tsc": "3.3.11",
+    "yaml": "^2.9.0"
+  },
+  "overrides": {
+    "vite": "6.4.3",
+    "postcss": "8.5.28",
+    "nanoid": "3.3.18"
   }
 }

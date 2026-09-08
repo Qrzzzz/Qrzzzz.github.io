@@ -25,7 +25,7 @@ test("cycles inline search selection and defaults Enter to the first result", ()
 });
 
 test("mounts an accessible inline search instead of the VitePress modal trigger", () => {
-  const layout = readFileSync("docs/.vitepress/theme/Layout.vue", "utf8");
+  const layout = (readFileSync("docs/.vitepress/theme/Layout.vue", "utf8") + readFileSync("docs/.vitepress/theme/navigationAccessibility.ts", "utf8"));
   const component = readFileSync("docs/.vitepress/theme/InlineSearch.vue", "utf8");
   const siteStyles = readFileSync("docs/.vitepress/theme/styles/site.css", "utf8");
 
@@ -59,7 +59,7 @@ test("isolates the expanded search from overlapping navigation controls", () => 
 });
 
 test("uses the top navigation and native mobile screen without a sidebar drawer", () => {
-  const layout = readFileSync("docs/.vitepress/theme/Layout.vue", "utf8");
+  const layout = (readFileSync("docs/.vitepress/theme/Layout.vue", "utf8") + readFileSync("docs/.vitepress/theme/navigationAccessibility.ts", "utf8"));
   const siteStyles = readFileSync("docs/.vitepress/theme/styles/site.css", "utf8");
   const tokens = readFileSync("docs/.vitepress/theme/styles/tokens.css", "utf8");
 

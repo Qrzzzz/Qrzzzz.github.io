@@ -48,7 +48,7 @@ const categories: Array<{
 
 const query = ref("");
 const activeKind = ref<LibraryKind | "all">("all");
-let queryUrlTimer: ReturnType<typeof setTimeout> | undefined;
+let queryUrlTimer: number | undefined;
 
 const latestUpdated = computed(() => libraryItems[0]?.updated ?? "");
 const filteredItems = computed(() =>

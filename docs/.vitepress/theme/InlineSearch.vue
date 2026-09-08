@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { tokenizeSearch, rankSearchResults, createSearchLoader } from "../content/search.mjs";
 import localSearchIndex from "@localSearchIndex";
 import type MiniSearch from "minisearch";
 import type { SearchResult } from "minisearch";
@@ -25,6 +26,9 @@ const expanded = ref(false);
 const query = ref("");
 const selectedIndex = ref(-1);
 const loading = ref(false);
+const loadError = ref(false);
+const cachedLoad = createSearchLoader();
+let loadGeneration = 0;
 const searchIndex = shallowRef<MiniSearch<SearchDocument>>();
 const { localeIndex, theme } = useData();
 const router = useRouter();
@@ -32,7 +36,7 @@ const router = useRouter();
 const results = computed<InlineSearchResult[]>(() => {
   const value = query.value.trim();
   if (!value || !searchIndex.value) return [];
-  return searchIndex.value.search(value).slice(0, 8) as InlineSearchResult[];
+  return rankSearchResults(searchIndex.value.search(value)) as InlineSearchResult[];
 });
 
 const activeDescendant = computed(() =>
@@ -48,36 +52,46 @@ function isEditingContent(target: EventTarget | null) {
 }
 
 async function loadIndex() {
-  const loader = localSearchIndex[localeIndex.value];
+  const locale = localeIndex.value;
+  const current = ++loadGeneration;
+  const loader = localSearchIndex[locale];
   if (!loader) {
     searchIndex.value = undefined;
     return;
   }
 
+  if (searchIndex.value) return;
   loading.value = true;
+  loadError.value = false;
   try {
-    const [{ default: MiniSearchClass }, module] = await Promise.all([
-      import("minisearch"),
-      loader()
-    ]);
-    const options = theme.value.search?.provider === "local"
-      ? theme.value.search.options?.miniSearch
-      : undefined;
-    searchIndex.value = markRaw(
-      MiniSearchClass.loadJSON<SearchDocument>(module.default, {
-        fields: ["title", "titles", "text"],
-        storeFields: ["title", "titles"],
-        searchOptions: {
-          fuzzy: 0.2,
-          prefix: true,
-          boost: { title: 4, text: 2, titles: 1 },
-          ...options?.searchOptions
-        },
-        ...options?.options
-      })
-    );
+    const loaded = await cachedLoad(locale, async () => {
+      const [{ default: MiniSearchClass }, module] = await Promise.all([
+        import("minisearch"),
+        loader()
+      ]);
+      const options = theme.value.search?.provider === "local"
+        ? theme.value.search.options?.miniSearch
+        : undefined;
+      return markRaw(
+        MiniSearchClass.loadJSON<SearchDocument>(module.default, {
+          fields: ["title", "titles", "text"],
+          storeFields: ["title", "titles"],
+          searchOptions: {
+            fuzzy: 0.2,
+            prefix: true,
+            boost: { title: 4, text: 2, titles: 1 },
+            ...options?.searchOptions
+          },
+          ...options?.options,
+          tokenize: tokenizeSearch
+        })
+      );
+    });
+    if (current === loadGeneration) searchIndex.value = loaded;
+  } catch {
+    if (current === loadGeneration) loadError.value = true;
   } finally {
-    loading.value = false;
+    if (current === loadGeneration) loading.value = false;
   }
 }
 
@@ -85,6 +99,7 @@ async function openSearch() {
   expanded.value = true;
   await nextTick();
   input.value?.focus();
+  void loadIndex();
 }
 
 function closeSearch(returnFocus = false) {
@@ -151,19 +166,23 @@ function clearQuery() {
 watch(query, () => {
   selectedIndex.value = -1;
 });
-watch(localeIndex, loadIndex);
+watch(localeIndex, () => {
+  loadGeneration++;
+  searchIndex.value = undefined;
+  if (expanded.value) void loadIndex();
+});
 watch(
   () => router.route.path,
   () => closeSearch()
 );
 
 onMounted(() => {
-  void loadIndex();
   window.addEventListener("keydown", handleGlobalKeydown, true);
   document.addEventListener("pointerdown", handleDocumentPointerDown);
 });
 
 onBeforeUnmount(() => {
+  loadGeneration++;
   window.removeEventListener("keydown", handleGlobalKeydown, true);
   document.removeEventListener("pointerdown", handleDocumentPointerDown);
 });
@@ -233,8 +252,11 @@ onBeforeUnmount(() => {
       </button>
     </form>
 
-    <div v-if="expanded && query" class="inline-search-panel">
+    <div v-if="expanded && (query || loading || loadError)" class="inline-search-panel">
       <p v-if="loading" class="inline-search-state">Loading search index…</p>
+      <p v-else-if="loadError" class="inline-search-state" role="alert">
+        Search is unavailable. <button type="button" @click="loadIndex">Retry search</button>
+      </p>
       <ul
         v-else-if="results.length"
         id="inline-search-results"

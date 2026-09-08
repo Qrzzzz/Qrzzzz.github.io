@@ -1,15 +1,9 @@
-import { spawnSync } from "node:child_process";
-import path from "node:path";
-import process from "node:process";
 import { fileURLToPath } from "node:url";
-
-const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-
-for (const script of ["pull-lyrics-card-docs.mjs", "pull-project-readmes.mjs"]) {
-  const result = spawnSync(process.execPath, [path.join(repositoryRoot, "scripts", script)], {
-    cwd: repositoryRoot,
-    encoding: "utf8",
-    stdio: "inherit"
-  });
-  if (result.error || result.status !== 0) process.exit(result.status ?? 1);
-}
+import { syncProjectSnapshot } from "./lib/source-snapshot.mjs";
+const args = process.argv.slice(2);
+const lockIndex = args.indexOf("--lock");
+if (lockIndex >= 0 && !args[lockIndex + 1]) throw new Error("--lock requires a snapshot file");
+syncProjectSnapshot(fileURLToPath(new URL("..", import.meta.url)), {
+  refresh: args.includes("--refresh"),
+  ...(lockIndex >= 0 ? { lockFile: args[lockIndex + 1] } : {})
+});

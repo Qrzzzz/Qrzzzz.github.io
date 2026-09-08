@@ -1,6 +1,8 @@
+import { tokenizeSearch } from "./content/search.mjs";
+import { normalizeLibraryItem, sortLibraryItems } from "./content/library";
 import { defineConfig } from "vitepress";
 import { fileURLToPath } from "node:url";
-import { collectLibraryRecords } from "../../scripts/check-content-metadata.mjs";
+import { collectLibraryRecords } from "../../scripts/lib/content-library.mjs";
 import { inlineEmphasisPlugin } from "./markdown/inline-emphasis.mjs";
 
 const repositoryRoot = fileURLToPath(new URL("../..", import.meta.url));
@@ -16,20 +18,7 @@ const libraryPager = new Map<
 for (const kind of ["article", "prompt", "excerpt"]) {
   const items = libraryRecords
     .filter((record) => record.frontmatter.kind === kind)
-    .sort((left, right) => {
-      const leftDate =
-        left.frontmatter.updated ?? left.frontmatter.published ?? "";
-      const rightDate =
-        right.frontmatter.updated ?? right.frontmatter.published ?? "";
-      const dateOrder = String(rightDate).localeCompare(String(leftDate));
-      return (
-        dateOrder ||
-        String(left.frontmatter.title).localeCompare(
-          String(right.frontmatter.title),
-          "zh-CN"
-        )
-      );
-    });
+    .sort((left, right) => sortLibraryItems(normalizeLibraryItem(left), normalizeLibraryItem(right)));
 
   items.forEach((item, index) => {
     const navigationItem = (target: (typeof items)[number] | undefined) =>
@@ -103,6 +92,8 @@ export default defineConfig({
   ],
 
   transformPageData(pageData) {
+    const record = libraryRecords.find(item => item.relativePath === pageData.relativePath.replaceAll("\\", "/"));
+    if (record) Object.assign(pageData.frontmatter, record.frontmatter);
     const sourcePath = pageData.relativePath
       .replace(/(^|\/)index\.md$/, "$1")
       .replace(/\.md$/, ".html");
@@ -243,6 +234,7 @@ export default defineConfig({
     search: {
       provider: "local",
       options: {
+        miniSearch: { options: { tokenize: tokenizeSearch } },
         translations: {
           button: {
             buttonText: "Search the site…",

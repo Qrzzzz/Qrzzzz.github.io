@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 
 const config = readFileSync("docs/.vitepress/config.mts", "utf8");
-const layout = readFileSync("docs/.vitepress/theme/Layout.vue", "utf8");
+const layout = (readFileSync("docs/.vitepress/theme/Layout.vue", "utf8") + readFileSync("docs/.vitepress/theme/navigationAccessibility.ts", "utf8"));
 const styles = readFileSync("docs/.vitepress/theme/styles/content.css", "utf8");
 const tokens = readFileSync("docs/.vitepress/theme/styles/tokens.css", "utf8");
 

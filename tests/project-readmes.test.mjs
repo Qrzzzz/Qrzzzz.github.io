@@ -205,6 +205,6 @@ test("wires all project sync and check scripts into deployment", () => {
   assert.equal(packageJson.scripts["docs:check"], "node scripts/check-project-docs.mjs");
   assert.match(workflow, /name: Pull project documentation\s+run: npm run docs:pull/);
   assert.doesNotMatch(workflow, /Checkout lyrics-card-generator docs/);
-  assert.match(navigationCheck, /"\/second-glow\/"/);
-  assert.match(navigationCheck, /"\/AI-slop-site\/"/);
+  assert.match(workflow, /run: npm run check/);
+  assert.match(navigationCheck, /checkSiteNavigation/);
 });
