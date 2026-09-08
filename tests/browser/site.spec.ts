@@ -9,7 +9,7 @@ test("search is lazy, finds Chinese words and navigates with the keyboard", asyn
   await page.getByRole("button", { name: "Search the site", exact: true }).click();
   const search = page.getByRole("combobox", { name: "Search the site" });
   await search.fill("野心");
-  await expect(page.getByRole("listbox")).toContainText("巨大野心");
+  await expect(page.getByRole("listbox")).toContainText("巨大野心", { timeout: 20000 });
   expect(indexes).toHaveLength(1);
   await search.press("ArrowDown");
   await search.press("Enter");

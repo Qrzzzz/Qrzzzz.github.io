@@ -57,6 +57,14 @@ jobs:
       - name: Test browser behavior
         run: npm run docs:e2e
 
+      - name: Preserve browser failure evidence
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-test-results
+          path: test-results/
+          retention-days: 7
+
       - name: Audit build dependencies
         run: npm run docs:audit
 
