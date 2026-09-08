@@ -7,12 +7,10 @@
  */
 :root {
   --site-marker-fill: rgba(255, 226, 72, 0.58);
-  --site-marker-edge: rgba(239, 184, 33, 0.22);
 }
 
 .dark {
   --site-marker-fill: rgba(246, 207, 74, 0.34);
-  --site-marker-edge: rgba(246, 207, 74, 0.16);
 }
 
 .vp-doc strong {
@@ -21,25 +19,18 @@
   font-weight: 750;
 }
 
-/* Retain the existing inline geometry; only the paint changes. */
+/* A flat yellow rectangle with subtly slanted ends, repeated on each line. */
 .vp-doc .text-emphasis,
 .vp-doc .excerpt-entry strong {
   display: inline;
-  padding-inline: 0.03em;
+  padding-inline: 0.16em;
   background:
     linear-gradient(
-      178deg,
-      transparent 0 31%,
-      var(--site-marker-edge) 31% 37%,
-      var(--site-marker-fill) 37% 78%,
-      var(--site-marker-edge) 78% 84%,
-      transparent 84% 100%
-    ),
-    linear-gradient(
-      182deg,
-      transparent 0 44%,
-      color-mix(in srgb, var(--site-marker-fill) 68%, transparent) 44% 73%,
-      transparent 73% 100%
+      100deg,
+      transparent 0.16em,
+      var(--site-marker-fill) 0.16em,
+      var(--site-marker-fill) calc(100% - 0.16em),
+      transparent calc(100% - 0.16em)
     );
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;

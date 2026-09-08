@@ -28,8 +28,7 @@ test("loads the marker treatment after the core content styles", () => {
 
 test("keeps marker color independent from the active theme accent", () => {
   assert.match(emphasis, /--site-marker-fill:\s*rgba\(/);
-  assert.match(emphasis, /--site-marker-edge:\s*rgba\(/);
-  assert.match(emphasis, /\.dark\s*\{[\s\S]*--site-marker-fill:[\s\S]*--site-marker-edge:/);
+  assert.match(emphasis, /\.dark\s*\{[\s\S]*--site-marker-fill:/);
   assert.doesNotMatch(
     emphasis.match(/:root\s*\{([\s\S]*?)\}/)?.[1] ?? "",
     /--site-accent/
@@ -46,10 +45,9 @@ test("paints markdown and excerpt emphasis while retaining inline geometry", () 
 
   assert.ok(marker, "shared marker rule is missing");
   assert.match(marker, /display:\s*inline/);
-  assert.match(marker, /padding-inline:\s*0\.03em/);
+  assert.match(marker, /padding-inline:\s*0\.16em/);
   assert.doesNotMatch(marker, /margin-inline/);
   assert.match(marker, /var\(--site-marker-fill\)/);
-  assert.match(marker, /var\(--site-marker-edge\)/);
   assert.match(marker, /box-decoration-break:\s*clone/);
   assert.match(marker, /-webkit-box-decoration-break:\s*clone/);
 });
