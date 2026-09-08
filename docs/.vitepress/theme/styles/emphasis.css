@@ -19,7 +19,7 @@
   font-weight: 750;
 }
 
-/* A flat yellow rectangle with subtly slanted ends, repeated on each line. */
+/* A reduced-height yellow marker with subtly slanted ends, repeated on each line. */
 .vp-doc .text-emphasis,
 .vp-doc .excerpt-entry strong {
   display: inline;
@@ -32,6 +32,9 @@
       var(--site-marker-fill) calc(100% - 0.16em),
       transparent calc(100% - 0.16em)
     );
+  background-size: 100% 60%;
+  background-position: center 58%;
+  background-repeat: no-repeat;
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
 }
