@@ -3,7 +3,7 @@ import { nextTick, onBeforeUnmount, ref, watch } from "vue";
 import { useData } from "vitepress";
 import { SHARE_IMAGE_FORMAT, createShareImageFilename, extractLongformContent, measureLongformHeight } from "./shareImageRuntime.mjs";
 
-defineProps<{ pageKind: "article" | "excerpt" }>();
+const props = defineProps<{ pageKind: "article" | "excerpt" }>();
 const { frontmatter, page } = useData();
 const longform = ref<HTMLElement>();
 const rendering = ref(false);
@@ -30,7 +30,7 @@ async function downloadImage() {
   statusMessage.value = "正在生成全文长图…";
   statusTone.value = "neutral";
   try {
-    const content = extractLongformContent(document.querySelector(".vp-doc"), frontmatter.value.title || page.value.title);
+    const content = extractLongformContent(document.querySelector(".vp-doc"), frontmatter.value.title || page.value.title, props.pageKind);
     const canonical = document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.href;
     const href = new URL(canonical || window.location.href);
     href.hash = "";
@@ -57,7 +57,7 @@ async function downloadImage() {
     if (!blob || !blob.size) throw new Error("The browser did not return image data");
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement("a");
-    anchor.download = createShareImageFilename(content.title);
+    anchor.download = createShareImageFilename(props.pageKind === "excerpt" ? frontmatter.value.title : content.title);
     anchor.href = url;
     anchor.click();
     window.setTimeout(() => URL.revokeObjectURL(url), 1000);
@@ -93,12 +93,12 @@ async function downloadImage() {
       <article ref="longform" class="share-image-longform" :style="{ width: `${SHARE_IMAGE_FORMAT.width}px` }">
         <header class="share-image-longform__header">
           <span class="share-image-longform__brand">Qrzzzz · 全文阅读</span>
-          <h1>{{ exportContent.title }}</h1>
+          <h1 v-if="exportContent.title">{{ exportContent.title }}</h1>
         </header>
         <!-- Only the allowlisted semantic DOM from extractLongformContent is rendered. -->
         <div class="share-image-longform__body" v-html="exportContent.html" />
         <footer class="share-image-longform__footer">
-          <span class="share-image-longform__url">{{ exportContent.href }}</span>
+          <span v-if="pageKind !== 'excerpt'" class="share-image-longform__url">{{ exportContent.href }}</span>
           <figure><img v-if="qrCodeDataUrl" :src="qrCodeDataUrl" alt="" width="84" height="84" /><figcaption>扫码阅读原文</figcaption></figure>
         </footer>
       </article>

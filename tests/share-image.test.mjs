@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import test from "node:test";
 import { createMarkdownRenderer } from "vitepress";
 const markdown = await createMarkdownRenderer(process.cwd());
@@ -11,6 +11,23 @@ const fixture = readFileSync("tests/fixtures/share-image-longform.md", "utf8");
 function source(html) {
   return parseHTML(`<html><head><base href="https://qrzzzz.github.io/notes/test"></head><body><div class="vp-doc">${html}</div></body></html>`).document.querySelector(".vp-doc");
 }
+
+test("exports every excerpt without a title while preserving its complete body", () => {
+  for (const name of readdirSync("docs/excerpts").filter(name => /^\d.*\.md$/.test(name))) {
+    const text = readFileSync(`docs/excerpts/${name}`, "utf8");
+    const body = text.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, "");
+    const input = source(markdown.render(body));
+    const result = extractLongformContent(input, `Excerpt ${name.slice(0, -3)}`, "excerpt");
+    assert.equal(result.title, "", name);
+    assert.equal(source(result.html).textContent, input.textContent, name);
+    assert.equal(source(result.html).querySelector("h1"), null, name);
+  }
+  const legacy = extractLongformContent(source('<article><h1 class="excerpt-entry__heading">偶拾，2026 年 9 月 4 日，第一则</h1><p>正文</p></article>'), "Excerpt 2026-09-04-01", "excerpt");
+  assert.equal(legacy.title, "");
+  assert.equal(source(legacy.html).textContent, "正文");
+  assert.match(component, /<h1 v-if="exportContent.title">/);
+  assert.match(component, /v-if="pageKind !== 'excerpt'" class="share-image-longform__url"/);
+});
 
 test("exports complete Markdown structure, including text well beyond 200 characters", () => {
   const input = source(markdown.render(fixture));

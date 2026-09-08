@@ -5,18 +5,18 @@ const excluded = 'script, style, template, noscript, button, input, select, text
 
 // VitePress has already parsed Markdown. Rebuild semantic content without site
 // styles or interactive controls, rather than flattening or reparsing Markdown.
-export function extractLongformContent(source, fallbackTitle = "Untitled article") {
+export function extractLongformContent(source, fallbackTitle = "Untitled article", pageKind = "article") {
   if (!source) throw new Error("Article content is unavailable");
   const doc = source.ownerDocument;
   const output = doc.createElement("div");
-  const titleNode = source.querySelector("h1");
+  const titleNode = pageKind === "excerpt" ? null : source.querySelector("h1");
   function copy(node, parent, omitTitle = false) {
     if (omitTitle && node === titleNode) return;
     if (node.nodeType === 3) {
       parent.appendChild(doc.createTextNode(node.textContent ?? ""));
       return;
     }
-    if (node.nodeType !== 1 || node.matches(excluded)) return;
+    if (node.nodeType !== 1 || node.matches(excluded) || node.matches(".excerpt-entry__heading")) return;
     const tag = node.tagName.toLowerCase();
     const target = contentTags.has(tag) ? doc.createElement(tag) : parent;
     if (target !== parent) {
@@ -43,7 +43,7 @@ export function extractLongformContent(source, fallbackTitle = "Untitled article
   const titleOutput = doc.createElement("div");
   if (titleNode) for (const child of titleNode.childNodes) copy(child, titleOutput);
   for (const child of source.childNodes) copy(child, output, true);
-  return { title: titleOutput.textContent.trim() || String(fallbackTitle), html: output.innerHTML };
+  return { title: pageKind === "excerpt" ? "" : titleOutput.textContent.trim() || String(fallbackTitle), html: output.innerHTML };
 }
 
 export function measureLongformHeight(element) {

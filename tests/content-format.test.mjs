@@ -110,7 +110,8 @@ test("keeps hand-written pages on their category-specific metadata and lead cont
     const unfenced = outsideFences(page.body);
     const markdownH1 = unfenced.match(/^#\s+(.+)$/gm) ?? [];
     const htmlH1 = unfenced.match(/<h1(?:\s|>)/gi) ?? [];
-    assert.equal(markdownH1.length + htmlH1.length, 1, `${page.relativePath} 应有且仅有一个一级标题`);
+    const isExcerpt = frontmatterValue(page.frontmatter, "kind") === "excerpt";
+    assert.equal(markdownH1.length + htmlH1.length, isExcerpt ? 0 : 1, `${page.relativePath} 应遵循所属分类的标题规则`);
 
     if (!page.relativePath.startsWith("excerpts/20")) {
       assert.equal(markdownH1.length, 1, `${page.relativePath} 应使用 Markdown 一级标题`);

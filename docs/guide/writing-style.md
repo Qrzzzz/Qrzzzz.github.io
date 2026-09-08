@@ -14,6 +14,8 @@ title: 内容写作规范
 
 每页先写 Frontmatter，再写一个且仅一个一级标题。`title` 用于浏览器标题、站内搜索和分享卡片；`description` 用一句完整的话交代主题、范围或读者能获得什么。
 
+Excerpts 条目不设正文标题，也不添加隐藏标题。Frontmatter 的 `title` 仅以 `Excerpt YYYY-MM-DD-NN` 作为英文内部标号；分享图不展示该标号、日期标题或含编号的网址，保留正文、出处与原文二维码。
+
 ```md
 ---
 title: 为个人文档站新增全文搜索

@@ -74,9 +74,10 @@ test("uses shared data and compact previews for 偶拾", () => {
 });
 
 test("keeps every excerpt in its own titleless Markdown page", () => {
-  for (const page of excerptPages) {
-    assert.doesNotMatch(page, /^#\s+/m);
-    assert.match(page, /class="excerpt-entry__heading"/);
+  for (const { source: page, name } of excerptSources) {
+    assert.doesNotMatch(page, /^#\s+|<h1|excerpt-entry__heading|aria-labelledby=/m);
+    assert.ok(page.includes(`title: Excerpt ${name.slice(0, -3)}`));
+    assert.match(page, /aria-label="Excerpt"/);
   }
 
   assert.match(first, /拜托你一直鲜活，keep learning/);
@@ -148,7 +149,6 @@ test("keeps every excerpt in its own titleless Markdown page", () => {
     nineteenth,
     /<cite>弗里德里希·尼采《查拉图斯特拉如是说》，第三部〈论旧榜与新榜〉第 23 节<\/cite>/
   );
-  assert.match(styles, /\.vp-doc \.excerpt-entry__heading\s*\{[\s\S]*?clip-path: inset\(50%\)/);
   assert.match(styles, /\.excerpt-renderings\s*\{[\s\S]*?grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
 });
 
