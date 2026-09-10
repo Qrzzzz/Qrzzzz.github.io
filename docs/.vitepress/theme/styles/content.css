@@ -145,7 +145,7 @@
 .back-to-top:focus-visible {
   border-color: color-mix(in srgb, var(--site-accent) 55%, var(--site-line));
   box-shadow: 0 12px 34px color-mix(in srgb, var(--site-text) 13%, transparent);
-  color: var(--site-accent);
+  color: var(--site-link);
   transform: translateY(-2px);
 }
 
@@ -220,6 +220,7 @@
 }
 
 .vp-doc {
+  font-family: var(--site-font-reading);
   color: var(--site-text);
   font-size: 17px;
   overflow-wrap: break-word;
@@ -232,8 +233,8 @@
 .vp-doc h5,
 .vp-doc h6 {
   color: var(--site-text);
-  font-family: var(--site-font-sans);
-  font-weight: 700;
+  font-family: var(--site-font-reading);
+  font-weight: 600;
   letter-spacing: -0.018em;
   text-wrap: balance;
 }
@@ -267,24 +268,6 @@
   font-size: clamp(38px, 4.8vw, 56px);
   line-height: 1.08;
   overflow-wrap: anywhere;
-}
-
-@supports ((background-clip: text) or (-webkit-background-clip: text)) {
-  .vp-doc h1 {
-    background-image: linear-gradient(
-      to right,
-      var(--site-accent) 0%,
-      var(--site-spark-secondary) 100%
-    );
-    background-clip: text;
-    color: transparent;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-
-  .vp-doc h1 .header-anchor {
-    -webkit-text-fill-color: currentColor;
-  }
 }
 
 @media (forced-colors: active) {
@@ -374,7 +357,7 @@
 }
 
 .vp-doc a {
-  color: var(--site-accent);
+  color: var(--site-link);
   text-decoration-color: color-mix(in srgb, var(--site-accent) 44%, transparent);
   text-decoration-thickness: 1px;
   text-underline-offset: 4px;
@@ -399,7 +382,7 @@
   background:
     linear-gradient(
       to top,
-      var(--site-accent-soft) 0 34%,
+      var(--site-content-accent-soft) 0 34%,
       transparent 34%
     );
   box-decoration-break: clone;
@@ -424,8 +407,8 @@
     linear-gradient(
       to bottom,
       transparent 16%,
-      var(--site-accent-soft) 16%,
-      var(--site-accent-soft) 90%,
+      var(--site-content-accent-soft) 16%,
+      var(--site-content-accent-soft) 90%,
       transparent 90%
     );
   color: var(--site-text);
@@ -611,6 +594,8 @@
 .vp-doc .project-docs-sync.sync-notice {
   --custom-block-accent: var(--site-text-muted);
   --custom-block-tint: 5%;
+  --site-surface: var(--site-content-surface);
+  --site-text-muted: var(--site-content-muted);
 
   border: 0;
   border-radius: 10px;
@@ -693,7 +678,7 @@
 }
 
 .vp-doc details summary::marker {
-  color: var(--site-accent);
+  color: var(--site-content-accent);
 }
 
 .vp-doc details[open] summary {
@@ -947,7 +932,7 @@
 }
 
 .library-search input:focus {
-  border-color: var(--site-accent);
+  border-color: var(--site-link);
   box-shadow: 0 0 0 2px color-mix(in srgb, var(--site-accent) 18%, transparent);
 }
 
@@ -977,9 +962,9 @@
 }
 
 .library-filter--active {
-  border-color: var(--site-accent);
+  border-color: var(--site-link);
   background: color-mix(in srgb, var(--site-accent) 12%, var(--site-surface));
-  color: var(--site-accent);
+  color: var(--site-link);
 }
 
 .library-toolbar__count {
@@ -1113,8 +1098,8 @@
 
 .library-empty button:hover,
 .library-empty button:focus-visible {
-  border-color: var(--site-accent);
-  color: var(--site-accent);
+  border-color: var(--site-link);
+  color: var(--site-link);
 }
 
 /* Section hubs */
@@ -1146,7 +1131,7 @@
 
 .hub-section__header > a:hover,
 .hub-section__header > a:focus-visible {
-  color: var(--site-accent);
+  color: var(--site-link);
 }
 
 .hub-list {
@@ -1534,7 +1519,7 @@
   align-self: end;
   border: 0;
   padding: 0;
-  color: var(--site-accent);
+  color: var(--site-link);
   font-size: 14px;
   font-weight: 650;
 }
@@ -1659,8 +1644,8 @@
 }
 
 .release-archive__languages a:hover {
-  border-color: var(--site-accent);
-  color: var(--site-accent);
+  border-color: var(--site-link);
+  color: var(--site-link);
 }
 
 .release-language-nav {
@@ -1686,14 +1671,14 @@
 }
 
 .release-language-nav a:hover {
-  color: var(--site-accent);
+  color: var(--site-link);
 }
 
 .release-language-nav a[aria-current="page"] {
   color: var(--site-text);
   font-weight: 680;
   text-decoration: underline;
-  text-decoration-color: var(--site-accent);
+  text-decoration-color: var(--site-link);
   text-decoration-thickness: 2px;
   text-underline-offset: 6px;
 }

@@ -1,0 +1,116 @@
+[
+  {
+    "file": "maple-mono/MapleMono-Italic-VF.woff2",
+    "bytes": 152816,
+    "sha256": "6ee68f909d35b832b804649c8ddf2baadac0c00a035294b2b0eeef95990641ef",
+    "family": "Maple Mono",
+    "axes": {
+      "wght": [
+        100.0,
+        400.0,
+        800.0
+      ]
+    },
+    "glyphs": 1436
+  },
+  {
+    "file": "maple-mono/MapleMono-VF.woff2",
+    "bytes": 130908,
+    "sha256": "e7080ef37fa8b3a38f71446e53e546634c27ce2cfe97673478cafc029d6344ee",
+    "family": "Maple Mono",
+    "axes": {
+      "wght": [
+        100.0,
+        400.0,
+        800.0
+      ]
+    },
+    "glyphs": 1435
+  },
+  {
+    "file": "maple-mono/OFL.txt",
+    "bytes": 4394,
+    "sha256": "eb2d28d2e565a0757e3d64e34ebb452e75a0cad87c0ab3faf4e08ba7596de902"
+  },
+  {
+    "file": "newsreader/Newsreader-Italic[opsz,wght].ttf",
+    "bytes": 495684,
+    "sha256": "796668611f80b64d5adf182fde3b6f29ed83b4e7cbec7b96937e84ac01364792",
+    "family": "Newsreader 16pt",
+    "axes": {
+      "wght": [
+        200.0,
+        400.0,
+        800.0
+      ],
+      "opsz": [
+        6.0,
+        18.0,
+        72.0
+      ]
+    },
+    "glyphs": 564
+  },
+  {
+    "file": "newsreader/Newsreader[opsz,wght].ttf",
+    "bytes": 451664,
+    "sha256": "8a08d13f8a6c0d51be379a60af84f945f65369a67e509ee3c3bdcc421254d7c1",
+    "family": "Newsreader 16pt",
+    "axes": {
+      "wght": [
+        200.0,
+        400.0,
+        800.0
+      ],
+      "opsz": [
+        6.0,
+        18.0,
+        72.0
+      ]
+    },
+    "glyphs": 564
+  },
+  {
+    "file": "newsreader/OFL.txt",
+    "bytes": 4487,
+    "sha256": "b82a97d07a954ebe64246945545f6b5fe2895e1caed00bb1bbf55d91deadc520"
+  },
+  {
+    "file": "source-han-sans/OFL.txt",
+    "bytes": 4463,
+    "sha256": "fcac737e761ec63dbfbdce11030a1780161920d80315edba9c8beff1c2bac5a2"
+  },
+  {
+    "file": "source-han-sans/SourceHanSansSC-VF.woff2",
+    "bytes": 14270432,
+    "sha256": "085cc88c530b9c434165ab926f81608a55b24e60e05719f3d41340ac45d9c62f",
+    "family": "Source Han Sans SC VF",
+    "axes": {
+      "wght": [
+        250.0,
+        250.0,
+        900.0
+      ]
+    },
+    "glyphs": 44853
+  },
+  {
+    "file": "source-han-serif/OFL.txt",
+    "bytes": 4463,
+    "sha256": "9ff5bb567e1b92c801fc1069e5fbf992ff8efccacb9db94e5959a5b3ba9bb903"
+  },
+  {
+    "file": "source-han-serif/SourceHanSerifSC-VF.woff2",
+    "bytes": 19747252,
+    "sha256": "3b9451444b4a3554ab061a43cb79dc11c72c0dbc381f148c56c542dca9c0a7e3",
+    "family": "Source Han Serif SC VF",
+    "axes": {
+      "wght": [
+        250.0,
+        250.0,
+        900.0
+      ]
+    },
+    "glyphs": 44779
+  }
+]

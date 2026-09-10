@@ -169,7 +169,7 @@ onBeforeUnmount(() => {
 }
 
 .theme-toggle.is-dark .theme-toggle__thumb {
-  color: var(--site-accent);
+  color: var(--site-link);
   transform: rotate(8deg);
 }
 

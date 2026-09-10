@@ -148,7 +148,7 @@ test("mounts direct animated theme and GitHub actions in the top bar", () => {
   assert.match(siteStyles, /\.site-layout \.VPNavBar\.has-sidebar \.container > \.title\s*\{[^}]*position:\s*static[^}]*width:\s*auto[^}]*padding:\s*0/s);
   assert.match(siteStyles, /\.site-layout \.VPNavBar\.has-sidebar \.content\s*\{[^}]*position:\s*static[^}]*padding:\s*0/s);
   assert.match(siteStyles, /\.VPNavBarTitle \.title\s*\{[^}]*width:\s*40px[^}]*height:\s*40px[^}]*place-items:\s*center[^}]*border-radius:\s*8px/s);
-  assert.match(siteStyles, /\.site-brand-mark\s*\{[^}]*width:\s*40px[^}]*height:\s*40px[^}]*place-items:\s*center[^}]*background:\s*transparent[^}]*color:\s*var\(--site-accent\)[^}]*font-family:\s*var\(--site-font-brand\)[^}]*font-size:\s*23px[^}]*font-weight:\s*900[^}]*letter-spacing:\s*-0\.04em/s);
+  assert.match(siteStyles, /\.site-brand-mark\s*\{[^}]*width:\s*40px[^}]*height:\s*40px[^}]*place-items:\s*center[^}]*background:\s*transparent[^}]*color:\s*var\(--site-link\)[^}]*font-family:\s*var\(--site-font-brand\)[^}]*font-size:\s*23px[^}]*font-weight:\s*900[^}]*letter-spacing:\s*-0\.04em/s);
   assert.match(siteStyles, /\.VPNavBarTitle \.title:hover,[\s\S]*?background:\s*var\(--site-accent-soft\)/s);
   assert.match(siteStyles, /\.VPNavBar::before\s*\{[^}]*backdrop-filter:\s*saturate\(135%\) blur\(22px\)[^}]*mask-image:\s*linear-gradient\(to bottom/s);
   assert.match(siteStyles, /\.VPNavBar::after\s*\{[^}]*backdrop-filter:\s*saturate\(118%\) blur\(8px\)[^}]*mask-image:\s*linear-gradient\(to bottom/s);

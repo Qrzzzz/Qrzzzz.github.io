@@ -129,10 +129,10 @@ let runtime: ReturnType<typeof createHomeGrainientRuntime> | undefined;
 
 function paletteFromTokens(element: HTMLElement) {
   const styles = window.getComputedStyle(element);
-  const colors = ["--site-surface", "--site-accent", "--site-canvas"]
+  const colors = ["--site-surface", "--site-home-wash", "--site-canvas"]
     .map((token) => styles.getPropertyValue(token).trim())
     .filter(Boolean);
-  return colors.length === 3 ? colors : ["#fcfbf7", "#d92d16", "#f5f4ef"];
+  return colors.length === 3 ? colors : ["#fbf8f1", "#d8d2c6", "#f5f0e6"];
 }
 
 function colorValue(value: string) {
@@ -165,7 +165,7 @@ function createScene({
 
   const geometry = new Triangle(gl);
   if (geometry.attributes.uv) delete geometry.attributes.uv;
-  const source = palette.length === 3 ? palette : ["#fcfbf7", "#d92d16", "#f5f4ef"];
+  const source = palette.length === 3 ? palette : ["#fbf8f1", "#d8d2c6", "#f5f0e6"];
   const program = new Program(gl, {
     vertex: vertexShader,
     fragment: fragmentShader,
@@ -267,7 +267,7 @@ onBeforeUnmount(() => {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse at 82% 18%, color-mix(in srgb, var(--site-accent) 52%, transparent), transparent 54%),
+    radial-gradient(ellipse at 82% 18%, color-mix(in srgb, var(--site-home-wash) 52%, transparent), transparent 54%),
     radial-gradient(ellipse at 16% 84%, color-mix(in srgb, var(--site-surface) 78%, transparent), transparent 58%),
     linear-gradient(142deg, var(--site-surface), var(--site-canvas) 72%);
   content: "";

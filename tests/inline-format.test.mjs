@@ -9,7 +9,7 @@ const styles = readFileSync("docs/.vitepress/theme/styles/content.css", "utf8");
 const tokens = readFileSync("docs/.vitepress/theme/styles/tokens.css", "utf8");
 const markdown = createMarkdownRenderer("docs", { config: inlineEmphasisPlugin });
 
-test("ties bold and inline-code treatments to the active accent", () => {
+test("preserves article emphasis and inline-code treatments independently of the brand accent", () => {
   for (const token of [
     "--site-emphasis-text",
     "--site-inline-code-bg",
@@ -25,7 +25,7 @@ test("ties bold and inline-code treatments to the active accent", () => {
   );
   assert.match(
     styles,
-    /\.vp-doc \.text-emphasis\s*\{[^}]*display:\s*inline;[^}]*var\(--site-accent-soft\)[^}]*box-decoration-break:\s*clone/s
+    /\.vp-doc \.text-emphasis\s*\{[^}]*display:\s*inline;[^}]*var\(--site-content-accent-soft\)[^}]*box-decoration-break:\s*clone/s
   );
   assert.match(
     styles,

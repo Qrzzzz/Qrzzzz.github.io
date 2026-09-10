@@ -83,7 +83,7 @@ function syncDocumentMetadata() {
     'meta[name="theme-color"]'
   );
 
-  themeColor?.setAttribute("content", isDark.value ? "#111214" : "#F5F4EF");
+  themeColor?.setAttribute("content", isDark.value ? "#252724" : "#F5F0E6");
   document.documentElement.lang = pageLanguage.value;
 }
 

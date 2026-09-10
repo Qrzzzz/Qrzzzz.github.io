@@ -206,7 +206,7 @@ html.theme-is-switching .site-layout :where(h1, h2, h3, p, a, button, strong, co
   flex: 0 0 40px;
   place-items: center;
   background: transparent;
-  color: var(--site-accent);
+  color: var(--site-link);
   font-family: var(--site-font-brand);
   font-size: 23px;
   font-weight: 900;
@@ -315,7 +315,7 @@ html.theme-is-switching .site-layout :where(h1, h2, h3, p, a, button, strong, co
 .VPNav .VPSocialLink:hover,
 .VPNav .VPNavBarHamburger:hover {
   background: transparent;
-  color: var(--site-accent);
+  color: var(--site-link);
 }
 
 button.VPSwitch.VPSwitchAppearance {
@@ -348,7 +348,7 @@ button.VPSwitch.VPSwitchAppearance:hover {
 }
 
 button.VPSwitch.VPSwitchAppearance:hover::before {
-  border-color: var(--site-accent);
+  border-color: var(--site-link);
 }
 
 button.VPSwitch.VPSwitchAppearance > .check {
@@ -403,7 +403,7 @@ button.VPSwitch.VPSwitchAppearance > .check {
 .VPLocalSearchBox mark {
   border-radius: 2px;
   background: var(--site-accent-soft);
-  color: var(--site-accent);
+  color: var(--site-link);
 }
 
 /* Editorial homepage */
@@ -447,6 +447,8 @@ button.VPSwitch.VPSwitchAppearance > .check {
 }
 
 .home-title {
+  font-family: var(--site-font-brand);
+  --site-particle-ink: var(--site-text);
   position: relative;
   width: 100%;
   height: clamp(160px, 15vw, 250px);
@@ -494,8 +496,8 @@ button.VPSwitch.VPSwitchAppearance > .check {
 }
 
 .home-text-link:hover {
-  border-color: var(--site-accent);
-  color: var(--site-accent);
+  border-color: var(--site-link);
+  color: var(--site-link);
 }
 
 .home-text-link:hover::after {
@@ -642,9 +644,9 @@ button.VPSwitch.VPSwitchAppearance > .check {
 }
 
 .home-actions .home-text-link:hover {
-  border-color: var(--site-accent);
+  border-color: var(--site-link);
   background: var(--site-accent-soft);
-  color: var(--site-accent);
+  color: var(--site-link);
   transform: translateY(-1px);
 }
 
@@ -656,7 +658,7 @@ button.VPSwitch.VPSwitchAppearance > .check {
 
 .home-actions .home-text-link:first-child:hover {
   border-color: var(--site-accent-hover);
-  background: var(--site-accent-hover);
+  background: var(--site-accent);
   color: var(--site-accent-ink);
 }
 

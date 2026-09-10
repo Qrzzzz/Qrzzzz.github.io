@@ -26,17 +26,10 @@ test("keeps contextual sidebars only for the current documentation set", () => {
   assert.match(layout, /setElementInert\(sidebar, isMobileSidebar && !sidebar\.classList\.contains\("open"\)\)/);
 });
 
-test("renders the largest document heading with the site two-color gradient", () => {
+test("renders document headings in solid ink and the reading typeface", () => {
   assert.match(styles, /\.vp-doc h1\s*\{[\s\S]*?width:\s*fit-content/);
-  assert.match(
-    styles,
-    /@supports \(\(background-clip: text\) or \(-webkit-background-clip: text\)\)/
-  );
-  assert.match(
-    styles,
-    /background-image:\s*linear-gradient\(\s*to right,\s*var\(--site-accent\) 0%,\s*var\(--site-spark-secondary\) 100%/s
-  );
-  assert.match(styles, /-webkit-text-fill-color:\s*transparent/);
+  assert.match(styles, /font-family:\s*var\(--site-font-reading\)/);
+  assert.doesNotMatch(styles, /-webkit-text-fill-color:\s*transparent/);
   assert.match(styles, /@media \(forced-colors: active\)/);
 });
 

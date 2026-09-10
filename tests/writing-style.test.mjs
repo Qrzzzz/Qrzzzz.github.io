@@ -167,6 +167,6 @@ test("styles structured article content and live format demonstrations", () => {
   );
   assert.match(
     styles,
-    /\.vp-doc details summary::marker\s*\{[^}]*color:\s*var\(--site-accent\)/s
+    /\.vp-doc details summary::marker\s*\{[^}]*color:\s*var\(--site-content-accent\)/s
   );
 });

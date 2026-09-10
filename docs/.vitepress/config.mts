@@ -82,7 +82,7 @@ export default defineConfig({
           themeColor.setAttribute("name", "theme-color");
           document.head.appendChild(themeColor);
         }
-        themeColor.setAttribute("content", isDark ? "#111214" : "#F5F4EF");
+        themeColor.setAttribute("content", isDark ? "#252724" : "#F5F0E6");
       })()`
     ],
     ["meta", { name: "color-scheme", content: "light dark" }],
@@ -136,7 +136,7 @@ export default defineConfig({
           const themeColor = document.querySelector('meta[name="theme-color"]');
           themeColor?.setAttribute(
             "content",
-            document.documentElement.classList.contains("dark") ? "#111214" : "#F5F4EF"
+            document.documentElement.classList.contains("dark") ? "#252724" : "#F5F0E6"
           );
         })()`
       ]

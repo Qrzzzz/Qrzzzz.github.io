@@ -142,7 +142,7 @@ function draw(now: number) {
 
   if (!reducedMotion) {
     context.shadowBlur = props.particleSize * 2.4;
-    context.shadowColor = getComputedStyle(container.value!).getPropertyValue("--site-accent").trim();
+    context.shadowColor = getComputedStyle(container.value!).getPropertyValue("--site-particle-ink").trim();
   }
 
   pointer.smoothX += (pointer.x - pointer.smoothX) * 0.28;
@@ -296,7 +296,7 @@ async function sampleText() {
   const selected = targets.filter((_, index) => index % stride === 0);
   const baseColor = parseColor(computed.color) ?? { r: 242, g: 240, b: 234 };
   const accentColor =
-    parseColor(computed.getPropertyValue("--site-accent")) ?? { r: 0, g: 230, b: 176 };
+    parseColor(computed.getPropertyValue("--site-particle-ink")) ?? baseColor;
 
   particles = selected.map((target, index) => {
     const seed = ((index * 9301 + 49297) % 233280) / 233280;
