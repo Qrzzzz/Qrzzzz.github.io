@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { nextTick, onBeforeUnmount, ref, watch } from "vue";
 import { useData } from "vitepress";
-import { SHARE_IMAGE_FORMAT, createShareImageFilename, extractLongformContent, measureLongformHeight } from "./shareImageRuntime.mjs";
+import { SHARE_IMAGE_FORMAT, createShareImageFilename, extractLongformContent, measureLongformHeight, snapshotShareImagePalette, withExportTimeout } from "./shareImageRuntime.mjs";
 
 const props = defineProps<{ pageKind: "article" | "excerpt" }>();
 const { frontmatter, page } = useData();
 const longform = ref<HTMLElement>();
 const rendering = ref(false);
+const exportPalette = ref<Record<string, string>>({});
 const exportContent = ref<{ title: string; html: string; href: string }>();
 const qrCodeDataUrl = ref("");
 const statusMessage = ref("");
@@ -30,29 +31,33 @@ async function downloadImage() {
   statusMessage.value = "正在生成全文长图…";
   statusTone.value = "neutral";
   try {
+    exportPalette.value = snapshotShareImagePalette(getComputedStyle(document.documentElement));
     const content = extractLongformContent(document.querySelector(".vp-doc"), frontmatter.value.title || page.value.title, props.pageKind);
     const canonical = document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.href;
     const href = new URL(canonical || window.location.href);
     href.hash = "";
     exportContent.value = { ...content, href: href.href };
-    const [{ toDataURL }, { domToBlob }] = await Promise.all([import("qrcode"), import("modern-screenshot")]);
-    const qr = await toDataURL(href.href, { errorCorrectionLevel: "M", margin: 4, width: 256, color: { dark: "#191816", light: "#fffdf8" } });
+    const [{ toDataURL }, { domToBlob }] = await withExportTimeout(Promise.all([import("qrcode"), import("modern-screenshot")]));
+    const qr = await toDataURL(href.href, { errorCorrectionLevel: "M", margin: 4, width: 256, color: { dark: "#30332f", light: "#fbf8f1" } });
     if (current !== generation) return;
     qrCodeDataUrl.value = qr;
     await nextTick();
-    await document.fonts?.ready;
+    // The export uses local system fonts; page web fonts are unrelated.
+    statusMessage.value = "正在加载文章图片…";
     const element = longform.value;
     if (!element || current !== generation) return;
-    await Promise.all(Array.from(element.querySelectorAll("img")).map(image => image.decode()));
+    await withExportTimeout(Promise.all(Array.from(element.querySelectorAll<HTMLImageElement>("img[src]")).map(image => image.decode())));
     if (current !== generation) return;
-    const blob = await domToBlob(element, {
-      backgroundColor: "#f5f1e8",
+    statusMessage.value = "正在绘制全文长图…";
+    const blob = await withExportTimeout(domToBlob(element, {
+      backgroundColor: exportPalette.value["--share-canvas"],
       width: SHARE_IMAGE_FORMAT.width,
       height: measureLongformHeight(element),
       scale: SHARE_IMAGE_FORMAT.scale,
       font: false,
-      timeout: 15000
-    });
+      timeout: 15000,
+      fetch: { placeholderImage: () => { throw new Error("Article image could not be embedded"); } }
+    }), 30000);
     if (current !== generation) return;
     if (!blob || !blob.size) throw new Error("The browser did not return image data");
     const url = URL.createObjectURL(blob);
@@ -90,7 +95,7 @@ async function downloadImage() {
   </section>
   <Teleport to="body">
     <div v-if="exportContent" class="share-image-render-host" aria-hidden="true" inert>
-      <article ref="longform" class="share-image-longform" :style="{ width: `${SHARE_IMAGE_FORMAT.width}px` }">
+      <article ref="longform" class="share-image-longform" :style="{ ...exportPalette, width: `${SHARE_IMAGE_FORMAT.width}px` }">
         <header class="share-image-longform__header">
           <span class="share-image-longform__brand">Qrzzzz · 全文阅读</span>
           <h1 v-if="exportContent.title">{{ exportContent.title }}</h1>
@@ -182,41 +187,42 @@ async function downloadImage() {
 
 .share-image-render-host { position: absolute; top: 0; left: -10000px; pointer-events: none; }
 .share-image-longform {
+  color-scheme: normal;
   box-sizing: border-box;
   padding: 44px 40px 32px;
-  background: #f5f1e8;
-  color: #191816;
+  background: var(--share-canvas);
+  color: var(--share-text);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
   font-size: 17px;
   line-height: 1.85;
   overflow-wrap: anywhere;
 }
-.share-image-longform__header { margin-bottom: 32px; padding-bottom: 24px; border-bottom: 2px solid #c9c1b4; }
-.share-image-longform__brand { color: #a33424; font-size: 13px; letter-spacing: .08em; }
+.share-image-longform__header { margin-bottom: 32px; padding-bottom: 24px; border-bottom: 2px solid var(--share-line); }
+.share-image-longform__brand { color: var(--share-link); font-size: 13px; letter-spacing: .08em; }
 .share-image-longform__header h1 { margin: 18px 0 0; font-size: 32px; line-height: 1.4; font-weight: 750; }
 .share-image-longform__body :deep(h1) { font-size: 28px; }
 .share-image-longform__body :deep(h2) { font-size: 24px; }
 .share-image-longform__body :deep(h3) { font-size: 20px; }
 .share-image-longform__body :deep(:is(h1,h2,h3,h4,h5,h6)) { margin: 32px 0 14px; line-height: 1.5; font-weight: 700; }
 .share-image-longform__body :deep(p) { margin: 0 0 18px; }
-.share-image-longform__body :deep(blockquote) { margin: 22px 0; border-left: 3px solid #a33424; padding: 4px 0 4px 18px; color: #514b43; }
+.share-image-longform__body :deep(blockquote) { margin: 22px 0; border-left: 3px solid var(--share-content-accent); padding: 4px 0 4px 18px; color: var(--share-content-muted); }
 .share-image-longform__body :deep(blockquote > :last-child) { margin-bottom: 0; }
 .share-image-longform__body :deep(:is(ul,ol)) { margin: 16px 0 22px; padding-left: 26px; }
 .share-image-longform__body :deep(ul) { list-style: disc; }
 .share-image-longform__body :deep(ol) { list-style: decimal; }
 .share-image-longform__body :deep(li) { margin: 8px 0; }
 .share-image-longform__body :deep(li > :is(ul,ol)) { margin: 6px 0; }
-.share-image-longform__body :deep(hr) { margin: 28px 0; border: 0; border-top: 1px solid #c9c1b4; }
-.share-image-longform__body :deep(code) { font-family: "Cascadia Code", Consolas, monospace; font-size: .85em; background: #e8e2d7; border-radius: 3px; padding: 2px 4px; }
-.share-image-longform__body :deep(pre) { margin: 22px 0; padding: 16px; background: #e8e2d7; border-radius: 6px; white-space: pre-wrap; overflow-wrap: anywhere; tab-size: 2; line-height: 1.65; }
+.share-image-longform__body :deep(hr) { margin: 28px 0; border: 0; border-top: 1px solid var(--share-line); }
+.share-image-longform__body :deep(code) { font-family: "Cascadia Code", Consolas, monospace; font-size: .85em; background: var(--share-surface-subtle); border-radius: 3px; padding: 2px 4px; }
+.share-image-longform__body :deep(pre) { margin: 22px 0; padding: 16px; background: var(--share-surface-subtle); border-radius: 6px; white-space: pre-wrap; overflow-wrap: anywhere; tab-size: 2; line-height: 1.65; }
 .share-image-longform__body :deep(pre code) { padding: 0; background: transparent; white-space: inherit; }
-.share-image-longform__body :deep(a) { color: #913d2d; text-decoration: underline; }
+.share-image-longform__body :deep(a) { color: var(--share-link); text-decoration: underline; }
 .share-image-longform__body :deep(img) { display: block; max-width: 100%; height: auto; margin: 18px auto; }
 .share-image-longform__body :deep(figure) { margin: 22px 0; }
-.share-image-longform__body :deep(:is(figcaption,cite)) { font-size: 14px; color: #666157; }
+.share-image-longform__body :deep(:is(figcaption,cite)) { font-size: 14px; color: var(--share-text-muted); }
 .share-image-longform__body :deep(table) { width: 100%; table-layout: fixed; border-collapse: collapse; margin: 22px 0; font-size: 14px; }
-.share-image-longform__body :deep(:is(th,td)) { border: 1px solid #c9c1b4; padding: 8px; }
-.share-image-longform__footer { display: flex; align-items: end; gap: 24px; margin-top: 36px; padding-top: 20px; border-top: 1px solid #c9c1b4; color: #666157; font-size: 11px; }
+.share-image-longform__body :deep(:is(th,td)) { border: 1px solid var(--share-line); padding: 8px; }
+.share-image-longform__footer { display: flex; align-items: end; gap: 24px; margin-top: 36px; padding-top: 20px; border-top: 1px solid var(--share-line); color: var(--share-text-muted); font-size: 11px; }
 .share-image-longform__url { flex: 1; min-width: 0; }
 .share-image-longform__footer figure { flex: 0 0 84px; margin: 0; text-align: center; }
 .share-image-longform__footer img { display: block; }

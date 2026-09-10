@@ -4,7 +4,7 @@ import test from "node:test";
 import { createMarkdownRenderer } from "vitepress";
 const markdown = await createMarkdownRenderer(process.cwd());
 import { parseHTML } from "linkedom";
-import { SHARE_IMAGE_FORMAT, createShareImageFilename, extractLongformContent, measureLongformHeight } from "../docs/.vitepress/theme/shareImageRuntime.mjs";
+import { SHARE_IMAGE_FORMAT, createShareImageFilename, extractLongformContent, measureLongformHeight, snapshotShareImagePalette, withExportTimeout } from "../docs/.vitepress/theme/shareImageRuntime.mjs";
 
 const component = readFileSync("docs/.vitepress/theme/ShareImage.vue", "utf8");
 const fixture = readFileSync("tests/fixtures/share-image-longform.md", "utf8");
@@ -77,7 +77,7 @@ test("measures natural longform height instead of fixing a 720px canvas", () => 
   assert.match(component, /scale: SHARE_IMAGE_FORMAT.scale/);
   assert.match(component, /v-html="exportContent.html"/);
   assert.match(component, /导出全文长图/);
-  assert.match(component, /document.fonts\?\.ready/);
+  assert.doesNotMatch(component, /document.fonts/);
   assert.match(component, /image.decode\(\)/);
   assert.match(component, /current !== generation/);
   assert.doesNotMatch(component, /line-clamp|maxExcerptLength|shareExcerpt|resolveExcerpt|share-image-card|720px|3x4/);
@@ -93,4 +93,28 @@ test("keeps one direct accessible export on article and excerpt pages", () => {
   assert.match(component, /aria-live="polite"/);
   assert.match(component, /aria-hidden="true" inert/);
   assert.match(component, /exportContent.value = undefined/);
+});
+
+
+test("captures both site palettes independently of subsequent theme changes", () => {
+  for (const canvas of ["#f5f0e6", "#252724"]) {
+    const values = { "--site-canvas": canvas, "--site-text": "#30332f", "--site-link": "#006778" };
+    const palette = snapshotShareImagePalette({ getPropertyValue: key => values[key] || "" });
+    values["--site-canvas"] = "changed";
+    assert.equal(palette["--share-canvas"], canvas);
+    assert.equal(palette["--share-link"], "#006778");
+  }
+});
+
+test("bounds stuck export work and preserves success and image failures", async () => {
+  assert.equal(await withExportTimeout(Promise.resolve("image"), 50), "image");
+  await assert.rejects(withExportTimeout(Promise.reject(new Error("broken image")), 50), /broken image/);
+  await assert.rejects(withExportTimeout(new Promise(() => {}), 10), /timed out/);
+});
+
+test("preserves merged table cells and expanded disclosure content", () => {
+  const output = source(extractLongformContent(source('<table><tr><td colspan="2" rowspan="3">merged</td></tr></table><details><summary>More</summary><p>All content</p></details>')).html);
+  assert.equal(output.querySelector("td").getAttribute("colspan"), "2");
+  assert.equal(output.querySelector("td").getAttribute("rowspan"), "3");
+  assert.ok(output.querySelector("details").hasAttribute("open"));
 });

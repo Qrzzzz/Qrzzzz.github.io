@@ -1,5 +1,22 @@
 export const SHARE_IMAGE_FORMAT = Object.freeze({ id: "longform", width: 540, scale: 2 });
 
+// Freeze the active palette at click time so a theme toggle cannot mix colors.
+export function snapshotShareImagePalette(style) {
+  return Object.fromEntries(["canvas", "surface", "surface-subtle", "text", "text-muted", "line", "line-strong", "accent", "link", "content-accent", "content-muted", "code-bg", "code-text"]
+    .map(name => [`--share-${name}`, style.getPropertyValue(`--site-${name}`).trim()]));
+}
+
+export async function withExportTimeout(task, milliseconds = 15000) {
+  let timer;
+  try {
+    return await Promise.race([task, new Promise((_, reject) => {
+      timer = setTimeout(() => reject(new Error("Export timed out")), milliseconds);
+    })]);
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 const contentTags = new Set("h1 h2 h3 h4 h5 h6 p blockquote ul ol li hr pre code strong em del s a br img figure figcaption cite table thead tbody tfoot tr th td dl dt dd sup sub details summary div".split(" "));
 const excluded = 'script, style, template, noscript, button, input, select, textarea, nav, .header-anchor, .line-numbers-wrapper, .lang, .share-image-entry, [data-share-image-exclude]';
 
@@ -24,6 +41,11 @@ export function extractLongformContent(source, fallbackTitle = "Untitled article
         if (/^-?\d+$/.test(node.getAttribute(attr) ?? "")) target.setAttribute(attr, node.getAttribute(attr));
       }
       if (tag === "ol" && node.hasAttribute("reversed")) target.setAttribute("reversed", "");
+      if (tag === "td" || tag === "th") {
+        for (const attr of ["colspan", "rowspan"]) {
+          if (/^\d+$/.test(node.getAttribute(attr) ?? "")) target.setAttribute(attr, node.getAttribute(attr));
+        }
+      }
       if (tag === "details") target.setAttribute("open", "");
       if (tag === "a" || tag === "img") {
         const attr = tag === "a" ? "href" : "src";
