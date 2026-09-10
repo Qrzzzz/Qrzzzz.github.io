@@ -12,6 +12,7 @@
   --site-accent: #00b8d4;
   --site-accent-hover: #006778;
   --site-accent-soft: rgba(0, 184, 212, 0.08);
+  --site-selection: rgba(0, 184, 212, 0.22);
   --site-accent-ink: #30332f;
   --site-link: #006778;
   --site-home-wash: #d8d2c6;
@@ -102,6 +103,7 @@
   --site-emphasis-text: #6dffd5;
   --site-accent-hover: #75e5f5;
   --site-accent-soft: rgba(34, 211, 238, 0.08);
+  --site-selection: rgba(34, 211, 238, 0.26);
   --site-accent-ink: #252724;
   --site-cursor: #22d3ee;
   --site-nav-bg: #252724;
@@ -146,7 +148,7 @@ body {
 }
 
 ::selection {
-  background: var(--site-accent-soft);
+  background: var(--site-selection);
   color: var(--site-text);
 }
 
