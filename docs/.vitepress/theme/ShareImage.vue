@@ -7,6 +7,10 @@ const props = defineProps<{ pageKind: "article" | "excerpt" }>();
 const { frontmatter, page } = useData();
 const longform = ref<HTMLElement>();
 const rendering = ref(false);
+const preparedImage = ref<Blob>();
+const preparedFilename = ref("");
+const copying = ref(false);
+const copyButton = ref<HTMLButtonElement>();
 const exportPalette = ref<Record<string, string>>({});
 const exportContent = ref<{ title: string; html: string; href: string }>();
 const qrCodeDataUrl = ref("");
@@ -17,6 +21,8 @@ let generation = 0;
 function resetExport() {
   generation++;
   rendering.value = false;
+  preparedImage.value = undefined;
+  copying.value = false;
   exportContent.value = undefined;
   qrCodeDataUrl.value = "";
   statusMessage.value = "";
@@ -24,7 +30,7 @@ function resetExport() {
 watch(() => page.value.relativePath, resetExport);
 onBeforeUnmount(resetExport);
 
-async function downloadImage() {
+async function prepareImage() {
   if (rendering.value) return;
   const current = ++generation;
   rendering.value = true;
@@ -60,14 +66,11 @@ async function downloadImage() {
     }), 30000);
     if (current !== generation) return;
     if (!blob || !blob.size) throw new Error("The browser did not return image data");
-    const url = URL.createObjectURL(blob);
-    const anchor = document.createElement("a");
-    anchor.download = createShareImageFilename(props.pageKind === "excerpt" ? frontmatter.value.title : content.title);
-    anchor.href = url;
-    anchor.click();
-    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
-    statusMessage.value = "全文长图已下载。";
-    statusTone.value = "success";
+    preparedImage.value = blob;
+    preparedFilename.value = createShareImageFilename(props.pageKind === "excerpt" ? frontmatter.value.title : content.title);
+    statusMessage.value = "";
+    await nextTick();
+    copyButton.value?.focus();
   } catch (error) {
     if (current !== generation) return;
     console.error(error);
@@ -81,13 +84,48 @@ async function downloadImage() {
     }
   }
 }
+
+async function copyImage() {
+  if (!preparedImage.value || copying.value) return;
+  const current = generation;
+  copying.value = true;
+  try {
+    if (!navigator.clipboard?.write || typeof ClipboardItem === "undefined") throw new Error("Clipboard unavailable");
+    await navigator.clipboard.write([new ClipboardItem({ "image/png": preparedImage.value })]);
+    if (current !== generation) return;
+    statusMessage.value = "全文长图已复制到剪贴板。";
+    statusTone.value = "success";
+  } catch {
+    if (current !== generation) return;
+    statusMessage.value = "无法复制到剪贴板，请重试或下载图片。";
+    statusTone.value = "error";
+  } finally {
+    if (current === generation) copying.value = false;
+  }
+}
+
+function downloadImage() {
+  if (!preparedImage.value) return;
+  const url = URL.createObjectURL(preparedImage.value);
+  const anchor = document.createElement("a");
+  anchor.download = preparedFilename.value;
+  anchor.href = url;
+  anchor.click();
+  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+  statusMessage.value = "全文长图已下载。";
+  statusTone.value = "success";
+}
 </script>
 
 <template>
   <section class="share-image-entry" aria-label="导出全文长图">
     <div class="share-image-entry__actions">
       <p class="share-image-status" :class="`is-${statusTone}`" role="status" aria-live="polite">{{ statusMessage }}</p>
-      <button type="button" class="share-image-entry__button" :disabled="rendering" :aria-busy="rendering" @click="downloadImage">
+      <template v-if="preparedImage">
+        <button ref="copyButton" type="button" class="share-image-entry__button share-image-entry__button--primary" :disabled="copying" :aria-busy="copying" aria-label="复制到剪贴板" @click="copyImage">{{ copying ? "正在复制…" : "复制" }}</button>
+        <button type="button" class="share-image-entry__button" @click="downloadImage">下载图片</button>
+      </template>
+      <button v-else type="button" class="share-image-entry__button" :disabled="rendering" :aria-busy="rendering" @click="prepareImage">
         <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 5h14v14H5zM8 15l3-3 2 2 2-2 3 3M15.5 9h.01" /></svg>
         {{ rendering ? "正在生成…" : "导出全文长图" }}
       </button>
@@ -158,6 +196,24 @@ async function downloadImage() {
 .share-image-entry__button:disabled {
   cursor: wait;
   opacity: 0.58;
+}
+
+.share-image-entry__button--primary {
+  min-height: 36px;
+  padding: 0 18px;
+  border-radius: 6px;
+  background: var(--site-text);
+  color: var(--site-canvas);
+}
+
+.share-image-entry__button--primary:hover:not(:disabled) {
+  color: var(--site-canvas);
+  opacity: .88;
+}
+
+.share-image-entry__button:focus-visible {
+  outline: 2px solid var(--site-link);
+  outline-offset: 3px;
 }
 
 .share-image-entry__button svg {
