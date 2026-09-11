@@ -8,8 +8,8 @@ test("uses a localized collection index backed by shared Library data", () => {
   const index = readFileSync(`${promptRoot}/index.md`, "utf8");
   const config = readFileSync("docs/.vitepress/config.mts", "utf8");
 
-  assert.match(index, /<p class="page-eyebrow">PROMPT COLLECTION<\/p>/);
-  assert.match(index, /^# Prompts$/m);
+  assert.match(index, /^pageType: index$/m);
+  assert.match(index, /<CatalogHeader title="Prompts"/);
   assert.match(index, /<CollectionIndex kind="prompt" \/>/);
   assert.doesNotMatch(index, /A growing library|Chinese-language|Research · Analysis/);
   assert.match(config, /text: "Library",\s*link: "\/library\/"/);

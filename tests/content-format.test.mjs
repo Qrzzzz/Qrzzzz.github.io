@@ -108,6 +108,14 @@ test("keeps hand-written pages on their category-specific metadata and lead cont
     }
 
     const unfenced = outsideFences(page.body);
+    if (frontmatterValue(page.frontmatter, "pageType") === "index") {
+      const headers = [...unfenced.matchAll(/<CatalogHeader title="([^"]+)" description="([^"]+)"/g)];
+      assert.equal(headers.length, 1, `${page.relativePath} 应使用一个共享入口页标题`);
+      assert.equal(headers[0][1], title, `${page.relativePath} 的可见标题应与元数据一致`);
+      assert.ok(headers[0][2], `${page.relativePath} 应有导语`);
+      assert.doesNotMatch(unfenced, /^#\s|<h1(?:\s|>)/m);
+      continue;
+    }
     const markdownH1 = unfenced.match(/^#\s+(.+)$/gm) ?? [];
     const htmlH1 = unfenced.match(/<h1(?:\s|>)/gi) ?? [];
     const isExcerpt = frontmatterValue(page.frontmatter, "kind") === "excerpt";

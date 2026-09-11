@@ -2,11 +2,12 @@
 title: Tools
 description: Browser tools that work without an account or server upload.
 lang: en
+outline: false
+aside: false
+pageType: index
 ---
 
-# Tools
-
-<p class="lead">Open a tool and use it immediately—no account, installation, or upload required.</p>
+<CatalogHeader title="Tools" description="Small browser tools, ready to use." parent="Projects" parent-href="/projects/" />
 
 <script setup>
 import ProjectIndex from "../.vitepress/theme/components/ProjectIndex.vue";

@@ -58,6 +58,12 @@ test("navigation rejects fragments, resources, unsupported aliases and removed p
     assert.doesNotMatch(errors, /second-glow/);
     writeFileSync(path.join(root, "index.html"), '<a href="/page#valid">good</a>');
     assert.deepEqual(checkSiteNavigation(root).errors, []);
+    writeFileSync(path.join(root, "legacy.html"), '<link rel="canonical" href="https://qrzzzz.github.io/page.html">');
+    assert.deepEqual(checkSiteNavigation(root).errors, []);
+    writeFileSync(path.join(root, "legacy.html"), '<link rel="canonical" href="https://example.com/page.html">');
+    assert.match(checkSiteNavigation(root).errors.join("\n"), /Unreachable page: \/legacy.html/);
+    writeFileSync(path.join(root, "legacy.html"), '<link rel="canonical" href="/missing.html">');
+    assert.match(checkSiteNavigation(root).errors.join("\n"), /Unreachable page: \/legacy.html/);
   } finally { removeStage(root, os.tmpdir()); }
 });
 

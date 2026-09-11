@@ -13,38 +13,7 @@ import {
   matchesLibraryItem,
   type LibraryKind
 } from "../../content/library";
-import LibraryCategory from "./LibraryCategory.vue";
 import LibraryToolbar from "./LibraryToolbar.vue";
-
-const categories: Array<{
-  kind: LibraryKind;
-  title: string;
-  unit: string;
-  action: string;
-  href: string;
-}> = [
-  {
-    kind: "article",
-    title: "Articles",
-    unit: "entries",
-    action: "Browse all articles",
-    href: "/notes/"
-  },
-  {
-    kind: "prompt",
-    title: "Prompts",
-    unit: "entries",
-    action: "Browse all prompts",
-    href: "/prompt-collection/"
-  },
-  {
-    kind: "excerpt",
-    title: "Excerpts",
-    unit: "entries",
-    action: "Browse all excerpts",
-    href: "/excerpts/"
-  }
-];
 
 const query = ref("");
 const activeKind = ref<LibraryKind | "all">("all");
@@ -58,10 +27,6 @@ const filteredItems = computed(() =>
       matchesLibraryItem(item, query.value)
   )
 );
-
-function itemsFor(kind: LibraryKind) {
-  return libraryItems.filter((item) => item.kind === kind);
-}
 
 function restoreUrlState() {
   const parameters = new URLSearchParams(window.location.search);
@@ -138,18 +103,7 @@ onBeforeUnmount(() => {
       </p>
     </header>
 
-    <div class="library-categories" aria-label="Library categories">
-      <LibraryCategory
-        v-for="category in categories"
-        :key="category.kind"
-        v-bind="category"
-        :count="itemsFor(category.kind).length"
-        :latest="itemsFor(category.kind).slice(0, 3)"
-      />
-    </div>
-
-    <section class="library-results-section" aria-labelledby="library-results-title">
-      <h2 id="library-results-title">Search and browse</h2>
+    <section class="library-results-section" aria-label="Search and browse">
       <LibraryToolbar
         :query="query"
         :active-kind="activeKind"
@@ -199,5 +153,12 @@ onBeforeUnmount(() => {
         <button type="button" @click="clearFilters">Clear filters</button>
       </div>
     </section>
+
+    <nav class="catalog-collections" aria-label="Browse collections">
+      <span>Browse collections</span>
+      <a href="/notes/">Articles</a>
+      <a href="/prompt-collection/">Prompts</a>
+      <a href="/excerpts/">Excerpts</a>
+    </nav>
   </div>
 </template>

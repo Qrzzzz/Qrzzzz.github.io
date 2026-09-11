@@ -14,7 +14,7 @@ import ParticleText from "./ParticleText.vue";
       </h1>
       <nav class="home-actions" aria-label="Primary destinations">
         <a class="home-text-link" href="/library/">Browse the Library</a>
-        <a class="home-text-link" href="/works/">View the projects</a>
+        <a class="home-text-link" href="/projects/">View the projects</a>
       </nav>
     </section>
   </div>

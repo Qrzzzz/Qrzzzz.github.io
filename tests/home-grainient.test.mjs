@@ -204,7 +204,7 @@ test("WebGL failures remain a non-animated fallback", () => {
   assert.equal(harness.frames.size, 0);
 });
 
-test("homepage and Library mount Grainient as a global background", () => {
+test("only the homepage mounts Grainient as a global background", () => {
   const backgroundIndex = layoutSource.indexOf("<HomeGrainient");
   const defaultLayoutIndex = layoutSource.indexOf("<Layout>");
 
@@ -216,7 +216,7 @@ test("homepage and Library mount Grainient as a global background", () => {
   assert.doesNotMatch(homeContentSource, /HomeGrainient/);
   assert.match(
     layoutSource,
-    /const hasGrainientBackground = computed\(\s*\(\) => pageKind\.value === "home" \|\| pageKind\.value === "library"\s*\)/
+    /const hasGrainientBackground = computed\(\s*\(\) => pageKind\.value === "home"\s*\)/
   );
   assert.match(
     layoutSource,
@@ -226,14 +226,10 @@ test("homepage and Library mount Grainient as a global background", () => {
   assert.doesNotMatch(componentSource, /mask-image/);
   assert.match(
     siteStyles,
-    /\.site-layout\[data-page-kind="home"\] > \.Layout,\s*\.site-layout\[data-page-kind="library"\] > \.Layout\s*\{[\s\S]*?z-index:\s*1/
+    /\.site-layout\[data-page-kind="home"\] > \.Layout\s*\{[\s\S]*?z-index:\s*1/
   );
   assert.match(
     siteStyles,
-    /\.site-layout\[data-page-kind="library"\] \.VPContent\s*\{[\s\S]*?background:\s*transparent/
-  );
-  assert.match(
-    siteStyles,
-    /\.site-layout\[data-page-kind="home"\] \.VPFooter,\s*\.site-layout\[data-page-kind="library"\] \.VPFooter\s*\{[\s\S]*?background:\s*transparent/
+    /\.site-layout\[data-page-kind="home"\] \.VPFooter\s*\{[\s\S]*?background:\s*transparent/
   );
 });

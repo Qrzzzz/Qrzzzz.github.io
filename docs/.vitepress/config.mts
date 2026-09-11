@@ -160,8 +160,8 @@ export default defineConfig({
           "^/(?:docs|guide)(?:/|$)|^/projects/[^/]+/docs(?:/|$)"
       },
       {
-        text: "Works",
-        link: "/works/",
+        text: "Projects",
+        link: "/projects/",
         activeMatch:
           "^/(?:works|tools)(?:/|$)|^/projects/(?![^/]+/docs(?:/|$))"
       },

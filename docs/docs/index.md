@@ -3,11 +3,11 @@ title: Docs
 description: Product guides and maintainer notes for Qrzzzz projects and this site.
 lang: en
 outline: false
+aside: false
+pageType: index
 ---
 
-# Docs
-
-<p class="lead">User guides, project documentation, and the notes that keep this site maintainable.</p>
+<CatalogHeader title="Docs" description="Product guides and the notes that keep this site maintainable." />
 
 <section class="hub-section" aria-labelledby="product-docs-title">
   <header class="hub-section__header">

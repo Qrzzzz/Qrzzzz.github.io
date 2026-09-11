@@ -7,13 +7,11 @@
   isolation: isolate;
 }
 
-.site-layout[data-page-kind="home"],
-.site-layout[data-page-kind="library"] {
+.site-layout[data-page-kind="home"] {
   background: transparent;
 }
 
-.site-layout[data-page-kind="home"] > .Layout,
-.site-layout[data-page-kind="library"] > .Layout {
+.site-layout[data-page-kind="home"] > .Layout {
   position: relative;
   z-index: 1;
   background: transparent;
@@ -423,10 +421,6 @@ button.VPSwitch.VPSwitchAppearance > .check {
   background: transparent;
 }
 
-.site-layout[data-page-kind="library"] .VPContent {
-  background: transparent;
-}
-
 .home-page {
   display: flex;
   flex: 1;
@@ -511,8 +505,7 @@ button.VPSwitch.VPSwitchAppearance > .check {
   background: var(--site-canvas);
 }
 
-.site-layout[data-page-kind="home"] .VPFooter,
-.site-layout[data-page-kind="library"] .VPFooter {
+.site-layout[data-page-kind="home"] .VPFooter {
   border-top: 0;
   background: transparent;
 }

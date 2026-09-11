@@ -23,7 +23,7 @@ type PageKind =
   | "excerpt"
   | "project"
   | "document"
-  | "library"
+  | "index"
   | "general";
 
 const pageKind = computed<PageKind>(() => {
@@ -33,16 +33,14 @@ const pageKind = computed<PageKind>(() => {
     return "home";
   }
 
+  if (frontmatter.value.pageType === "index") return "index";
+
   if (relativePath.startsWith("notes/")) {
     return "article";
   }
 
   if (relativePath.startsWith("excerpts/")) {
     return "excerpt";
-  }
-
-  if (relativePath.startsWith("library/")) {
-    return "library";
   }
 
   if (
@@ -60,7 +58,7 @@ const pageKind = computed<PageKind>(() => {
 });
 
 const hasGrainientBackground = computed(
-  () => pageKind.value === "home" || pageKind.value === "library"
+  () => pageKind.value === "home"
 );
 
 const isShareablePage = computed(() => {

@@ -24,7 +24,7 @@ test("defines four non-overlapping top-level navigation areas", () => {
 
   for (const entry of [
     ['"Docs"', '"/docs/"'],
-    ['"Works"', '"/works/"'],
+    ['"Projects"', '"/projects/"'],
     ['"Library"', '"/library/"'],
     ['"About"', '"/about"']
   ]) {
@@ -49,10 +49,7 @@ test("uses one generated Library source for the main and collection indexes", ()
   assert.match(library, /<LibraryIndex \/>/);
   assert.doesNotMatch(library, /01 \/ DOCS|library-folder|href="\/notes\//);
   assert.match(libraryIndex, /data as libraryItems/);
-  assert.match(libraryIndex, /title: "Articles"/);
-  assert.match(libraryIndex, /title: "Prompts"/);
-  assert.match(libraryIndex, /title: "Excerpts"/);
-  assert.match(libraryIndex, /slice\(0, 3\)/);
+  assert.doesNotMatch(libraryIndex, /LibraryCategory|slice\(0, 3\)/);
   assert.doesNotMatch(libraryIndex, /description: "对技术、产品/);
   assert.doesNotMatch(libraryIndex, /description: "经过整理/);
   assert.doesNotMatch(libraryIndex, /description: "偶然遇见/);
@@ -82,32 +79,16 @@ test("implements searchable URL-backed filters and a clear empty state", () => {
   assert.match(libraryIndex, /matchesLibraryItem\(item, query\.value\)/);
 });
 
-test("renders the Library as responsive categories and stable result rows", () => {
-  assert.match(layout, /relativePath\.startsWith\("library\/"\)/);
-  assert.match(library, /^outline: false$/m);
-  assert.match(
-    styles,
-    /\.library-categories\s*\{[^}]*grid-template-columns:\s*repeat\(3, minmax\(0, 1fr\)\)/s
-  );
-  assert.match(
-    styles,
-    /@media \(max-width: 959px\)[\s\S]*?\.library-categories\s*\{[^}]*repeat\(2, minmax\(0, 1fr\)\)/s
-  );
-  assert.match(
-    styles,
-    /@media \(max-width: 639px\)[\s\S]*?\.library-categories\s*\{[^}]*minmax\(0, 1fr\)/s
-  );
-  assert.match(
-    styles,
-    /\.library-result\s*\{[^}]*grid-template-columns:\s*100px minmax\(220px, 1fr\) 120px/s
-  );
-  assert.match(
-    styles,
-    /\.library-result:hover,[\s\S]*?box-shadow:\s*inset 2px 0 0 var\(--site-accent\)/s
-  );
-  assert.doesNotMatch(styles, /padding-inline:\s*8px/);
-  assert.match(
-    styles,
-    /@media \(max-width: 639px\)[\s\S]*?\.library-result__date\s*\{[^}]*display:\s*none/s
-  );
+test("entry pages share a header and keep collections reachable", () => {
+  for (const slug of ["library", "projects", "works", "tools", "docs", "notes", "prompt-collection", "excerpts"]) {
+    const source = readFileSync(`docs/${slug}/index.md`, "utf8");
+    assert.match(source, /^pageType: index$/m);
+    assert.match(source, /^outline: false$/m);
+    assert.match(source, /<CatalogHeader /);
+  }
+  for (const slug of ["notes", "prompt-collection", "excerpts"]) {
+    assert.ok(libraryIndex.includes(`href="/${slug}/"`));
+  }
+  assert.match(layout, /frontmatter.value.pageType === "index"/);
+  assert.match(styles, /library-result__date/);
 });

@@ -67,6 +67,19 @@ export function checkSiteNavigation(root, { requiredRoutes = [] } = {}) {
   if (!home) errors.push("Missing home page");
   const reached = new Set(home ? [home] : []), queue = [...reached];
   for (const page of queue) for (const target of page.links) if (!reached.has(target)) { reached.add(target); queue.push(target); }
-  for (const page of pages) if (!reached.has(page)) errors.push(`Unreachable page: ${page.route}`);
+  for (const page of pages) {
+    if (reached.has(page)) continue;
+    // Compatibility pages can name a reachable primary page instead of adding
+    // a duplicate destination to the site's navigation.
+    const canonical = page.document.querySelector('link[rel="canonical"]')?.getAttribute("href");
+    let primary;
+    if (canonical) {
+      try {
+        const url = new URL(canonical, origin + page.route);
+        if (url.origin === origin) primary = byRoute.get(url.pathname);
+      } catch { /* Invalid links are reported by resolveLink above. */ }
+    }
+    if (!primary || !reached.has(primary)) errors.push(`Unreachable page: ${page.route}`);
+  }
   return { pages: pages.length, routes: pages.map(page => page.route).sort(), errors };
 }
