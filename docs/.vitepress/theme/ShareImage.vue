@@ -48,10 +48,13 @@ async function prepareImage() {
     if (current !== generation) return;
     qrCodeDataUrl.value = qr;
     await nextTick();
-    // The export uses local system fonts; page web fonts are unrelated.
-    statusMessage.value = "正在加载文章图片…";
+    statusMessage.value = "正在加载字体和文章图片…";
     const element = longform.value;
     if (!element || current !== generation) return;
+    // Load only the export's glyphs before measuring its final line wrapping.
+    const text = element.textContent || "";
+    await withExportTimeout(Promise.all([400, 700, 750].map(weight => document.fonts.load(`${weight} 17px "Site Han Serif"`, text))));
+    if (current !== generation) return;
     await withExportTimeout(Promise.all(Array.from(element.querySelectorAll<HTMLImageElement>("img[src]")).map(image => image.decode())));
     if (current !== generation) return;
     statusMessage.value = "正在绘制全文长图…";
@@ -60,7 +63,7 @@ async function prepareImage() {
       width: SHARE_IMAGE_FORMAT.width,
       height: measureLongformHeight(element),
       scale: SHARE_IMAGE_FORMAT.scale,
-      font: false,
+      font: { preferredFormat: "woff2" },
       timeout: 15000,
       fetch: { placeholderImage: () => { throw new Error("Article image could not be embedded"); } }
     }), 30000);
@@ -248,7 +251,7 @@ function downloadImage() {
   padding: 44px 40px 32px;
   background: var(--share-canvas);
   color: var(--share-text);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-family: "Site Han Serif", "Source Han Serif SC", "Songti SC", SimSun, serif;
   font-size: 17px;
   line-height: 1.85;
   overflow-wrap: anywhere;

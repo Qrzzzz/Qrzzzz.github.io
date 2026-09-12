@@ -77,7 +77,9 @@ test("measures natural longform height instead of fixing a 720px canvas", () => 
   assert.match(component, /scale: SHARE_IMAGE_FORMAT.scale/);
   assert.match(component, /v-html="exportContent.html"/);
   assert.match(component, /导出全文长图/);
-  assert.doesNotMatch(component, /document.fonts/);
+  assert.match(component, /document.fonts.load/);
+  assert.match(component, /font-family: "Site Han Serif"/);
+  assert.match(component, /font: \{ preferredFormat: "woff2" \}/);
   assert.match(component, /image.decode\(\)/);
   assert.match(component, /current !== generation/);
   assert.doesNotMatch(component, /line-clamp|maxExcerptLength|shareExcerpt|resolveExcerpt|share-image-card|720px|3x4/);
