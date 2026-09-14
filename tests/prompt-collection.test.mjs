@@ -67,25 +67,23 @@ test("preserves the learning-mode tutoring protocol", () => {
   assert.match(prompt, /不要直接给出作业答案，也不要替用户完成作业/);
 });
 
-test("preserves the Duolingo daily-quest completion and safety gates", () => {
+test("preserves the Duolingo daily-quest state loop and recovery gates", () => {
   const prompt = readFileSync(
     `${promptRoot}/duolingo-daily-quest-streak-automation.md`,
     "utf8"
   );
 
-  assert.match(prompt, /^# Duolingo 延续连胜自动化任务$/m);
-  assert.match(prompt, /读取今天三个任务的名称和实时进度/);
-  assert.match(prompt, /每完成一课都重新检查 \/quests/);
-  assert.match(prompt, /全部完成后立即停止，不做额外课程/);
-  assert.match(prompt, /优先继续正常作答和完成课程，让时间自然累计/);
-  assert.match(
-    prompt,
-    /不购买商品、不消耗宝石、不进入付费或传奇挑战，不修改账号设置，不切换课程或学习语言/
-  );
-  assert.match(prompt, /关闭当前多邻国标签页，新建标签页并重新打开/);
-  assert.match(prompt, /完全关闭 Chrome，再重新启动 Chrome/);
-  assert.match(prompt, /停止并准确报告阻塞原因/);
-  assert.match(prompt, /只有实时 \/quests 页面明确显示三个每日任务均已完成，才可报告成功/);
+  assert.match(prompt, /^# Duolingo 每日任务自动完成$/m);
+  assert.match(prompt, /读取今天三个每日任务的：/);
+  assert.match(prompt, /每完成一课后重新检查 `\/quests`，再决定下一步/);
+  assert.match(prompt, /当三个任务均达到目标进度后立即结束/);
+  assert.match(prompt, /如果尚未登录，打开 Duolingo 登录页面，并让用户直接在当前浏览器中完成登录/);
+  assert.match(prompt, /用户完成后，重新打开 `\/quests`，重新读取三个任务及当前进度，再继续执行/);
+  assert.match(prompt, /如果任务要求累计学习时间，则通过正常完成课程累计/);
+  assert.match(prompt, /如果页面加载或交互出现异常，重新打开相关页面，并优先返回 `\/quests` 确认当前进度/);
+  assert.match(prompt, /恢复后根据最新状态继续，避免重复已经被服务器记录的课程/);
+  assert.match(prompt, /只有三个每日任务都明确达到目标进度时，最终状态才记为/);
+  assert.match(prompt, /最终状态：成功、部分完成或受阻/);
 });
 
 test("marks every prompt body as Markdown inside its existing code block", () => {
