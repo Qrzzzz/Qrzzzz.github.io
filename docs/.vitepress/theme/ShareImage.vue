@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { nextTick, onBeforeUnmount, ref, watch } from "vue";
 import { useData } from "vitepress";
+import { prepareMermaidImages } from "./mermaidRuntime";
 import { SHARE_IMAGE_FORMAT, createShareImageFilename, extractLongformContent, measureLongformHeight, snapshotShareImagePalette, withExportTimeout } from "./shareImageRuntime.mjs";
 
 const props = defineProps<{ pageKind: "article" | "excerpt" }>();
@@ -38,7 +39,10 @@ async function prepareImage() {
   statusTone.value = "neutral";
   try {
     exportPalette.value = snapshotShareImagePalette(getComputedStyle(document.documentElement));
-    const content = extractLongformContent(document.querySelector(".vp-doc"), frontmatter.value.title || page.value.title, props.pageKind);
+    const source = document.querySelector<HTMLElement>(".vp-doc");
+    const diagrams = await withExportTimeout(prepareMermaidImages(source));
+    if (current !== generation) return;
+    const content = extractLongformContent(source, frontmatter.value.title || page.value.title, props.pageKind, diagrams);
     const canonical = document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.href;
     const href = new URL(canonical || window.location.href);
     href.hash = "";

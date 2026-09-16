@@ -4,6 +4,7 @@ import { defineConfig } from "vitepress";
 import { fileURLToPath } from "node:url";
 import { collectLibraryRecords } from "../../scripts/lib/content-library.mjs";
 import { inlineEmphasisPlugin } from "./markdown/inline-emphasis.mjs";
+import { mermaidPlugin } from "./markdown/mermaid.mjs";
 
 const repositoryRoot = fileURLToPath(new URL("../..", import.meta.url));
 const { records: libraryRecords } = collectLibraryRecords(repositoryRoot);
@@ -146,7 +147,7 @@ export default defineConfig({
   markdown: {
     lineNumbers: false,
     codeCopyButtonTitle: "Copy code",
-    config: inlineEmphasisPlugin
+    config(md) { inlineEmphasisPlugin(md); mermaidPlugin(md); }
   },
 
   themeConfig: {

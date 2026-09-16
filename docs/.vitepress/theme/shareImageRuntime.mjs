@@ -22,13 +22,21 @@ const excluded = 'script, style, template, noscript, button, input, select, text
 
 // VitePress has already parsed Markdown. Rebuild semantic content without site
 // styles or interactive controls, rather than flattening or reparsing Markdown.
-export function extractLongformContent(source, fallbackTitle = "Untitled article", pageKind = "article") {
+export function extractLongformContent(source, fallbackTitle = "Untitled article", pageKind = "article", diagramImages = new Map()) {
   if (!source) throw new Error("Article content is unavailable");
   const doc = source.ownerDocument;
   const output = doc.createElement("div");
   const titleNode = pageKind === "excerpt" ? null : source.querySelector("h1");
   function copy(node, parent, omitTitle = false) {
     if (omitTitle && node === titleNode) return;
+    if (diagramImages.has(node)) {
+      const snapshot = diagramImages.get(node);
+      const image = doc.createElement("img");
+      image.setAttribute("src", snapshot.src);
+      image.setAttribute("alt", snapshot.alt);
+      parent.appendChild(image);
+      return;
+    }
     if (node.nodeType === 3) {
       parent.appendChild(doc.createTextNode(node.textContent ?? ""));
       return;
