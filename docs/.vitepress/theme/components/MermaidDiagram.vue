@@ -38,11 +38,11 @@ onBeforeUnmount(() => { generation++; stop?.(); if (root.value) diagramTasks.del
 
 <template>
   <figure ref="root" class="mermaid-diagram" :data-state="state" :aria-busy="state === 'pending'">
-    <p v-if="state === 'pending'" role="status">正在绘制图表…</p>
-    <p v-if="state === 'error'" role="alert">图表未能绘制，请查看源码并检查语法。</p>
-    <div v-if="svg" class="mermaid-diagram__canvas" tabindex="0" role="region" aria-label="图表，可横向滚动" v-html="svg"></div>
+    <p v-if="state === 'pending'" role="status">Rendering diagram…</p>
+    <p v-if="state === 'error'" role="alert">Could not render this diagram. Check the source for syntax errors.</p>
+    <div v-if="svg" class="mermaid-diagram__canvas" tabindex="0" role="region" aria-label="Diagram; scroll horizontally to explore" v-html="svg"></div>
     <details :open="state !== 'ready'" data-share-image-exclude>
-      <summary>查看 Mermaid 源码</summary>
+      <summary>View Mermaid source</summary>
       <pre><code>{{ source }}</code></pre>
     </details>
   </figure>

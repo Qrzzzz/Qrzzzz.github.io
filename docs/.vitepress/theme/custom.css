@@ -6,6 +6,4 @@
 @import "./styles/emphasis.css";
 @import "./styles/catalog.css";
 
-.site-layout[data-page-kind="article"] .lead {
-  display: none !important;
-}
+@import "./styles/gesture-content.css";

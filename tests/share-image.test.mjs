@@ -76,7 +76,7 @@ test("measures natural longform height instead of fixing a 720px canvas", () => 
   assert.match(component, /height: measureLongformHeight\(element\)/);
   assert.match(component, /scale: SHARE_IMAGE_FORMAT.scale/);
   assert.match(component, /v-html="exportContent.html"/);
-  assert.match(component, /导出全文长图/);
+  assert.match(component, /Export article image/);
   assert.match(component, /document.fonts.load/);
   assert.match(component, /font-family: "Site Han Serif"/);
   assert.match(component, /font: \{ preferredFormat: "woff2" \}/);
@@ -99,7 +99,7 @@ test("keeps one direct accessible export on article and excerpt pages", () => {
 
 
 test("captures both site palettes independently of subsequent theme changes", () => {
-  for (const canvas of ["#f5f0e6", "#252724"]) {
+  for (const canvas of ["#eef2f3", "#151d37"]) {
     const values = { "--site-canvas": canvas, "--site-text": "#30332f", "--site-link": "#006778" };
     const palette = snapshotShareImagePalette({ getPropertyValue: key => values[key] || "" });
     values["--site-canvas"] = "changed";

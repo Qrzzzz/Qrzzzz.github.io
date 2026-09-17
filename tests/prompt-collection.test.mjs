@@ -126,18 +126,11 @@ test("uses the native always-visible page outline without custom folding", () =>
   assert.doesNotMatch(styles, /\.back-to-top[\s\S]*?box-shadow:\s*0\s+10px/);
 });
 
-test("reproduces the macOS code window and hides line numbers by default", () => {
+test("code keeps copy and language controls on a quiet shared surface", () => {
   const config = readFileSync("docs/.vitepress/config.mts", "utf8");
   const codeStyles = readFileSync("docs/.vitepress/theme/styles/code.css", "utf8");
-  const customStyles = readFileSync("docs/.vitepress/theme/custom.css", "utf8");
-
-  assert.match(config, /lineNumbers: false/);
-  assert.match(customStyles, /@import "\.\/styles\/code\.css"/);
-  assert.match(
-    codeStyles,
-    /\.vp-doc div\[class\*="language-"\]\s*\{[^}]*box-shadow:\s*0 10px 30px 0 rgb\(0 0 0 \/ 40%\)[^}]*padding-top:\s*20px/s
-  );
-  assert.match(codeStyles, /background-color:\s*#ff5f56/);
-  assert.match(codeStyles, /box-shadow:\s*20px 0 0 #ffbd2e, 40px 0 0 #27c93f/);
-  assert.match(codeStyles, /\.vp-code-group\s*\{[^}]*box-shadow:\s*0 10px 30px 0 rgb\(0 0 0 \/ 40%\)/s);
+  assert.match(config, /lineNumbers:\s*false/);
+  assert.match(config, /codeCopyButtonTitle:\s*"Copy code"/);
+  assert.match(codeStyles, /var\(--site-line\)/);
+  assert.doesNotMatch(codeStyles, /#ff5f56|#ffbd2e|#27c93f/);
 });

@@ -83,7 +83,7 @@ export default defineConfig({
           themeColor.setAttribute("name", "theme-color");
           document.head.appendChild(themeColor);
         }
-        themeColor.setAttribute("content", isDark ? "#252724" : "#F5F0E6");
+        themeColor.setAttribute("content", isDark ? "#151d37" : "#eef2f3");
       })()`
     ],
     ["meta", { name: "color-scheme", content: "light dark" }],
@@ -137,7 +137,7 @@ export default defineConfig({
           const themeColor = document.querySelector('meta[name="theme-color"]');
           themeColor?.setAttribute(
             "content",
-            document.documentElement.classList.contains("dark") ? "#252724" : "#F5F0E6"
+            document.documentElement.classList.contains("dark") ? "#151d37" : "#eef2f3"
           );
         })()`
       ]
@@ -151,7 +151,7 @@ export default defineConfig({
   },
 
   themeConfig: {
-    siteTitle: "Qrzzzz",
+    siteTitle: "Cherry Chu",
 
     nav: [
       {

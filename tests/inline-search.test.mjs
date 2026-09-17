@@ -34,7 +34,7 @@ test("mounts an accessible inline search instead of the VitePress modal trigger"
   assert.match(component, /aria-autocomplete="list"/);
   assert.match(component, /role="listbox"/);
   assert.match(component, /stopImmediatePropagation\(\)/);
-  assert.match(siteStyles, /\.VPNavBarSearch\s*\{\s*display:\s*none;/s);
+  assert.match(siteStyles, /\.VPNavBarSearch[^{}]*\{\s*display:\s*none/s);
 });
 
 test("isolates the expanded search from overlapping navigation controls", () => {
@@ -50,11 +50,11 @@ test("isolates the expanded search from overlapping navigation controls", () => 
   assert.match(navActions, /@media \(max-width:\s*767\.98px\)/);
   assert.match(
     siteStyles,
-    /\.VPNavBar:has\(\.InlineSiteSearch\.is-expanded\) \.VPNavBarMenu\s*\{[^}]*visibility:\s*hidden;[^}]*pointer-events:\s*none/s
+    /\.VPNavBar:has\(\.InlineSiteSearch\.is-expanded\) :is\(\.VPNavBarMenu, \.NavActions, \.VPNavBarHamburger\)\s*\{[^}]*visibility:\s*hidden;[^}]*pointer-events:\s*none/s
   );
   assert.match(
     siteStyles,
-    /@media \(max-width:\s*767\.98px\)[\s\S]*?\.VPNavBar:has\(\.InlineSiteSearch\.is-expanded\) \.VPNavBarTitle,[\s\S]*?\.NavActions,[\s\S]*?\.VPNavBarHamburger\s*\{[^}]*visibility:\s*hidden;[^}]*pointer-events:\s*none/s
+    /@media \(max-width:\s*680px\)[\s\S]*?\.VPNavBar:has\(\.InlineSiteSearch\.is-expanded\) \.VPNavBarTitle\s*\{[^}]*visibility:\s*hidden;[^}]*pointer-events:\s*none/s
   );
 });
 
@@ -70,7 +70,7 @@ test("uses the top navigation and native mobile screen without a sidebar drawer"
   assert.match(layout, /aria-modal/);
   assert.match(
     siteStyles,
-    /@media \(max-width:\s*1079\.98px\)\s*\{[^}]*\.VPNavBarHamburger\s*\{[^}]*display:\s*flex\s*!important/s
+    /@media \(max-width:\s*1079\.98px\)[\s\S]*?\.VPNavBarHamburger\s*\{[^}]*display:\s*flex\s*!important/s
   );
   assert.match(
     siteStyles,

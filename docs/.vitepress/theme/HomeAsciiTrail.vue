@@ -9,7 +9,7 @@ let runtime: ReturnType<typeof createHomeAsciiTrailRuntime> | undefined;
 
 function colorFromTokens(element: HTMLElement) {
   const styles = window.getComputedStyle(element);
-  return styles.getPropertyValue("--site-text").trim() || "#181818";
+  return styles.getPropertyValue("--site-accent").trim() || "#181818";
 }
 
 function syncColor() {
@@ -59,13 +59,13 @@ onBeforeUnmount(() => {
   display: block;
   width: 100%;
   height: 100%;
-  opacity: 0.62;
+  opacity: 0.28;
   pointer-events: none;
   user-select: none;
 }
 
 .dark .home-ascii-trail {
-  opacity: 0.68;
+  opacity: 0.34;
 }
 
 @media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) {

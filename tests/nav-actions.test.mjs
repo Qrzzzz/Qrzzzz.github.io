@@ -31,7 +31,7 @@ test("falls back to an immediate theme update when motion is reduced", async () 
   assert.equal(updates, 1);
 });
 
-test("cross-fades the old and new theme snapshots", async () => {
+test("fades the old snapshot over a fully visible new theme", async () => {
   let updates = 0;
   const animations = [];
   const documentObject = {
@@ -62,15 +62,13 @@ test("cross-fades the old and new theme snapshots", async () => {
   );
 
   assert.equal(updates, 1);
-  assert.equal(animations.length, 2);
+  assert.equal(animations.length, 1);
   assert.equal(animations[0].options.pseudoElement, "::view-transition-old(root)");
-  assert.equal(animations[0].options.duration, 320);
+  assert.equal(animations[0].options.duration, 260);
   assert.deepEqual(animations[0].frames.opacity, [1, 0]);
-  assert.equal(animations[1].options.pseudoElement, "::view-transition-new(root)");
-  assert.deepEqual(animations[1].frames.opacity, [0, 1]);
 });
 
-test("uses CSS fade classes when view transitions are unavailable", async () => {
+test("updates colors without blanking the page when view transitions are unavailable", async () => {
   let updates = 0;
   const classNames = new Set();
   const classChanges = [];
@@ -112,58 +110,20 @@ test("uses CSS fade classes when view transitions are unavailable", async () => 
   );
 
   assert.equal(updates, 1);
-  assert.deepEqual(delays, [144, 176]);
+  assert.deepEqual(delays, [260]);
   assert.deepEqual(classChanges, [
-    "add:theme-fade-out",
-    "remove:theme-fade-out",
-    "add:theme-fade-in",
-    "remove:theme-fade-in"
+    "add:theme-is-switching",
+    "remove:theme-is-switching"
   ]);
   assert.equal(classNames.size, 0);
 });
 
-test("mounts direct animated theme and GitHub actions in the top bar", () => {
+test("keeps accessible theme, search and external profile actions", () => {
   const layout = readFileSync("docs/.vitepress/theme/Layout.vue", "utf8");
   const component = readFileSync("docs/.vitepress/theme/NavActions.vue", "utf8");
-  const search = readFileSync("docs/.vitepress/theme/InlineSearch.vue", "utf8");
-  const siteStyles = readFileSync("docs/.vitepress/theme/styles/site.css", "utf8");
-
-  assert.match(layout, /#nav-bar-content-after/);
   assert.match(layout, /<NavActions\s*\/>/);
-  assert.match(layout, /#nav-bar-title-before/);
-  assert.match(layout, /class="site-brand-mark"[^>]*>Q\\/);
-  assert.doesNotMatch(layout, /site-brand-context|tools \/ notes/);
-  assert.match(component, /@click="toggleTheme"/);
-  assert.match(component, /targetIsDark/);
+  assert.match(layout, /<InlineSearch\s*\/>/);
   assert.match(component, /role="switch"/);
   assert.match(component, /:aria-checked="isDark"/);
   assert.match(component, /https:\/\/github\.com\/Qrzzzz/);
-  assert.doesNotMatch(component, /<span>GitHub<\/span>/);
-  assert.match(component, /theme-toggle__track/);
-  assert.match(component, /theme-toggle__thumb/);
-  assert.match(component, /theme-toggle__sun/);
-  assert.match(component, /theme-toggle__moon/);
-  assert.doesNotMatch(component, /<select|<details/);
-  assert.match(siteStyles, /\.VPNavBar \.container\s*\{[^}]*max-width:\s*calc\(var\(--site-max\) \+ 64px\)/s);
-  assert.match(siteStyles, /\.site-layout \.VPNavBar\.has-sidebar \.container > \.title\s*\{[^}]*position:\s*static[^}]*width:\s*auto[^}]*padding:\s*0/s);
-  assert.match(siteStyles, /\.site-layout \.VPNavBar\.has-sidebar \.content\s*\{[^}]*position:\s*static[^}]*padding:\s*0/s);
-  assert.match(siteStyles, /\.VPNavBarTitle \.title\s*\{[^}]*width:\s*40px[^}]*height:\s*40px[^}]*place-items:\s*center[^}]*border-radius:\s*8px/s);
-  assert.match(siteStyles, /\.site-brand-mark\s*\{[^}]*width:\s*40px[^}]*height:\s*40px[^}]*place-items:\s*center[^}]*background:\s*transparent[^}]*color:\s*var\(--site-link\)[^}]*font-family:\s*var\(--site-font-brand\)[^}]*font-size:\s*23px[^}]*font-weight:\s*900[^}]*letter-spacing:\s*-0\.04em/s);
-  assert.match(siteStyles, /\.VPNavBarTitle \.title:hover,[\s\S]*?background:\s*var\(--site-accent-soft\)/s);
-  assert.match(siteStyles, /\.VPNavBar::before\s*\{[^}]*backdrop-filter:\s*saturate\(135%\) blur\(22px\)[^}]*mask-image:\s*linear-gradient\(to bottom/s);
-  assert.match(siteStyles, /\.VPNavBar::after\s*\{[^}]*backdrop-filter:\s*saturate\(118%\) blur\(8px\)[^}]*mask-image:\s*linear-gradient\(to bottom/s);
-  assert.doesNotMatch(siteStyles, /data-page-kind="home"[^}]*\.VPNavBar\.home\.top/);
-  assert.match(siteStyles, /\.VPNavBarMenu\s*\{[^}]*border:\s*0[^}]*background:\s*transparent/s);
-  assert.match(siteStyles, /\.VPNavBar \.VPNavBarMenuLink::after\s*\{[^}]*width:\s*4px[^}]*border-radius:\s*50%/s);
-  assert.match(component, /\.NavActions\s*\{[^}]*border-left:\s*1px solid var\(--site-line\)/s);
-  assert.match(component, /\.theme-toggle,\s*\.nav-github\s*\{[^}]*width:\s*40px[^}]*border-radius:\s*8px[^}]*background:\s*transparent/s);
-  assert.match(component, /\.theme-toggle:hover,[\s\S]*?\.nav-github:focus-visible\s*\{[^}]*background:\s*var\(--site-accent-soft\)[^}]*color:\s*var\(--site-accent-hover\)/s);
-  assert.match(component, /\.theme-toggle__track\s*\{[^}]*width:\s*32px[^}]*height:\s*32px[^}]*border:\s*0/s);
-  assert.match(component, /\.theme-toggle__thumb\s*\{[^}]*color:\s*inherit/s);
-  assert.match(component, /\.theme-toggle\.is-dark \.theme-toggle__thumb\s*\{[^}]*rotate\(8deg\)/s);
-  assert.doesNotMatch(component, /@keyframes theme-toggle-spring|translateX\(18px\)/);
-  assert.match(siteStyles, /::view-transition-new\(root\)\s*\{\s*z-index:\s*2/s);
-  assert.match(siteStyles, /html\.theme-fade-out body\s*\{[^}]*theme-page-fade-out 144ms/s);
-  assert.match(siteStyles, /html\.theme-fade-in body\s*\{[^}]*theme-page-fade-in 176ms/s);
-  assert.match(search, /\.inline-search-trigger,\s*\.inline-search-form\s*\{[^}]*height:\s*40px[^}]*border:\s*1px solid var\(--site-line\)[^}]*background:\s*var\(--site-surface-subtle\)/s);
 });

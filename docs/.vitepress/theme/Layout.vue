@@ -9,11 +9,10 @@ import InlineSearch from "./InlineSearch.vue";
 import NavActions from "./NavActions.vue";
 import NotFound from "./NotFound.vue";
 import ShareImage from "./ShareImage.vue";
-import TargetCursor from "./TargetCursor.vue";
+import ReadingGesture from "./ReadingGesture.vue";
 
 const { Layout } = DefaultTheme;
 const { frontmatter, isDark, page } = useData();
-const HomeGrainient = defineAsyncComponent(() => import("./HomeGrainient.vue"));
 const HomeAsciiTrail = defineAsyncComponent(() => import("./HomeAsciiTrail.vue"));
 const clientReady = ref(false);
 
@@ -57,10 +56,6 @@ const pageKind = computed<PageKind>(() => {
   return "general";
 });
 
-const hasGrainientBackground = computed(
-  () => pageKind.value === "home"
-);
-
 const isShareablePage = computed(() => {
   const relativePath = page.value.relativePath.replace(/\\/g, "/");
   return (
@@ -81,7 +76,7 @@ function syncDocumentMetadata() {
     'meta[name="theme-color"]'
   );
 
-  themeColor?.setAttribute("content", isDark.value ? "#252724" : "#F5F0E6");
+  themeColor?.setAttribute("content", isDark.value ? "#151d37" : "#eef2f3");
   document.documentElement.lang = pageLanguage.value;
 }
 
@@ -101,20 +96,14 @@ onBeforeUnmount(() => navigationAccessibility.destroy());
 </script>
 
 <template>
-  <TargetCursor />
-
   <div
     class="site-layout"
     :data-page-kind="pageKind"
     :data-page-language="pageLanguage"
   >
-    <HomeGrainient v-if="clientReady && hasGrainientBackground" />
     <HomeAsciiTrail v-if="clientReady && pageKind === 'home'" />
 
     <Layout>
-      <template #nav-bar-title-before>
-        <span class="site-brand-mark" aria-hidden="true">Q\</span>
-      </template>
       <template #nav-bar-content-before>
         <InlineSearch />
       </template>
@@ -129,6 +118,9 @@ onBeforeUnmount(() => navigationAccessibility.destroy());
       </template>
       <template #doc-bottom>
         <BackToTop />
+      </template>
+      <template #doc-top>
+        <ReadingGesture :key="page.relativePath" />
       </template>
       <template #home-hero-before>
         <HomeContent />

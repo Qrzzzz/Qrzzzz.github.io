@@ -35,7 +35,7 @@ async function prepareImage() {
   if (rendering.value) return;
   const current = ++generation;
   rendering.value = true;
-  statusMessage.value = "正在生成全文长图…";
+  statusMessage.value = "Preparing image…";
   statusTone.value = "neutral";
   try {
     exportPalette.value = snapshotShareImagePalette(getComputedStyle(document.documentElement));
@@ -48,11 +48,11 @@ async function prepareImage() {
     href.hash = "";
     exportContent.value = { ...content, href: href.href };
     const [{ toDataURL }, { domToBlob }] = await withExportTimeout(Promise.all([import("qrcode"), import("modern-screenshot")]));
-    const qr = await toDataURL(href.href, { errorCorrectionLevel: "M", margin: 4, width: 256, color: { dark: "#30332f", light: "#fbf8f1" } });
+    const qr = await toDataURL(href.href, { errorCorrectionLevel: "M", margin: 4, width: 256, color: { dark: "#172439", light: "#f6f8fa" } });
     if (current !== generation) return;
     qrCodeDataUrl.value = qr;
     await nextTick();
-    statusMessage.value = "正在加载字体和文章图片…";
+    statusMessage.value = "Loading fonts and images…";
     const element = longform.value;
     if (!element || current !== generation) return;
     // Load only the export's glyphs before measuring its final line wrapping.
@@ -61,7 +61,7 @@ async function prepareImage() {
     if (current !== generation) return;
     await withExportTimeout(Promise.all(Array.from(element.querySelectorAll<HTMLImageElement>("img[src]")).map(image => image.decode())));
     if (current !== generation) return;
-    statusMessage.value = "正在绘制全文长图…";
+    statusMessage.value = "Rendering image…";
     const blob = await withExportTimeout(domToBlob(element, {
       backgroundColor: exportPalette.value["--share-canvas"],
       width: SHARE_IMAGE_FORMAT.width,
@@ -81,7 +81,7 @@ async function prepareImage() {
   } catch (error) {
     if (current !== generation) return;
     console.error(error);
-    statusMessage.value = "全文长图生成失败，请重试。文章过长或图片加载失败时，浏览器可能无法导出。";
+    statusMessage.value = "Could not export the article. Retry after the images load, or try a shorter article.";
     statusTone.value = "error";
   } finally {
     if (current === generation) {
@@ -100,11 +100,11 @@ async function copyImage() {
     if (!navigator.clipboard?.write || typeof ClipboardItem === "undefined") throw new Error("Clipboard unavailable");
     await navigator.clipboard.write([new ClipboardItem({ "image/png": preparedImage.value })]);
     if (current !== generation) return;
-    statusMessage.value = "全文长图已复制到剪贴板。";
+    statusMessage.value = "Image copied to clipboard.";
     statusTone.value = "success";
   } catch {
     if (current !== generation) return;
-    statusMessage.value = "无法复制到剪贴板，请重试或下载图片。";
+    statusMessage.value = "Could not copy the image. Retry or download it instead.";
     statusTone.value = "error";
   } finally {
     if (current === generation) copying.value = false;
@@ -119,22 +119,22 @@ function downloadImage() {
   anchor.href = url;
   anchor.click();
   window.setTimeout(() => URL.revokeObjectURL(url), 1000);
-  statusMessage.value = "全文长图已下载。";
+  statusMessage.value = "Image downloaded.";
   statusTone.value = "success";
 }
 </script>
 
 <template>
-  <section class="share-image-entry" aria-label="导出全文长图">
+  <section class="share-image-entry" aria-label="Export article image">
     <div class="share-image-entry__actions">
       <p class="share-image-status" :class="`is-${statusTone}`" role="status" aria-live="polite">{{ statusMessage }}</p>
       <template v-if="preparedImage">
-        <button ref="copyButton" type="button" class="share-image-entry__button share-image-entry__button--primary" :disabled="copying" :aria-busy="copying" aria-label="复制到剪贴板" @click="copyImage">{{ copying ? "正在复制…" : "复制" }}</button>
-        <button type="button" class="share-image-entry__button" @click="downloadImage">下载图片</button>
+        <button ref="copyButton" type="button" class="share-image-entry__button share-image-entry__button--primary" :disabled="copying" :aria-busy="copying" aria-label="Copy image to clipboard" @click="copyImage">{{ copying ? "Copying…" : "Copy image" }}</button>
+        <button type="button" class="share-image-entry__button" @click="downloadImage">Download image</button>
       </template>
       <button v-else type="button" class="share-image-entry__button" :disabled="rendering" :aria-busy="rendering" @click="prepareImage">
         <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 5h14v14H5zM8 15l3-3 2 2 2-2 3 3M15.5 9h.01" /></svg>
-        {{ rendering ? "正在生成…" : "导出全文长图" }}
+        {{ rendering ? "Preparing…" : "Export article image" }}
       </button>
     </div>
   </section>
@@ -142,14 +142,15 @@ function downloadImage() {
     <div v-if="exportContent" class="share-image-render-host" aria-hidden="true" inert>
       <article ref="longform" class="share-image-longform" :style="{ ...exportPalette, width: `${SHARE_IMAGE_FORMAT.width}px` }">
         <header class="share-image-longform__header">
-          <span class="share-image-longform__brand">Qrzzzz · 全文阅读</span>
+          <svg class="share-image-longform__gesture" viewBox="0 0 440 82" aria-hidden="true"><path d="M-15 20C65-12 146 7 112 54C75 102 26 55 70 34C118 8 178 61 230 69C315 89 354 36 455 62" /></svg>
+          <span class="share-image-longform__brand">Cherry Chu · Library</span>
           <h1 v-if="exportContent.title">{{ exportContent.title }}</h1>
         </header>
         <!-- Only the allowlisted semantic DOM from extractLongformContent is rendered. -->
         <div class="share-image-longform__body" v-html="exportContent.html" />
         <footer class="share-image-longform__footer">
           <span v-if="pageKind !== 'excerpt'" class="share-image-longform__url">{{ exportContent.href }}</span>
-          <figure><img v-if="qrCodeDataUrl" :src="qrCodeDataUrl" alt="" width="84" height="84" /><figcaption>扫码阅读原文</figcaption></figure>
+          <figure><img v-if="qrCodeDataUrl" :src="qrCodeDataUrl" alt="" width="84" height="84" /><figcaption>Read the original</figcaption></figure>
         </footer>
       </article>
     </div>
@@ -307,4 +308,8 @@ function downloadImage() {
     transition: none;
   }
 }
+</style>
+
+<style scoped>
+.share-image-longform__gesture { display: block; width: 100%; height: 64px; margin-bottom: 22px; fill: none; stroke: var(--share-accent); stroke-width: 2; }
 </style>

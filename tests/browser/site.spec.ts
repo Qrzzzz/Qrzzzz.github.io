@@ -67,12 +67,12 @@ test("full article export offers clipboard copy and a dynamic-height PNG downloa
   await page.goto("/notes/why-this-site.html");
   const downloads: string[] = [];
   page.on("download", download => downloads.push(download.suggestedFilename()));
-  await page.getByRole("button", { name: "导出全文长图", exact: true }).click();
-  const copy = page.getByRole("button", { name: "复制到剪贴板", exact: true });
+  await page.getByRole("button", { name: "Export article image", exact: true }).click();
+  const copy = page.getByRole("button", { name: "Copy image to clipboard", exact: true });
   await expect(copy).toBeFocused();
   expect(downloads).toHaveLength(0);
   await copy.click();
-  await expect(page.getByRole("status")).toContainText("全文长图已复制到剪贴板");
+  await expect(page.getByRole("status")).toContainText("Image copied to clipboard");
   const clipboard = await page.evaluate(async () => {
     const [item] = await navigator.clipboard.read();
     const blob = await item.getType("image/png");
@@ -84,18 +84,18 @@ test("full article export offers clipboard copy and a dynamic-height PNG downloa
   expect(clipboard.width).toBe(1080);
   expect(clipboard.height).toBeGreaterThan(1440);
   const download = page.waitForEvent("download");
-  await page.getByRole("button", { name: "下载图片", exact: true }).click();
+  await page.getByRole("button", { name: "Download image", exact: true }).click();
   const file = await (await download).path();
   const image = readFileSync(file!);
   expect(image.subarray(1, 4).toString()).toBe("PNG");
   expect(image.readUInt32BE(16)).toBe(1080);
   expect(image.readUInt32BE(20)).toBeGreaterThan(1440);
   expect(image.readUInt32BE(20)).toBe(clipboard.height);
-  await expect(page.getByRole("status")).toContainText("全文长图已下载");
+  await expect(page.getByRole("status")).toContainText("Image downloaded");
   await page.evaluate(() => {
     Object.defineProperty(navigator.clipboard, "write", { configurable: true, value: () => Promise.reject(new DOMException("Denied", "NotAllowedError")) });
   });
   await copy.click();
-  await expect(page.getByRole("status")).toContainText("请重试或下载图片");
-  await expect(page.getByRole("button", { name: "下载图片", exact: true })).toBeEnabled();
+  await expect(page.getByRole("status")).toContainText("Retry or download it instead");
+  await expect(page.getByRole("button", { name: "Download image", exact: true })).toBeEnabled();
 });

@@ -1,0 +1,25 @@
+# Gesture / blue ink
+
+The home is a name and two destinations inside one continuous gesture. Content,
+metadata, public routes and VitePress navigation remain the source of truth.
+
+- Light: cool paper `#eef2f3`, cobalt `#243ecd`, ink `#172439`.
+- Dark: navy `#151d37`, periwinkle ink `#a7bcff`, text `#f0f4ff`.
+- Interface: sans serif. Reading: the existing local serif subsets. No new font service.
+- The mobile curve is a separate composition. Never crop or scale down the desktop layout.
+- Hover attraction is local and small. Drag uses smooth resistance (112 px desktop,
+  76 px phone), fixed ends and protected link space. Release is a monotonic exponential
+  return, with no spring bounce. The animation loop stops at rest.
+- Only the 40 px stroke hit area captures touch. Everything else keeps native scrolling.
+- The document margin follows native page scrolling; there is no nested reading viewport.
+  Its length responds to content and layout changes. The heading outline stays available.
+- Reduced motion makes the line static and fully drawn. Hidden pages and unmount cancel
+  animation work, release pointer capture and remove listeners.
+- The preserved ASCII pointer trail is a quiet secondary texture, home only.
+- Shared controls use short color/underline changes. Theme switching fades one snapshot
+  over a fully visible new theme. Avoid autoplay, floating cards, fake windows and
+  independent decorative effects.
+
+Run `npm run check`, `npm run docs:e2e` and `npm run docs:audit` before publication.
+The browser suite covers touch capture, native scrolling, outline navigation,
+reduced motion, responsive widths, search, history, theme and full article export.

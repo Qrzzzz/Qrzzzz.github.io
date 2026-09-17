@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { withBase } from "vitepress";
-import FuzzyText from "./FuzzyText.vue";
 </script>
 
 <template>
@@ -8,15 +7,8 @@ import FuzzyText from "./FuzzyText.vue";
     <p class="site-not-found__eyebrow">ERROR / PAGE NOT FOUND</p>
     <h1 id="not-found-title" class="visually-hidden">404 · Page not found</h1>
     <div class="site-not-found__visual">
-      <FuzzyText
-        text="404"
-        :font-weight="800"
-        :base-intensity="0.2"
-        :hover-intensity="0.65"
-        :fuzz-range="34"
-        :fps="45"
-        :transition-duration="160"
-      />
+      <svg class="site-not-found__gesture" viewBox="0 0 700 280" aria-hidden="true"><path d="M-40 95C210-40 440 50 350 184C280 292 95 214 160 131C237 29 420 288 735 247" /></svg>
+      <span aria-hidden="true">404</span>
     </div>
     <div class="site-not-found__footer">
       <p>This page does not exist, or it has moved to a new location.</p>
@@ -46,12 +38,20 @@ import FuzzyText from "./FuzzyText.vue";
 }
 
 .site-not-found__visual {
+  position: relative;
   display: flex;
   align-items: center;
   align-self: center;
   min-width: 0;
   color: var(--site-text);
+  min-height: 280px;
+  font-size: clamp(90px, 16vw, 170px);
+  font-weight: 400;
+  letter-spacing: -.07em;
 }
+
+.site-not-found__gesture { position: absolute; inset: 0; width: 100%; height: 100%; fill: none; stroke: var(--site-accent); stroke-width: 2; pointer-events: none; }
+.site-not-found__visual > span { position: relative; margin-left: 18%; }
 
 .site-not-found__footer {
   display: flex;

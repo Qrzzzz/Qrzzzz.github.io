@@ -204,13 +204,11 @@ test("touch, coarse pointers, reduced motion, and hidden pages stay inactive", (
   assert.equal(active.runtime.getState().activeCells, 0);
 });
 
-test("the trail mounts above Grainient and only on the homepage", () => {
-  const grainientIndex = layoutSource.indexOf("<HomeGrainient");
+test("the trail remains behind the interactive homepage", () => {
   const trailIndex = layoutSource.indexOf("<HomeAsciiTrail");
   const defaultLayoutIndex = layoutSource.indexOf("<Layout>");
 
-  assert.ok(grainientIndex > 0);
-  assert.ok(trailIndex > grainientIndex);
+  assert.ok(trailIndex > 0);
   assert.ok(defaultLayoutIndex > trailIndex);
   assert.match(
     layoutSource,

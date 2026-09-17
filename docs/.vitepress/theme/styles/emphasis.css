@@ -6,11 +6,11 @@
  * unpainted.
  */
 :root {
-  --site-marker-fill: rgba(255, 226, 72, 0.58);
+  --site-marker-fill: rgba(36, 62, 205, 0.14);
 }
 
 .dark {
-  --site-marker-fill: rgba(246, 207, 74, 0.34);
+  --site-marker-fill: rgba(167, 188, 255, 0.2);
 }
 
 .vp-doc strong {
@@ -19,7 +19,7 @@
   font-weight: 750;
 }
 
-/* A lower-half yellow marker with subtly slanted ends, repeated on each line. */
+/* A lower-half blue ink marker with subtly slanted ends, repeated on each line. */
 .vp-doc .text-emphasis,
 .vp-doc .excerpt-entry strong {
   display: inline;
