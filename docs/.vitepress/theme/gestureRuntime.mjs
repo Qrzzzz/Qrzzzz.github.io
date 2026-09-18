@@ -22,7 +22,8 @@ export function createGestureRuntime({ host, svg, ink, hit, window: win, documen
       for (const r of zones) {
         const dx = Math.max(r.left - original.x, 0, original.x - r.right);
         const dy = Math.max(r.top - original.y, 0, original.y - r.bottom);
-        weight = Math.min(weight, Math.min(1, Math.hypot(dx, dy) / 80));
+        const t = Math.min(1, Math.hypot(dx, dy) / 140);
+        weight = Math.min(weight, .18 + .82 * t * t * (3 - 2 * t));
       }
       return { x: original.x + (p.x - original.x) * weight, y: original.y + (p.y - original.y) * weight };
     });

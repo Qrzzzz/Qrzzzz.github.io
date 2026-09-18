@@ -1,17 +1,17 @@
 // A single continuous gesture, composed for each viewport rather than cropped.
 export const DESKTOP_GESTURE = [
   [[-25, 160], [158, 23], [356, 16], [424, 114]],
-  [[424, 114], [519, 251], [233, 433], [100, 363]],
-  [[100, 363], [-11, 297], [100, 178], [240, 197]],
-  [[240, 197], [403, 205], [469, 367], [630, 440]],
-  [[630, 440], [775, 504], [869, 483], [1030, 589]]
+  [[424, 114], [519.2, 251.2], [233, 433], [100, 363]],
+  [[100, 363], [-33, 293], [100, 178], [240, 197]],
+  [[240, 197], [380, 216], [469, 367], [630, 440]],
+  [[630, 440], [791, 513], [869, 483], [1030, 589]]
 ];
 export const MOBILE_GESTURE = [
   [[-32, 113], [122, 17], [355, 46], [285, 220]],
-  [[285, 220], [245, 310], [63, 357], [47, 279]],
-  [[47, 279], [33, 211], [115, 173], [184, 214]],
-  [[184, 214], [295, 279], [236, 410], [312, 457]],
-  [[312, 457], [360, 488], [414, 508], [440, 575]]
+  [[285, 220], [250, 307], [63, 357], [47, 279]],
+  [[47, 279], [31, 201], [115, 173], [184, 214]],
+  [[184, 214], [253, 255], [236, 410], [312, 457]],
+  [[312, 457], [388, 504], [414, 508], [440, 575]]
 ];
 
 export function gesturePath(segments) {
@@ -58,18 +58,35 @@ export function deformGesture(points, center, x, y, radius) {
   return points.map(p => {
     const influence = Math.exp(-(((p.distance - center) / radius) ** 2));
     // Anchor both offscreen ends, so the whole line never drifts.
-    const edge = Math.min(1, p.distance / 80, (points.at(-1).distance - p.distance) / 80);
+    const t = Math.min(1, p.distance / 140, (points.at(-1).distance - p.distance) / 140);
+    const edge = t * t * (3 - 2 * t);
     return { x: p.x + x * influence * edge, y: p.y + y * influence * edge };
   });
 }
 
 export function pointsPath(points) {
-  return points.map((p, i) => `${i ? 'L' : 'M'}${p.x.toFixed(2)} ${p.y.toFixed(2)}`).join(' ');
+  if (!points.length) return '';
+  const xy = p => `${p.x.toFixed(2)} ${p.y.toFixed(2)}`;
+  let path = `M${xy(points[0])}`;
+  for (let i = 1; i < points.length; i++) {
+    const a = points[i - 1], b = points[i];
+    const before = points[Math.max(0, i - 2)], after = points[Math.min(points.length - 1, i + 1)];
+    path += ` C${xy({ x: a.x + (b.x - before.x) / 6, y: a.y + (b.y - before.y) / 6 })} ${xy({ x: b.x - (after.x - a.x) / 6, y: b.y - (after.y - a.y) / 6 })} ${xy(b)}`;
+  }
+  return path;
 }
 
 export function readingGesture(height, width) {
   // The first loop recalls the home. Long, quiet turns follow the document.
   const h = Math.max(360, height), w = width;
+  // Narrow margins get an open wave, not a horizontally crushed loop.
+  if (w < 60) {
+    let path = `M${w * .5} -12`;
+    for (let y = -12; y < h; y += 640) {
+      path += ` C${w * .9} ${y + 105} ${w * .9} ${y + 215} ${w * .5} ${y + 320} C${w * .1} ${y + 425} ${w * .1} ${y + 535} ${w * .5} ${y + 640}`;
+    }
+    return path;
+  }
   let path = `M${w * .18} -12 C${w * 1.12} 65 ${w * .88} 235 ${w * .4} 214 C${w * -.22} 187 ${w * .09} 83 ${w * .5} 145 C${w * .83} 210 ${w * .68} 340 ${w * .48} 420`;
   for (let y = 420; y < h + 500; y += 920) {
     path += ` C${w * -.08} ${y + 140} ${w * .94} ${y + 285} ${w * .54} ${y + 460} C${w * .12} ${y + 610} ${w * .84} ${y + 780} ${w * .48} ${y + 920}`;

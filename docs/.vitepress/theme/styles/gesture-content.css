@@ -5,7 +5,7 @@
 .site-layout[data-page-kind="index"] .VPDoc .content-container { max-width: 1000px !important; }
 .site-layout[data-page-kind="index"] .VPDoc { padding-left: max(130px, 12vw); padding-right: max(40px, 6vw); }
 .vp-doc .catalog-header h1 { font-family: var(--site-font-sans); font-size: clamp(36px, 4vw, 54px); font-weight: 400; letter-spacing: -1.8px; }
-.catalog-header { margin-bottom: 30px; }
+.catalog-header { margin-bottom: 44px; }
 .vp-doc .catalog-header__description { font-family: var(--site-font-sans); font-size: 13px; line-height: 1.8; margin-top: 18px; }
 .site-layout[data-page-kind] .vp-doc h1 { max-width: 100%; font-size: clamp(30px, 3.15vw, 44px); line-height: 1.5; letter-spacing: -.6px; }
 .site-layout .vp-doc .catalog-header h1 { line-height: 1.2; font-size: clamp(36px, 4vw, 54px); }
@@ -24,7 +24,7 @@
 .site-layout .VPDocFooter .pager-link .title { font-size: 15px; }
 .site-layout :is(.library-result, .content-index-row, .hub-entry, .project-link-row, .project-link-card, .project-docs-card) { border-radius: 0; transition: color 180ms ease, border-color 180ms ease, background-color 180ms ease; }
 .site-layout :is(.library-result, .content-index-row, .hub-entry):hover { background: transparent; }
-.site-layout[data-page-kind="index"] .library-result { padding: 26px 0; }
+.site-layout[data-page-kind="index"] .library-result { padding: 32px 0; }
 .site-layout[data-page-kind="index"] .library-result__title { font-size: 20px; font-weight: 500; }
 .site-layout .library-result__kind, .site-layout .library-result__date, .site-layout .library-stats { font-family: var(--site-font-sans); font-size: 11px; font-weight: 400; }
 .site-layout .library-filter { position: relative; padding: 9px 6px; border: 0; border-radius: 0; background: transparent; min-height: 44px; font-size: 12px; font-weight: 400; }
@@ -47,13 +47,13 @@
   .site-layout[data-page-kind="index"] .VPDoc { padding-left: 70px; padding-right: 32px; }
 }
 @media (max-width: 680px) {
-  .site-layout .VPDoc, .site-layout[data-page-kind="index"] .VPDoc { padding: 30px 22px 70px 38px; }
+  .site-layout .VPDoc, .site-layout[data-page-kind="index"] .VPDoc { padding: 38px 24px 80px 42px; }
   .site-layout[data-page-kind] .vp-doc h1 { font-size: 27px; line-height: 1.6; }
   .site-layout .vp-doc .catalog-header h1 { font-size: 36px; }
   .site-layout .vp-doc h2 { font-size: 22px; margin-top: 48px; }
   .site-layout .vp-doc h3 { font-size: 19px; }
   .site-layout .vp-doc p, .site-layout .vp-doc li { font-size: 16px; line-height: 2; }
-  .site-layout .vp-doc .catalog-header__description { font-size: 12px; }
+  .site-layout .vp-doc .catalog-header__description { font-size: 14px; line-height: 1.9; }
   .site-layout .library-toolbar__filters { gap: 16px; flex-wrap: wrap; }
   .site-layout .library-filter { padding-inline: 0; }
   .site-layout .library-filter::after { left: 0; right: 0; }

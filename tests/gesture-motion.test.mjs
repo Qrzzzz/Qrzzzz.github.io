@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { sampleGesture, limitPull, deformGesture, pointsPath, readingGesture } from '../docs/.vitepress/theme/gestureGeometry.mjs';
+import { DESKTOP_GESTURE, MOBILE_GESTURE, sampleGesture, limitPull, deformGesture, pointsPath, readingGesture } from '../docs/.vitepress/theme/gestureGeometry.mjs';
 import { createGestureRuntime } from '../docs/.vitepress/theme/gestureRuntime.mjs';
 
 class Events {
@@ -55,6 +55,23 @@ test('gesture sampling stays continuous on narrow, desktop and ultrawide screens
   assert.ok(Math.hypot(pull.x, pull.y) <= 76.001);
   assert.deepEqual(limitPull(0, 0, 76), { x: 0, y: 0 });
   assert.doesNotMatch(readingGesture(35000, 22), /NaN|Infinity/);
+});
+
+test('home joins share a tangent and deformed strokes remain curved', () => {
+  for (const segments of [DESKTOP_GESTURE, MOBILE_GESTURE]) {
+    for (let i = 1; i < segments.length; i++) {
+      const previous = segments[i - 1], next = segments[i];
+      assert.deepEqual(previous[3], next[0]);
+      const a = previous[3].map((v, axis) => v - previous[2][axis]);
+      const b = next[1].map((v, axis) => v - next[0][axis]);
+      assert.ok(Math.abs(a[0] * b[1] - a[1] * b[0]) < 1);
+      assert.ok(a[0] * b[0] + a[1] * b[1] > 0);
+    }
+  }
+  const points = sampleGesture(390, 575);
+  const path = pointsPath(deformGesture(points, points[90].distance, 60, 35, 125));
+  assert.match(path, /C/);
+  assert.doesNotMatch(path, /L/);
 });
 
 test('motion rests without frames, pulls only the captured pointer and returns exactly', () => {
