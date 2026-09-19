@@ -133,27 +133,35 @@ test("styles structured article content and live format demonstrations", () => {
   assert.match(styles, /\.vp-doc \.custom-block\.danger\s*\{/);
   assert.match(
     styles,
-    /\.vp-doc \.custom-block,\s*\.vp-doc \.project-docs-sync\.sync-notice\s*\{[^}]*border:\s*0[^}]*border-radius:\s*10px[^}]*box-shadow:\s*inset 0 0 0 1px/s
+    /\.vp-doc \.custom-block\s*\{[^}]*border:\s*1px solid var\(--site-line\)[^}]*border-inline-start-width:\s*3px[^}]*border-radius:\s*var\(--site-radius-md\)/s
   );
   assert.match(
     styles,
-    /\.vp-doc \.custom-block\.info\s*\{[^}]*--custom-block-accent:\s*var\(--site-text-muted\)/s
+    /\.vp-doc \.custom-block\.info\s*\{[^}]*border-inline-start-color:\s*var\(--site-text-muted\)/s
   );
   assert.match(
     styles,
-    /\.vp-doc \.custom-block\.tip\s*\{[^}]*--custom-block-accent:\s*var\(--vp-c-success-1\)/s
+    /\.vp-doc \.custom-block\.tip\s*\{[^}]*border-inline-start-color:\s*var\(--vp-c-success-1\)/s
   );
   assert.match(
     styles,
-    /\.vp-doc \.custom-block\.warning\s*\{[^}]*--custom-block-accent:\s*var\(--vp-c-warning-1\)/s
+    /\.vp-doc \.custom-block\.warning\s*\{[^}]*border-inline-start-color:\s*var\(--vp-c-warning-1\)/s
   );
   assert.match(
     styles,
-    /\.vp-doc \.custom-block\.danger\s*\{[^}]*--custom-block-accent:\s*var\(--vp-c-danger-1\)/s
+    /\.vp-doc \.custom-block\.danger\s*\{[^}]*border-inline-start-color:\s*var\(--vp-c-danger-1\)/s
+  );
+  assert.doesNotMatch(
+    styles,
+    /\.vp-doc \.custom-block \.custom-block-title::before\s*\{/
   );
   assert.match(
     styles,
-    /\.vp-doc \.custom-block \.custom-block-title::before,\s*\.vp-doc \.project-docs-sync\.sync-notice \.sync-notice__title::before\s*\{/
+    /\.vp-doc \.project-docs-sync\.sync-notice\s*\{[^}]*border:\s*0[^}]*border-radius:\s*10px[^}]*box-shadow:\s*inset 0 0 0 1px/s
+  );
+  assert.match(
+    styles,
+    /\.vp-doc \.project-docs-sync\.sync-notice \.sync-notice__title::before\s*\{/
   );
   assert.match(styles, /\.project-docs-sync:not\(\.sync-notice\)\s*\{/);
   assert.doesNotMatch(
