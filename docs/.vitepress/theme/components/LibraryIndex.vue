@@ -14,9 +14,18 @@ import {
   type LibraryKind
 } from "../../content/library";
 import LibraryToolbar from "./LibraryToolbar.vue";
+import { useLibraryResultMarker } from "./useLibraryResultMarker";
 
 const query = ref("");
 const activeKind = ref<LibraryKind | "all">("all");
+const {
+  resultsRef,
+  markerRef,
+  handlePointerOver,
+  handlePointerLeave,
+  handleFocusIn,
+  handleFocusOut
+} = useLibraryResultMarker();
 let queryUrlTimer: number | undefined;
 
 const latestUpdated = computed(() => libraryItems[0]?.updated ?? "");
@@ -112,7 +121,22 @@ onBeforeUnmount(() => {
         @change-kind="handleKind"
       />
 
-      <div v-if="filteredItems.length" class="library-results">
+      <div
+        v-if="filteredItems.length"
+        ref="resultsRef"
+        class="library-results"
+        @pointerover="handlePointerOver"
+        @pointerleave="handlePointerLeave"
+        @focusin="handleFocusIn"
+        @focusout="handleFocusOut"
+      >
+        <span
+          ref="markerRef"
+          class="library-result-marker"
+          aria-hidden="true"
+        >
+          <span class="library-result-marker__ink"></span>
+        </span>
         <a
           v-for="item in filteredItems"
           :key="item.url"

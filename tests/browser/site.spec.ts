@@ -32,6 +32,28 @@ test("Library filtering, browser history and URL restoration agree", async ({ pa
   await expect(page.getByRole("button", { name: "Articles", exact: true })).toHaveAttribute("aria-pressed", "true");
 });
 
+test("Library emphasis marker appears once and glides between entries", async ({ page }) => {
+  await page.goto("/library/");
+  const entries = page.locator(".library-result");
+  const marker = page.locator(".library-result-marker");
+
+  await entries.nth(0).hover();
+  await expect(marker).toHaveClass(/is-active/);
+  const firstY = await marker.evaluate(element =>
+    element.style.getPropertyValue("--library-marker-y")
+  );
+
+  await entries.nth(1).hover();
+  await expect(marker).toHaveClass(/is-active/);
+  const secondY = await marker.evaluate(element =>
+    element.style.getPropertyValue("--library-marker-y")
+  );
+
+  expect(firstY).not.toBe(secondY);
+  await page.getByRole("searchbox", { name: "Search the Library" }).hover();
+  await expect(marker).not.toHaveClass(/is-active/);
+});
+
 test("mobile navigation restores focus and releases background across breakpoints", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");

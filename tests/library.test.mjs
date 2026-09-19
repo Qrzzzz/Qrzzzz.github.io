@@ -19,6 +19,10 @@ const collectionIndex = readFileSync(
   "docs/.vitepress/theme/components/CollectionIndex.vue",
   "utf8"
 );
+const libraryResultMarker = readFileSync(
+  "docs/.vitepress/theme/components/useLibraryResultMarker.ts",
+  "utf8"
+);
 
 test("defines four non-overlapping top-level navigation areas", () => {
   const nav = config.match(/nav:\s*\[([\s\S]*?)\],\s*\n\s*sidebar:/)?.[1] ?? "";
@@ -67,6 +71,27 @@ test("uses one generated Library source for the main and collection indexes", ()
     assert.match(source, new RegExp(`<CollectionIndex kind="${kind}" \\/>`));
     assert.doesNotMatch(source, /class="content-index-row"/);
   }
+});
+
+test("animates one shared Library emphasis marker across hovered and focused entries", () => {
+  for (const source of [libraryIndex, collectionIndex]) {
+    assert.match(source, /useLibraryResultMarker/);
+    assert.match(source, /class="library-result-marker"/);
+    assert.match(source, /@pointerover="handlePointerOver"/);
+    assert.match(source, /@focusin="handleFocusIn"/);
+  }
+
+  assert.match(libraryResultMarker, /result\.offsetTop/);
+  assert.match(libraryResultMarker, /result\.offsetHeight/);
+  assert.match(libraryResultMarker, /classList\.contains\("is-active"\)/);
+  assert.match(libraryResultMarker, /classList\.add\("is-preparing"\)/);
+  assert.match(styles, /\.library-result-marker\s*\{[\s\S]*?transform:\s*translate3d/s);
+  assert.match(styles, /\.library-result-marker__ink\s*\{[\s\S]*?transform:\s*scaleY\(0\)/s);
+  assert.match(styles, /\.library-result-marker\.is-active \.library-result-marker__ink\s*\{[\s\S]*?scaleY\(1\)/s);
+  assert.doesNotMatch(
+    styles,
+    /\.library-result:hover,[\s\S]*?\.library-result:focus-visible\s*\{[^}]*box-shadow:/s
+  );
 });
 
 test("implements searchable URL-backed filters and a clear empty state", () => {

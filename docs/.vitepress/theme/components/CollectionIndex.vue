@@ -6,6 +6,7 @@ import {
   LIBRARY_STATUS_LABELS,
   type LibraryKind
 } from "../../content/library";
+import { useLibraryResultMarker } from "./useLibraryResultMarker";
 
 const props = defineProps<{
   kind: LibraryKind;
@@ -14,14 +15,34 @@ const props = defineProps<{
 const items = computed(() =>
   libraryItems.filter((item) => item.kind === props.kind)
 );
+const {
+  resultsRef,
+  markerRef,
+  handlePointerOver,
+  handlePointerLeave,
+  handleFocusIn,
+  handleFocusOut
+} = useLibraryResultMarker();
 </script>
 
 <template>
   <div
     v-if="items.length"
+    ref="resultsRef"
     class="library-results collection-index"
     :aria-label="`${LIBRARY_KIND_LABELS[kind]} list`"
+    @pointerover="handlePointerOver"
+    @pointerleave="handlePointerLeave"
+    @focusin="handleFocusIn"
+    @focusout="handleFocusOut"
   >
+    <span
+      ref="markerRef"
+      class="library-result-marker"
+      aria-hidden="true"
+    >
+      <span class="library-result-marker__ink"></span>
+    </span>
     <a
       v-for="item in items"
       :key="item.url"
