@@ -32,6 +32,30 @@ test("Library filtering, browser history and URL restoration agree", async ({ pa
   await expect(page.getByRole("button", { name: "Articles", exact: true })).toHaveAttribute("aria-pressed", "true");
 });
 
+test("top navigation underline glides between the four desktop destinations", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/library/");
+  const marker = page.locator(".top-nav-marker");
+  const library = page.getByRole("link", { name: "Library", exact: true });
+  const projects = page.getByRole("link", { name: "Projects", exact: true });
+
+  await expect(marker).toHaveClass(/is-ready/);
+  await expect(marker).toHaveClass(/is-visible/);
+  const libraryTransform = await marker.evaluate(element => (element as HTMLElement).style.transform);
+
+  await projects.hover();
+  await expect.poll(() => marker.evaluate(element => (element as HTMLElement).style.transform)).not.toBe(libraryTransform);
+  const projectsTransform = await marker.evaluate(element => (element as HTMLElement).style.transform);
+
+  await page.getByRole("button", { name: "Search the site", exact: true }).hover();
+  await expect.poll(() => marker.evaluate(element => (element as HTMLElement).style.transform)).toBe(libraryTransform);
+
+  await projects.click();
+  await expect(page).toHaveURL(/\/projects\/$/);
+  await expect.poll(() => marker.evaluate(element => (element as HTMLElement).style.transform)).toBe(projectsTransform);
+  expect(await marker.evaluate(element => getComputedStyle(element).transitionProperty)).toContain("transform");
+});
+
 test("Library filter underline glides between choices and returns to the active filter", async ({ page }) => {
   await page.goto("/library/");
   const marker = page.locator(".library-filter-marker");

@@ -2,6 +2,7 @@
 import { computed, defineAsyncComponent, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { useData } from "vitepress";
 import { createNavigationAccessibility } from "./navigationAccessibility";
+import { createTopNavigationMarker } from "./topNavigationMarker";
 import DefaultTheme from "vitepress/theme";
 import BackToTop from "./BackToTop.vue";
 import HomeContent from "./HomeContent.vue";
@@ -81,18 +82,24 @@ function syncDocumentMetadata() {
 }
 
 const navigationAccessibility = createNavigationAccessibility();
+const topNavigationMarker = createTopNavigationMarker();
 onMounted(() => {
   clientReady.value = true;
   syncDocumentMetadata();
   nextTick(syncDocumentMetadata);
   navigationAccessibility.mount();
+  topNavigationMarker.mount();
 });
 watch([isDark, pageLanguage], syncDocumentMetadata, { flush: "sync" });
 watch(() => page.value.relativePath, () => nextTick(() => {
   syncDocumentMetadata();
   navigationAccessibility.sync();
+  topNavigationMarker.sync();
 }), { flush: "post" });
-onBeforeUnmount(() => navigationAccessibility.destroy());
+onBeforeUnmount(() => {
+  navigationAccessibility.destroy();
+  topNavigationMarker.destroy();
+});
 </script>
 
 <template>

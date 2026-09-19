@@ -127,3 +127,18 @@ test("keeps accessible theme, search and external profile actions", () => {
   assert.match(component, /:aria-checked="isDark"/);
   assert.match(component, /https:\/\/github\.com\/Qrzzzz/);
 });
+
+test("uses one gliding marker for the four desktop top navigation links", () => {
+  const layout = readFileSync("docs/.vitepress/theme/Layout.vue", "utf8");
+  const marker = readFileSync("docs/.vitepress/theme/topNavigationMarker.ts", "utf8");
+  const styles = readFileSync("docs/.vitepress/theme/styles/site.css", "utf8");
+
+  assert.match(layout, /createTopNavigationMarker/);
+  assert.match(layout, /topNavigationMarker\.mount\(\)/);
+  assert.match(marker, /\.VPNavBarMenuLink/);
+  assert.match(marker, /className = "top-nav-marker"/);
+  assert.match(marker, /translate3d/);
+  assert.match(marker, /handlePointerOver/);
+  assert.match(styles, /\.top-nav-marker\s*\{[^}]*transition:\s*transform 320ms/s);
+  assert.doesNotMatch(styles, /VPNavBarMenuLink\.active\s*\{[^}]*text-decoration:\s*underline/s);
+});

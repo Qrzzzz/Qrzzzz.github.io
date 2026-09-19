@@ -10,11 +10,13 @@
 .VPNavBar .content-body { gap: 8px; background: transparent !important; }
 .VPNavBarTitle .title { height: 44px; min-height: 44px; border: 0; font-size: 18px; font-weight: 400; letter-spacing: -.7px; }
 .VPNavBarTitle { display: flex; align-items: center; height: var(--vp-nav-height); }
-.VPNavBarMenu { align-items: center; gap: 8px; }
-.VPNavBar .VPNavBarMenuLink { height: 44px; padding: 0 10px; color: var(--site-text-muted); font-size: 12px; font-weight: 400; line-height: 44px; transition: color var(--site-motion-short); }
+.VPNavBarMenu { position: relative; align-items: center; gap: 8px; }
+.VPNavBar .VPNavBarMenuLink { position: relative; z-index: 1; height: 44px; padding: 0 10px; color: var(--site-text-muted); font-size: 12px; font-weight: 400; line-height: 44px; transition: color var(--site-motion-short); }
 .VPNavBar .VPNavBarMenuLink.active,
 .VPNavBar .VPNavBarMenuLink:hover { color: var(--site-link); }
-.VPNavBar .VPNavBarMenuLink.active { text-decoration: underline; text-underline-offset: 6px; text-decoration-thickness: 1px; }
+.VPNavBar .top-nav-marker { position: absolute; z-index: 2; top: 0; left: 0; width: 0; height: 1px; background: var(--site-link); opacity: 0; pointer-events: none; transform: translate3d(0, 0, 0); transition: transform 320ms var(--site-ease), width 320ms var(--site-ease), opacity 120ms ease; will-change: transform, width; }
+.VPNavBar .top-nav-marker.is-ready.is-visible { opacity: 1; }
+.VPNavBar .top-nav-marker.is-preparing { transition: none; }
 .VPNavBarSearch, .VPNavBarAppearance, .VPNavBarTranslations, .VPNavBarSocialLinks, .VPNavBarExtra { display: none !important; }
 .site-layout[data-page-kind="home"] .VPNavBarMenuLink:not([href^="/about"]) { display: none; }
 .site-layout[data-page-kind="home"] .nav-github { display: none; }
