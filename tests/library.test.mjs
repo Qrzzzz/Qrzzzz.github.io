@@ -97,6 +97,11 @@ test("animates one shared Library emphasis marker across hovered and focused ent
 test("implements searchable URL-backed filters and a clear empty state", () => {
   assert.match(libraryToolbar, /type="search"/);
   assert.match(libraryToolbar, /aria-pressed/);
+  assert.match(libraryToolbar, /class="library-filter-marker"/);
+  assert.match(libraryToolbar, /translate3d/);
+  assert.match(libraryToolbar, /@pointerover="handleFilterPointerOver"/);
+  assert.match(gestureStyles, /\.library-filter-marker\s*\{[^}]*transition:\s*transform 320ms/s);
+  assert.doesNotMatch(gestureStyles, /\.library-filter::after/);
   assert.match(libraryIndex, /URLSearchParams\(window\.location\.search\)/);
   assert.match(libraryIndex, /window\.history\[method\]/);
   assert.match(libraryIndex, /window\.addEventListener\("popstate"/);

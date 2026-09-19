@@ -32,6 +32,26 @@ test("Library filtering, browser history and URL restoration agree", async ({ pa
   await expect(page.getByRole("button", { name: "Articles", exact: true })).toHaveAttribute("aria-pressed", "true");
 });
 
+test("Library filter underline glides between choices and returns to the active filter", async ({ page }) => {
+  await page.goto("/library/");
+  const marker = page.locator(".library-filter-marker");
+  const articles = page.getByRole("button", { name: "Articles", exact: true });
+
+  await expect(marker).toHaveClass(/is-ready/);
+  const allTransform = await marker.evaluate(element => (element as HTMLElement).style.transform);
+
+  await articles.hover();
+  await expect.poll(() => marker.evaluate(element => (element as HTMLElement).style.transform)).not.toBe(allTransform);
+  const articlesTransform = await marker.evaluate(element => (element as HTMLElement).style.transform);
+
+  await page.locator(".library-stats").hover();
+  await expect.poll(() => marker.evaluate(element => (element as HTMLElement).style.transform)).toBe(allTransform);
+
+  await articles.click();
+  await expect.poll(() => marker.evaluate(element => (element as HTMLElement).style.transform)).toBe(articlesTransform);
+  expect(await marker.evaluate(element => getComputedStyle(element).transitionProperty)).toContain("transform");
+});
+
 test("Library emphasis marker appears once and glides between entries", async ({ page }) => {
   await page.goto("/library/");
   const entries = page.locator(".library-result");
