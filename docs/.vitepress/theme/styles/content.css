@@ -590,7 +590,62 @@
   vertical-align: top;
 }
 
-.vp-doc .custom-block,
+.vp-doc .custom-block {
+  --site-surface: var(--site-content-surface);
+  --site-text-muted: var(--site-content-muted);
+
+  border: 1px solid var(--site-line);
+  border-inline-start-width: 3px;
+  border-radius: var(--site-radius-md);
+  margin: 26px 0;
+  padding: 16px 18px;
+  background: var(--site-surface);
+}
+
+.vp-doc .custom-block.info {
+  border-inline-start-color: var(--site-text-muted);
+  background: color-mix(in srgb, var(--site-text-muted) 6%, var(--site-surface));
+}
+
+.vp-doc .custom-block.tip {
+  border-inline-start-color: var(--vp-c-success-1);
+  background: color-mix(in srgb, var(--vp-c-success-1) 7%, var(--site-surface));
+}
+
+.vp-doc .custom-block.warning {
+  border-inline-start-color: var(--vp-c-warning-1);
+  background: color-mix(in srgb, var(--vp-c-warning-1) 7%, var(--site-surface));
+}
+
+.vp-doc .custom-block.danger {
+  border-inline-start-color: var(--vp-c-danger-1);
+  background: color-mix(in srgb, var(--vp-c-danger-1) 7%, var(--site-surface));
+}
+
+.vp-doc .custom-block .custom-block-title {
+  margin: 0 0 7px;
+  color: var(--site-text);
+  font-size: 14px;
+  font-weight: 720;
+  letter-spacing: 0.01em;
+}
+
+.vp-doc .custom-block.info .custom-block-title {
+  color: var(--site-text-muted);
+}
+
+.vp-doc .custom-block.tip .custom-block-title {
+  color: var(--vp-c-success-1);
+}
+
+.vp-doc .custom-block.warning .custom-block-title {
+  color: var(--vp-c-warning-1);
+}
+
+.vp-doc .custom-block.danger .custom-block-title {
+  color: var(--vp-c-danger-1);
+}
+
 .vp-doc .project-docs-sync.sync-notice {
   --custom-block-accent: var(--site-text-muted);
   --custom-block-tint: 5%;
@@ -610,26 +665,6 @@
     color-mix(in srgb, var(--custom-block-accent) 17%, transparent);
 }
 
-.vp-doc .custom-block.info {
-  --custom-block-accent: var(--site-text-muted);
-}
-
-.vp-doc .custom-block.tip {
-  --custom-block-accent: var(--vp-c-success-1);
-  --custom-block-tint: 6%;
-}
-
-.vp-doc .custom-block.warning {
-  --custom-block-accent: var(--vp-c-warning-1);
-  --custom-block-tint: 6%;
-}
-
-.vp-doc .custom-block.danger {
-  --custom-block-accent: var(--vp-c-danger-1);
-  --custom-block-tint: 6%;
-}
-
-.vp-doc .custom-block .custom-block-title,
 .vp-doc .project-docs-sync.sync-notice .sync-notice__title {
   display: flex;
   align-items: center;
@@ -642,7 +677,6 @@
   line-height: 1.5;
 }
 
-.vp-doc .custom-block .custom-block-title::before,
 .vp-doc .project-docs-sync.sync-notice .sync-notice__title::before {
   width: 8px;
   height: 8px;
