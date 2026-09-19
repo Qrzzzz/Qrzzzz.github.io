@@ -126,11 +126,13 @@ test("uses the native always-visible page outline without custom folding", () =>
   assert.doesNotMatch(styles, /\.back-to-top[\s\S]*?box-shadow:\s*0\s+10px/);
 });
 
-test("code keeps copy and language controls on a quiet shared surface", () => {
+test("restores macOS traffic-light code windows while keeping copy and language controls", () => {
   const config = readFileSync("docs/.vitepress/config.mts", "utf8");
   const codeStyles = readFileSync("docs/.vitepress/theme/styles/code.css", "utf8");
   assert.match(config, /lineNumbers:\s*false/);
   assert.match(config, /codeCopyButtonTitle:\s*"Copy code"/);
   assert.match(codeStyles, /var\(--site-line\)/);
-  assert.doesNotMatch(codeStyles, /#ff5f56|#ffbd2e|#27c93f/);
+  assert.match(codeStyles, /background-color:\s*#ff5f56/);
+  assert.match(codeStyles, /box-shadow:\s*20px 0 0 #ffbd2e, 40px 0 0 #27c93f/);
+  assert.match(codeStyles, /\.vp-code-group \.tabs::before/);
 });
