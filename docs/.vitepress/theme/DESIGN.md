@@ -7,9 +7,11 @@ metadata, public routes and VitePress navigation remain the source of truth.
 - Dark: navy `#151d37`, periwinkle ink `#a7bcff`, text `#f0f4ff`.
 - Interface: sans serif. Reading: the existing local serif subsets. No new font service.
 - The mobile curve is a separate composition. Never crop or scale down the desktop layout.
-- Hover attraction is local and small. Drag uses smooth resistance (112 px desktop,
-  76 px phone), fixed ends and protected link space. Release is a monotonic exponential
-  return, with no spring bounce. The animation loop stops at rest.
+- Hover and drag resolve to a continuous arc-length coordinate on the stroke, never
+  to a sampled anchor. Drag uses smooth resistance (112 px desktop, 76 px phone), a
+  two-scale continuous deformation field, off-canvas endpoint constraints and protected
+  link space. Release is a monotonic exponential return, with no spring bounce. The
+  animation loop stops at rest.
 - Only the 40 px stroke hit area captures touch. Everything else keeps native scrolling.
 - The document margin follows native page scrolling; there is no nested reading viewport.
   Its length responds to content and layout changes. The heading outline stays available.

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { DESKTOP_GESTURE, MOBILE_GESTURE, sampleGesture, limitPull, deformGesture, pointsPath, readingGesture } from '../docs/.vitepress/theme/gestureGeometry.mjs';
+import { DESKTOP_GESTURE, MOBILE_GESTURE, sampleGesture, projectOnGesture, limitPull, deformGesture, pointsPath, readingGesture } from '../docs/.vitepress/theme/gestureGeometry.mjs';
 import { createGestureRuntime } from '../docs/.vitepress/theme/gestureRuntime.mjs';
 
 class Events {
@@ -43,7 +43,7 @@ function harness({ reduced = false, fine = true, width = 1000 } = {}) {
 test('gesture sampling stays continuous on narrow, desktop and ultrawide screens', () => {
   for (const width of [320, 390, 680, 681, 1440, 2560]) {
     const points = sampleGesture(width, 700);
-    assert.equal(points.length, 241);
+    assert.ok(points.length > 300);
     assert.ok(points.every((p, i) => Number.isFinite(p.x + p.y) && (!i || p.distance > points[i - 1].distance)));
     const deformed = deformGesture(points, points[100].distance, 80, -60, 160);
     assert.deepEqual(deformed[0], { x: points[0].x, y: points[0].y });
@@ -55,6 +55,22 @@ test('gesture sampling stays continuous on narrow, desktop and ultrawide screens
   assert.ok(Math.hypot(pull.x, pull.y) <= 76.001);
   assert.deepEqual(limitPull(0, 0, 76), { x: 0, y: 0 });
   assert.doesNotMatch(readingGesture(35000, 22), /NaN|Infinity/);
+});
+
+test('projection uses a continuous material coordinate between samples', () => {
+  const points = sampleGesture(1000, 620);
+  const a = points[120], b = points[121];
+  const x = a.x + (b.x - a.x) * .37;
+  const y = a.y + (b.y - a.y) * .37;
+  const projection = projectOnGesture(points, x, y);
+  assert.equal(projection.segment, 120);
+  assert.ok(Math.abs(projection.t - .37) < 1e-9);
+  assert.ok(projection.distance < 1e-9);
+  assert.ok(Math.abs(projection.arcLength - (a.distance + (b.distance - a.distance) * .37)) < 1e-9);
+
+  const before = projectOnGesture(points, x - .01, y);
+  const after = projectOnGesture(points, x + .01, y);
+  assert.ok(Math.abs(after.arcLength - before.arcLength) < 1);
 });
 
 test('home joins share a tangent and deformed strokes remain curved', () => {

@@ -1,17 +1,21 @@
 // A single continuous gesture, composed for each viewport rather than cropped.
 export const DESKTOP_GESTURE = [
+  [[-262.9, 338.1], [-179.18, 275.44], [-89.05, 207.95], [-25, 160]],
   [[-25, 160], [158, 23], [356, 16], [424, 114]],
   [[424, 114], [519.2, 251.2], [233, 433], [100, 363]],
   [[100, 363], [-33, 293], [100, 178], [240, 197]],
   [[240, 197], [380, 216], [469, 367], [630, 440]],
-  [[630, 440], [791, 513], [869, 483], [1030, 589]]
+  [[630, 440], [791, 513], [869, 483], [1030, 589]],
+  [[1030, 589], [1086.35, 626.1], [1190.65, 694.8], [1287.6, 758.6]]
 ];
 export const MOBILE_GESTURE = [
+  [[-247.6, 247.4], [-171.14, 199.73], [-85.9, 146.6], [-32, 113]],
   [[-32, 113], [122, 17], [355, 46], [285, 220]],
   [[285, 220], [250, 307], [63, 357], [47, 279]],
   [[47, 279], [31, 201], [115, 173], [184, 214]],
   [[184, 214], [253, 255], [236, 410], [312, 457]],
-  [[312, 457], [388, 504], [414, 508], [440, 575]]
+  [[312, 457], [388, 504], [414, 508], [440, 575]],
+  [[440, 575], [449.1, 598.45], [485.5, 692.25], [505, 742.5]]
 ];
 
 export function gesturePath(segments) {
@@ -38,13 +42,28 @@ export function sampleGesture(width, height, mobile = width <= 680) {
   return points;
 }
 
-export function nearestPoint(points, x, y) {
-  let nearest, distance = Infinity;
-  for (const point of points) {
-    const d = Math.hypot(point.x - x, point.y - y);
-    if (d < distance) { nearest = point; distance = d; }
+export function projectOnGesture(points, x, y) {
+  let best = null;
+  for (let i = 1; i < points.length; i++) {
+    const a = points[i - 1], b = points[i];
+    const vx = b.x - a.x, vy = b.y - a.y;
+    const lengthSquared = vx * vx + vy * vy;
+    const t = lengthSquared
+      ? Math.max(0, Math.min(1, ((x - a.x) * vx + (y - a.y) * vy) / lengthSquared))
+      : 0;
+    const px = a.x + vx * t, py = a.y + vy * t;
+    const distance = Math.hypot(px - x, py - y);
+    if (!best || distance < best.distance) {
+      best = {
+        point: { x: px, y: py },
+        distance,
+        arcLength: a.distance + (b.distance - a.distance) * t,
+        segment: i - 1,
+        t
+      };
+    }
   }
-  return { point: nearest, distance };
+  return best ?? { point: points[0], distance: Infinity, arcLength: points[0]?.distance ?? 0, segment: 0, t: 0 };
 }
 
 export function limitPull(x, y, limit) {
@@ -54,12 +73,28 @@ export function limitPull(x, y, limit) {
   return { x: x * ratio, y: y * ratio };
 }
 
+function smootherstep01(value) {
+  const t = Math.max(0, Math.min(1, value));
+  return t * t * t * (t * (t * 6 - 15) + 10);
+}
+
+function deformationKernel(distance, radius) {
+  return 1 - smootherstep01(distance / radius);
+}
+
 export function deformGesture(points, center, x, y, radius) {
+  const total = points.at(-1)?.distance ?? 0;
+  const localRadius = radius * .72;
+  const broadRadius = radius * 2.45;
   return points.map(p => {
-    const influence = Math.exp(-(((p.distance - center) / radius) ** 2));
-    // Anchor both offscreen ends, so the whole line never drifts.
-    const t = Math.min(1, p.distance / 140, (points.at(-1).distance - p.distance) / 140);
-    const edge = t * t * (3 - 2 * t);
+    const ds = Math.abs(p.distance - center);
+    // A narrow field keeps the grabbed material responsive while a broader field
+    // carries some motion into the surrounding stroke, avoiding a visible "bump".
+    const influence = .76 * deformationKernel(ds, localRadius) + .24 * deformationKernel(ds, broadRadius);
+    // The only true constraints live at the off-canvas ends of the authored gesture.
+    // Their fade is intentionally broad so no fixed point is perceptible in the viewport.
+    const edgeDistance = Math.min(p.distance, total - p.distance);
+    const edge = smootherstep01(edgeDistance / Math.max(220, radius * 1.6));
     return { x: p.x + x * influence * edge, y: p.y + y * influence * edge };
   });
 }

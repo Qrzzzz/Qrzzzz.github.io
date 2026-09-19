@@ -1,4 +1,4 @@
-import { sampleGesture, nearestPoint, limitPull, deformGesture, pointsPath } from './gestureGeometry.mjs';
+import { sampleGesture, projectOnGesture, limitPull, deformGesture, pointsPath } from './gestureGeometry.mjs';
 
 /** Event-driven, bounded deformation. No idle animation and no scroll interception. */
 export function createGestureRuntime({ host, svg, ink, hit, window: win, document: doc }) {
@@ -90,22 +90,23 @@ export function createGestureRuntime({ host, svg, ink, hit, window: win, documen
     if (drag) {
       const pull = limitPull(p.x - drag.x, p.y - drag.y, width <= 680 ? 76 : 112);
       targetX = pull.x; targetY = pull.y;
+      targetCenter = drag.grabS;
     } else {
-      const nearest = nearestPoint(points, p.x, p.y);
-      const strength = .32 * Math.max(0, 1 - nearest.distance / 100) ** 1.5;
-      targetX = (p.x - nearest.point.x) * strength;
-      targetY = (p.y - nearest.point.y) * strength;
-      if (Math.hypot(x, y) < .1) center = nearest.point.distance;
-      targetCenter = nearest.point.distance;
+      const projection = projectOnGesture(points, p.x, p.y);
+      const strength = .32 * Math.max(0, 1 - projection.distance / 100) ** 1.5;
+      targetX = (p.x - projection.point.x) * strength;
+      targetY = (p.y - projection.point.y) * strength;
+      if (Math.hypot(x, y) < .1) center = projection.arcLength;
+      targetCenter = projection.arcLength;
     }
     wake();
   }
   function down(event) {
     if (reduced.matches || !event.isPrimary || event.button !== 0 || drag) return;
-    const p = location(event), nearest = nearestPoint(points, p.x, p.y);
-    if (!nearest.point || nearest.distance > 30) return;
-    drag = { id: event.pointerId, x: p.x, y: p.y };
-    center = targetCenter = nearest.point.distance;
+    const p = location(event), projection = projectOnGesture(points, p.x, p.y);
+    if (!projection.point || projection.distance > 30) return;
+    drag = { id: event.pointerId, x: p.x, y: p.y, grabS: projection.arcLength };
+    center = targetCenter = projection.arcLength;
     targetX = targetY = 0;
     hit.setPointerCapture(event.pointerId);
     host.dataset.pulling = 'true';
@@ -116,9 +117,9 @@ export function createGestureRuntime({ host, svg, ink, hit, window: win, documen
     if (!entry || reduced.matches || !points.length) return;
     const r = entry.getBoundingClientRect(), h = host.getBoundingClientRect();
     const p = { x: r.left - h.left + r.width / 2, y: r.top - h.top + r.height / 2 };
-    const nearest = nearestPoint(points, p.x, p.y);
-    center = targetCenter = nearest.point.distance;
-    const pull = limitPull((p.x - nearest.point.x) * .13, (p.y - nearest.point.y) * .13, 12);
+    const projection = projectOnGesture(points, p.x, p.y);
+    center = targetCenter = projection.arcLength;
+    const pull = limitPull((p.x - projection.point.x) * .13, (p.y - projection.point.y) * .13, 12);
     targetX = pull.x; targetY = pull.y;
     wake();
   }
