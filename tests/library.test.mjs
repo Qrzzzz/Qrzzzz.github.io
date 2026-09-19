@@ -6,6 +6,7 @@ const library = readFileSync("docs/library/index.md", "utf8");
 const config = readFileSync("docs/.vitepress/config.mts", "utf8");
 const layout = readFileSync("docs/.vitepress/theme/Layout.vue", "utf8");
 const styles = readFileSync("docs/.vitepress/theme/styles/content.css", "utf8");
+const gestureStyles = readFileSync("docs/.vitepress/theme/styles/gesture-content.css", "utf8");
 const libraryIndex = readFileSync(
   "docs/.vitepress/theme/components/LibraryIndex.vue",
   "utf8"
@@ -91,4 +92,8 @@ test("entry pages share a header and keep collections reachable", () => {
   }
   assert.match(layout, /frontmatter.value.pageType === "index"/);
   assert.match(styles, /library-result__date/);
+  assert.match(
+    gestureStyles,
+    /\.site-layout\[data-page-kind="index"\] \.library-result \{ padding: 32px 0 32px 16px; \}/
+  );
 });

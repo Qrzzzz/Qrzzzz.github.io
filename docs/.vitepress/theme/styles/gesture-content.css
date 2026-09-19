@@ -24,7 +24,7 @@
 .site-layout .VPDocFooter .pager-link .title { font-size: 15px; }
 .site-layout :is(.library-result, .content-index-row, .hub-entry, .project-link-row, .project-link-card, .project-docs-card) { border-radius: 0; transition: color 180ms ease, border-color 180ms ease, background-color 180ms ease; }
 .site-layout :is(.library-result, .content-index-row, .hub-entry):hover { background: transparent; }
-.site-layout[data-page-kind="index"] .library-result { padding: 32px 0; }
+.site-layout[data-page-kind="index"] .library-result { padding: 32px 0 32px 16px; }
 .site-layout[data-page-kind="index"] .library-result__title { font-size: 20px; font-weight: 500; }
 .site-layout .library-result__kind, .site-layout .library-result__date, .site-layout .library-stats { font-family: var(--site-font-sans); font-size: 11px; font-weight: 400; }
 .site-layout .library-filter { position: relative; padding: 9px 6px; border: 0; border-radius: 0; background: transparent; min-height: 44px; font-size: 12px; font-weight: 400; }
