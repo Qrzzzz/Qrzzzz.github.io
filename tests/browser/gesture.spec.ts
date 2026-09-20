@@ -66,8 +66,11 @@ test("touch can pull the line and then scroll a document normally", async ({ bro
   await expect.poll(async () => Number(await line.getAttribute("data-progress"))).toBeGreaterThan(before);
   // Returning to earlier text keeps the furthest read body coordinate.
   const read = Number(await line.getAttribute("data-progress"));
-  await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
-  await expect.poll(() => page.evaluate(() => scrollY)).toBe(0);
+  await expect.poll(() => page.evaluate(async () => {
+    window.scrollTo(0, 0);
+    await new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
+    return scrollY;
+  })).toBe(0);
   await expect.poll(async () => Number(await line.getAttribute("data-progress"))).toBeGreaterThanOrEqual(read);
   await page.getByRole("button", { name: "On this page", exact: true }).click();
   await page.getByRole("link", { name: "基本概念", exact: true }).filter({ visible: true }).click();
