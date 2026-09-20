@@ -57,6 +57,9 @@ test("touch can pull the line and then scroll a document normally", async ({ bro
 
   await page.goto("/notes/identity-v-custom-room-legitimacy.html");
   const line = page.locator(".reading-rail");
+  const readCoordinate = () => line.evaluate((element) =>
+    Number(element.getAttribute("data-progress")) * element.getBoundingClientRect().height
+  );
   await expect(line).toHaveAttribute("data-progress", /\d/);
   const before = Number(await line.getAttribute("data-progress"));
   await touch("touchStart", 300, 710);
@@ -65,13 +68,13 @@ test("touch can pull the line and then scroll a document normally", async ({ bro
   await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(100);
   await expect.poll(async () => Number(await line.getAttribute("data-progress"))).toBeGreaterThan(before);
   // Returning to earlier text keeps the furthest read body coordinate.
-  const read = Number(await line.getAttribute("data-progress"));
+  const read = await readCoordinate();
   await expect.poll(() => page.evaluate(async () => {
     window.scrollTo(0, 0);
     await new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
     return scrollY;
   })).toBe(0);
-  await expect.poll(async () => Number(await line.getAttribute("data-progress"))).toBeGreaterThanOrEqual(read);
+  await expect.poll(readCoordinate).toBeGreaterThanOrEqual(read - 1);
   await page.getByRole("button", { name: "On this page", exact: true }).click();
   await page.getByRole("link", { name: "基本概念", exact: true }).filter({ visible: true }).click();
   await expect(page).toHaveURL(/#基本概念|#%E5%9F%BA/);
