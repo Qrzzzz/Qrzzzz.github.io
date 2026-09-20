@@ -136,7 +136,8 @@
 
 html {
   background: var(--site-canvas);
-  scroll-behavior: smooth;
+  /* Router restoration must finish before Reading Rail records this page. */
+  scroll-behavior: auto;
   text-size-adjust: 100%;
 }
 

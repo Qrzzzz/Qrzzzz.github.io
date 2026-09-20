@@ -3,7 +3,6 @@
 .site-layout[data-page-kind="index"] .VPDoc .container,
 .site-layout[data-page-kind="index"] .VPDoc .content,
 .site-layout[data-page-kind="index"] .VPDoc .content-container { max-width: 1000px !important; }
-.site-layout[data-page-kind="index"] .VPDoc { padding-left: max(130px, 12vw); padding-right: max(40px, 6vw); }
 .vp-doc .catalog-header h1 { font-family: var(--site-font-sans); font-size: clamp(36px, 4vw, 54px); font-weight: 400; letter-spacing: -1.8px; }
 .catalog-header { margin-bottom: 44px; }
 .vp-doc .catalog-header__description { font-family: var(--site-font-sans); font-size: 13px; line-height: 1.8; margin-top: 18px; }
@@ -41,14 +40,7 @@
 .site-layout .share-image-entry__button { min-height: 44px; }
 .site-layout .share-image-entry__actions { flex-wrap: wrap; }
 .site-layout .share-image-status { flex-basis: 100%; text-align: right; }
-@media (min-width: 960px) and (max-width: 1279px) {
-  .site-layout .VPDoc:not(.has-sidebar) { padding-left: 120px; }
-}
-@media (max-width: 959px) {
-  .site-layout[data-page-kind="index"] .VPDoc { padding-left: 70px; padding-right: 32px; }
-}
 @media (max-width: 680px) {
-  .site-layout .VPDoc, .site-layout[data-page-kind="index"] .VPDoc { padding: 38px 24px 80px 42px; }
   .site-layout[data-page-kind] .vp-doc h1 { font-size: 27px; line-height: 1.6; }
   .site-layout .vp-doc .catalog-header h1 { font-size: 36px; }
   .site-layout .vp-doc h2 { font-size: 22px; margin-top: 48px; }

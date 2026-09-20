@@ -165,7 +165,6 @@
 @media (max-width: 639px) {
   .site-layout[data-page-kind="index"] .VPDoc {
     padding-top: 36px;
-    padding-inline: 22px;
   }
 
   .catalog-header {

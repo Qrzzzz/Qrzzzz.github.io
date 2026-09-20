@@ -82,8 +82,6 @@ html.theme-is-switching .site-layout :where(a, button, p, h1, h2, h3, input, pat
 
 /* The margin belongs to the document and resizes as Markdown is rendered. */
 .site-layout .VPDoc { position: relative; }
-.reading-gesture { position: absolute; top: 0; left: 16px; width: clamp(34px, 6.5vw, 106px); height: 100%; pointer-events: none; overflow: hidden; }
-.reading-gesture path { fill: none; stroke: var(--site-accent); stroke-width: 3px; stroke-linecap: round; }
 .VPFooter { border-top: 1px solid var(--site-line); background: var(--site-canvas); }
 .VPFooter .message, .VPFooter .copyright { color: var(--site-text-muted); font-family: var(--site-font-sans); font-size: 11px; font-weight: 400; }
 .VPDocFooter .edit-info { gap: 12px; color: var(--site-text-faint); font-family: var(--site-font-sans); font-size: 12px; }
@@ -94,8 +92,6 @@ html.theme-is-switching .site-layout :where(a, button, p, h1, h2, h3, input, pat
   .site-layout .VPNavBar.has-sidebar .container > .title { position: static; width: auto; height: var(--vp-nav-height); padding: 0; }
   .site-layout .VPNavBar.has-sidebar .content { position: static; padding: 0; }
   .site-layout .VPNavBar.has-sidebar .VPNavBarTitle .title { padding: 0; }
-  .site-layout .VPDoc.has-sidebar { padding-left: 58px; }
-  .VPDoc.has-sidebar .reading-gesture { width: 35px; left: 8px; }
 }
 @media (min-width: 1080px) { .VPNavBarMenu { display: flex !important; } }
 @media (max-width: 1079.98px) {
@@ -103,10 +99,6 @@ html.theme-is-switching .site-layout :where(a, button, p, h1, h2, h3, input, pat
   .VPNavBarHamburger { display: flex !important; }
   .VPNavScreen { display: block !important; }
   .home-entry { column-gap: 28px; }
-}
-@media (max-width: 959px) {
-  .site-layout .VPDoc { padding-left: 70px; }
-  .reading-gesture { width: 38px; left: 8px; }
 }
 @media (max-width: 680px) {
   :root { --site-nav-height: 72px; }
@@ -127,9 +119,6 @@ html.theme-is-switching .site-layout :where(a, button, p, h1, h2, h3, input, pat
   .home-entry__count { font-size: 12px; }
   .home-entry__arrow { width: 30px; }
   .home-colophon { padding-inline: 22px; font-size: 11px; }
-  .site-layout .VPDoc, .site-layout[data-page-kind="index"] .VPDoc { padding: 32px 22px 70px 38px; }
-  .reading-gesture { width: 24px; left: 0; }
-  .reading-gesture path { stroke-width: 1.5px; opacity: .7; }
   .VPLocalNav .container { padding-inline: 22px; }
 }
 @media (max-width: 359px) {
@@ -142,5 +131,5 @@ html.theme-is-switching .site-layout :where(a, button, p, h1, h2, h3, input, pat
   .home-entry__arrow { transform: none !important; }
 }
 @media (forced-colors: active) {
-  .home-gesture__ink, .gesture-fallback path, .reading-gesture path { stroke: CanvasText; }
+  .home-gesture__ink, .gesture-fallback path { stroke: CanvasText; }
 }

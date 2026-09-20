@@ -1,0 +1,51 @@
+/* One layout contract for every document, collection and sidebar page. */
+:root {
+  --reading-rail-width: 64px;
+  --reading-rail-offset: 0px;
+  --reading-rail-gap: 24px;
+  --reading-rail-edge: 16px;
+  --reading-rail-stroke: 2.5px;
+}
+.site-layout .VPDoc {
+  padding-left: calc(var(--reading-rail-edge) + var(--reading-rail-width) + var(--reading-rail-gap));
+}
+.reading-rail {
+  position: absolute;
+  width: var(--reading-rail-width);
+  pointer-events: none;
+  overflow: hidden;
+  visibility: hidden;
+}
+.reading-rail path {
+  fill: none;
+  stroke: var(--site-accent);
+  stroke-width: var(--reading-rail-stroke);
+  stroke-linecap: round;
+}
+@media (min-width: 960px) {
+  .VPDoc.has-sidebar {
+    --reading-rail-width: 32px;
+    --reading-rail-gap: 18px;
+    --reading-rail-edge: 8px;
+  }
+}
+/* Includes phone landscape; no separate page-kind padding overrides. */
+@media (max-width: 959px) {
+  :root {
+    --reading-rail-width: 12px;
+    --reading-rail-gap: 12px;
+    --reading-rail-edge: 10px;
+    --reading-rail-stroke: 1.5px;
+  }
+  .site-layout .VPDoc { padding-top: 38px; padding-right: 22px; padding-bottom: 80px; }
+  .site-layout[data-page-kind] .VPDoc .content-container { max-width: none; }
+  .reading-rail path { opacity: .7; }
+  .site-layout .library-result-marker { display: none; }
+  .site-layout[data-page-kind="index"] .library-result { padding-left: 0; }
+  .site-layout .library-result:is(:hover, :focus-visible) .library-result__title {
+    color: var(--site-link);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+}
+@media (forced-colors: active) { .reading-rail path { stroke: CanvasText; } }

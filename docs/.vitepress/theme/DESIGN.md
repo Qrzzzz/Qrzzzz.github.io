@@ -15,7 +15,12 @@ metadata, public routes and VitePress navigation remain the source of truth.
 - Only the 40 px stroke hit area captures touch. Everything else keeps native scrolling.
 - The document margin follows native page scrolling; there is no nested reading viewport.
   Its length responds to content and layout changes. The heading outline stays available.
-- Reduced motion makes the line static and fully drawn. Hidden pages and unmount cancel
+- Reading Rail clips a shallow wave at the furthest visible body coordinate, without easing.
+  Per-document session progress survives history navigation; body resize recomputes geometry.
+  Shared width, offset, gap, edge and stroke tokens live in `styles/reading-rail.css`.
+  Phones (including landscape) reserve 34 px, with a 12 px rail.
+- Reduced motion makes the home line static and fully drawn; Reading Rail keeps its
+  immediate position updates without animation. Hidden pages and unmount cancel
   animation work, release pointer capture and remove listeners.
 - The preserved ASCII pointer trail is a quiet secondary texture, home only.
 - Shared controls use short color/underline changes. Theme switching fades one snapshot

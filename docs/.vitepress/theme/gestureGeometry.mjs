@@ -112,19 +112,10 @@ export function pointsPath(points) {
 }
 
 export function readingGesture(height, width) {
-  // The first loop recalls the home. Long, quiet turns follow the document.
-  const h = Math.max(360, height), w = width;
-  // Narrow margins get an open wave, not a horizontally crushed loop.
-  if (w < 60) {
-    let path = `M${w * .5} -12`;
-    for (let y = -12; y < h; y += 640) {
-      path += ` C${w * .9} ${y + 105} ${w * .9} ${y + 215} ${w * .5} ${y + 320} C${w * .1} ${y + 425} ${w * .1} ${y + 535} ${w * .5} ${y + 640}`;
-    }
-    return path;
-  }
-  let path = `M${w * .18} -12 C${w * 1.12} 65 ${w * .88} 235 ${w * .4} 214 C${w * -.22} 187 ${w * .09} 83 ${w * .5} 145 C${w * .83} 210 ${w * .68} 340 ${w * .48} 420`;
-  for (let y = 420; y < h + 500; y += 920) {
-    path += ` C${w * -.08} ${y + 140} ${w * .94} ${y + 285} ${w * .54} ${y + 460} C${w * .12} ${y + 610} ${w * .84} ${y + 780} ${w * .48} ${y + 920}`;
+  // A monotone vertical wave: clipping at y always corresponds to document y.
+  let path = `M${width * .5} 0`;
+  for (let y = 0; y < height; y += 960) {
+    path += ` C${width * .9} ${y + 160} ${width * .9} ${y + 320} ${width * .5} ${y + 480} C${width * .1} ${y + 640} ${width * .1} ${y + 800} ${width * .5} ${y + 960}`;
   }
   return path;
 }

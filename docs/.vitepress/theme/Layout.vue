@@ -10,7 +10,7 @@ import InlineSearch from "./InlineSearch.vue";
 import NavActions from "./NavActions.vue";
 import NotFound from "./NotFound.vue";
 import ShareImage from "./ShareImage.vue";
-import ReadingGesture from "./ReadingGesture.vue";
+import ReadingRail from "./ReadingRail.vue";
 
 const { Layout } = DefaultTheme;
 const { frontmatter, isDark, page } = useData();
@@ -127,7 +127,7 @@ onBeforeUnmount(() => {
         <BackToTop />
       </template>
       <template #doc-top>
-        <ReadingGesture :key="page.relativePath" />
+        <ReadingRail :key="page.relativePath" />
       </template>
       <template #home-hero-before>
         <HomeContent />
