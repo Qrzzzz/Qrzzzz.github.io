@@ -57,9 +57,6 @@ test("touch can pull the line and then scroll a document normally", async ({ bro
 
   await page.goto("/notes/identity-v-custom-room-legitimacy.html");
   const line = page.locator(".reading-rail");
-  const readCoordinate = () => line.evaluate((element) =>
-    Number(element.getAttribute("data-progress")) * element.getBoundingClientRect().height
-  );
   await expect(line).toHaveAttribute("data-progress", /\d/);
   const before = Number(await line.getAttribute("data-progress"));
   await touch("touchStart", 300, 710);
@@ -67,20 +64,37 @@ test("touch can pull the line and then scroll a document normally", async ({ bro
   await touch("touchEnd", 0, 0);
   await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(100);
   await expect.poll(async () => Number(await line.getAttribute("data-progress"))).toBeGreaterThan(before);
-  // Returning to earlier text keeps the furthest read body coordinate.
-  const read = await readCoordinate();
   await expect.poll(() => page.evaluate(async () => {
     window.scrollTo(0, 0);
     await new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
     return scrollY;
   })).toBe(0);
-  await expect.poll(readCoordinate).toBeGreaterThanOrEqual(read - 1);
   await page.getByRole("button", { name: "On this page", exact: true }).click();
   await page.getByRole("link", { name: "基本概念", exact: true }).filter({ visible: true }).click();
   await expect(page).toHaveURL(/#基本概念|#%E5%9F%BA/);
   await page.emulateMedia({ reducedMotion: "reduce" });
   await expect.poll(async () => Number(await line.getAttribute("data-progress"))).toBeGreaterThanOrEqual(before);
   await context.close();
+});
+
+test("reading rail follows the live reading position in both scroll directions", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/notes/deepseek-restraint-and-ambition.html");
+  const line = page.locator(".reading-rail");
+  const readCoordinate = () => line.evaluate((element) =>
+    Number(element.getAttribute("data-progress")) * element.getBoundingClientRect().height
+  );
+  await expect(line).toHaveAttribute("data-progress", /\d/);
+  const start = await readCoordinate();
+
+  await page.evaluate(() => window.scrollTo(0, 1600));
+  await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(1000);
+  await expect.poll(readCoordinate).toBeGreaterThan(start);
+  const down = await readCoordinate();
+
+  await page.evaluate(() => window.scrollTo(0, 200));
+  await expect.poll(() => page.evaluate(() => scrollY)).toBeLessThan(300);
+  await expect.poll(readCoordinate).toBeLessThan(down - 500);
 });
 
 test("phone, landscape, tablet and desktop retain all destinations without horizontal overflow", async ({ page }) => {

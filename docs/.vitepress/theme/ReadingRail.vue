@@ -1,22 +1,13 @@
-<script lang="ts">
-// Session-local, per document; never carry another page's reading position over.
-const readPositions = new Map<string, number>();
-</script>
-
 <script setup lang="ts">
 import { nextTick, onBeforeUnmount, onMounted, ref } from "vue";
-import { useData } from "vitepress";
 import { readingGesture } from "./gestureGeometry.mjs";
 
 const svg = ref<SVGSVGElement>();
 const ink = ref<SVGPathElement>();
-const { page } = useData();
-const key = page.value.relativePath;
 let observer: ResizeObserver | undefined;
 let content: HTMLElement | null = null;
 let frame = 0, ready = false, disposed = false;
 let measuredWidth = 0, measuredHeight = 0;
-let furthest = readPositions.get(key) ?? 0;
 
 function sync() {
   if (!ready || !svg.value || !ink.value || !content) return;
@@ -40,11 +31,9 @@ function sync() {
   }
   const atEnd = window.scrollY + innerHeight >= document.documentElement.scrollHeight - 2;
   const position = atEnd ? height : Math.max(0, Math.min(height, innerHeight * .88 - body.top));
-  furthest = Math.max(furthest, position);
-  readPositions.set(key, furthest);
-  // Vertical clipping, not arc-length percentages. No easing or catch-up frames.
-  svg.value.style.clipPath = `inset(0 0 ${Math.max(0, height - furthest)}px 0)`;
-  svg.value.setAttribute("data-progress", Math.min(1, furthest / height).toFixed(4));
+  // Track the live reading coordinate in both scroll directions. No easing or catch-up frames.
+  svg.value.style.clipPath = `inset(0 0 ${Math.max(0, height - position)}px 0)`;
+  svg.value.setAttribute("data-progress", Math.min(1, position / height).toFixed(4));
   svg.value.style.visibility = "visible";
 }
 function visibility() { if (!document.hidden) sync(); }
@@ -53,7 +42,7 @@ onMounted(async () => {
   if (disposed) return;
   content = svg.value?.parentElement?.querySelector<HTMLElement>(".main") ?? null;
   // VitePress restores scroll in nextTick, and hash targets in the next frame.
-  // Initialize after both, so the previous route cannot seed this page's maximum.
+  // Initialize after both so the rail starts at the restored live reading coordinate.
   frame = requestAnimationFrame(() => {
     frame = requestAnimationFrame(() => {
       ready = true;
