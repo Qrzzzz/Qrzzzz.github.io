@@ -63,8 +63,18 @@ html.theme-is-switching .site-layout :where(a, button, p, h1, h2, h3, input, pat
 .home-page { width: 100%; margin: 0 auto; }
 .gesture-stage { position: relative; width: 100%; height: clamp(520px, calc(100svh - 166px), 900px); overflow: hidden; touch-action: pan-y; }
 .home-gesture, .gesture-fallback { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
-.home-gesture__ink, .gesture-fallback path { fill: none; stroke: var(--site-accent); stroke-width: 6.5px; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
-.home-gesture__hit { fill: none; stroke: transparent; stroke-width: 40px; pointer-events: stroke; touch-action: none; cursor: grab; }
+.home-gesture :is(.home-gesture__field, .home-gesture__ink, .home-gesture__signal),
+.gesture-fallback path { fill: none; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.home-gesture__stop { stop-color: var(--site-accent); stop-opacity: 1; }
+.home-gesture__stop--bright { stop-color: color-mix(in srgb, var(--site-accent) 72%, white); }
+.home-gesture__stop--edge { stop-opacity: .52; }
+.home-gesture__field { stroke: var(--site-accent); stroke-width: 13px; opacity: .075; transition: opacity 160ms ease; }
+.home-gesture__ink { stroke: url(#home-gesture-gradient); stroke-width: 4.4px; }
+.home-gesture__signal { stroke: color-mix(in srgb, var(--site-canvas) 38%, var(--site-accent)); stroke-width: 1.15px; stroke-dasharray: .1 11.5; opacity: .72; transition: opacity 160ms ease; }
+.gesture-fallback path { stroke: var(--site-accent); stroke-width: 4.4px; }
+.home-gesture__hit { fill: none; stroke: transparent; stroke-width: 44px; pointer-events: stroke; touch-action: none; cursor: grab; }
+[data-pulling="true"] .home-gesture__field { opacity: .12; }
+[data-pulling="true"] .home-gesture__signal { opacity: .92; }
 [data-pulling="true"] .home-gesture__hit { cursor: grabbing; }
 .gesture-fallback--mobile { display: none; }
 [data-gesture-ready="true"] .gesture-fallback { display: none; }
@@ -111,7 +121,9 @@ html.theme-is-switching .site-layout :where(a, button, p, h1, h2, h3, input, pat
   .gesture-stage { height: clamp(530px, 147.44vw, 760px); }
   .gesture-fallback--desktop { display: none; }
   .gesture-fallback--mobile { display: block; }
-  .home-gesture__ink, .gesture-fallback path { stroke-width: 4.6px; }
+  .home-gesture__field { stroke-width: 10px; }
+  .home-gesture__ink, .gesture-fallback path { stroke-width: 3.7px; }
+  .home-gesture__signal { stroke-width: .95px; stroke-dasharray: .1 10px; }
   .home-entry { grid-template-columns: auto 30px; min-height: 66px; gap: 3px 22px; }
   .home-entry--library { left: 18%; top: 39%; }
   .home-entry--projects { left: 55%; top: 86%; }
@@ -131,5 +143,6 @@ html.theme-is-switching .site-layout :where(a, button, p, h1, h2, h3, input, pat
   .home-entry__arrow { transform: none !important; }
 }
 @media (forced-colors: active) {
-  .home-gesture__ink, .gesture-fallback path { stroke: CanvasText; }
+  .home-gesture__field, .home-gesture__ink, .home-gesture__signal, .gesture-fallback path { stroke: CanvasText !important; }
+  .home-gesture__field, .home-gesture__signal { opacity: 1; }
 }

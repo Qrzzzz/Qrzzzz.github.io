@@ -1,11 +1,12 @@
 import { sampleGesture, projectOnGesture, limitPull, deformGesture, pointsPath } from './gestureGeometry.mjs';
 
 /** Event-driven, bounded deformation. No idle animation and no scroll interception. */
-export function createGestureRuntime({ host, svg, ink, hit, window: win, document: doc }) {
+export function createGestureRuntime({ host, svg, ink, hit, layers = /** @type {SVGPathElement[]} */ ([]), window: win, document: doc }) {
   const reduced = win.matchMedia('(prefers-reduced-motion: reduce)');
   const fine = win.matchMedia('(hover: hover) and (pointer: fine)');
   let points = [], width = 0, height = 0, frame = 0, last = 0;
   let x = 0, y = 0, targetX = 0, targetY = 0, center = 0, targetCenter = 0;
+  let vx = 0, vy = 0, centerV = 0;
   let drag = null, destroyed = false, zones = [];
   const removers = [];
 
@@ -14,7 +15,7 @@ export function createGestureRuntime({ host, svg, ink, hit, window: win, documen
     removers.push(() => target.removeEventListener(name, callback, options));
   }
   function draw() {
-    let deformed = deformGesture(points, center, x, y, width <= 680 ? 125 : 200);
+    let deformed = deformGesture(points, center, x, y, width <= 680 ? 110 : 175);
     // Navigation has its own stable space, including while pulling the curve.
     deformed = deformed.map((p, i) => {
       const original = points[i];
@@ -28,6 +29,7 @@ export function createGestureRuntime({ host, svg, ink, hit, window: win, documen
       return { x: original.x + (p.x - original.x) * weight, y: original.y + (p.y - original.y) * weight };
     });
     const d = pointsPath(deformed);
+    for (const layer of layers) layer?.setAttribute('d', d);
     ink.setAttribute('d', d);
     hit.setAttribute('d', d);
     host.dataset.gestureState = drag ? 'dragging' : frame ? 'settling' : 'idle';
@@ -36,17 +38,48 @@ export function createGestureRuntime({ host, svg, ink, hit, window: win, documen
     if (frame || destroyed || reduced.matches || doc.hidden || !width) return;
     frame = win.requestAnimationFrame(tick);
   }
+  function criticalStep(value, velocity, target, omega, dt) {
+    const offset = value - target;
+    const c = velocity + omega * offset;
+    const decay = Math.exp(-omega * dt);
+    return {
+      value: target + (offset + c * dt) * decay,
+      velocity: (velocity - omega * c * dt) * decay
+    };
+  }
   function tick(time) {
     frame = 0;
-    const dt = Math.min(32, last ? time - last : 16);
+    const dtMs = Math.min(32, last ? time - last : 16);
+    const dt = dtMs / 1000;
     last = time;
-    const alpha = 1 - Math.exp(-dt / (drag ? 48 : 105));
-    x += (targetX - x) * alpha;
-    y += (targetY - y) * alpha;
-    center += (targetCenter - center) * alpha;
-    const unsettled = Math.hypot(targetX - x, targetY - y) > .035 || Math.abs(targetCenter - center) > .08;
+    if (drag) {
+      // Pointer motion should feel attached, not filtered through a slow spring.
+      const pullAlpha = 1 - Math.exp(-dtMs / 10);
+      const centerAlpha = 1 - Math.exp(-dtMs / 18);
+      x += (targetX - x) * pullAlpha;
+      y += (targetY - y) * pullAlpha;
+      center += (targetCenter - center) * centerAlpha;
+      vx = vy = centerV = 0;
+    } else {
+      const omega = targetX || targetY ? 22 : 18;
+      const sx = criticalStep(x, vx, targetX, omega, dt);
+      const sy = criticalStep(y, vy, targetY, omega, dt);
+      const sc = criticalStep(center, centerV, targetCenter, 24, dt);
+      x = sx.value; vx = sx.velocity;
+      y = sy.value; vy = sy.velocity;
+      center = sc.value; centerV = sc.velocity;
+    }
+    const unsettled =
+      Math.hypot(targetX - x, targetY - y) > .035 ||
+      Math.abs(targetCenter - center) > .08 ||
+      Math.hypot(vx, vy) > .05 ||
+      Math.abs(centerV) > .08;
     if (unsettled) wake();
-    else { x = targetX; y = targetY; center = targetCenter; last = 0; }
+    else {
+      x = targetX; y = targetY; center = targetCenter;
+      vx = vy = centerV = 0;
+      last = 0;
+    }
     draw();
   }
   function release(event) {
@@ -55,13 +88,14 @@ export function createGestureRuntime({ host, svg, ink, hit, window: win, documen
     drag = null;
     if (id !== undefined && hit.hasPointerCapture?.(id)) hit.releasePointerCapture(id);
     targetX = targetY = 0;
+    vx = vy = centerV = 0;
     host.dataset.pulling = 'false';
     wake();
   }
   function reset() {
     release();
     if (frame) win.cancelAnimationFrame(frame);
-    frame = last = x = y = targetX = targetY = 0;
+    frame = last = x = y = targetX = targetY = vx = vy = centerV = 0;
     draw();
   }
   function resize() {
@@ -88,12 +122,21 @@ export function createGestureRuntime({ host, svg, ink, hit, window: win, documen
     if (!drag && (event.pointerType === 'touch' || !fine.matches)) return;
     const p = location(event);
     if (drag) {
-      const pull = limitPull(p.x - drag.x, p.y - drag.y, width <= 680 ? 76 : 112);
-      targetX = pull.x; targetY = pull.y;
-      targetCenter = drag.grabS;
+      const dx = p.x - drag.x, dy = p.y - drag.y;
+      const tangential = dx * drag.tx + dy * drag.ty;
+      const slideLimit = width <= 680 ? 58 : 96;
+      const slide = Math.max(-slideLimit, Math.min(slideLimit, tangential * .34));
+      const pull = limitPull(
+        dx - drag.tx * slide,
+        dy - drag.ty * slide,
+        width <= 680 ? 82 : 124
+      );
+      targetX = drag.baseX + pull.x;
+      targetY = drag.baseY + pull.y;
+      targetCenter = Math.max(0, Math.min(points.at(-1)?.distance ?? drag.grabS, drag.grabS + slide));
     } else {
       const projection = projectOnGesture(points, p.x, p.y);
-      const strength = .32 * Math.max(0, 1 - projection.distance / 100) ** 1.5;
+      const strength = .22 * Math.max(0, 1 - projection.distance / 82) ** 1.7;
       targetX = (p.x - projection.point.x) * strength;
       targetY = (p.y - projection.point.y) * strength;
       if (Math.hypot(x, y) < .1) center = projection.arcLength;
@@ -105,9 +148,23 @@ export function createGestureRuntime({ host, svg, ink, hit, window: win, documen
     if (reduced.matches || !event.isPrimary || event.button !== 0 || drag) return;
     const p = location(event), projection = projectOnGesture(points, p.x, p.y);
     if (!projection.point || projection.distance > 30) return;
-    drag = { id: event.pointerId, x: p.x, y: p.y, grabS: projection.arcLength };
+    const i = Math.max(1, Math.min(points.length - 2, projection.segment + 1));
+    const before = points[i - 1], after = points[i + 1];
+    const length = Math.hypot(after.x - before.x, after.y - before.y) || 1;
+    drag = {
+      id: event.pointerId,
+      x: p.x,
+      y: p.y,
+      grabS: projection.arcLength,
+      tx: (after.x - before.x) / length,
+      ty: (after.y - before.y) / length,
+      baseX: x,
+      baseY: y
+    };
     center = targetCenter = projection.arcLength;
-    targetX = targetY = 0;
+    targetX = x;
+    targetY = y;
+    vx = vy = centerV = 0;
     hit.setPointerCapture(event.pointerId);
     host.dataset.pulling = 'true';
     host.dataset.gestureState = 'dragging';

@@ -8,11 +8,21 @@ import { createGestureRuntime } from "./gestureRuntime.mjs";
 
 const stage = ref<HTMLElement>();
 const svg = ref<SVGSVGElement>();
+const field = ref<SVGPathElement>();
 const ink = ref<SVGPathElement>();
+const signal = ref<SVGPathElement>();
 const hit = ref<SVGPathElement>();
 let runtime: ReturnType<typeof createGestureRuntime> | undefined;
 onMounted(() => {
-  runtime = createGestureRuntime({ host: stage.value!, svg: svg.value!, ink: ink.value!, hit: hit.value!, window, document });
+  runtime = createGestureRuntime({
+    host: stage.value!,
+    svg: svg.value!,
+    ink: ink.value!,
+    hit: hit.value!,
+    layers: [field.value!, signal.value!],
+    window,
+    document
+  });
 });
 onBeforeUnmount(() => runtime?.destroy());
 </script>
@@ -28,7 +38,18 @@ onBeforeUnmount(() => runtime?.destroy());
         <path :d="gesturePath(MOBILE_GESTURE)" />
       </svg>
       <svg ref="svg" class="home-gesture" aria-hidden="true">
+        <defs>
+          <linearGradient id="home-gesture-gradient" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" class="home-gesture__stop home-gesture__stop--edge" />
+            <stop offset=".2" class="home-gesture__stop" />
+            <stop offset=".58" class="home-gesture__stop home-gesture__stop--bright" />
+            <stop offset=".86" class="home-gesture__stop" />
+            <stop offset="1" class="home-gesture__stop home-gesture__stop--edge" />
+          </linearGradient>
+        </defs>
+        <path ref="field" class="home-gesture__field" />
         <path ref="ink" class="home-gesture__ink" />
+        <path ref="signal" class="home-gesture__signal" />
         <path ref="hit" class="home-gesture__hit" />
       </svg>
       <nav class="home-actions" aria-label="Primary destinations">

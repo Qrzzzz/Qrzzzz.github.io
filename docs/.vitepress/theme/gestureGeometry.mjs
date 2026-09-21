@@ -67,9 +67,16 @@ export function projectOnGesture(points, x, y) {
 }
 
 export function limitPull(x, y, limit) {
-  // Smooth resistance at the edge; no hard stop or spring overshoot.
+  // Keep the first half of the pull 1:1, then compress only the excess.
+  // This removes the "rubber wall" feeling close to the grab point while
+  // still giving large throws a finite, smooth travel.
   const length = Math.hypot(x, y);
-  const ratio = length ? Math.tanh(length / limit) * limit / length : 0;
+  if (!length) return { x: 0, y: 0 };
+  const knee = limit * .54;
+  if (length <= knee) return { x, y };
+  const room = limit - knee;
+  const easedLength = knee + room * (1 - Math.exp(-(length - knee) / room));
+  const ratio = easedLength / length;
   return { x: x * ratio, y: y * ratio };
 }
 

@@ -51,6 +51,7 @@ test('gesture sampling stays continuous on narrow, desktop and ultrawide screens
     assert.ok(deformed.every((p, i) => Math.hypot(p.x - points[i].x, p.y - points[i].y) <= 100.001));
     assert.doesNotMatch(pointsPath(deformed), /NaN|Infinity/);
   }
+  assert.deepEqual(limitPull(28, -16, 112), { x: 28, y: -16 });
   const pull = limitPull(9000, 12000, 76);
   assert.ok(Math.hypot(pull.x, pull.y) <= 76.001);
   assert.deepEqual(limitPull(0, 0, 76), { x: 0, y: 0 });

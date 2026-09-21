@@ -7,12 +7,16 @@ metadata, public routes and VitePress navigation remain the source of truth.
 - Dark: navy `#151d37`, periwinkle ink `#a7bcff`, text `#f0f4ff`.
 - Interface: sans serif. Reading: the existing local serif subsets. No new font service.
 - The mobile curve is a separate composition. Never crop or scale down the desktop layout.
+- The home gesture is rendered as a restrained three-layer signal: a low-opacity field,
+  a 4.4 px gradient ink stroke (3.7 px on phones), and a fine dotted signal core. The
+  layers share exactly the same geometry and deform as one object.
 - Hover and drag resolve to a continuous arc-length coordinate on the stroke, never
-  to a sampled anchor. Drag uses smooth resistance (112 px desktop, 76 px phone), a
-  two-scale continuous deformation field, off-canvas endpoint constraints and protected
-  link space. Release is a monotonic exponential return, with no spring bounce. The
-  animation loop stops at rest.
-- Only the 40 px stroke hit area captures touch. Everything else keeps native scrolling.
+  to a sampled anchor. Small pulls stay effectively 1:1 before a soft resistance knee;
+  tangential motion can slide the deformation center a limited distance instead of
+  pinning one material point. Pointer tracking uses a short direct-response filter and
+  release uses a critically damped return with no bounce. Off-canvas endpoint constraints
+  and protected link space remain fixed, and the animation loop stops at rest.
+- Only the 44 px stroke hit area captures touch. Everything else keeps native scrolling.
 - The document margin follows native page scrolling; there is no nested reading viewport.
   Its length responds to content and layout changes. The heading outline stays available.
 - Reading Rail clips a shallow wave at the current visible body coordinate, without easing.
