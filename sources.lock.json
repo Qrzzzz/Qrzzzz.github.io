@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
-  "resolvedAt": "2026-09-08T01:50:15.791Z",
+  "resolvedAt": "2026-09-21T07:05:02.582Z",
   "sources": [
     {
       "slug": "lyrics-card-generator",
       "repository": "Qrzzzz/lyrics-card-generator",
-      "commit": "8d0de9839481b221f8878144a1c4950cc2095744"
+      "commit": "4c128f92109b1422f390d89ab259ff067ca96d66"
     },
     {
       "slug": "lyrics-card-generator-android",
       "repository": "Qrzzzz/lyrics-card-generator-android",
-      "commit": "3bce9fb805483e75de0d2f99ea3e3acc9f3c3529"
+      "commit": "ae255651d81d1f6f4293e035d6d092b0cacb9d54"
     },
     {
       "slug": "second-glow",
@@ -25,7 +25,7 @@
     {
       "slug": "bili-downloader",
       "repository": "Qrzzzz/bili-downloader",
-      "commit": "4d9d174f3c79643e30efe410f0349b28b3211c40"
+      "commit": "6c4bd066cc704661c3ebfe48393e2b20571c0b6d"
     },
     {
       "slug": "aegis-vault-mobile",
@@ -36,6 +36,11 @@
       "slug": "slop-infinity",
       "repository": "Qrzzzz/AI-slop-site",
       "commit": "d6a25e04322fa9de51d101e99039fe0474eb74af"
+    },
+    {
+      "slug": "pelican-bike-benchmark",
+      "repository": "Qrzzzz/pelican-bike-benchmark",
+      "commit": "c9c7108537156fc6fa494b8460982ef41aa807f8"
     }
   ]
 }

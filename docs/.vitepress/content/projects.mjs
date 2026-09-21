@@ -66,6 +66,17 @@ const readmeProjects = Object.freeze([
     statusLabel: "Live experiment · Web",
     sourcePath: "README.md",
     homepage: "https://qrzzzz.github.io/AI-slop-site/"
+  },
+  {
+    slug: "pelican-bike-benchmark",
+    repository: "Qrzzzz/pelican-bike-benchmark",
+    title: "Pelican Bike Benchmark",
+    description: "Compare AI implementations of the same pelican-riding-a-bicycle HTML prompt.",
+    summary: "Compare AI-generated single-file HTML implementations of the same pelican-riding-a-bicycle prompt.",
+    status: "online",
+    statusLabel: "Live benchmark · Web",
+    sourcePath: "README.md",
+    homepage: "https://qrzzzz.github.io/pelican-bike-benchmark/"
   }
 ]);
 export const PROJECTS = Object.freeze([
