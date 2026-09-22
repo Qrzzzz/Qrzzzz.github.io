@@ -97,6 +97,7 @@ html.theme-is-switching .site-layout :where(a, button, p, h1, h2, h3, input, pat
 .VPDocFooter .edit-info { gap: 12px; color: var(--site-text-faint); font-family: var(--site-font-sans); font-size: 12px; }
 
 @media (min-width: 960px) {
+  .site-layout .VPSidebar .curtain { top: calc(-1 * var(--vp-nav-height)); }
   .site-layout .VPNavBar.has-sidebar > .wrapper { padding: 0 32px; }
   .site-layout .VPNavBar.has-sidebar .container { max-width: var(--site-max); }
   .site-layout .VPNavBar.has-sidebar .container > .title { position: static; width: auto; height: var(--vp-nav-height); padding: 0; }
@@ -104,6 +105,16 @@ html.theme-is-switching .site-layout :where(a, button, p, h1, h2, h3, input, pat
   .site-layout .VPNavBar.has-sidebar .VPNavBarTitle .title { padding: 0; }
 }
 @media (min-width: 1080px) { .VPNavBarMenu { display: flex !important; } }
+/* Move the local-nav box itself off the sidebar, including its background
+   and hit area. Padding alone leaves an opaque layer over the first group. */
+@media (min-width: 960px) and (max-width: 1279.98px) {
+  .site-layout .VPLocalNav.has-sidebar {
+    margin-left: var(--vp-sidebar-width);
+    width: calc(100% - var(--vp-sidebar-width));
+    padding-left: 0;
+  }
+  .site-layout .VPLocalNav.has-sidebar .items { left: 32px; }
+}
 @media (max-width: 1079.98px) {
   .VPNavBarMenu { display: none !important; }
   .VPNavBarHamburger { display: flex !important; }
@@ -137,6 +148,27 @@ html.theme-is-switching .site-layout :where(a, button, p, h1, h2, h3, input, pat
   .VPNavBar > .wrapper { padding-inline: 16px; }
   .home-entry { gap: 3px 14px; }
   .home-entry__name { font-size: 22px; }
+}
+/* Short landscape viewports keep full-size controls and use available height
+   instead of the portrait stage's minimum height. svh avoids toolbar jumps. */
+@media (orientation: landscape) and (max-height: 500px) {
+  :root { --site-nav-height: 56px; }
+  .site-layout .VPLocalNav .container { min-height: 44px; }
+  .site-layout .VPLocalNav .menu { min-height: 44px; padding-block: 10px; }
+  .site-layout .VPLocalNavOutlineDropdown { padding-block: 0; }
+  .site-layout .VPLocalNavOutlineDropdown > button { min-height: 44px; }
+  .site-layout .VPLocalNav .outline { min-height: 0; }
+  .site-layout .VPLocalNav .items {
+    top: 44px;
+    max-height: calc(100svh - var(--vp-nav-height) - 56px);
+  }
+  .site-layout .VPNavScreen .container { padding-top: 8px; padding-bottom: 16px; }
+  .site-layout .VPNavScreenMenuLink { min-height: 44px; font-size: 20px; }
+  .gesture-stage { height: max(220px, calc(100svh - var(--site-nav-height) - 56px)); }
+  .home-entry { min-height: 66px; column-gap: 22px; }
+  .home-entry--library { left: 15%; top: 30%; }
+  .home-entry--projects { left: 62%; top: 42%; }
+  .home-colophon { min-height: 56px; padding-block: 6px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .home-gesture__hit { pointer-events: none; cursor: auto; }

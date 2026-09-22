@@ -48,4 +48,7 @@
     text-underline-offset: 4px;
   }
 }
+@media (orientation: landscape) and (max-height: 500px) {
+  .site-layout .VPDoc { padding-top: 20px; }
+}
 @media (forced-colors: active) { .reading-rail path { stroke: CanvasText; } }
