@@ -40,6 +40,12 @@ function focusPageHeading() {
 }
 
 function returnToTop() {
+  const librarySearch = document.querySelector<HTMLInputElement>(".library-search input");
+  if (librarySearch) {
+    librarySearch.focus({ preventScroll: true });
+    librarySearch.scrollIntoView({ block: "center", behavior: "auto" });
+    return;
+  }
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   focusPageHeading();
   window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
@@ -77,13 +83,13 @@ onBeforeUnmount(() => {
     :disabled="!visible"
     :tabindex="visible ? 0 : -1"
     :aria-hidden="!visible"
-    aria-label="Back to top"
-    title="Back to top"
+    :aria-label="page.relativePath === 'library/index.md' ? 'Back to filters' : 'Back to top'"
+    :title="page.relativePath === 'library/index.md' ? 'Back to filters' : 'Back to top'"
     @click="returnToTop"
   >
     <span class="back-to-top__icon" aria-hidden="true">
       <span />
     </span>
-    <span class="back-to-top__label">Top</span>
+    <span class="back-to-top__label">{{ page.relativePath === "library/index.md" ? "Filters" : "Top" }}</span>
   </button>
 </template>

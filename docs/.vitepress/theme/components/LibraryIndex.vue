@@ -68,6 +68,13 @@ function handleQuery(value: string) {
   }, 180);
 }
 
+function flushQuery() {
+  if (!queryUrlTimer) return;
+  window.clearTimeout(queryUrlTimer);
+  queryUrlTimer = undefined;
+  writeUrl("replace");
+}
+
 function handleKind(kind: LibraryKind | "all") {
   if (kind === activeKind.value) return;
   if (queryUrlTimer) window.clearTimeout(queryUrlTimer);
@@ -125,6 +132,7 @@ onBeforeUnmount(() => {
         v-if="filteredItems.length"
         ref="resultsRef"
         class="library-results"
+        @click.capture="flushQuery"
         @pointerover="handlePointerOver"
         @pointerleave="handlePointerLeave"
         @focusin="handleFocusIn"
@@ -147,7 +155,7 @@ onBeforeUnmount(() => {
           <span class="library-result__meta">
             {{ LIBRARY_KIND_LABELS[item.kind] }}
             <span class="library-result__mobile-state">
-              · {{ item.updated }} · {{ LIBRARY_STATUS_LABELS[item.status] }}
+              · {{ item.updated }}<template v-if="item.status === 'archived'"> · {{ LIBRARY_STATUS_LABELS[item.status] }}</template>
             </span>
           </span>
           <span class="library-result__content">
@@ -166,7 +174,7 @@ onBeforeUnmount(() => {
           </span>
           <span class="library-result__date">
             <time :datetime="item.updated">{{ item.updated }}</time>
-            <span>{{ LIBRARY_STATUS_LABELS[item.status] }}</span>
+            <span v-if="item.status === 'archived'">{{ LIBRARY_STATUS_LABELS[item.status] }}</span>
           </span>
         </a>
       </div>

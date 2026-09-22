@@ -21,7 +21,7 @@ test("preserves article emphasis and inline-code treatments independently of the
 
   assert.match(
     styles,
-    /\.vp-doc strong\s*\{\s*background:\s*none;\s*color:\s*var\(--site-emphasis-text\);\s*font-weight:\s*750;\s*\}/s
+    /\.vp-doc strong\s*\{\s*background:\s*none;\s*color:\s*var\(--site-text\);\s*font-weight:\s*700;\s*\}/s
   );
   assert.match(
     styles,

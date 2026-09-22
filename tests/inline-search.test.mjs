@@ -44,7 +44,7 @@ test("isolates the expanded search from overlapping navigation controls", () => 
 
   assert.match(
     component,
-    /\.inline-search-form\s*\{[^}]*background:\s*var\(--site-surface\)/s
+    /\.inline-search-form\s*\{[^}]*background:\s*var\(--site-canvas\)/s
   );
   assert.match(component, /@media \(max-width:\s*767\.98px\)/);
   assert.match(navActions, /@media \(max-width:\s*767\.98px\)/);

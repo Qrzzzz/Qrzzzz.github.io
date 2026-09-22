@@ -123,7 +123,7 @@ test("entry pages share a header and keep collections reachable", () => {
   assert.match(layout, /frontmatter.value.pageType === "index"/);
   assert.match(styles, /library-result__date/);
   assert.match(
-    gestureStyles,
-    /\.site-layout\[data-page-kind="index"\] \.library-result \{ padding: 32px 0 32px 16px; \}/
+    readFileSync("docs/.vitepress/theme/styles/catalog.css", "utf8"),
+    /\.site-layout\[data-page-kind="index"\] \.library-result\s*\{[^}]*padding: 24px 0 24px 16px;/
   );
 });

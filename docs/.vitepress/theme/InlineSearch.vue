@@ -20,6 +20,8 @@ type SearchDocument = {
 type InlineSearchResult = SearchResult & SearchDocument;
 
 const root = ref<HTMLElement>();
+const panelHeight = ref(430);
+const viewportTop = ref(10);
 const trigger = ref<HTMLButtonElement>();
 const input = ref<HTMLInputElement>();
 const expanded = ref(false);
@@ -99,7 +101,20 @@ async function openSearch() {
   expanded.value = true;
   await nextTick();
   input.value?.focus();
+  updateViewport();
   void loadIndex();
+}
+
+function updateViewport() {
+  if (!expanded.value) return;
+  const viewport = window.visualViewport;
+  const top = viewport?.offsetTop ?? 0;
+  viewportTop.value = top + 10;
+  // Measure after the mobile search has followed the visible viewport.
+  nextTick(() => {
+    const bottom = root.value?.getBoundingClientRect().bottom ?? 0;
+    panelHeight.value = Math.max(0, Math.min(430, top + (viewport?.height ?? window.innerHeight) - bottom - 20));
+  });
 }
 
 function closeSearch(returnFocus = false) {
@@ -166,6 +181,10 @@ function clearQuery() {
 watch(query, () => {
   selectedIndex.value = -1;
 });
+watch(selectedIndex, () => nextTick(() => {
+  if (selectedIndex.value < 0) return;
+  document.getElementById(`inline-search-item-${selectedIndex.value}`)?.scrollIntoView({ block: "nearest" });
+}));
 watch(localeIndex, () => {
   loadGeneration++;
   searchIndex.value = undefined;
@@ -179,17 +198,24 @@ watch(
 onMounted(() => {
   window.addEventListener("keydown", handleGlobalKeydown, true);
   document.addEventListener("pointerdown", handleDocumentPointerDown);
+  window.addEventListener("resize", updateViewport);
+  window.visualViewport?.addEventListener("resize", updateViewport);
+  window.visualViewport?.addEventListener("scroll", updateViewport);
 });
 
 onBeforeUnmount(() => {
   loadGeneration++;
   window.removeEventListener("keydown", handleGlobalKeydown, true);
   document.removeEventListener("pointerdown", handleDocumentPointerDown);
+  window.removeEventListener("resize", updateViewport);
+  window.visualViewport?.removeEventListener("resize", updateViewport);
+  window.visualViewport?.removeEventListener("scroll", updateViewport);
 });
 </script>
 
 <template>
-  <div ref="root" class="InlineSiteSearch" :class="{ 'is-expanded': expanded }">
+  <div ref="root" class="InlineSiteSearch" :class="{ 'is-expanded': expanded }"
+    :style="{ '--search-panel-height': `${panelHeight}px`, '--search-viewport-top': `${viewportTop}px` }">
     <button
       v-if="!expanded"
       ref="trigger"
@@ -295,25 +321,27 @@ onBeforeUnmount(() => {
   position: relative;
   z-index: 12;
   display: flex;
-  width: 232px;
-  flex: 0 1 232px;
-  min-width: 40px;
-  margin-right: 8px;
-  transition: width 220ms cubic-bezier(0.2, 0.8, 0.2, 1), flex-basis 220ms ease;
+  width: 44px;
+  flex: 0 0 44px;
+  min-width: 0;
 }
 
 .InlineSiteSearch.is-expanded {
-  width: min(400px, 38vw);
-  flex-basis: min(480px, 46vw);
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: min(560px, calc(100vw - 56px));
+  transform: translateY(-50%);
+  z-index: 80;
 }
 
 .inline-search-trigger,
 .inline-search-form {
   position: relative;
   width: 100%;
-  height: 40px;
+  height: 44px;
   border: 1px solid var(--site-line);
-  border-radius: 9px;
+  border-radius: 3px;
   background: var(--site-surface-subtle);
   color: var(--site-text-muted);
   transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease;
@@ -322,8 +350,10 @@ onBeforeUnmount(() => {
 .inline-search-trigger {
   display: flex;
   align-items: center;
-  gap: 9px;
-  padding: 0 10px;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
   text-align: left;
 }
 
@@ -352,6 +382,7 @@ onBeforeUnmount(() => {
 }
 
 .inline-search-placeholder {
+  display: none;
   min-width: 0;
   flex: 1;
   overflow: hidden;
@@ -361,6 +392,7 @@ onBeforeUnmount(() => {
 }
 
 .inline-search-trigger kbd {
+  display: none;
   flex: 0 0 auto;
   padding: 2px 5px;
   border: 1px solid var(--site-line);
@@ -377,7 +409,7 @@ onBeforeUnmount(() => {
   gap: 9px;
   padding: 0 10px;
   border-color: var(--site-line-strong);
-  background: var(--site-surface);
+  background: var(--site-canvas);
   box-shadow: none;
 }
 
@@ -389,7 +421,7 @@ onBeforeUnmount(() => {
   background: transparent;
   color: var(--site-text);
   font: inherit;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .inline-search-form input::-webkit-search-cancel-button {
@@ -401,8 +433,8 @@ onBeforeUnmount(() => {
 }
 
 .inline-search-action {
-  min-width: 30px;
-  height: 30px;
+  min-width: 44px;
+  height: 40px;
   border: 0;
   border-radius: 7px;
   background: transparent;
@@ -426,12 +458,15 @@ onBeforeUnmount(() => {
   top: calc(100% + 8px);
   right: 0;
   left: 0;
-  max-height: min(430px, calc(100vh - var(--vp-nav-height) - 28px));
+  max-height: min(var(--search-panel-height, 430px), calc(100dvh - 76px));
   overflow-y: auto;
+  overscroll-behavior: contain;
+  scroll-padding-block: 6px;
   border: 1px solid var(--site-line);
-  border-radius: 14px;
+  border-radius: 3px;
+  padding: 4px;
   background: var(--site-surface);
-  box-shadow: var(--site-shadow-float);
+  box-shadow: 0 14px 32px color-mix(in srgb, var(--site-canvas) 70%, transparent);
 }
 
 .inline-search-panel ul {
@@ -446,8 +481,8 @@ onBeforeUnmount(() => {
   flex-direction: column;
   justify-content: center;
   gap: 3px;
-  padding: 8px 10px;
-  border-radius: 8px;
+  padding: 12px;
+  border-radius: 2px;
   color: var(--site-text);
   text-decoration: none;
 }
@@ -458,19 +493,22 @@ onBeforeUnmount(() => {
 }
 
 .inline-search-result strong {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
   overflow: hidden;
   font-size: 13px;
   font-weight: 650;
   line-height: 1.35;
   text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
 }
 
 .inline-search-context {
   overflow: hidden;
   color: var(--site-text-faint);
-  font-size: 10px;
-  line-height: 1.25;
+  font-size: 12px;
+  line-height: 1.5;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -494,66 +532,14 @@ onBeforeUnmount(() => {
   border: 0;
 }
 
-@media (max-width: 959px) and (min-width: 768px) {
-  .InlineSiteSearch {
-    width: min(230px, 30vw);
-    flex-basis: 210px;
-  }
-
-  .InlineSiteSearch.is-expanded {
-    width: min(360px, 44vw);
-    flex-basis: min(420px, 48vw);
-  }
-}
-
-@media (min-width: 768px) {
-  .InlineSiteSearch {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin-right: 0;
-    transform: translate(-50%, -50%);
-  }
-}
-
-@media (min-width: 1200px) {
-  .InlineSiteSearch {
-    width: 280px;
-    flex-basis: 280px;
-  }
-
-  .InlineSiteSearch.is-expanded {
-    width: min(400px, 34vw);
-  }
-}
-
 @media (max-width: 767.98px) {
-  .InlineSiteSearch {
-    width: 40px;
-    flex: 0 0 40px;
-    margin-right: 0;
-  }
-
-  .inline-search-trigger {
-    justify-content: center;
-    padding: 0;
-    border-color: transparent;
-    background: transparent;
-  }
-
-  .inline-search-placeholder,
-  .inline-search-trigger kbd {
-    display: none;
-  }
-
   .InlineSiteSearch.is-expanded {
     position: fixed;
-    top: 10px;
+    top: var(--search-viewport-top, 10px);
     right: 12px;
     left: 12px;
-    z-index: 80;
-    display: block;
     width: auto;
+    transform: none;
   }
 }
 

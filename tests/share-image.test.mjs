@@ -12,6 +12,19 @@ function source(html) {
   return parseHTML(`<html><head><base href="https://qrzzzz.github.io/notes/test"></head><body><div class="vp-doc">${html}</div></body></html>`).document.querySelector(".vp-doc");
 }
 
+test("exports a nested article title and all collapsed author metadata", () => {
+  const input = source('<header class="article-header"><h1>Long article</h1><p>Lead</p><p>Author A · Author B</p><p>2026-09-15</p><details><summary>Author details</summary><p>Long institution name</p><p><a href="mailto:author@example.com">author@example.com</a></p></details></header><h2>Abstract</h2><p>Body</p>');
+  const result = extractLongformContent(input);
+  const exported = source(result.html);
+  assert.equal(result.title, "Long article");
+  assert.equal(exported.querySelector("h1"), null);
+  assert.ok(exported.querySelector("details").hasAttribute("open"));
+  for (const text of ["Lead", "Author A · Author B", "2026-09-15", "Long institution name", "author@example.com", "Abstract", "Body"]) {
+    assert.ok(exported.textContent.includes(text), text);
+  }
+  assert.equal(input.querySelector("details").hasAttribute("open"), false);
+});
+
 test("exports every excerpt without a title while preserving its complete body", () => {
   for (const name of readdirSync("docs/excerpts").filter(name => /^\d.*\.md$/.test(name))) {
     const text = readFileSync(`docs/excerpts/${name}`, "utf8");

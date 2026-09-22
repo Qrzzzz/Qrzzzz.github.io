@@ -53,8 +53,14 @@
   --site-ease: cubic-bezier(.2, .7, .25, 1);
   --site-motion-short: 180ms;
   --site-motion-settle: 320ms;
-  --site-reading: 740px;
-  --site-article: 690px;
+  /* Reading measures are shared; document media may use the wider container. */
+  --site-reading: 690px;
+  --site-article: var(--site-reading);
+  --site-index: 1000px;
+  --site-body-size: 17px;
+  --site-body-leading: 2;
+  --site-heading-size: clamp(30px, 3.15vw, 44px);
+  --site-paragraph-gap: 18px;
   --site-nav-height: 88px;
   --site-radius-sm: 3px;
   --site-radius-md: 5px;

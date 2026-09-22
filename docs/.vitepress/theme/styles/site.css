@@ -22,15 +22,6 @@
 .site-layout[data-page-kind="home"] .nav-github { display: none; }
 .site-layout .NavActions { border: 0; padding: 0; margin-left: 0; gap: 4px; }
 .site-layout .theme-toggle, .site-layout .nav-github { height: 44px; width: 44px; border-radius: 3px; }
-.site-layout .InlineSiteSearch { position: relative; inset: auto; width: 44px; flex: 0 0 44px; margin: 0; transform: none; transition: none; }
-.site-layout .InlineSiteSearch:not(.is-expanded) .inline-search-trigger { height: 44px; justify-content: center; padding: 0; border: 0; border-radius: 3px; background: transparent; }
-.site-layout .inline-search-trigger kbd, .site-layout .inline-search-placeholder { display: none; }
-.site-layout .InlineSiteSearch.is-expanded { position: absolute; top: 50%; left: auto; right: 0; width: min(560px, calc(100vw - 56px)); transform: translateY(-50%); z-index: 80; }
-.site-layout .inline-search-form { height: 44px; border-radius: 3px; background: var(--site-canvas); }
-.site-layout .inline-search-form input { font-size: 16px; }
-.site-layout .inline-search-action { min-width: 36px; height: 40px; }
-.site-layout .inline-search-panel { border-radius: 3px; padding: 4px; box-shadow: 0 14px 32px color-mix(in srgb, var(--site-canvas) 70%, transparent); }
-.site-layout .inline-search-result { border-radius: 2px; padding: 12px; }
 .VPNavBar:has(.InlineSiteSearch.is-expanded) :is(.VPNavBarMenu, .NavActions, .VPNavBarHamburger) { visibility: hidden; pointer-events: none; }
 .VPNavBarHamburger { display: none !important; width: 44px; height: 44px; }
 .VPNavScreen { background: var(--site-canvas); }
@@ -128,7 +119,6 @@ html.theme-is-switching .site-layout :where(a, button, p, h1, h2, h3, input, pat
   .VPNavBar .content-body { gap: 0; }
   .site-layout .nav-github { display: none; }
   .VPNavBar:has(.InlineSiteSearch.is-expanded) .VPNavBarTitle { visibility: hidden; pointer-events: none; }
-  .site-layout .InlineSiteSearch.is-expanded { width: calc(100vw - 44px); }
   .gesture-stage { height: clamp(530px, 147.44vw, 760px); }
   .gesture-fallback--desktop { display: none; }
   .gesture-fallback--mobile { display: block; }

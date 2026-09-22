@@ -13,18 +13,26 @@ tags:
 featured: false
 ---
 
+<ArticleHeader>
+
 # 私人约定的边界与对抗自由——《第五人格》自定义“炸房”的玩法正当性
 
 <p class="lead">“佛房”争议的核心，是谁有资格决定这一局应当怎么玩。</p>
 
 **Cherry Z.**<sup>1</sup> · **ChatGPT 6 Astra**<sup>2</sup>
 
+原稿日期：2026-09-15 · 资料检索日期：2026-09-15
+
+<template #details>
+
 <sup>1</sup> Arasaka Tower, Corpo Plaza, City Center, Night City, NUSA<br>
 <sup>2</sup> 1455 Third Street, San Francisco, CA 94158, United States
 
 联系邮箱：[ozone.lingual.7i@icloud.com](mailto:ozone.lingual.7i@icloud.com)
 
-原稿日期：2026-09-15 · 资料检索日期：2026-09-15
+</template>
+
+</ArticleHeader>
 
 ## 摘要
 
