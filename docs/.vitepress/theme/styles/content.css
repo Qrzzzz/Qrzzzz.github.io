@@ -27,11 +27,16 @@
   }
 }
 
-/* Native page-outline hover trace */
+/* Anchor the trace to each link so wrapped and nested titles stay aligned. */
+
+.VPDocAsideOutline .outline-marker {
+  display: none;
+}
 
 .VPDocAsideOutline .outline-link {
   --site-outline-hover-offset: -17px;
   position: relative;
+  overflow: visible;
 }
 
 .VPDocAsideOutline .VPDocOutlineItem.nested .outline-link {
@@ -78,9 +83,18 @@
 }
 
 .VPDocAsideOutline .outline-link:hover::before,
-.VPDocAsideOutline .outline-link:focus-visible::before {
+.VPDocAsideOutline .outline-link:focus-visible::before,
+.VPDocAsideOutline .outline-link.active::before {
   opacity: 1;
   transform: translateY(-50%) scaleY(1);
+}
+
+.VPDocAsideOutline .outline-link:not(.active):is(:hover, :focus-visible) {
+  color: color-mix(in srgb, var(--site-link) 65%, white);
+}
+
+.VPDocAsideOutline .outline-link:not(.active):is(:hover, :focus-visible)::before {
+  background: color-mix(in srgb, var(--site-accent) 45%, white);
 }
 
 .page-progress {
