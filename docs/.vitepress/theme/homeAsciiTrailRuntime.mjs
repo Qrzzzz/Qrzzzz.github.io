@@ -67,7 +67,7 @@ export function createHomeAsciiTrailRuntime(options) {
   function configureContext() {
     context.font = `12px ${
       options?.fontFamily ??
-      'ui-monospace, "SFMono-Regular", "Cascadia Code", Consolas, monospace'
+      '"Maple Mono", monospace'
     }`;
     context.textAlign = "center";
     context.textBaseline = "middle";

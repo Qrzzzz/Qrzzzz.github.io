@@ -440,7 +440,7 @@
   background: var(--site-surface);
   box-shadow: inset 0 -2px 0 var(--site-line);
   color: var(--site-text);
-  font-family: var(--site-font-mono);
+  font-family: var(--site-font-sans);
   font-size: 0.76em;
   font-weight: 650;
   line-height: 1;
@@ -1162,7 +1162,7 @@
 
 .content-index-meta {
   color: var(--site-text-faint);
-  font-family: var(--site-font-mono);
+  font-family: var(--site-font-sans);
   font-size: 12px;
   line-height: 1.45;
 }
@@ -1184,7 +1184,7 @@
   justify-self: end;
   content: "→";
   color: currentColor;
-  font-family: var(--site-font-mono);
+  font-family: var(--site-font-sans);
 }
 
 .content-index-row--excerpt {
@@ -1390,7 +1390,7 @@
   padding: 0;
   background: transparent;
   color: var(--site-text-faint) !important;
-  font-family: var(--site-font-mono);
+  font-family: var(--site-font-sans);
   font-size: 12px;
   font-weight: 550;
   letter-spacing: 0;
@@ -1514,7 +1514,7 @@
 
 .release-archive__version {
   color: var(--site-text);
-  font-family: var(--site-font-mono);
+  font-family: var(--site-font-sans);
   font-size: 13px;
   font-weight: 650;
 }
@@ -1649,7 +1649,7 @@
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
   color: var(--site-text);
-  font-family: var(--site-font-reading);
+  font-family: var(--site-font-sans);
   line-height: 1.6;
 }
 

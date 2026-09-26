@@ -57,7 +57,11 @@ async function prepareImage() {
     if (!element || current !== generation) return;
     // Load only the export's glyphs before measuring its final line wrapping.
     const text = element.textContent || "";
-    await withExportTimeout(Promise.all([400, 700, 750].map(weight => document.fonts.load(`${weight} 17px "Site Han Serif"`, text))));
+    const fontFamilies = ["--site-font-reading", "--site-font-sans", "--site-font-mono"]
+      .map(token => getComputedStyle(element).getPropertyValue(token).trim());
+    await withExportTimeout(Promise.all(fontFamilies.flatMap(family =>
+      [400, 700, 750].map(weight => document.fonts.load(`${weight} 17px ${family}`, text))
+    )));
     if (current !== generation) return;
     await withExportTimeout(Promise.all(Array.from(element.querySelectorAll<HTMLImageElement>("img[src]")).map(image => image.decode())));
     if (current !== generation) return;
@@ -256,7 +260,7 @@ function downloadImage() {
   padding: 44px 40px 32px;
   background: var(--share-canvas);
   color: var(--share-text);
-  font-family: "Site Han Serif", "Source Han Serif SC", "Songti SC", SimSun, serif;
+  font-family: var(--site-font-reading);
   font-size: 17px;
   line-height: 1.85;
   overflow-wrap: anywhere;
@@ -277,7 +281,7 @@ function downloadImage() {
 .share-image-longform__body :deep(li) { margin: 8px 0; }
 .share-image-longform__body :deep(li > :is(ul,ol)) { margin: 6px 0; }
 .share-image-longform__body :deep(hr) { margin: 28px 0; border: 0; border-top: 1px solid var(--share-line); }
-.share-image-longform__body :deep(code) { font-family: "Cascadia Code", Consolas, monospace; font-size: .85em; background: var(--share-surface-subtle); border-radius: 3px; padding: 2px 4px; }
+.share-image-longform__body :deep(code) { font-family: var(--site-font-mono); font-size: .85em; background: var(--share-surface-subtle); border-radius: 3px; padding: 2px 4px; }
 .share-image-longform__body :deep(pre) { margin: 22px 0; padding: 16px; background: var(--share-surface-subtle); border-radius: 6px; white-space: pre-wrap; overflow-wrap: anywhere; tab-size: 2; line-height: 1.65; }
 .share-image-longform__body :deep(pre code) { padding: 0; background: transparent; white-space: inherit; }
 .share-image-longform__body :deep(a) { color: var(--share-link); text-decoration: underline; }

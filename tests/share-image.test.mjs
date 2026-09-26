@@ -91,7 +91,7 @@ test("measures natural longform height instead of fixing a 720px canvas", () => 
   assert.match(component, /v-html="exportContent.html"/);
   assert.match(component, /Export article image/);
   assert.match(component, /document.fonts.load/);
-  assert.match(component, /font-family: "Site Han Serif"/);
+  assert.match(component, /font-family: var\(--site-font-reading\)/);
   assert.match(component, /font: \{ preferredFormat: "woff2" \}/);
   assert.match(component, /image.decode\(\)/);
   assert.match(component, /current !== generation/);

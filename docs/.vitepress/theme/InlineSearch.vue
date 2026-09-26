@@ -399,7 +399,7 @@ onBeforeUnmount(() => {
   border-radius: 5px;
   background: var(--site-surface);
   color: var(--site-text-faint);
-  font-family: var(--site-font-mono);
+  font-family: var(--site-font-sans);
   font-size: 11px;
 }
 
@@ -449,7 +449,7 @@ onBeforeUnmount(() => {
 
 .inline-search-close {
   padding-inline: 7px;
-  font-family: var(--site-font-mono);
+  font-family: var(--site-font-sans);
   font-size: 10px;
 }
 

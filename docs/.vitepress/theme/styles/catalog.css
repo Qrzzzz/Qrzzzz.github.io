@@ -1,4 +1,8 @@
 /* Shared layout for collection, project, and documentation entry pages. */
+.site-layout[data-page-kind="index"] .vp-doc,
+.site-layout[data-page-kind="index"] .vp-doc :is(h1, h2, h3, h4, h5, h6) {
+  font-family: var(--site-font-sans);
+}
 .site-layout[data-page-kind="index"] .VPDoc {
   padding-top: 48px;
 }

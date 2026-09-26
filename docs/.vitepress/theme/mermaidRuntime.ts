@@ -19,7 +19,7 @@ export function renderDiagram(source: string, dark: boolean, palette: CSSStyleDe
       secure: ["secure", "securityLevel", "startOnLoad", "maxTextSize", "maxEdges", "htmlLabels", "flowchart"],
       maxTextSize: 50000, maxEdges: 500,
       flowchart: { htmlLabels: false },
-      themeVariables: { ...colors, darkMode: dark, fontFamily: "sans-serif" }
+      themeVariables: { ...colors, darkMode: dark, fontFamily: palette.getPropertyValue("--site-font-sans").trim() }
     });
     const result = await mermaid.render(`site-mermaid-${++sequence}`, source);
     const parsed = new DOMParser().parseFromString(result.svg, "image/svg+xml");

@@ -31,7 +31,7 @@ import { withBase } from "vitepress";
   align-self: start;
   margin: 0;
   color: var(--site-text-muted);
-  font-family: var(--site-font-mono);
+  font-family: var(--site-font-sans);
   font-size: 12px;
   font-weight: 650;
   letter-spacing: 0.08em;

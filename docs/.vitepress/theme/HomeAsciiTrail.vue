@@ -26,7 +26,8 @@ onMounted(() => {
       canvas: element,
       window,
       document,
-      color: colorFromTokens(element)
+      color: colorFromTokens(element),
+      fontFamily: window.getComputedStyle(element).getPropertyValue("--site-font-mono").trim()
     });
     runtime.mount();
   } catch {

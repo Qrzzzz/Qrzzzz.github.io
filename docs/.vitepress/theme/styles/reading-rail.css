@@ -31,36 +31,46 @@
     width: var(--vp-sidebar-width);
     padding-left: 32px;
   }
-  /* Keep the rail and reading column at the left edge of the available area. */
+  /* Rail 15%, reading 50%, gap 10%, outline 20%, outer space 5%. */
+  .site-layout .VPDoc { padding-inline: 0; }
   .site-layout[data-page-kind] .VPContent .VPDoc > .container {
-    display: flex;
-    justify-content: flex-start;
-    gap: clamp(24px, 4vw, 64px);
-    max-width: none;
+    display: grid;
+    grid-template-columns: 15% 50% 10% 20% 5%;
+    max-width: none !important;
     margin-inline: 0;
   }
   .site-layout .VPDoc > .container > .content {
-    flex: 0 1 var(--site-reading);
+    grid-column: 2;
+    grid-row: 1;
     min-width: 0;
-    max-width: var(--site-reading);
+    max-width: none !important;
     margin: 0;
     padding-inline: 0;
   }
-  .site-layout .VPDoc .content-container { margin-inline: 0; }
-  .site-layout[data-page-kind="index"] .VPDoc > .container > .content {
-    flex-basis: var(--site-index);
+  .site-layout[data-page-kind] .VPDoc .content-container {
+    max-width: none !important;
+    margin-inline: 0;
   }
   /* Reuse the native outline, including active headings and keyboard links. */
   .site-layout .VPDoc > .container > .aside {
     display: block;
-    flex: 0 0 clamp(176px, 17vw, 224px);
-    width: clamp(176px, 17vw, 224px);
+    grid-column: 4;
+    grid-row: 1;
+    position: sticky;
+    top: calc(var(--vp-nav-height) + 48px);
+    align-self: start;
+    width: 100%;
+    max-width: none;
     padding-left: 0;
   }
-  .site-layout .VPDoc .aside-container,
-  .site-layout .VPDoc .aside-curtain {
-    width: clamp(176px, 17vw, 224px);
+  .site-layout .VPDoc .aside-container {
+    position: static;
+    width: 100%;
+    height: calc(100dvh - var(--vp-nav-height) - 48px);
+    padding-top: 0;
   }
+  .site-layout .VPDoc .aside-content { min-height: 0; }
+  .site-layout .VPDoc .aside-curtain { display: none; }
   .site-layout .VPDocAsideOutline .outline-link {
     white-space: normal;
     overflow-wrap: anywhere;
