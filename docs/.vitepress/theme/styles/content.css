@@ -1743,6 +1743,39 @@
     display: none;
   }
 
+  /* Documentation entries keep their source readable below the title.
+     Project catalogs have their own nested body and responsive grid. */
+  .content-index:not(.project-catalog) .content-index-row {
+    grid-template-columns: minmax(0, 1fr) 20px;
+    gap: 8px 12px;
+    padding-block: 18px;
+  }
+
+  .content-index:not(.project-catalog) .content-index-meta {
+    grid-column: 1 / -1;
+    grid-row: 1;
+  }
+
+  .content-index:not(.project-catalog) .content-index-title {
+    grid-column: 1;
+    grid-row: 2;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .content-index:not(.project-catalog) .content-index-summary {
+    display: block;
+    grid-column: 1 / -1;
+    grid-row: 3;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .content-index:not(.project-catalog) .content-index-row::after {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
   .project-showcase__action {
     grid-column: 1;
     grid-row: auto;

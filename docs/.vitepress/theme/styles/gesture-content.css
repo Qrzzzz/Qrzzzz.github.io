@@ -27,6 +27,6 @@
   .site-layout .library-toolbar__filters { gap: 16px; flex-wrap: wrap; }
   .site-layout .library-filter { padding-inline: 0; }
   .site-layout .project-catalog .content-index-title { font-size: 22px; }
-  .site-layout .content-index-summary { display: block; }
+  .site-layout .project-catalog .content-index-summary { display: block; }
   .site-layout .share-image-status { text-align: left; }
 }

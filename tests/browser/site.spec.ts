@@ -1,6 +1,27 @@
 import { test, expect } from "@playwright/test";
 import { readFileSync } from "node:fs";
 
+test("mobile documentation sources occupy a readable row across layout breakpoints", async ({ page }) => {
+  await page.goto("/projects/lyrics-card-generator/docs/");
+  for (const width of [320, 390, 639, 640, 680, 681, 767]) {
+    await page.setViewportSize({ width, height: 844 });
+    await page.evaluate(() => document.fonts.ready);
+    const entries = page.locator(".content-index:not(.project-catalog) .content-index-row");
+    expect(await entries.count()).toBeGreaterThan(0);
+    for (const entry of await entries.all()) {
+      const source = entry.locator(".content-index-summary");
+      await expect(source).toBeVisible();
+      const row = (await entry.boundingBox())!;
+      const title = (await entry.locator(".content-index-title").boundingBox())!;
+      const summary = (await source.boundingBox())!;
+      expect(summary.width, `source width at ${width}px`).toBeGreaterThanOrEqual(row.width - 1);
+      expect(summary.y, `source follows title at ${width}px`).toBeGreaterThanOrEqual(title.y + title.height);
+      expect(summary.height, `source must not become a vertical strip at ${width}px`).toBeLessThan(120);
+    }
+    expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(1);
+  }
+});
+
 test("search is lazy, finds Chinese words and navigates with the keyboard", async ({ page }) => {
   const indexes: string[] = [];
   page.on("request", request => { if (request.url().includes("@localSearchIndexroot")) indexes.push(request.url()); });
