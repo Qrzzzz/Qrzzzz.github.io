@@ -23,6 +23,49 @@
   stroke-linecap: round;
 }
 @media (min-width: 960px) {
+  .site-layout .VPContent.has-sidebar {
+    padding-left: var(--vp-sidebar-width);
+    padding-right: 0;
+  }
+  .site-layout .VPSidebar {
+    width: var(--vp-sidebar-width);
+    padding-left: 32px;
+  }
+  /* Keep the rail and reading column at the left edge of the available area. */
+  .site-layout[data-page-kind] .VPContent .VPDoc > .container {
+    display: flex;
+    justify-content: flex-start;
+    gap: clamp(24px, 4vw, 64px);
+    max-width: none;
+    margin-inline: 0;
+  }
+  .site-layout .VPDoc > .container > .content {
+    flex: 0 1 var(--site-reading);
+    min-width: 0;
+    max-width: var(--site-reading);
+    margin: 0;
+    padding-inline: 0;
+  }
+  .site-layout .VPDoc .content-container { margin-inline: 0; }
+  .site-layout[data-page-kind="index"] .VPDoc > .container > .content {
+    flex-basis: var(--site-index);
+  }
+  /* Reuse the native outline, including active headings and keyboard links. */
+  .site-layout .VPDoc > .container > .aside {
+    display: block;
+    flex: 0 0 clamp(176px, 17vw, 224px);
+    width: clamp(176px, 17vw, 224px);
+    padding-left: 0;
+  }
+  .site-layout .VPDoc .aside-container,
+  .site-layout .VPDoc .aside-curtain {
+    width: clamp(176px, 17vw, 224px);
+  }
+  .site-layout .VPDocAsideOutline .outline-link {
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+  .site-layout .VPLocalNav { display: none; }
   .VPDoc.has-sidebar {
     --reading-rail-width: 32px;
     --reading-rail-gap: 18px;
