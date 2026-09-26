@@ -90,8 +90,7 @@ test("keeps every excerpt in its own titleless Markdown page", () => {
   assert.doesNotMatch(third, /^next: false$/m);
   assert.match(fourth, /<blockquote lang="es">/);
   assert.match(fourth, /después de nuestro paso por aquí/);
-  assert.match(fourth, /原文直译/);
-  assert.match(fourth, /流传意译/);
+  assert.doesNotMatch(fourth, /<h2>/);
   assert.match(fourth, /Mi campaña con el Che/);
   assert.match(fourth, /第 43—44 页/);
   assert.doesNotMatch(fourth, /^next: false$/m);
@@ -139,7 +138,7 @@ test("keeps every excerpt in its own titleless Markdown page", () => {
   assert.doesNotMatch(sixteenth, /<footer>[^<]*[—–-]/);
   assert.match(nineteenth, /<blockquote lang="de">/);
   assert.match(nineteenth, /Und verloren sei uns der Tag, wo nicht Ein Mal getanzt wurde!/);
-  assert.match(nineteenth, /<h2>流传意译<\/h2>/);
+  assert.doesNotMatch(nineteenth, /<h2>/);
   assert.match(nineteenth, /每一个不曾起舞的日子都是对生命的辜负。/);
   assert.match(
     nineteenth,
@@ -149,7 +148,7 @@ test("keeps every excerpt in its own titleless Markdown page", () => {
     nineteenth,
     /<cite>弗里德里希·尼采《查拉图斯特拉如是说》，第三部〈论旧榜与新榜〉第 23 节<\/cite>/
   );
-  assert.match(styles, /\.excerpt-renderings\s*\{[\s\S]*?grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
+  assert.match(styles, /\.excerpt-renderings\s*\{[\s\S]*?grid-template-columns: minmax\(0, 1fr\)/);
 });
 
 test("preserves the Tim Cook report and formats its source as an excerpt attribution", () => {
@@ -209,11 +208,11 @@ test("renders simple excerpts as standard body copy without an accent rail", () 
   );
   assert.match(
     styles,
-    /@media \(max-width: 767px\)[\s\S]*?\.vp-doc \.excerpt-entry > \.excerpt-quotation p\s*\{[^}]*font-size:\s*16px;[^}]*\}/
+    /@media \(max-width: 767px\)[\s\S]*?\.vp-doc \.excerpt-entry > \.excerpt-quotation p[^{]*\{[^}]*font-size:\s*16px;[^}]*\}/
   );
 });
 
-test("renders a single translation across the full excerpt width", () => {
+test("renders translations across the full excerpt width", () => {
   assert.match(
     eighteenth,
     /class="excerpt-renderings excerpt-renderings--single" aria-label="中文翻译"/
@@ -224,7 +223,7 @@ test("renders a single translation across the full excerpt width", () => {
   );
   assert.match(
     styles,
-    /\.excerpt-renderings--single\s*\{[^}]*grid-template-columns:\s*minmax\(0, 1fr\);[^}]*\}/
+    /\.excerpt-renderings\s*\{[^}]*grid-template-columns:\s*minmax\(0, 1fr\);[^}]*\}/
   );
   assert.match(
     styles,
