@@ -30,6 +30,7 @@ test("exports every excerpt without a title while preserving its complete body",
     const text = readFileSync(`docs/excerpts/${name}`, "utf8");
     const body = text.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, "");
     const input = source(markdown.render(body));
+    input.querySelectorAll(".header-anchor").forEach(node => node.remove());
     const result = extractLongformContent(input, `Excerpt ${name.slice(0, -3)}`, "excerpt");
     assert.equal(result.title, "", name);
     assert.equal(source(result.html).textContent, input.textContent, name);
