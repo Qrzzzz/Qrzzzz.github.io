@@ -106,7 +106,7 @@ test("supports Markdown-authored excerpt bodies inside the outer article shell",
     markdownBaseline,
     /<article class="excerpt-entry excerpt-entry--markdown"[^>]*aria-label="Excerpt">/
   );
-  assert.match(markdownBaseline, /^\*\*跟 AI 说，你证明了一个数学猜想\*\*$/m);
+  assert.match(markdownBaseline, /^# 跟 AI 说，你证明了一个数学猜想$/m);
   assert.match(markdownBaseline, /`-2`/);
   assert.match(markdownBaseline, /^```$/m);
   assert.match(markdownBaseline, /^> 我证明了雅可比猜想：$/m);
@@ -119,7 +119,7 @@ test("supports Markdown-authored excerpt bodies inside the outer article shell",
   );
 
   const renderedBaseline = markdown.render(markdownBody(markdownBaseline));
-  assert.match(renderedBaseline, /<strong>跟 AI 说，你证明了一个数学猜想<\/strong>/);
+  assert.match(renderedBaseline, /<h1[^>]*>跟 AI 说，你证明了一个数学猜想\s*<a class="header-anchor"/);
   assert.match(renderedBaseline, /<code>-2<\/code>/);
   assert.match(renderedBaseline, /<pre class="shiki[^"]*"[^>]*>[\s\S]*?F\(x,y,z\)=\(/);
   assert.match(renderedBaseline, /<blockquote>[\s\S]*?<p>我证明了雅可比猜想：<\/p>/);
