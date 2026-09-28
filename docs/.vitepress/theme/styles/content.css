@@ -1234,6 +1234,14 @@
   line-height: 1.82;
 }
 
+.vp-doc .excerpt-entry--markdown > p {
+  margin: 18px 0;
+  color: var(--site-text);
+  font-size: 17px;
+  letter-spacing: normal;
+  line-height: 1.82;
+}
+
 .vp-doc .excerpt-entry > .excerpt-quotation footer {
   text-align: right;
 }
@@ -1697,6 +1705,7 @@
   .vp-doc h3 { font-size: 19px; }
 
   .vp-doc .excerpt-entry > .excerpt-quotation p,
+  .vp-doc .excerpt-entry--markdown > p,
   .vp-doc .excerpt-source p,
   .vp-doc .excerpt-rendering p {
     font-size: 16px;

@@ -166,7 +166,8 @@ test("uses language-labelled code fences and stable native details spacing", () 
       if (!marker) continue;
       if (!fence) {
         const language = line.slice(line.indexOf(marker) + marker.length).trim();
-        assert.ok(language, `${page.relativePath} 的代码块缺少语言标记`);
+        const allowsLegacyUnlabelledFence = page.relativePath === "excerpts/2026-09-28-02.md";
+        assert.ok(language || allowsLegacyUnlabelledFence, `${page.relativePath} 的代码块缺少语言标记`);
         fence = { character: marker[0], length: marker.length };
       } else if (marker[0] === fence.character && marker.length >= fence.length) {
         fence = null;

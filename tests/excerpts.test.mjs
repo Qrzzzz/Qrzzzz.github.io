@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import test from "node:test";
+import { createMarkdownRenderer } from "vitepress";
 
 const config = readFileSync("docs/.vitepress/config.mts", "utf8");
 const layout = readFileSync("docs/.vitepress/theme/Layout.vue", "utf8");
@@ -27,6 +28,20 @@ const seventeenth = readFileSync("docs/excerpts/2026-08-24-02.md", "utf8");
 const eighteenth = readFileSync("docs/excerpts/2026-08-24-03.md", "utf8");
 const nineteenth = readFileSync("docs/excerpts/2026-08-25-01.md", "utf8");
 const twentieth = readFileSync("docs/excerpts/2026-09-04-01.md", "utf8");
+const markdownBaseline = readFileSync("docs/excerpts/2026-09-28-02.md", "utf8");
+const markdown = await createMarkdownRenderer("docs");
+
+const migratedExcerpts = [
+  ["2026-07-17-01.md", first],
+  ["2026-07-17-02.md", second],
+  ["2026-07-25-01.md", fifth],
+  ["2026-07-27-01.md", sixth],
+  ["2026-07-29-01.md", seventh],
+  ["2026-07-29-04.md", tenth]
+];
+
+const markdownBody = (source) =>
+  source.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, "");
 
 const excerptPages = [
   first,
@@ -73,6 +88,48 @@ test("uses shared data and compact previews for 偶拾", () => {
   );
 });
 
+test("supports Markdown-authored excerpt bodies inside the outer article shell", () => {
+  for (const [name, source] of migratedExcerpts) {
+    assert.match(
+      source,
+      /<article class="excerpt-entry excerpt-entry--markdown"[^>]*aria-label="Excerpt">/,
+      name + " should use the Markdown excerpt shell"
+    );
+    assert.doesNotMatch(
+      source,
+      /<p>|<pre><code>|class="excerpt-quotation"/,
+      name + " should not keep handwritten body HTML"
+    );
+  }
+
+  assert.match(
+    markdownBaseline,
+    /<article class="excerpt-entry excerpt-entry--markdown"[^>]*aria-label="Excerpt">/
+  );
+  assert.match(markdownBaseline, /^\*\*跟 AI 说，你证明了一个数学猜想\*\*$/m);
+  assert.match(markdownBaseline, /`-2`/);
+  assert.match(markdownBaseline, /^```$/m);
+  assert.match(markdownBaseline, /^> 我证明了雅可比猜想：$/m);
+  assert.doesNotMatch(markdownBaseline, /<p>|<pre><code>|class="excerpt-quotation"/);
+
+  const renderedSimple = markdown.render(markdownBody(first));
+  assert.match(
+    renderedSimple,
+    /<article class="excerpt-entry excerpt-entry--markdown"[^>]*>[\s\S]*?<p>拜托你一直鲜活，keep learning/
+  );
+
+  const renderedBaseline = markdown.render(markdownBody(markdownBaseline));
+  assert.match(renderedBaseline, /<strong>跟 AI 说，你证明了一个数学猜想<\/strong>/);
+  assert.match(renderedBaseline, /<code>-2<\/code>/);
+  assert.match(renderedBaseline, /<pre class="shiki[^"]*"[^>]*>[\s\S]*?F\(x,y,z\)=\(/);
+  assert.match(renderedBaseline, /<blockquote>[\s\S]*?<p>我证明了雅可比猜想：<\/p>/);
+
+  assert.match(
+    styles,
+    /\.vp-doc \.excerpt-entry--markdown > p\s*\{[^}]*margin:\s*18px 0;[^}]*font-size:\s*17px;[^}]*line-height:\s*1\.82;[^}]*\}/
+  );
+});
+
 test("keeps every excerpt in its own titleless Markdown page", () => {
   for (const { source: page, name } of excerptSources) {
     assert.doesNotMatch(page, /^#\s+|<h1|excerpt-entry__heading|aria-labelledby=/m);
@@ -96,7 +153,7 @@ test("keeps every excerpt in its own titleless Markdown page", () => {
   assert.doesNotMatch(fourth, /^next: false$/m);
   assert.match(fifth, /其实大家多少都在炒股。/);
   assert.match(fifth, /城市发展 ETF/);
-  assert.match(fifth, /也没法设止损。<\/p>/);
+  assert.match(fifth, /也没法设止损。/);
   assert.match(fifth, /谁都逃不过这场资产轮盘/);
   assert.match(fifth, /只是有些仓位叫投资，有些仓位叫人生。/);
   assert.doesNotMatch(fifth, /^next: false$/m);
