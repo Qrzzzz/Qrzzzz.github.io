@@ -40,8 +40,8 @@
   --site-spark-primary: #243ecd;
   --site-spark-secondary: #172439;
 
-  --site-font-reading: "Newsreader", "Site Han Serif", serif;
-  --site-font-sans: "Site Han Sans", sans-serif;
+  --site-font-reading: "Site Proportional Punctuation", "Newsreader", "Site Han Serif", serif;
+  --site-font-sans: "Site Proportional Punctuation", "Site Han Sans", sans-serif;
   --site-font-brand: var(--site-font-sans);
   --site-font-mono: "Maple Mono", monospace;
 
