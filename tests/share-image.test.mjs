@@ -34,7 +34,7 @@ test("exports every excerpt without a title while preserving its complete body",
     const result = extractLongformContent(input, `Excerpt ${name.slice(0, -3)}`, "excerpt");
     assert.equal(result.title, "", name);
     assert.equal(source(result.html).textContent, input.textContent, name);
-    assert.equal(source(result.html).querySelector("h1"), null, name);
+    assert.equal(source(result.html).querySelectorAll("h1").length, input.querySelectorAll("h1").length, name);
   }
   const legacy = extractLongformContent(source('<article><h1 class="excerpt-entry__heading">偶拾，2026 年 9 月 4 日，第一则</h1><p>正文</p></article>'), "Excerpt 2026-09-04-01", "excerpt");
   assert.equal(legacy.title, "");
