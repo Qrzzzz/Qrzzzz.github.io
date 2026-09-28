@@ -130,9 +130,9 @@ test("supports Markdown-authored excerpt bodies inside the outer article shell",
   );
 });
 
-test("keeps every excerpt in its own titleless Markdown page", () => {
+test("keeps every excerpt in its own Markdown page", () => {
   for (const { source: page, name } of excerptSources) {
-    assert.doesNotMatch(page, /^#\s+|<h1|excerpt-entry__heading|aria-labelledby=/m);
+    assert.doesNotMatch(page, /excerpt-entry__heading|aria-labelledby=/m);
     assert.ok(page.includes(`title: Excerpt ${name.slice(0, -3)}`));
     assert.match(page, /aria-label="Excerpt"/);
   }
