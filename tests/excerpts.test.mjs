@@ -51,6 +51,20 @@ const markdownBaseline = readFileSync("docs/excerpts/2026-09-28-02.md", "utf8");
 const markdownBoldBaseline = readFileSync("docs/excerpts/2026-09-28-03.md", "utf8");
 const markdown = await createMarkdownRenderer("docs");
 
+const specialMigratedExcerpts = [
+  ["2026-07-17-03.md", "it"],
+  ["2026-07-22-01.md", "es"],
+  ["2026-08-24-03.md", "ja"],
+  ["2026-08-25-01.md", "de"],
+  ["2026-09-14-01.md", "en"],
+  ["2026-09-16-01.md", "tr"],
+  ["2026-09-23-01.md", "en"]
+].map(([name, language]) => [
+  name,
+  language,
+  readFileSync(`docs/excerpts/${name}`, "utf8")
+]);
+
 const migratedExcerpts = [
   ["2026-07-17-01.md", first],
   ["2026-07-17-02.md", second],
@@ -300,6 +314,43 @@ test("supports Markdown-authored excerpt bodies inside the outer article shell",
     styles,
     /\.vp-doc \.excerpt-entry--quotation > blockquote\s*\{[^}]*border:\s*0;[^}]*margin:\s*0;[^}]*padding:\s*0;[^}]*\}/
   );
+});
+
+test("renders Markdown inside preserved special excerpt containers", () => {
+  const renderedByName = new Map();
+
+  for (const [name, language, source] of specialMigratedExcerpts) {
+    assert.match(
+      source,
+      /<article class="excerpt-entry excerpt-entry--markdown excerpt-entry--parallel"[^>]*aria-label="Excerpt">/,
+      name + " should use the Markdown parallel excerpt shell"
+    );
+    assert.doesNotMatch(source, /<p>/, name + " should not keep handwritten paragraph HTML");
+    assert.match(source, /<figure class="excerpt-source">/);
+    assert.match(source, new RegExp(`<blockquote lang="${language}">`));
+    assert.match(source, /<figcaption\b[^>]*>/);
+    assert.match(source, /<div class="excerpt-renderings(?: excerpt-renderings--single)?"[^>]*>/);
+    assert.match(source, /<div class="excerpt-rendering">/);
+
+    const rendered = markdown.render(markdownBody(source));
+    renderedByName.set(name, rendered);
+
+    assert.match(
+      rendered,
+      /<figure class="excerpt-source">[\s\S]*?<blockquote\b[^>]*>[\s\S]*?<p>/,
+      name + " should render Markdown paragraphs inside the preserved source blockquote"
+    );
+    assert.match(
+      rendered,
+      /<div class="excerpt-rendering">[\s\S]*?<blockquote>[\s\S]*?<p>/,
+      name + " should render Markdown paragraphs inside the preserved translation container"
+    );
+    assert.doesNotMatch(rendered, /<figcaption\b[^>]*>\s*<p>/);
+    assert.doesNotMatch(rendered, /<p><cite>/);
+  }
+
+  assert.equal((renderedByName.get("2026-07-17-03.md").match(/<br>/g) ?? []).length, 1);
+  assert.equal((renderedByName.get("2026-08-24-03.md").match(/<br>/g) ?? []).length, 8);
 });
 
 test("keeps every excerpt in its own Markdown page", () => {
