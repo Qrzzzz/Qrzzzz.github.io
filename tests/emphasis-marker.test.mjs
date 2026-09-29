@@ -1,10 +1,15 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
+import { createMarkdownRenderer } from "vitepress";
 
 const custom = readFileSync("docs/.vitepress/theme/custom.css", "utf8");
 const emphasis = readFileSync("docs/.vitepress/theme/styles/emphasis.css", "utf8");
 const excerpt = readFileSync("docs/excerpts/2026-09-04-01.md", "utf8");
+const markdown = await createMarkdownRenderer("docs");
+
+const markdownBody = (source) =>
+  source.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, "");
 
 function ruleBody(selector) {
   const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -52,10 +57,15 @@ test("paints markdown and excerpt emphasis while retaining inline geometry", () 
   assert.match(marker, /-webkit-box-decoration-break:\s*clone/);
 });
 
-test("opts hand-authored excerpt strong into the marker without widening global strong", () => {
+test("opts Markdown-authored excerpt strong into the marker without widening global strong", () => {
   assert.match(
     excerpt,
-    /<article class="excerpt-entry"[\s\S]*<strong>“When we work on making our devices accessible by the blind,” he said, “I don't consider the bloody ROI\.”<\/strong>/
+    /\*\*“When we work on making our devices accessible by the blind,” he said, “I don't consider the bloody ROI\.”\*\*/
+  );
+  const renderedExcerpt = markdown.render(markdownBody(excerpt));
+  assert.match(
+    renderedExcerpt,
+    /<strong>“When we work on making our devices accessible by the blind,” he said, “I don't consider the bloody ROI\.”<\/strong>/
   );
   assert.match(
     emphasis,

@@ -28,6 +28,8 @@ const seventeenth = readFileSync("docs/excerpts/2026-08-24-02.md", "utf8");
 const eighteenth = readFileSync("docs/excerpts/2026-08-24-03.md", "utf8");
 const nineteenth = readFileSync("docs/excerpts/2026-08-25-01.md", "utf8");
 const twentieth = readFileSync("docs/excerpts/2026-09-04-01.md", "utf8");
+const twentyFirst = readFileSync("docs/excerpts/2026-09-06-01.md", "utf8");
+const twentySecond = readFileSync("docs/excerpts/2026-09-06-02.md", "utf8");
 const markdownBaseline = readFileSync("docs/excerpts/2026-09-28-02.md", "utf8");
 const markdownBoldBaseline = readFileSync("docs/excerpts/2026-09-28-03.md", "utf8");
 const markdown = await createMarkdownRenderer("docs");
@@ -44,7 +46,13 @@ const migratedExcerpts = [
   ["2026-08-15-01.md", eleventh],
   ["2026-08-16-01.md", twelfth],
   ["2026-08-17-01.md", thirteenth],
-  ["2026-08-21-01.md", fourteenth]
+  ["2026-08-21-01.md", fourteenth],
+  ["2026-08-21-02.md", fifteenth],
+  ["2026-08-24-01.md", sixteenth],
+  ["2026-08-24-02.md", seventeenth],
+  ["2026-09-04-01.md", twentieth],
+  ["2026-09-06-01.md", twentyFirst],
+  ["2026-09-06-02.md", twentySecond]
 ];
 
 const markdownBody = (source) =>
@@ -70,7 +78,9 @@ const excerptPages = [
   seventeenth,
   eighteenth,
   nineteenth,
-  twentieth
+  twentieth,
+  twentyFirst,
+  twentySecond
 ];
 
 const excerptSources = readdirSync("docs/excerpts", { withFileTypes: true })
@@ -124,6 +134,13 @@ test("supports Markdown-authored excerpt bodies inside the outer article shell",
   assert.match(ninth, /^> 我第一次为无神论者感到一些遗憾/m);
   assert.match(twelfth, /^> 预计到2020年，国际上微电子技术水平将发展到14纳米/m);
   assert.match(fourteenth, /^> 没有恶意的人被恶意砸中的时候/m);
+  assert.match(fifteenth, /^> 我十分怀念在大学里学习的时光/m);
+  assert.match(sixteenth, /^> 多和健谈的人一起吃麦当劳/m);
+  assert.match(seventeenth, /<blockquote class="excerpt-quotation" lang="en">/);
+  assert.match(twentieth, /\*\*“When we work on making our devices accessible by the blind,”/);
+  assert.doesNotMatch(twentieth, /<strong>/);
+  assert.match(twentyFirst, /^> 1\\\. Get coffee\\$/m);
+  assert.match(twentySecond, /<blockquote class="excerpt-quotation" lang="en">/);
 
   const renderedSimple = markdown.render(markdownBody(first));
   assert.match(
@@ -150,6 +167,12 @@ test("supports Markdown-authored excerpt bodies inside the outer article shell",
   assert.match(
     renderedQuotedExcerpt,
     /<blockquote>[\s\S]*?<p>我第一次为无神论者感到一些遗憾[^<]*<\/p>[\s\S]*?<footer>/
+  );
+
+  const renderedRoutine = markdown.render(markdownBody(twentyFirst));
+  assert.match(
+    renderedRoutine,
+    /<blockquote>[\s\S]*?<p>My new Sunday morning routine:<\/p>[\s\S]*?<p>1\. Get coffee<br>\s*2\. Check GPT-5\.4 projects/
   );
 
   assert.match(
@@ -242,7 +265,13 @@ test("keeps every excerpt in its own Markdown page", () => {
 
 test("preserves the Tim Cook report and formats its source as an excerpt attribution", () => {
   assert.match(twentieth, /<blockquote class="excerpt-quotation" lang="en">/);
-  const paragraphs = [...twentieth.matchAll(/<p>([\s\S]*?)<\/p>/g)].map((match) => match[1]);
+  assert.match(
+    twentieth,
+    /\*\*“When we work on making our devices accessible by the blind,” he said, “I don't consider the bloody ROI\.”\*\*/
+  );
+  assert.doesNotMatch(twentieth, /<p>|<strong>/);
+  const renderedTimCook = markdown.render(markdownBody(twentieth));
+  const paragraphs = [...renderedTimCook.matchAll(/<p>([\s\S]*?)<\/p>/g)].map((match) => match[1]);
   assert.equal(paragraphs.length, 6);
   assert.match(paragraphs[0], /^That shareholder proposal was rejected by Apple's shareholders, receiving just 2\.95 percent of the vote\./);
   assert.match(paragraphs[1], /Apple plans on having 100 percent of its power come from green sources/);
