@@ -30,6 +30,12 @@ const nineteenth = readFileSync("docs/excerpts/2026-08-25-01.md", "utf8");
 const twentieth = readFileSync("docs/excerpts/2026-09-04-01.md", "utf8");
 const twentyFirst = readFileSync("docs/excerpts/2026-09-06-01.md", "utf8");
 const twentySecond = readFileSync("docs/excerpts/2026-09-06-02.md", "utf8");
+const twentyThird = readFileSync("docs/excerpts/2026-09-07-01.md", "utf8");
+const twentyFourth = readFileSync("docs/excerpts/2026-09-07-02.md", "utf8");
+const twentyFifth = readFileSync("docs/excerpts/2026-09-07-03.md", "utf8");
+const twentySixth = readFileSync("docs/excerpts/2026-09-07-04.md", "utf8");
+const twentySeventh = readFileSync("docs/excerpts/2026-09-08-01.md", "utf8");
+const twentyEighth = readFileSync("docs/excerpts/2026-09-09-01.md", "utf8");
 const markdownBaseline = readFileSync("docs/excerpts/2026-09-28-02.md", "utf8");
 const markdownBoldBaseline = readFileSync("docs/excerpts/2026-09-28-03.md", "utf8");
 const markdown = await createMarkdownRenderer("docs");
@@ -52,7 +58,13 @@ const migratedExcerpts = [
   ["2026-08-24-02.md", seventeenth],
   ["2026-09-04-01.md", twentieth],
   ["2026-09-06-01.md", twentyFirst],
-  ["2026-09-06-02.md", twentySecond]
+  ["2026-09-06-02.md", twentySecond],
+  ["2026-09-07-01.md", twentyThird],
+  ["2026-09-07-02.md", twentyFourth],
+  ["2026-09-07-03.md", twentyFifth],
+  ["2026-09-07-04.md", twentySixth],
+  ["2026-09-08-01.md", twentySeventh],
+  ["2026-09-09-01.md", twentyEighth]
 ];
 
 const markdownBody = (source) =>
@@ -80,7 +92,13 @@ const excerptPages = [
   nineteenth,
   twentieth,
   twentyFirst,
-  twentySecond
+  twentySecond,
+  twentyThird,
+  twentyFourth,
+  twentyFifth,
+  twentySixth,
+  twentySeventh,
+  twentyEighth
 ];
 
 const excerptSources = readdirSync("docs/excerpts", { withFileTypes: true })
@@ -141,6 +159,12 @@ test("supports Markdown-authored excerpt bodies inside the outer article shell",
   assert.doesNotMatch(twentieth, /<strong>/);
   assert.match(twentyFirst, /^> 1\\\. Get coffee\\$/m);
   assert.match(twentySecond, /<blockquote class="excerpt-quotation" lang="en">/);
+  assert.match(twentyThird, /<blockquote class="excerpt-quotation" lang="en">/);
+  assert.match(twentyFourth, /^> 猫这种东西/m);
+  assert.match(twentyFifth, /^> 但是太阳/m);
+  assert.match(twentySixth, /<blockquote class="excerpt-quotation" lang="en">/);
+  assert.match(twentySeventh, /<blockquote class="excerpt-quotation" lang="en">/);
+  assert.match(twentyEighth, /<blockquote class="excerpt-quotation" lang="en">/);
 
   const renderedSimple = markdown.render(markdownBody(first));
   assert.match(
@@ -174,6 +198,21 @@ test("supports Markdown-authored excerpt bodies inside the outer article shell",
     renderedRoutine,
     /<blockquote>[\s\S]*?<p>My new Sunday morning routine:<\/p>[\s\S]*?<p>1\. Get coffee<br>\s*2\. Check GPT-5\.4 projects/
   );
+
+  const renderedSeptemberBatch = [
+    markdown.render(markdownBody(twentyThird)),
+    markdown.render(markdownBody(twentyFourth)),
+    markdown.render(markdownBody(twentyFifth)),
+    markdown.render(markdownBody(twentySixth)),
+    markdown.render(markdownBody(twentySeventh)),
+    markdown.render(markdownBody(twentyEighth))
+  ];
+  assert.match(renderedSeptemberBatch[0], /<blockquote class="excerpt-quotation" lang="en">[\s\S]*?<p>If it’s painful/);
+  assert.match(renderedSeptemberBatch[1], /<blockquote>[\s\S]*?<p>猫这种东西/);
+  assert.match(renderedSeptemberBatch[2], /<blockquote>[\s\S]*?<p>但是太阳[\s\S]*?<footer>史铁生/);
+  assert.match(renderedSeptemberBatch[3], /<blockquote class="excerpt-quotation" lang="en">[\s\S]*?<p>4397328654844826923/);
+  assert.match(renderedSeptemberBatch[4], /<blockquote class="excerpt-quotation" lang="en">[\s\S]*?<p>The reasonable man/);
+  assert.match(renderedSeptemberBatch[5], /<blockquote class="excerpt-quotation" lang="en">[\s\S]*?<p>I resigned from Anthropic today/);
 
   assert.match(
     styles,
