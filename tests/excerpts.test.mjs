@@ -36,6 +36,12 @@ const twentyFifth = readFileSync("docs/excerpts/2026-09-07-03.md", "utf8");
 const twentySixth = readFileSync("docs/excerpts/2026-09-07-04.md", "utf8");
 const twentySeventh = readFileSync("docs/excerpts/2026-09-08-01.md", "utf8");
 const twentyEighth = readFileSync("docs/excerpts/2026-09-09-01.md", "utf8");
+const twentyNinth = readFileSync("docs/excerpts/2026-09-09-02.md", "utf8");
+const thirtieth = readFileSync("docs/excerpts/2026-09-09-03.md", "utf8");
+const thirtyFirst = readFileSync("docs/excerpts/2026-09-09-04.md", "utf8");
+const thirtySecond = readFileSync("docs/excerpts/2026-09-10-01.md", "utf8");
+const thirtyThird = readFileSync("docs/excerpts/2026-09-19-01.md", "utf8");
+const thirtyFourth = readFileSync("docs/excerpts/2026-09-21-01.md", "utf8");
 const markdownBaseline = readFileSync("docs/excerpts/2026-09-28-02.md", "utf8");
 const markdownBoldBaseline = readFileSync("docs/excerpts/2026-09-28-03.md", "utf8");
 const markdown = await createMarkdownRenderer("docs");
@@ -64,7 +70,13 @@ const migratedExcerpts = [
   ["2026-09-07-03.md", twentyFifth],
   ["2026-09-07-04.md", twentySixth],
   ["2026-09-08-01.md", twentySeventh],
-  ["2026-09-09-01.md", twentyEighth]
+  ["2026-09-09-01.md", twentyEighth],
+  ["2026-09-09-02.md", twentyNinth],
+  ["2026-09-09-03.md", thirtieth],
+  ["2026-09-09-04.md", thirtyFirst],
+  ["2026-09-10-01.md", thirtySecond],
+  ["2026-09-19-01.md", thirtyThird],
+  ["2026-09-21-01.md", thirtyFourth]
 ];
 
 const markdownBody = (source) =>
@@ -98,7 +110,13 @@ const excerptPages = [
   twentyFifth,
   twentySixth,
   twentySeventh,
-  twentyEighth
+  twentyEighth,
+  twentyNinth,
+  thirtieth,
+  thirtyFirst,
+  thirtySecond,
+  thirtyThird,
+  thirtyFourth
 ];
 
 const excerptSources = readdirSync("docs/excerpts", { withFileTypes: true })
@@ -165,6 +183,14 @@ test("supports Markdown-authored excerpt bodies inside the outer article shell",
   assert.match(twentySixth, /<blockquote class="excerpt-quotation" lang="en">/);
   assert.match(twentySeventh, /<blockquote class="excerpt-quotation" lang="en">/);
   assert.match(twentyEighth, /<blockquote class="excerpt-quotation" lang="en">/);
+  assert.match(twentyNinth, /^> 很多人不知道人生体验也是有利息的。$/m);
+  assert.match(thirtieth, /^> 当时地球还年轻，我们诞生在荒凉的大海里。/m);
+  assert.match(thirtyFirst, /^> 人生在世必遇患难，如同火星飞腾。$/m);
+  assert.match(thirtyFirst, /<cite><a href="https:\/\/www\.biblegateway\.com\/passage\//);
+  assert.match(thirtySecond, /\*\*蒸馏更好的模型\*\*/);
+  assert.doesNotMatch(thirtySecond, /<strong>/);
+  assert.match(thirtyThird, /^> 我们能不能不要再聊奖学金科研竞赛绩点入党社团活动了\\$/m);
+  assert.match(thirtyFourth, /^> 海永远无法被看完。/m);
 
   const renderedSimple = markdown.render(markdownBody(first));
   assert.match(
@@ -213,6 +239,22 @@ test("supports Markdown-authored excerpt bodies inside the outer article shell",
   assert.match(renderedSeptemberBatch[3], /<blockquote class="excerpt-quotation" lang="en">[\s\S]*?<p>4397328654844826923/);
   assert.match(renderedSeptemberBatch[4], /<blockquote class="excerpt-quotation" lang="en">[\s\S]*?<p>The reasonable man/);
   assert.match(renderedSeptemberBatch[5], /<blockquote class="excerpt-quotation" lang="en">[\s\S]*?<p>I resigned from Anthropic today/);
+
+  const renderedCurrentBatch = [
+    markdown.render(markdownBody(twentyNinth)),
+    markdown.render(markdownBody(thirtieth)),
+    markdown.render(markdownBody(thirtyFirst)),
+    markdown.render(markdownBody(thirtySecond)),
+    markdown.render(markdownBody(thirtyThird)),
+    markdown.render(markdownBody(thirtyFourth))
+  ];
+  assert.match(renderedCurrentBatch[0], /<blockquote>[\s\S]*?<p>很多人不知道人生体验也是有利息的。<\/p>/);
+  assert.match(renderedCurrentBatch[1], /<blockquote>[\s\S]*?<p>当时地球还年轻，我们诞生在荒凉的大海里。/);
+  assert.match(renderedCurrentBatch[2], /<blockquote>[\s\S]*?<a href="https:\/\/www\.biblegateway\.com\/passage\//);
+  assert.match(renderedCurrentBatch[2], /<footer><cite><a [^>]+>《约伯记》<\/a><\/cite> 5:7<\/footer>/);
+  assert.match(renderedCurrentBatch[3], /<strong>蒸馏更好的模型<\/strong>/);
+  assert.match(renderedCurrentBatch[4], /奖学金科研竞赛绩点入党社团活动了<br>/);
+  assert.match(renderedCurrentBatch[5], /<blockquote>[\s\S]*?<p>海永远无法被看完。/);
 
   assert.match(
     styles,
