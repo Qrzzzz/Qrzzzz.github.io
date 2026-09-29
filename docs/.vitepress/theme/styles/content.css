@@ -1246,6 +1246,26 @@
   text-align: right;
 }
 
+.vp-doc .excerpt-entry--quotation > blockquote {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+}
+
+.vp-doc .excerpt-entry--quotation > blockquote p {
+  margin: 18px 0;
+  color: var(--site-text);
+  font-size: 17px;
+  letter-spacing: normal;
+  line-height: 1.82;
+}
+
+.vp-doc .excerpt-entry--quotation > blockquote footer {
+  text-align: right;
+}
+
 .excerpt-entry--parallel {
   max-width: none;
   border-inline-start: 0;
@@ -1706,6 +1726,7 @@
 
   .vp-doc .excerpt-entry > .excerpt-quotation p,
   .vp-doc .excerpt-entry--markdown > p,
+  .vp-doc .excerpt-entry--quotation > blockquote p,
   .vp-doc .excerpt-source p,
   .vp-doc .excerpt-rendering p {
     font-size: 16px;

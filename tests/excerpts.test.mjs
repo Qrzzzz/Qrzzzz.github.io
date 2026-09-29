@@ -29,6 +29,7 @@ const eighteenth = readFileSync("docs/excerpts/2026-08-24-03.md", "utf8");
 const nineteenth = readFileSync("docs/excerpts/2026-08-25-01.md", "utf8");
 const twentieth = readFileSync("docs/excerpts/2026-09-04-01.md", "utf8");
 const markdownBaseline = readFileSync("docs/excerpts/2026-09-28-02.md", "utf8");
+const markdownBoldBaseline = readFileSync("docs/excerpts/2026-09-28-03.md", "utf8");
 const markdown = await createMarkdownRenderer("docs");
 
 const migratedExcerpts = [
@@ -37,7 +38,13 @@ const migratedExcerpts = [
   ["2026-07-25-01.md", fifth],
   ["2026-07-27-01.md", sixth],
   ["2026-07-29-01.md", seventh],
-  ["2026-07-29-04.md", tenth]
+  ["2026-07-29-02.md", eighth],
+  ["2026-07-29-03.md", ninth],
+  ["2026-07-29-04.md", tenth],
+  ["2026-08-15-01.md", eleventh],
+  ["2026-08-16-01.md", twelfth],
+  ["2026-08-17-01.md", thirteenth],
+  ["2026-08-21-01.md", fourteenth]
 ];
 
 const markdownBody = (source) =>
@@ -92,13 +99,13 @@ test("supports Markdown-authored excerpt bodies inside the outer article shell",
   for (const [name, source] of migratedExcerpts) {
     assert.match(
       source,
-      /<article class="excerpt-entry excerpt-entry--markdown"[^>]*aria-label="Excerpt">/,
+      /<article class="excerpt-entry excerpt-entry--markdown(?: excerpt-entry--quotation)?"[^>]*aria-label="Excerpt">/,
       name + " should use the Markdown excerpt shell"
     );
     assert.doesNotMatch(
       source,
-      /<p>|<pre><code>|class="excerpt-quotation"/,
-      name + " should not keep handwritten body HTML"
+      /<p>|<pre><code>/,
+      name + " should not keep handwritten paragraph or code-block HTML"
     );
   }
 
@@ -111,6 +118,12 @@ test("supports Markdown-authored excerpt bodies inside the outer article shell",
   assert.match(markdownBaseline, /^```$/m);
   assert.match(markdownBaseline, /^> 我证明了雅可比猜想：$/m);
   assert.doesNotMatch(markdownBaseline, /<p>|<pre><code>|class="excerpt-quotation"/);
+  assert.match(markdownBoldBaseline, /\*\*Did that fix it\?\*\*/);
+
+  assert.match(eighth, /<blockquote class="excerpt-quotation" lang="en">/);
+  assert.match(ninth, /^> 我第一次为无神论者感到一些遗憾/m);
+  assert.match(twelfth, /^> 预计到2020年，国际上微电子技术水平将发展到14纳米/m);
+  assert.match(fourteenth, /^> 没有恶意的人被恶意砸中的时候/m);
 
   const renderedSimple = markdown.render(markdownBody(first));
   assert.match(
@@ -124,9 +137,28 @@ test("supports Markdown-authored excerpt bodies inside the outer article shell",
   assert.match(renderedBaseline, /<pre class="shiki[^"]*"[^>]*>[\s\S]*?F\(x,y,z\)=\(/);
   assert.match(renderedBaseline, /<blockquote>[\s\S]*?<p>我证明了雅可比猜想：<\/p>/);
 
+  const renderedBoldBaseline = markdown.render(markdownBody(markdownBoldBaseline));
+  assert.match(renderedBoldBaseline, /<strong>Did that fix it\?<\/strong>/);
+
+  const renderedLangExcerpt = markdown.render(markdownBody(eighth));
+  assert.match(
+    renderedLangExcerpt,
+    /<blockquote class="excerpt-quotation" lang="en">[\s\S]*?<p>I plan to live Anthropically\./
+  );
+
+  const renderedQuotedExcerpt = markdown.render(markdownBody(ninth));
+  assert.match(
+    renderedQuotedExcerpt,
+    /<blockquote>[\s\S]*?<p>我第一次为无神论者感到一些遗憾[^<]*<\/p>[\s\S]*?<footer>/
+  );
+
   assert.match(
     styles,
     /\.vp-doc \.excerpt-entry--markdown > p\s*\{[^}]*margin:\s*18px 0;[^}]*font-size:\s*17px;[^}]*line-height:\s*1\.82;[^}]*\}/
+  );
+  assert.match(
+    styles,
+    /\.vp-doc \.excerpt-entry--quotation > blockquote\s*\{[^}]*border:\s*0;[^}]*margin:\s*0;[^}]*padding:\s*0;[^}]*\}/
   );
 });
 
