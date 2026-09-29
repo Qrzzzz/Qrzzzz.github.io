@@ -42,6 +42,11 @@ const thirtyFirst = readFileSync("docs/excerpts/2026-09-09-04.md", "utf8");
 const thirtySecond = readFileSync("docs/excerpts/2026-09-10-01.md", "utf8");
 const thirtyThird = readFileSync("docs/excerpts/2026-09-19-01.md", "utf8");
 const thirtyFourth = readFileSync("docs/excerpts/2026-09-21-01.md", "utf8");
+const thirtyFifth = readFileSync("docs/excerpts/2026-09-24-01.md", "utf8");
+const thirtySixth = readFileSync("docs/excerpts/2026-09-26-01.md", "utf8");
+const thirtySeventh = readFileSync("docs/excerpts/2026-09-26-02.md", "utf8");
+const thirtyEighth = readFileSync("docs/excerpts/2026-09-28-01.md", "utf8");
+const thirtyNinth = readFileSync("docs/excerpts/2026-09-28-04.md", "utf8");
 const markdownBaseline = readFileSync("docs/excerpts/2026-09-28-02.md", "utf8");
 const markdownBoldBaseline = readFileSync("docs/excerpts/2026-09-28-03.md", "utf8");
 const markdown = await createMarkdownRenderer("docs");
@@ -76,7 +81,12 @@ const migratedExcerpts = [
   ["2026-09-09-04.md", thirtyFirst],
   ["2026-09-10-01.md", thirtySecond],
   ["2026-09-19-01.md", thirtyThird],
-  ["2026-09-21-01.md", thirtyFourth]
+  ["2026-09-21-01.md", thirtyFourth],
+  ["2026-09-24-01.md", thirtyFifth],
+  ["2026-09-26-01.md", thirtySixth],
+  ["2026-09-26-02.md", thirtySeventh],
+  ["2026-09-28-01.md", thirtyEighth],
+  ["2026-09-28-04.md", thirtyNinth]
 ];
 
 const markdownBody = (source) =>
@@ -116,7 +126,12 @@ const excerptPages = [
   thirtyFirst,
   thirtySecond,
   thirtyThird,
-  thirtyFourth
+  thirtyFourth,
+  thirtyFifth,
+  thirtySixth,
+  thirtySeventh,
+  thirtyEighth,
+  thirtyNinth
 ];
 
 const excerptSources = readdirSync("docs/excerpts", { withFileTypes: true })
@@ -191,6 +206,12 @@ test("supports Markdown-authored excerpt bodies inside the outer article shell",
   assert.doesNotMatch(thirtySecond, /<strong>/);
   assert.match(thirtyThird, /^> 我们能不能不要再聊奖学金科研竞赛绩点入党社团活动了\\$/m);
   assert.match(thirtyFourth, /^> 海永远无法被看完。/m);
+  assert.match(thirtyFifth, /^> 桂花的香，是忽然来的。/m);
+  assert.match(thirtySixth, /^> 我大抵是害怕了。$/m);
+  assert.match(thirtySeventh, /<blockquote class="excerpt-quotation" lang="en">/);
+  assert.match(thirtySeventh, /^Do you hear the people sing\?\\$/m);
+  assert.match(thirtyEighth, /<blockquote class="excerpt-quotation" lang="en">/);
+  assert.match(thirtyNinth, /^> 2020 年，光大证券保荐业务部门负责人/m);
 
   const renderedSimple = markdown.render(markdownBody(first));
   assert.match(
@@ -255,6 +276,21 @@ test("supports Markdown-authored excerpt bodies inside the outer article shell",
   assert.match(renderedCurrentBatch[3], /<strong>蒸馏更好的模型<\/strong>/);
   assert.match(renderedCurrentBatch[4], /奖学金科研竞赛绩点入党社团活动了<br>/);
   assert.match(renderedCurrentBatch[5], /<blockquote>[\s\S]*?<p>海永远无法被看完。/);
+
+  const renderedLatestBatch = [
+    markdown.render(markdownBody(thirtyFifth)),
+    markdown.render(markdownBody(thirtySixth)),
+    markdown.render(markdownBody(thirtySeventh)),
+    markdown.render(markdownBody(thirtyEighth)),
+    markdown.render(markdownBody(thirtyNinth))
+  ];
+  assert.match(renderedLatestBatch[0], /<blockquote>[\s\S]*?<p>桂花的香，是忽然来的。/);
+  assert.match(renderedLatestBatch[1], /<blockquote>[\s\S]*?<p>我大抵是害怕了。<\/p>[\s\S]*?<p>照学校的规规条条把头发剪了/);
+  assert.match(renderedLatestBatch[2], /<blockquote class="excerpt-quotation" lang="en">[\s\S]*?<p>Do you hear the people sing\?<br>\s*Singing the song of angry men<br>/);
+  assert.match(renderedLatestBatch[2], /<footer>Herbert Kretzmer（英文歌词），Claude-Michel Schönberg（作曲）；音乐剧 <cite>Les Misérables<\/cite>/);
+  assert.match(renderedLatestBatch[3], /<blockquote class="excerpt-quotation" lang="en">[\s\S]*?<p>Hating pop music doesn’t make you deep\.<\/p>/);
+  assert.match(renderedLatestBatch[4], /<blockquote>[\s\S]*?<p>2020 年，光大证券保荐业务部门负责人/);
+  assert.match(renderedLatestBatch[4], /<footer>tombkeeper，<cite><a href="https:\/\/www\.sina\.cn\/news\/detail\/5347753652653895\.html">新浪新闻<\/a><\/cite>/);
 
   assert.match(
     styles,
