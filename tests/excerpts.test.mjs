@@ -49,7 +49,7 @@ const thirtyEighth = readFileSync("docs/excerpts/2026-09-28-01.md", "utf8");
 const thirtyNinth = readFileSync("docs/excerpts/2026-09-28-04.md", "utf8");
 const markdownBaseline = readFileSync("docs/excerpts/2026-09-28-02.md", "utf8");
 const markdownBoldBaseline = readFileSync("docs/excerpts/2026-09-28-03.md", "utf8");
-const markdown = await createMarkdownRenderer("docs");
+const markdown = await createMarkdownRenderer("docs", { math: true });
 
 const specialMigratedExcerpts = [
   ["2026-07-17-03.md", "it"],
@@ -189,8 +189,8 @@ test("supports Markdown-authored excerpt bodies inside the outer article shell",
     /<article class="excerpt-entry excerpt-entry--markdown"[^>]*aria-label="Excerpt">/
   );
   assert.match(markdownBaseline, /^# 跟 AI 说，你证明了一个数学猜想$/m);
-  assert.match(markdownBaseline, /`-2`/);
-  assert.match(markdownBaseline, /^```$/m);
+  assert.match(markdownBaseline, /\$-2\$/);
+  assert.match(markdownBaseline, /^\$\$$/m);
   assert.match(markdownBaseline, /^> 我证明了雅可比猜想：$/m);
   assert.doesNotMatch(markdownBaseline, /<p>|<pre><code>|class="excerpt-quotation"/);
   assert.match(markdownBoldBaseline, /\*\*Did that fix it\?\*\*/);
@@ -235,8 +235,8 @@ test("supports Markdown-authored excerpt bodies inside the outer article shell",
 
   const renderedBaseline = markdown.render(markdownBody(markdownBaseline));
   assert.match(renderedBaseline, /<h1[^>]*>跟 AI 说，你证明了一个数学猜想\s*<a class="header-anchor"/);
-  assert.match(renderedBaseline, /<code>-2<\/code>/);
-  assert.match(renderedBaseline, /<pre class="shiki[^"]*"[^>]*>[\s\S]*?F\(x,y,z\)=\(/);
+  assert.equal((renderedBaseline.match(/<mjx-container\b/g) ?? []).length, 8);
+  assert.match(renderedBaseline, /data-mml-node="mtable"/);
   assert.match(renderedBaseline, /<blockquote>[\s\S]*?<p>我证明了雅可比猜想：<\/p>/);
 
   const renderedBoldBaseline = markdown.render(markdownBody(markdownBoldBaseline));

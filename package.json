@@ -35,6 +35,7 @@
     "@types/node": "^24.0.0",
     "@types/qrcode": "^1.5.6",
     "linkedom": "^0.18.13",
+    "markdown-it-mathjax3": "^4.3.2",
     "minisearch": "^7.2.0",
     "typescript": "~5.9.3",
     "vitepress": "1.6.4",
@@ -43,6 +44,9 @@
     "yaml": "^2.9.0"
   },
   "overrides": {
+    "speech-rule-engine": {
+      "@xmldom/xmldom": "^0.9.12"
+    },
     "vite": "6.4.3",
     "postcss": "8.5.28",
     "nanoid": "3.3.18"

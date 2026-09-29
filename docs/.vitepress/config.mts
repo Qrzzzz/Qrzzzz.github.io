@@ -145,6 +145,7 @@ export default defineConfig({
   },
 
   markdown: {
+    math: true,
     lineNumbers: false,
     codeCopyButtonTitle: "Copy code",
     config(md) { inlineEmphasisPlugin(md); mermaidPlugin(md); }
