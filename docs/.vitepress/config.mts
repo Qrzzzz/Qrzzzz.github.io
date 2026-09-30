@@ -215,11 +215,6 @@ export default defineConfig({
               text: "Release notes",
               link: "/projects/lyrics-card-generator/docs/releases/"
             },
-            {
-              text: "v5.1.0 P0 implementation plan",
-              link:
-                "/projects/lyrics-card-generator/docs/v5.1.0-p0-implementation-plan/"
-            }
           ]
         }
       ]

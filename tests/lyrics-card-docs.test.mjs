@@ -175,6 +175,25 @@ test("imports stable routes, links, assets and metadata", () => {
     const maintenancePlan = readFileSync(path.join(output, "maintenance-plan/index.md"), "utf8");
     assert.match(maintenancePlan, /^lang: "en"$/m);
     assert.match(maintenancePlan, /This page is synchronized from upstream/);
+
+    for (const relative of [
+      "testing/background-composition-v5.10.0/index.md",
+      "v5.1.0-p0-implementation-plan/index.md"
+    ]) {
+      const compatibility = readFileSync(path.join(output, ...relative.split("/")), "utf8");
+      assert.match(compatibility, /This URL is retained for compatibility\./);
+      assert.ok(
+        compatibility.includes(
+          'href: "https://qrzzzz.github.io/projects/lyrics-card-generator/docs/"'
+        )
+      );
+      assert.ok(
+        compatibility.includes(
+          "](/projects/lyrics-card-generator/docs/)"
+        )
+      );
+    }
+
     const examples = readFileSync(path.join(output, "examples/index.md"), "utf8");
     assert.match(examples, /^lang: "zh-CN"$/m);
     assert.match(examples, /This page is synchronized from upstream/);

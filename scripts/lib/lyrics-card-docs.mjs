@@ -36,6 +36,18 @@ const REQUIRED_ROUTES = [
   `${DOCS_ROUTE}examples/`,
   `${DOCS_ROUTE}releases/`
 ];
+const COMPATIBILITY_ROUTES = [
+  {
+    route: `${DOCS_ROUTE}testing/background-composition-v5.10.0/`,
+    title: "Background composition acceptance contract (v5.10.0)",
+    targetRoute: `${DOCS_ROUTE}testing/background-composition/`
+  },
+  {
+    route: `${DOCS_ROUTE}v5.1.0-p0-implementation-plan/`,
+    title: "v5.1.0 P0 implementation plan",
+    targetRoute: `${DOCS_ROUTE}development.en/`
+  }
+];
 const LANGUAGE_NAMES = {
   en: "English",
   es: "Español",
@@ -810,6 +822,31 @@ function projectBreadcrumb() {
   return `<nav class="docs-breadcrumb" aria-label="Breadcrumb" lang="en"><a href="/" lang="en">Home</a><span aria-hidden="true">/</span><a href="/projects/" lang="en">Projects</a><span aria-hidden="true">/</span><span aria-current="page" lang="en">lyrics-card-generator</span></nav>`;
 }
 
+function compatibilityPage({ title, targetRoute }) {
+  const canonical = `https://qrzzzz.github.io${targetRoute}`;
+  return `---
+title: ${escapeYaml(title)}
+description: ${escapeYaml(`${title}: compatibility page retained after the upstream document was retired.`)}
+lang: en
+editLink: false
+lastUpdated: false
+contentFormat: ${escapeYaml(CONTENT_FORMAT)}
+head:
+  - - link
+    - rel: canonical
+      href: ${escapeYaml(canonical)}
+---
+
+${breadcrumb("compatibility", title, "en")}
+
+# ${title}
+
+This upstream document is no longer published at this path. This URL is retained for compatibility.
+
+Continue at [the current documentation](${targetRoute}).
+`;
+}
+
 function frontmatter({ title, description, sourcePath, commitSha, upstreamFrontmatter, lang }) {
   const retained = upstreamFrontmatter
     .split(/\r?\n/)
@@ -1055,6 +1092,31 @@ function importLyricsCardDocsInto({
     throw new Error(`文档导入失败：\n- ${errors.join("\n- ")}`);
   }
 
+  const compatibilityRoutes = [];
+  for (const entry of COMPATIBILITY_ROUTES) {
+    if (routeKeys.has(entry.route.toLowerCase())) continue;
+
+    const targetRoute = routeKeys.has(entry.targetRoute.toLowerCase())
+      ? entry.targetRoute
+      : DOCS_ROUTE;
+    const outputPath = routeOutput(entry.route);
+    const destination = path.join(absoluteOutput, ...outputPath.split("/"));
+    mkdirSync(path.dirname(destination), { recursive: true });
+    writeFileSync(
+      destination,
+      compatibilityPage({ title: entry.title, targetRoute }),
+      "utf8"
+    );
+    routeKeys.set(entry.route.toLowerCase(), "<compatibility>");
+    compatibilityRoutes.push({
+      source: null,
+      route: entry.route,
+      output: outputPath,
+      title: entry.title,
+      language: "en"
+    });
+  }
+
   const releaseCount = routes.filter((entry) => entry.source.startsWith("docs/releases/") && !entry.source.endsWith("README.md")).length;
   const supplementalDocs = routes
     .filter((entry) => ![
@@ -1092,7 +1154,8 @@ function importLyricsCardDocsInto({
     })),
     routes: [
       { source: null, route: DOCS_ROUTE, output: "index.md" },
-      ...routes.sort((a, b) => a.route.localeCompare(b.route, "en"))
+      ...[...routes, ...compatibilityRoutes]
+        .sort((a, b) => a.route.localeCompare(b.route, "en"))
     ]
   };
   writeFileSync(path.join(absoluteOutput, MANIFEST_NAME), `${JSON.stringify(manifest, null, 2)}\n`, "utf8");
