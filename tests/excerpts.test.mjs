@@ -234,7 +234,7 @@ test("supports Markdown-authored excerpt bodies inside the outer article shell",
   assert.match(thirtyNinth, /^> 2020 年，光大证券保荐业务部门负责人/m);
   assert.match(fortieth, /^::: info 校订说明$/m);
   assert.match(fortieth, /^> 染上大荤了……/m);
-  assert.match(fortyFirst, /^> 从中国访问回来的金正日将军$/m);
+  assert.match(fortyFirst, /^# 从中国访问回来的金正日将军$/m);
   assert.match(fortyFirst, /战争总是要有牺牲的。为民族独立事业牺牲的人是伟大的。/);
   assert.doesNotMatch(fortyFirst, /<footer|<cite|<a href=/);
 
@@ -325,8 +325,10 @@ test("supports Markdown-authored excerpt bodies inside the outer article shell",
   assert.match(renderedLatestBatch[5], /潮水（焯水）/);
   assert.match(renderedLatestBatch[5], /<footer>她不想死也想去巴黎，<cite><a href="https:\/\/weibo\.com\/7709681873\/RjuN2qDLP">微博<\/a><\/cite>，2026 年 9 月 24 日 00:17<\/footer>/);
   assert.doesNotMatch(fortieth, /utm_source=/);
-  assert.match(renderedLatestBatch[6], /<blockquote>[\s\S]*?<p>从中国访问回来的金正日将军<\/p>/);
-  assert.doesNotMatch(renderedLatestBatch[6], /<footer>|<cite>|<a\s/);
+  assert.match(renderedLatestBatch[6], /<h1[^>]*>从中国访问回来的金正日将军\s*<a class="header-anchor"/);
+  assert.match(renderedLatestBatch[6], /<blockquote>[\s\S]*?<p>从中国访问回来金正日爷爷全然不顾身体的疲惫/);
+  assert.doesNotMatch(renderedLatestBatch[6], /<footer>|<cite>/);
+  assert.doesNotMatch(renderedLatestBatch[6], /<a\s(?!class="header-anchor")/);
 
   assert.match(
     styles,
