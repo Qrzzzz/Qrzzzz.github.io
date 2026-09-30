@@ -48,6 +48,7 @@ const thirtySeventh = readFileSync("docs/excerpts/2026-09-26-02.md", "utf8");
 const thirtyEighth = readFileSync("docs/excerpts/2026-09-28-01.md", "utf8");
 const thirtyNinth = readFileSync("docs/excerpts/2026-09-28-04.md", "utf8");
 const fortieth = readFileSync("docs/excerpts/2026-09-30-01.md", "utf8");
+const fortyFirst = readFileSync("docs/excerpts/2026-09-30-02.md", "utf8");
 const markdownBaseline = readFileSync("docs/excerpts/2026-09-28-02.md", "utf8");
 const markdownBoldBaseline = readFileSync("docs/excerpts/2026-09-28-03.md", "utf8");
 const markdown = await createMarkdownRenderer("docs", { math: true });
@@ -102,7 +103,8 @@ const migratedExcerpts = [
   ["2026-09-26-02.md", thirtySeventh],
   ["2026-09-28-01.md", thirtyEighth],
   ["2026-09-28-04.md", thirtyNinth],
-  ["2026-09-30-01.md", fortieth]
+  ["2026-09-30-01.md", fortieth],
+  ["2026-09-30-02.md", fortyFirst]
 ];
 
 const markdownBody = (source) =>
@@ -148,7 +150,8 @@ const excerptPages = [
   thirtySeventh,
   thirtyEighth,
   thirtyNinth,
-  fortieth
+  fortieth,
+  fortyFirst
 ];
 
 const excerptSources = readdirSync("docs/excerpts", { withFileTypes: true })
@@ -231,6 +234,9 @@ test("supports Markdown-authored excerpt bodies inside the outer article shell",
   assert.match(thirtyNinth, /^> 2020 年，光大证券保荐业务部门负责人/m);
   assert.match(fortieth, /^::: info 校订说明$/m);
   assert.match(fortieth, /^> 染上大荤了……/m);
+  assert.match(fortyFirst, /^> 从中国访问回来的金正日将军$/m);
+  assert.match(fortyFirst, /战争总是要有牺牲的。为民族独立事业牺牲的人是伟大的。/);
+  assert.doesNotMatch(fortyFirst, /<footer|<cite|<a href=/);
 
   const renderedSimple = markdown.render(markdownBody(first));
   assert.match(
@@ -302,7 +308,8 @@ test("supports Markdown-authored excerpt bodies inside the outer article shell",
     markdown.render(markdownBody(thirtySeventh)),
     markdown.render(markdownBody(thirtyEighth)),
     markdown.render(markdownBody(thirtyNinth)),
-    markdown.render(markdownBody(fortieth))
+    markdown.render(markdownBody(fortieth)),
+    markdown.render(markdownBody(fortyFirst))
   ];
   assert.match(renderedLatestBatch[0], /<blockquote>[\s\S]*?<p>桂花的香，是忽然来的。/);
   assert.match(renderedLatestBatch[1], /<blockquote>[\s\S]*?<p>我大抵是害怕了。<\/p>[\s\S]*?<p>照学校的规规条条把头发剪了/);
@@ -318,6 +325,8 @@ test("supports Markdown-authored excerpt bodies inside the outer article shell",
   assert.match(renderedLatestBatch[5], /潮水（焯水）/);
   assert.match(renderedLatestBatch[5], /<footer>她不想死也想去巴黎，<cite><a href="https:\/\/weibo\.com\/7709681873\/RjuN2qDLP">微博<\/a><\/cite>，2026 年 9 月 24 日 00:17<\/footer>/);
   assert.doesNotMatch(fortieth, /utm_source=/);
+  assert.match(renderedLatestBatch[6], /<blockquote>[\s\S]*?<p>从中国访问回来的金正日将军<\/p>/);
+  assert.doesNotMatch(renderedLatestBatch[6], /<footer>|<cite>|<a\s/);
 
   assert.match(
     styles,
