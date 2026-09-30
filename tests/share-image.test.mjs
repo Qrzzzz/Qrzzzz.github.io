@@ -101,6 +101,23 @@ for (const type of ["info", "tip", "warning", "danger"]) {
   });
 }
 
+test("preserves only the semantic emphasis span used by the marker treatment", () => {
+  const result = extractLongformContent(source('<p><strong><span class="text-emphasis extra">重点</span></strong><span class="unknown">普通</span></p>'));
+  const output = source(result.html);
+  const marker = output.querySelector("strong > span.text-emphasis");
+  assert.ok(marker);
+  assert.equal(marker.className, "text-emphasis");
+  assert.equal(marker.textContent, "重点");
+  assert.equal(output.querySelector("span.unknown"), null);
+  assert.equal(output.textContent, "重点普通");
+});
+
+test("converts excerpt strong marker semantics when no text-emphasis span exists", () => {
+  const result = extractLongformContent(source('<article class="excerpt-entry"><p><strong>摘录重点</strong></p></article>'), "", "excerpt");
+  const output = source(result.html);
+  assert.equal(output.querySelector("strong").className, "text-emphasis");
+});
+
 test("rejects unknown and near-match classes even beside semantic classes", () => {
   const result = extractLongformContent(source('<div class="custom-block info info-extra custom-block-title-extra unknown"><p class="custom-block-title highlighted">Title</p><pre class="shiki tip-extra"><code class="language-js"><span class="line info">code</span></code></pre><button class="tip">control</button><nav class="warning">navigation</nav></div>'));
   const output = source(result.html);
@@ -109,7 +126,7 @@ test("rejects unknown and near-match classes even beside semantic classes", () =
   assert.equal(output.querySelector("pre").hasAttribute("class"), false);
   assert.equal(output.querySelector("code").hasAttribute("class"), false);
   assert.equal(output.querySelector("pre").textContent, "code");
-  assert.doesNotMatch(result.html, /extra|unknown|highlighted|shiki|language-js|line|control|navigation|span/);
+  assert.doesNotMatch(result.html, /extra|unknown|highlighted|shiki|language-js|line|control|navigation|<span/);
 });
 
 test("measures natural longform height instead of fixing a 720px canvas", () => {
@@ -144,11 +161,12 @@ test("keeps one direct accessible export on article and excerpt pages", () => {
 
 test("captures both site palettes independently of subsequent theme changes", () => {
   for (const canvas of ["#eef2f3", "#151d37"]) {
-    const values = { "--site-canvas": canvas, "--site-text": "#30332f", "--site-link": "#006778", "--site-content-muted": "#566580", "--site-content-surface": "#f6f8fa", "--vp-c-success-1": "#18794e", "--vp-c-warning-1": "#915930", "--vp-c-danger-1": "#b8272c" };
+    const values = { "--site-canvas": canvas, "--site-text": "#30332f", "--site-link": "#006778", "--site-content-muted": "#566580", "--site-content-surface": "#f6f8fa", "--site-marker-fill": "rgba(36, 62, 205, 0.14)", "--vp-c-success-1": "#18794e", "--vp-c-warning-1": "#915930", "--vp-c-danger-1": "#b8272c" };
     const palette = snapshotShareImagePalette({ getPropertyValue: key => values[key] || "" });
     values["--site-canvas"] = "changed";
     assert.equal(palette["--share-canvas"], canvas);
     assert.equal(palette["--share-link"], "#006778");
+    assert.equal(palette["--share-marker-fill"], "rgba(36, 62, 205, 0.14)");
     for (const name of ["success", "warning", "danger"]) {
       const original = values[`--vp-c-${name}-1`];
       values[`--vp-c-${name}-1`] = "changed";

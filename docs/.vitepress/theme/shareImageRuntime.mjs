@@ -3,7 +3,7 @@ export const SHARE_IMAGE_FORMAT = Object.freeze({ id: "longform", width: 540, sc
 // Freeze the active palette at click time so a theme toggle cannot mix colors.
 export function snapshotShareImagePalette(style) {
   return Object.fromEntries([
-    ...["canvas", "surface", "surface-subtle", "text", "text-muted", "line", "line-strong", "accent", "link", "content-accent", "content-muted", "content-surface", "code-bg", "code-text"]
+    ...["canvas", "surface", "surface-subtle", "text", "text-muted", "line", "line-strong", "accent", "link", "content-accent", "content-muted", "content-surface", "code-bg", "code-text", "marker-fill"]
       .map(name => [`--share-${name}`, style.getPropertyValue(`--site-${name}`).trim()]),
     ...["success", "warning", "danger"]
       .map(name => [`--share-${name}`, style.getPropertyValue(`--vp-c-${name}-1`).trim()])
@@ -22,7 +22,7 @@ export async function withExportTimeout(task, milliseconds = 15000) {
 }
 
 const contentTags = new Set("h1 h2 h3 h4 h5 h6 p blockquote ul ol li hr pre code strong em del s a br img figure figcaption cite table thead tbody tfoot tr th td dl dt dd sup sub details summary div".split(" "));
-const contentClasses = new Set(["custom-block", "custom-block-title", "info", "tip", "warning", "danger"]);
+const contentClasses = new Set(["custom-block", "custom-block-title", "info", "tip", "warning", "danger", "text-emphasis"]);
 const excluded = 'script, style, template, noscript, button, input, select, textarea, nav, .header-anchor, .line-numbers-wrapper, .lang, .share-image-entry, [data-share-image-exclude]';
 
 // VitePress has already parsed Markdown. Rebuild semantic content without site
@@ -48,10 +48,12 @@ export function extractLongformContent(source, fallbackTitle = "Untitled article
     }
     if (node.nodeType !== 1 || node.matches(excluded) || node.matches(".excerpt-entry__heading")) return;
     const tag = node.tagName.toLowerCase();
-    const target = contentTags.has(tag) ? doc.createElement(tag) : parent;
+    const isEmphasisSpan = tag === "span" && node.classList.contains("text-emphasis");
+    const target = contentTags.has(tag) || isEmphasisSpan ? doc.createElement(tag) : parent;
     if (target !== parent) {
       const classes = Array.from(node.classList).filter(name => contentClasses.has(name));
-      if (classes.length) target.setAttribute("class", classes.join(" "));
+      if (tag === "strong" && node.closest?.(".excerpt-entry") && !node.querySelector?.(".text-emphasis")) classes.push("text-emphasis");
+      if (classes.length) target.setAttribute("class", [...new Set(classes)].join(" "));
       for (const attr of tag === "ol" ? ["start"] : tag === "li" ? ["value"] : []) {
         if (/^-?\d+$/.test(node.getAttribute(attr) ?? "")) target.setAttribute(attr, node.getAttribute(attr));
       }

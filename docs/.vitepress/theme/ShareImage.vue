@@ -273,6 +273,24 @@ function downloadImage() {
 .share-image-longform__body :deep(h3) { font-size: 20px; }
 .share-image-longform__body :deep(:is(h1,h2,h3,h4,h5,h6)) { margin: 32px 0 14px; line-height: 1.5; font-weight: 700; }
 .share-image-longform__body :deep(p) { margin: 0 0 18px; }
+.share-image-longform__body :deep(strong) { color: var(--share-text); font-weight: 750; }
+.share-image-longform__body :deep(.text-emphasis) {
+  display: inline;
+  padding-inline: 0.16em;
+  background:
+    linear-gradient(
+      100deg,
+      transparent 0.16em,
+      var(--share-marker-fill) 0.16em,
+      var(--share-marker-fill) calc(100% - 0.16em),
+      transparent calc(100% - 0.16em)
+    );
+  background-size: 100% 50%;
+  background-position: center bottom;
+  background-repeat: no-repeat;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
 .share-image-longform__body :deep(.custom-block) {
   --share-block-accent: var(--share-content-muted);
   --share-block-tint: 6%;

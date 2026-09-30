@@ -1,8 +1,9 @@
 import { test, expect } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 import { createMarkdownRenderer } from 'vitepress';
+import { inlineEmphasisPlugin } from '../../docs/.vitepress/markdown/inline-emphasis.mjs';
 
-const markdown = await createMarkdownRenderer(process.cwd());
+const markdown = await createMarkdownRenderer(process.cwd(), { config: inlineEmphasisPlugin });
 const fixture = markdown.render(readFileSync('tests/fixtures/share-image-longform.md', 'utf8'));
 
 for (const theme of ['light', 'dark'] as const) {
@@ -43,9 +44,33 @@ for (const theme of ['light', 'dark'] as const) {
         ctx.fillRect(0, 0, 1, 1);
         return Array.from(ctx.getImageData(0, 0, 1, 1).data);
       };
+      const marker = el.querySelector<HTMLElement>('.text-emphasis')!;
+      const markerStyle = getComputedStyle(marker);
+      const markerRect = marker.getBoundingClientRect();
+      const composite = (background: string, foreground: string) => {
+        const canvas = document.createElement('canvas');
+        canvas.width = canvas.height = 1;
+        const ctx = canvas.getContext('2d')!;
+        ctx.fillStyle = background;
+        ctx.fillRect(0, 0, 1, 1);
+        ctx.fillStyle = foreground;
+        ctx.fillRect(0, 0, 1, 1);
+        return Array.from(ctx.getImageData(0, 0, 1, 1).data);
+      };
       return {
         width: root.width,
         height: Math.ceil(Math.max(el.scrollHeight, root.height)),
+        marker: {
+          backgroundImage: markerStyle.backgroundImage,
+          backgroundSize: markerStyle.backgroundSize,
+          expectedPixel: composite(getComputedStyle(el).backgroundColor, markerStyle.getPropertyValue('--share-marker-fill').trim()),
+          rect: [
+            Math.floor((markerRect.left - root.left) * 2),
+            Math.floor((markerRect.top - root.top) * 2),
+            Math.ceil(markerRect.width * 2),
+            Math.ceil(markerRect.height * 2)
+          ]
+        },
         blocks: Array.from(el.querySelectorAll('.custom-block')).map(block => {
           const style = getComputedStyle(block);
           const rect = block.getBoundingClientRect();
@@ -78,6 +103,8 @@ for (const theme of ['light', 'dark'] as const) {
       };
     });
     const before = await inspect();
+    expect(before.marker.backgroundImage).toContain('linear-gradient');
+    expect(before.marker.backgroundSize).toBe('100% 50%');
     for (const block of before.blocks) {
       expect(block.borderWidth).toBe('3px');
       expect(block.borderStyle).toBe('solid');
@@ -102,7 +129,7 @@ for (const theme of ['light', 'dark'] as const) {
     expect(png.readUInt32BE(16)).toBe(1080);
     expect(png.readUInt32BE(20)).toBe(before.height * 2);
     expect(before.height).toBeGreaterThan(720);
-    const pixels = await page.evaluate(async ({ base64, blocks }) => {
+    const pixels = await page.evaluate(async ({ base64, blocks, marker }) => {
       const image = new Image();
       image.src = `data:image/png;base64,${base64}`;
       await image.decode();
@@ -111,18 +138,29 @@ for (const theme of ['light', 'dark'] as const) {
       canvas.height = image.height;
       const ctx = canvas.getContext('2d')!;
       ctx.drawImage(image, 0, 0);
-      return blocks.map(block => ({
+      const blockPixels = blocks.map(block => ({
         border: Array.from(ctx.getImageData(block.borderPoint[0], block.borderPoint[1], 1, 1).data),
         background: Array.from(ctx.getImageData(block.backgroundPoint[0], block.backgroundPoint[1], 1, 1).data)
       }));
-    }, { base64: png.toString('base64'), blocks: before.blocks });
-    pixels.forEach((pixel, index) => {
+      const [x, y, width, height] = marker.rect;
+      let markerMatches = 0;
+      const startY = y + Math.floor(height * 0.55);
+      for (let py = startY; py < y + height; py++) {
+        for (let px = x; px < x + width; px++) {
+          const actual = Array.from(ctx.getImageData(px, py, 1, 1).data);
+          if (actual.every((value, channel) => Math.abs(value - marker.expectedPixel[channel]) <= 3)) markerMatches++;
+        }
+      }
+      return { blockPixels, markerMatches };
+    }, { base64: png.toString('base64'), blocks: before.blocks, marker: before.marker });
+    pixels.blockPixels.forEach((pixel, index) => {
       for (const property of ['border', 'background'] as const) {
         pixel[property].forEach((value, channel) => {
           expect(Math.abs(value - before.blocks[index][property][channel])).toBeLessThanOrEqual(2);
         });
       }
     });
+    expect(pixels.markerMatches).toBeGreaterThan(5);
     await download.saveAs(`output/playwright/share-blocks-${theme}.png`);
   });
 }
