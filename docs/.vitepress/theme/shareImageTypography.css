@@ -1,0 +1,68 @@
+.share-image-longform__body :deep(h1) { font-size: 28px; }
+.share-image-longform__body :deep(h2) { font-size: 24px; }
+.share-image-longform__body :deep(h3) { font-size: 20px; }
+.share-image-longform__body :deep(:is(h1,h2,h3,h4,h5,h6)) { margin: 32px 0 14px; line-height: 1.5; font-weight: 700; }
+.share-image-longform__body :deep(p) { margin: 0 0 18px; }
+.share-image-longform__body :deep(strong) { color: var(--share-text); font-weight: 750; }
+.share-image-longform__body :deep(.text-emphasis) {
+  display: inline;
+  padding-inline: 0.16em;
+  background:
+    linear-gradient(
+      100deg,
+      transparent 0.16em,
+      var(--share-marker-fill) 0.16em,
+      var(--share-marker-fill) calc(100% - 0.16em),
+      transparent calc(100% - 0.16em)
+    );
+  background-size: 100% 50%;
+  background-position: center bottom;
+  background-repeat: no-repeat;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+.share-image-longform__body :deep(.custom-block) {
+  --share-block-accent: var(--share-content-muted);
+  --share-block-tint: 6%;
+  margin: 26px 0;
+  padding: 16px 18px;
+  border: 1px solid var(--share-line);
+  border-inline-start: 3px solid var(--share-block-accent);
+  border-radius: 5px;
+  background: color-mix(in srgb, var(--share-block-accent) var(--share-block-tint), var(--share-content-surface));
+  color: var(--share-text);
+}
+.share-image-longform__body :deep(.custom-block.tip) { --share-block-accent: var(--share-success); --share-block-tint: 7%; }
+.share-image-longform__body :deep(.custom-block.warning) { --share-block-accent: var(--share-warning); --share-block-tint: 7%; }
+.share-image-longform__body :deep(.custom-block.danger) { --share-block-accent: var(--share-danger); --share-block-tint: 7%; }
+.share-image-longform__body :deep(.custom-block p) { margin: 8px 0; line-height: 1.72; }
+.share-image-longform__body :deep(.custom-block .custom-block-title) {
+  margin: 0 0 7px;
+  color: var(--share-block-accent);
+  font-size: 14px;
+  font-weight: 720;
+  letter-spacing: .01em;
+}
+.share-image-longform__body :deep(.custom-block > :last-child) { margin-bottom: 0; }
+.share-image-longform__body :deep(.custom-block code) { color: var(--share-text); }
+.share-image-longform__body :deep(.custom-block a) { color: var(--share-link); }
+.share-image-longform__body :deep(blockquote) { margin: 22px 0; border-left: 3px solid var(--share-content-accent); padding: 4px 0 4px 18px; color: var(--share-content-muted); }
+.share-image-longform__body :deep(blockquote > :last-child) { margin-bottom: 0; }
+.share-image-longform__body :deep(:is(ul,ol)) { margin: 16px 0 22px; padding-left: 26px; }
+.share-image-longform__body :deep(ul) { list-style: disc; }
+.share-image-longform__body :deep(ol) { list-style: decimal; }
+.share-image-longform__body :deep(li) { margin: 8px 0; }
+.share-image-longform__body :deep(li > :is(ul,ol)) { margin: 6px 0; }
+.share-image-longform__body :deep(hr) { margin: 28px 0; border: 0; border-top: 1px solid var(--share-line); }
+.share-image-longform__body :deep(code) { font-family: var(--share-font-mono); font-size: .85em; background: var(--share-surface-subtle); border-radius: 3px; padding: 2px 4px; }
+.share-image-longform__body :deep(pre) { margin: 22px 0; padding: 16px; background: var(--share-surface-subtle); border-radius: 6px; white-space: pre-wrap; overflow-wrap: anywhere; tab-size: 2; line-height: 1.65; }
+.share-image-longform__body :deep(pre code) { padding: 0; background: transparent; white-space: inherit; }
+.share-image-longform__body :deep(a) { color: var(--share-link); text-decoration: underline; }
+.share-image-longform__body :deep(img) { display: block; max-width: 100%; height: auto; margin: 18px auto; }
+.share-image-longform__body :deep(figure) { margin: 22px 0; }
+.share-image-longform__body :deep(:is(figcaption,cite)) { font-size: 14px; color: var(--share-text-muted); }
+.share-image-longform__body :deep(table) { width: 100%; table-layout: fixed; border-collapse: collapse; margin: 22px 0; font-size: 14px; }
+.share-image-longform__body :deep(:is(th,td)) { border: 1px solid var(--share-line); padding: 8px; }
+.share-image-longform__body :deep([data-share-align="left"]) { text-align: left; }
+.share-image-longform__body :deep([data-share-align="center"]) { text-align: center; }
+.share-image-longform__body :deep([data-share-align="right"]) { text-align: right; }

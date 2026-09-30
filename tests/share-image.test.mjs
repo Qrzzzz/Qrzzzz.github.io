@@ -2,11 +2,14 @@ import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import test from "node:test";
 import { createMarkdownRenderer } from "vitepress";
-const markdown = await createMarkdownRenderer(process.cwd());
+const markdown = await createMarkdownRenderer(process.cwd(), { math: true });
 import { parseHTML } from "linkedom";
-import { SHARE_IMAGE_FORMAT, createShareImageFilename, extractLongformContent, measureLongformHeight, snapshotShareImagePalette, withExportTimeout } from "../docs/.vitepress/theme/shareImageRuntime.mjs";
+import { SHARE_IMAGE_CHARACTER_LIMIT, SHARE_IMAGE_FORMAT, countShareCharacters, createShareImageFilename, extractLongformContent, measureLongformHeight, snapshotShareImagePalette, withExportTimeout } from "../docs/.vitepress/theme/shareImageRuntime.mjs";
 
 const component = readFileSync("docs/.vitepress/theme/ShareImage.vue", "utf8");
+const canvas = readFileSync("docs/.vitepress/theme/ShareImageCanvas.vue", "utf8");
+const controller = readFileSync("docs/.vitepress/theme/useShareImageExport.ts", "utf8");
+const resources = readFileSync("docs/.vitepress/theme/shareImageResources.ts", "utf8");
 const fixture = readFileSync("tests/fixtures/share-image-longform.md", "utf8");
 function source(html) {
   return parseHTML(`<html><head><base href="https://qrzzzz.github.io/notes/test"></head><body><div class="vp-doc">${html}</div></body></html>`).document.querySelector(".vp-doc");
@@ -39,8 +42,8 @@ test("exports every excerpt without a title while preserving its complete body",
   const legacy = extractLongformContent(source('<article><h1 class="excerpt-entry__heading">偶拾，2026 年 9 月 4 日，第一则</h1><p>正文</p></article>'), "Excerpt 2026-09-04-01", "excerpt");
   assert.equal(legacy.title, "");
   assert.equal(source(legacy.html).textContent, "正文");
-  assert.match(component, /<h1 v-if="exportContent.title">/);
-  assert.match(component, /v-if="pageKind !== 'excerpt'" class="share-image-longform__url"/);
+  assert.match(canvas, /<h1 v-if="content.title">/);
+  assert.doesNotMatch(canvas, /content.href\s*}}/);
 });
 
 test("exports complete Markdown structure, including text well beyond 200 characters", () => {
@@ -134,15 +137,15 @@ test("measures natural longform height instead of fixing a 720px canvas", () => 
   assert.equal(measureLongformHeight({ scrollHeight: 2480, getBoundingClientRect: () => ({ height: 2479.5 }) }), 2480);
   assert.equal(measureLongformHeight({ scrollHeight: 500, getBoundingClientRect: () => ({ height: 500.4 }) }), 501);
   assert.equal(createShareImageFilename('文章/标题'), "文章-标题-longform.png");
-  assert.match(component, /height: measureLongformHeight\(element\)/);
-  assert.match(component, /scale: SHARE_IMAGE_FORMAT.scale/);
-  assert.match(component, /v-html="exportContent.html"/);
+  assert.match(controller, /measureLongformHeight\(element\)/);
+  assert.match(controller, /scale: SHARE_IMAGE_FORMAT.scale/);
+  assert.match(canvas, /v-html="content.html"/);
   assert.match(component, /Export article image/);
-  assert.match(component, /document.fonts.load/);
-  assert.match(component, /font-family: var\(--site-font-reading\)/);
-  assert.match(component, /font: \{ preferredFormat: "woff2" \}/);
-  assert.match(component, /image.decode\(\)/);
-  assert.match(component, /current !== generation/);
+  assert.match(resources, /document.fonts.load/);
+  assert.match(canvas, /font-family: var\(--share-font-reading\)/);
+  assert.match(controller, /font: \{ preferredFormat: "woff2" \}/);
+  assert.match(resources, /image.decode\(\)/);
+  assert.match(controller, /current !== generation/);
   assert.doesNotMatch(component, /line-clamp|maxExcerptLength|shareExcerpt|resolveExcerpt|share-image-card|720px|3x4/);
 });
 
@@ -155,7 +158,106 @@ test("keeps one direct accessible export on article and excerpt pages", () => {
   assert.match(component, /:aria-busy="rendering"/);
   assert.match(component, /aria-live="polite"/);
   assert.match(component, /aria-hidden="true" inert/);
-  assert.match(component, /exportContent.value = undefined/);
+  assert.match(controller, /exportContent.value = undefined/);
+});
+
+test("the optional limit counts visible Unicode characters and leaves short or exact-length articles intact", () => {
+  assert.equal(SHARE_IMAGE_CHARACTER_LIMIT, 3000);
+  assert.equal(countShareCharacters("中 A， 👨‍👩‍👧‍👦 e\u0301\n"), 5);
+  for (const count of [2999, 3000, 3001]) {
+    const input = source(`<h1>Title</h1><p>${"字".repeat(count)}</p>`);
+    const original = input.innerHTML;
+    const result = extractLongformContent(input, "", "article", new Map(), { limit: 3000 });
+    assert.equal(result.totalCharacters, count);
+    assert.equal(result.characterCount, Math.min(count, 3000));
+    assert.equal(result.truncated, count > 3000);
+    assert.equal(input.innerHTML, original);
+    assert.equal(extractLongformContent(input).characterCount, count, "full export remains available");
+  }
+});
+
+test("cutoff respects sentence boundaries, nested markup and complete Unicode graphemes", () => {
+  const text = "字".repeat(2890) + "。";
+  const result = extractLongformContent(source(`<p>${text}<strong>${"👨‍👩‍👧‍👦".repeat(200)}</strong></p>`), "", "article", new Map(), { limit: 3000 });
+  const output = source(result.html);
+  assert.equal(result.truncated, true);
+  assert.ok(result.characterCount <= 3000);
+  assert.ok(output.querySelector("p"));
+  assert.doesNotMatch(output.textContent.replaceAll("👨‍👩‍👧‍👦", ""), /[👨👩👧👦\u200d]/u);
+  const sentences = extractLongformContent(source(`<p>${text}${"字".repeat(300)}</p>`), "", "article", new Map(), { limit: 3000 });
+  assert.equal(source(sentences.html).textContent, text);
+});
+
+test("keeps large structured blocks atomic and removes headings orphaned by the cutoff", () => {
+  for (const block of [`<pre><code>${"码".repeat(200)}</code></pre>`, `<table><tr><td>${"表".repeat(200)}</td></tr></table>`, `<figure><img src="https://example.com/a.png"><figcaption>${"图".repeat(200)}</figcaption></figure>`]) {
+    const result = extractLongformContent(source(`<p>${"文".repeat(2900)}</p><h2>Next section</h2>${block}<p>Late text</p>`), "", "article", new Map(), { limit: 3000 });
+    assert.equal(result.characterCount, 2900);
+    assert.equal(result.truncated, true);
+    assert.doesNotMatch(result.html, /h2|pre|table|figure|Late text/);
+  }
+});
+
+test("separates complete author metadata and excerpt sources from the body budget", () => {
+  const article = source(`<header class="article-header"><h1>Title</h1><p>Author</p><details><summary>Details</summary><p>Institution</p></details></header><p>${"文".repeat(3001)}</p>`);
+  const original = article.innerHTML;
+  const result = extractLongformContent(article, "", "article", new Map(), { separateMetadata: true, limit: 3000 });
+  assert.equal(result.title, "Title");
+  assert.equal(result.characterCount, 3000);
+  assert.match(result.metadataHtml, /Author/);
+  assert.ok(source(result.metadataHtml).querySelector("details").hasAttribute("open"));
+  assert.equal(article.innerHTML, original);
+  const excerpt = extractLongformContent(source(`<article class="excerpt-entry"><blockquote><p>${"文".repeat(3001)}</p><footer>Author, <cite>Original book</cite></footer></blockquote></article>`), "Excerpt 2026-01-01-01", "excerpt", new Map(), { separateMetadata: true, limit: 3000 });
+  assert.equal(excerpt.title, "");
+  assert.equal(excerpt.characterCount, 3000);
+  assert.match(excerpt.attributionHtml, /Author/);
+  assert.match(excerpt.attributionHtml, /Original book/);
+});
+
+test("only retains resource requests inside the selected opening section", () => {
+  const article = source(`<p>First</p><mjx-container><svg></svg><mjx-assistive-mml>x</mjx-assistive-mml></mjx-container><p>${"文".repeat(3100)}</p><figure class="mermaid-diagram"><svg><text>Late diagram</text></svg></figure>`);
+  const result = extractLongformContent(article, "", "article", new Map(), { collectResources: true, limit: 3000 });
+  assert.equal(result.resources.length, 1);
+  assert.equal(result.resources[0].kind, "math");
+  assert.equal(result.resources[0].inline, true);
+  assert.equal(source(result.html).querySelectorAll("[data-share-resource]").length, 1);
+  assert.doesNotMatch(result.html, /Late diagram|<svg|mjx-assistive/);
+});
+
+test("truncated prose retains early images and breaks while ignoring diagram stylesheet text", () => {
+  const input = source(`<img src="https://example.com/early.png"><p>First<br>line</p><figure class="mermaid-diagram"><svg><style>${"css".repeat(2000)}</style><text>Diagram label</text></svg></figure><p>${"字".repeat(3100)}</p><img src="https://example.com/late.png">`);
+  const result = extractLongformContent(input, "", "article", new Map(), { collectResources: true, limit: 3000 });
+  const output = source(result.html);
+  assert.equal(output.querySelectorAll("img").length, 1);
+  assert.match(output.querySelector("img").getAttribute("src"), /early/);
+  assert.ok(output.querySelector("br"));
+  assert.equal(result.resources.length, 1);
+  assert.equal(result.characterCount, 3000);
+  assert.doesNotMatch(result.html, /css|late/);
+});
+
+test("formulas retain dedicated inline and display resources rather than flattened text", async () => {
+  const article = source(markdown.render("Inline $x^2$.\n\n$$\n\\frac{a}{b}\n$$"));
+  const original = article.innerHTML;
+  const result = extractLongformContent(article, "", "article", new Map(), { collectResources: true });
+  assert.equal(result.resources.length, 2);
+  assert.equal(result.resources[0].inline, true);
+  assert.equal(result.resources[1].inline, false);
+  assert.equal(source(result.html).querySelectorAll("[data-share-resource]").length, 2);
+  assert.equal(article.innerHTML, original);
+});
+
+test("rejects unrenderable canvas heights and labels truncated downloads", () => {
+  assert.throws(() => measureLongformHeight({ scrollHeight: 15001, getBoundingClientRect: () => ({ height: 15001 }) }), /Image is too tall/);
+  assert.equal(createShareImageFilename("Article", true), "Article-longform-truncated.png");
+});
+
+test("keeps language and table alignment as validated semantics without copying arbitrary styles", () => {
+  const result = extractLongformContent(source('<blockquote lang="en"><p>Quote</p></blockquote><table><tr><th style="text-align:right;color:red">Number</th><td align="center" style="position:fixed">42</td><td lang="invalid!" style="text-align:justify">Other</td></tr></table>'));
+  const output = source(result.html);
+  assert.equal(output.querySelector("blockquote").getAttribute("lang"), "en");
+  assert.equal(output.querySelector("th").getAttribute("data-share-align"), "right");
+  assert.equal(output.querySelector("td").getAttribute("data-share-align"), "center");
+  assert.doesNotMatch(result.html, /style=|color:|position:|justify|invalid!/);
 });
 
 

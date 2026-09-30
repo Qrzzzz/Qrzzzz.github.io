@@ -20,13 +20,9 @@
 .site-layout .project-catalog .content-index-title { font-family: var(--site-font-sans); font-weight: 400; font-size: 24px; letter-spacing: -.6px; }
 .site-layout .content-index-row::after { transition: transform 260ms var(--site-ease); }
 .site-layout .content-index-row:hover::after { transform: translateX(4px); }
-.site-layout .share-image-entry__button { min-height: 44px; }
-.site-layout .share-image-entry__actions { flex-wrap: wrap; }
-.site-layout .share-image-status { flex-basis: 100%; text-align: right; }
 @media (max-width: 680px) {
   .site-layout .library-toolbar__filters { gap: 16px; flex-wrap: wrap; }
   .site-layout .library-filter { padding-inline: 0; }
   .site-layout .project-catalog .content-index-title { font-size: 22px; }
   .site-layout .project-catalog .content-index-summary { display: block; }
-  .site-layout .share-image-status { text-align: left; }
 }

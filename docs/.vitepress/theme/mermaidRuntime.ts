@@ -2,7 +2,7 @@ let queue: Promise<unknown> = Promise.resolve();
 let sequence = 0;
 export const diagramTasks = new Map<HTMLElement, Promise<void>>();
 
-export function renderDiagram(source: string, dark: boolean, palette: CSSStyleDeclaration) {
+export function renderDiagram(source: string, dark: boolean, palette: Pick<CSSStyleDeclaration, "getPropertyValue">) {
   const colors = {
     primaryColor: palette.getPropertyValue("--site-surface").trim(),
     primaryTextColor: palette.getPropertyValue("--site-text").trim(),
