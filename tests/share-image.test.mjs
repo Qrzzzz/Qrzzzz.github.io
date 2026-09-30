@@ -82,6 +82,36 @@ test("does not carry executable HTML, page controls or source styles into v-html
   assert.throws(() => extractLongformContent(null), /unavailable/);
 });
 
+for (const type of ["info", "tip", "warning", "danger"]) {
+  test(`preserves ${type} block structure with only allowlisted semantic classes`, () => {
+    const input = source(markdown.render(`::: ${type} 标题\n正文含有 **强调** 和 [链接](https://example.com)。\n\n- 列表\n\n> 引用\n:::`));
+    input.querySelector(".custom-block").classList.add("unknown", "language-js", "is-active");
+    input.querySelector(".custom-block-title").setAttribute("style", "color:red");
+    const before = input.innerHTML;
+    const result = extractLongformContent(input);
+    const output = source(result.html);
+    const block = output.querySelector(`div.custom-block.${type}`);
+    assert.ok(block);
+    assert.equal(block.className, `${type} custom-block`);
+    assert.equal(block.querySelector("p.custom-block-title").textContent, "标题");
+    for (const tag of ["strong", "a", "ul", "li", "blockquote"]) assert.ok(block.querySelector(tag), tag);
+    assert.equal(output.textContent, input.textContent);
+    assert.doesNotMatch(result.html, /unknown|language-js|is-active|style=/);
+    assert.equal(input.innerHTML, before, "source is never mutated");
+  });
+}
+
+test("rejects unknown and near-match classes even beside semantic classes", () => {
+  const result = extractLongformContent(source('<div class="custom-block info info-extra custom-block-title-extra unknown"><p class="custom-block-title highlighted">Title</p><pre class="shiki tip-extra"><code class="language-js"><span class="line info">code</span></code></pre><button class="tip">control</button><nav class="warning">navigation</nav></div>'));
+  const output = source(result.html);
+  assert.equal(output.querySelector("div.custom-block").className, "custom-block info");
+  assert.equal(output.querySelector("p").className, "custom-block-title");
+  assert.equal(output.querySelector("pre").hasAttribute("class"), false);
+  assert.equal(output.querySelector("code").hasAttribute("class"), false);
+  assert.equal(output.querySelector("pre").textContent, "code");
+  assert.doesNotMatch(result.html, /extra|unknown|highlighted|shiki|language-js|line|control|navigation|span/);
+});
+
 test("measures natural longform height instead of fixing a 720px canvas", () => {
   assert.deepEqual(SHARE_IMAGE_FORMAT, { id: "longform", width: 540, scale: 2 });
   assert.equal(measureLongformHeight({ scrollHeight: 2480, getBoundingClientRect: () => ({ height: 2479.5 }) }), 2480);
@@ -114,11 +144,18 @@ test("keeps one direct accessible export on article and excerpt pages", () => {
 
 test("captures both site palettes independently of subsequent theme changes", () => {
   for (const canvas of ["#eef2f3", "#151d37"]) {
-    const values = { "--site-canvas": canvas, "--site-text": "#30332f", "--site-link": "#006778" };
+    const values = { "--site-canvas": canvas, "--site-text": "#30332f", "--site-link": "#006778", "--site-content-muted": "#566580", "--site-content-surface": "#f6f8fa", "--vp-c-success-1": "#18794e", "--vp-c-warning-1": "#915930", "--vp-c-danger-1": "#b8272c" };
     const palette = snapshotShareImagePalette({ getPropertyValue: key => values[key] || "" });
     values["--site-canvas"] = "changed";
     assert.equal(palette["--share-canvas"], canvas);
     assert.equal(palette["--share-link"], "#006778");
+    for (const name of ["success", "warning", "danger"]) {
+      const original = values[`--vp-c-${name}-1`];
+      values[`--vp-c-${name}-1`] = "changed";
+      assert.equal(palette[`--share-${name}`], original);
+    }
+    assert.equal(palette["--share-content-muted"], "#566580");
+    assert.equal(palette["--share-content-surface"], "#f6f8fa");
   }
 });
 
