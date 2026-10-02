@@ -13,6 +13,7 @@ export function useShareImageExport(pageKind: () => "article" | "excerpt", getEl
   const truncate = ref(false);
   const phase = ref<"idle" | "preparing" | "ready" | "error">("idle");
   const rendering = computed(() => phase.value === "preparing");
+  const progress = ref(0);
   const preparedImage = ref<Blob>();
   const copying = ref(false);
   const copyButton = ref<HTMLButtonElement>();
@@ -27,6 +28,7 @@ export function useShareImageExport(pageKind: () => "article" | "excerpt", getEl
   function resetExport() {
     generation++;
     phase.value = "idle";
+    progress.value = 0;
     preparedImage.value = undefined;
     preparedFilename = "";
     copying.value = false;
@@ -47,6 +49,8 @@ export function useShareImageExport(pageKind: () => "article" | "excerpt", getEl
     let stage = "content";
     statusMessage.value = "Preparing image…";
     try {
+      await nextTick();
+      if (!isCurrent()) return;
       const palette = snapshotShareImagePalette(getComputedStyle(document.documentElement));
       exportPalette.value = palette;
       const kind = pageKind();
@@ -60,6 +64,7 @@ export function useShareImageExport(pageKind: () => "article" | "excerpt", getEl
         limit: truncate.value ? SHARE_IMAGE_CHARACTER_LIMIT : 0
       });
       stage = "diagrams and formulas";
+      progress.value = 1;
       statusMessage.value = "Preparing diagrams and formulas…";
       const [images, qr] = await withExportTimeout(Promise.all([
         prepareShareResources(content.resources, palette, dark, isCurrent), createShareQrCode(href.href)
@@ -79,10 +84,12 @@ export function useShareImageExport(pageKind: () => "article" | "excerpt", getEl
       if (!isCurrent()) return;
       if (!element) throw new Error("The image layout is unavailable");
       stage = "fonts and images";
+      progress.value = 2;
       statusMessage.value = "Loading fonts and images…";
       await loadShareImageAssets(element);
       if (!isCurrent()) return;
       stage = "image rendering";
+      progress.value = 3;
       statusMessage.value = "Rendering image…";
       const height = measureLongformHeight(element);
       const { domToBlob } = await withExportTimeout(import("modern-screenshot"));
@@ -96,6 +103,7 @@ export function useShareImageExport(pageKind: () => "article" | "excerpt", getEl
       if (!isCurrent()) return;
       if (!blob || !blob.size) throw new Error("The browser did not return image data");
       preparedImage.value = blob;
+      progress.value = 4;
       preparedFilename = createShareImageFilename(kind === "excerpt" ? title : content.title, content.truncated);
       phase.value = "ready";
       statusMessage.value = content.truncated ? "Image prepared · opening section only. The QR code links to the full text." : "";
@@ -144,5 +152,5 @@ export function useShareImageExport(pageKind: () => "article" | "excerpt", getEl
     statusMessage.value = "Image downloaded.";
     statusTone.value = "success";
   }
-  return { truncate, rendering, preparedImage, copying, copyButton, exportPalette, exportContent, qrCode, statusMessage, statusTone, prepareImage, copyImage, downloadImage };
+  return { truncate, rendering, progress, preparedImage, copying, copyButton, exportPalette, exportContent, qrCode, statusMessage, statusTone, prepareImage, copyImage, downloadImage };
 }

@@ -5,7 +5,7 @@ import { useShareImageExport } from "./useShareImageExport";
 
 const props = defineProps<{ pageKind: "article" | "excerpt" }>();
 const canvas = ref<{ element?: HTMLElement }>();
-const { truncate, rendering, preparedImage, copying, copyButton, exportPalette, exportContent, qrCode, statusMessage, statusTone, prepareImage, copyImage, downloadImage } = useShareImageExport(() => props.pageKind, () => canvas.value?.element);
+const { truncate, rendering, progress, preparedImage, copying, copyButton, exportPalette, exportContent, qrCode, statusMessage, statusTone, prepareImage, copyImage, downloadImage } = useShareImageExport(() => props.pageKind, () => canvas.value?.element);
 </script>
 
 <template>
@@ -15,7 +15,7 @@ const { truncate, rendering, preparedImage, copying, copyButton, exportPalette, 
       <span>Limit to 3,000 characters</span>
     </label>
     <div class="share-image-entry__actions">
-      <p class="share-image-status" :class="`is-${statusTone}`" role="status" aria-live="polite">{{ statusMessage }}</p>
+      <p id="share-image-status" class="share-image-status" :class="`is-${statusTone}`" role="status" aria-live="polite">{{ statusMessage }}</p>
       <template v-if="preparedImage">
         <button ref="copyButton" type="button" class="share-image-entry__button share-image-entry__button--primary" :disabled="copying" :aria-busy="copying" aria-label="Copy image to clipboard" @click="copyImage">{{ copying ? "Copying…" : "Copy image" }}</button>
         <button type="button" class="share-image-entry__button" @click="downloadImage">Download image</button>
@@ -25,6 +25,10 @@ const { truncate, rendering, preparedImage, copying, copyButton, exportPalette, 
         <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 5h14v14H5zM8 15l3-3 2 2 2-2 3 3M15.5 9h.01" /></svg>
         {{ rendering ? "Preparing…" : "Export article image" }}
       </button>
+    </div>
+    <div v-if="rendering" class="share-image-progress">
+      <progress :value="progress" max="4" aria-label="Article image generation progress" aria-describedby="share-image-status" :aria-valuetext="`Step ${progress + 1} of 4: ${statusMessage}`" />
+      <span aria-hidden="true">Step {{ progress + 1 }} / 4</span>
     </div>
   </section>
   <Teleport to="body">
@@ -121,6 +125,30 @@ const { truncate, rendering, preparedImage, copying, copyButton, exportPalette, 
 }
 
 .share-image-status:empty { display: none; }
+
+.share-image-progress {
+  display: flex;
+  flex-basis: 100%;
+  align-items: center;
+  gap: 12px;
+  color: var(--site-text-muted);
+  font-family: var(--site-font-sans);
+  font-size: 12px;
+}
+.share-image-progress progress {
+  appearance: none;
+  flex: 1;
+  min-width: 0;
+  height: 6px;
+  overflow: hidden;
+  border: 0;
+  border-radius: 3px;
+  background: var(--site-line);
+  accent-color: var(--site-accent);
+}
+.share-image-progress progress::-webkit-progress-bar { background: var(--site-line); }
+.share-image-progress progress::-webkit-progress-value { background: var(--site-accent); }
+.share-image-progress progress::-moz-progress-bar { background: var(--site-accent); }
 
 .share-image-status.is-success {
   color: var(--site-accent);

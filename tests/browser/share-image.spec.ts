@@ -27,6 +27,10 @@ for (const theme of ['light', 'dark'] as const) {
     await page.locator('.vp-doc').evaluate((el, html) => { el.innerHTML = html; }, fixture);
     await page.getByRole('button', { name: 'Export article image', exact: true }).click();
     const host = page.locator('.share-image-longform');
+    const progress = page.getByRole('progressbar', { name: 'Article image generation progress' });
+    await expect(progress).toBeVisible();
+    await expect(progress).toHaveAttribute('value', '2');
+    await expect(progress).toHaveAttribute('aria-valuetext', 'Step 3 of 4: Loading fonts and images…');
     await expect(host.locator('.custom-block')).toHaveCount(4);
     await expect(host.locator('.custom-block-title')).toHaveCount(4);
     await page.evaluate(() => document.fonts.ready.then(() => undefined));
@@ -119,6 +123,7 @@ for (const theme of ['light', 'dark'] as const) {
     expect(await inspect()).toEqual(before);
     await page.evaluate(() => (window as any).releaseExportFonts());
     await expect(page.getByRole('button', { name: 'Copy image to clipboard' })).toBeVisible({ timeout: 60000 });
+    await expect(progress).toHaveCount(0);
     const downloadPromise = page.waitForEvent('download');
     await page.getByRole('button', { name: 'Download image', exact: true }).click();
     const download = await downloadPromise;
