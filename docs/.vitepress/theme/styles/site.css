@@ -22,7 +22,8 @@
 .site-layout[data-page-kind="home"] .nav-github { display: none; }
 .site-layout .NavActions { border: 0; padding: 0; margin-left: 0; gap: 4px; }
 .site-layout .theme-toggle, .site-layout .nav-github { height: 44px; width: 44px; border-radius: 3px; }
-.VPNavBar:has(.InlineSiteSearch.is-expanded) :is(.VPNavBarMenu, .NavActions, .VPNavBarHamburger) { visibility: hidden; pointer-events: none; }
+.VPNavBar :is(.VPNavBarMenu, .NavActions, .VPNavBarHamburger, .VPNavBarTitle) { transition: opacity 180ms ease 220ms, visibility 0s; }
+.VPNavBar:has(.InlineSiteSearch.is-expanded) :is(.VPNavBarMenu, .NavActions, .VPNavBarHamburger) { visibility: hidden; pointer-events: none; opacity: 0; transition: opacity 120ms ease, visibility 0s linear 120ms; }
 .VPNavBarHamburger { display: none !important; width: 44px; height: 44px; }
 .VPNavScreen { background: var(--site-canvas); }
 .site-layout .VPNavScreenMenuLink { display: flex; align-items: center; min-height: 68px; color: var(--site-text); font-size: 26px; font-weight: 400; }
@@ -118,7 +119,7 @@ html.theme-is-switching .site-layout :where(a, button, p, h1, h2, h3, input, pat
   .VPNavBarTitle .title { font-size: 17px; }
   .VPNavBar .content-body { gap: 0; }
   .site-layout .nav-github { display: none; }
-  .VPNavBar:has(.InlineSiteSearch.is-expanded) .VPNavBarTitle { visibility: hidden; pointer-events: none; }
+  .VPNavBar:has(.InlineSiteSearch.is-expanded) .VPNavBarTitle { visibility: hidden; pointer-events: none; opacity: 0; transition: opacity 120ms ease, visibility 0s linear 120ms; }
   .gesture-stage { height: clamp(530px, 147.44vw, 760px); }
   .gesture-fallback--desktop { display: none; }
   .gesture-fallback--mobile { display: block; }
@@ -167,4 +168,8 @@ html.theme-is-switching .site-layout :where(a, button, p, h1, h2, h3, input, pat
 @media (forced-colors: active) {
   .home-gesture__field, .home-gesture__ink, .home-gesture__signal, .gesture-fallback path { stroke: CanvasText !important; }
   .home-gesture__field, .home-gesture__signal { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .VPNavBar :is(.VPNavBarMenu, .NavActions, .VPNavBarHamburger, .VPNavBarTitle) { transition: none; }
 }

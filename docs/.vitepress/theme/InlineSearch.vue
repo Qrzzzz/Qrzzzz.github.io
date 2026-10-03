@@ -21,7 +21,9 @@ type InlineSearchResult = SearchResult & SearchDocument;
 
 const root = ref<HTMLElement>();
 const panelHeight = ref(430);
-const viewportTop = ref(10);
+const surfaceWidth = ref(44);
+const surfaceX = ref(0);
+const surfaceY = ref(0);
 const trigger = ref<HTMLButtonElement>();
 const input = ref<HTMLInputElement>();
 const expanded = ref(false);
@@ -98,6 +100,7 @@ async function loadIndex() {
 }
 
 async function openSearch() {
+  measureSurface();
   expanded.value = true;
   await nextTick();
   input.value?.focus();
@@ -105,16 +108,22 @@ async function openSearch() {
   void loadIndex();
 }
 
-function updateViewport() {
-  if (!expanded.value) return;
+function measureSurface() {
+  if (!root.value) return;
+  const anchor = root.value.getBoundingClientRect();
   const viewport = window.visualViewport;
   const top = viewport?.offsetTop ?? 0;
-  viewportTop.value = top + 10;
-  // Measure after the mobile search has followed the visible viewport.
-  nextTick(() => {
-    const bottom = root.value?.getBoundingClientRect().bottom ?? 0;
-    panelHeight.value = Math.max(0, Math.min(430, top + (viewport?.height ?? window.innerHeight) - bottom - 20));
-  });
+  const mobile = window.matchMedia("(max-width: 767.98px)").matches;
+  const right = root.value.parentElement?.getBoundingClientRect().right ?? window.innerWidth - 28;
+  surfaceWidth.value = mobile ? (viewport?.width ?? window.innerWidth) - 24 : Math.min(560, window.innerWidth - 56);
+  surfaceX.value = mobile ? (viewport?.offsetLeft ?? 0) + 12 - anchor.left : Math.min(0, right - anchor.left - surfaceWidth.value);
+  surfaceY.value = mobile ? top + 10 - anchor.top : 0;
+  const bottom = anchor.top + surfaceY.value + 44;
+  panelHeight.value = Math.max(0, Math.min(430, top + (viewport?.height ?? window.innerHeight) - bottom - 20));
+}
+
+function updateViewport() {
+  if (expanded.value) measureSurface();
 }
 
 function closeSearch(returnFocus = false) {
@@ -215,14 +224,16 @@ onBeforeUnmount(() => {
 
 <template>
   <div ref="root" class="InlineSiteSearch" :class="{ 'is-expanded': expanded }"
-    :style="{ '--search-panel-height': `${panelHeight}px`, '--search-viewport-top': `${viewportTop}px` }">
+    :style="{ '--search-panel-height': `${panelHeight}px`, '--search-width': `${surfaceWidth}px`, '--search-x': `${surfaceX}px`, '--search-y': `${surfaceY}px` }">
     <button
-      v-if="!expanded"
       ref="trigger"
       type="button"
       class="inline-search-trigger"
       aria-label="Search the site"
       aria-haspopup="listbox"
+      :aria-expanded="expanded"
+      :tabindex="expanded ? -1 : 0"
+      :inert="expanded"
       @click="openSearch"
     >
       <svg aria-hidden="true" viewBox="0 0 24 24">
@@ -233,85 +244,89 @@ onBeforeUnmount(() => {
       <kbd>Ctrl K</kbd>
     </button>
 
-    <form v-else class="inline-search-form" role="search" @submit.prevent="">
-      <svg aria-hidden="true" viewBox="0 0 24 24">
-        <circle cx="11" cy="11" r="6.5" />
-        <path d="m16 16 4 4" />
-      </svg>
-      <label class="visually-hidden" for="inline-site-search-input">Search the site</label>
-      <input
-        id="inline-site-search-input"
-        ref="input"
-        v-model="query"
-        type="search"
-        role="combobox"
-        aria-label="Search the site"
-        aria-autocomplete="list"
-        :aria-controls="query && results.length ? 'inline-search-results' : undefined"
-        :aria-expanded="Boolean(query)"
-        :aria-activedescendant="activeDescendant"
-        autocomplete="off"
-        autocapitalize="off"
-        autocorrect="off"
-        enterkeyhint="go"
-        maxlength="64"
-        placeholder="Search titles and page content…"
-        spellcheck="false"
-        @keydown="handleInputKeydown"
-      />
-      <button
-        v-if="query"
-        type="button"
-        class="inline-search-action"
-        aria-label="Clear search"
-        @click="clearQuery"
-      >
-        ×
-      </button>
-      <button
-        type="button"
-        class="inline-search-action inline-search-close"
-        aria-label="Close search"
-        @click="closeSearch(true)"
-      >
-        Esc
-      </button>
-    </form>
-
-    <div v-if="expanded && (query || loading || loadError)" class="inline-search-panel">
-      <p v-if="loading" class="inline-search-state">Loading search index…</p>
-      <p v-else-if="loadError" class="inline-search-state" role="alert">
-        Search is unavailable. <button type="button" @click="loadIndex">Retry search</button>
-      </p>
-      <ul
-        v-else-if="results.length"
-        id="inline-search-results"
-        role="listbox"
-        aria-label="Search results"
-      >
-        <li
-          v-for="(result, index) in results"
-          :id="`inline-search-item-${index}`"
-          :key="result.id"
-          role="option"
-          :aria-selected="selectedIndex === index"
+    <div class="inline-search-surface" :inert="!expanded">
+      <form class="inline-search-form" role="search" @submit.prevent="">
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="11" cy="11" r="6.5" />
+          <path d="m16 16 4 4" />
+        </svg>
+        <label class="visually-hidden" for="inline-site-search-input">Search the site</label>
+        <input
+          id="inline-site-search-input"
+          ref="input"
+          v-model="query"
+          type="search"
+          role="combobox"
+          aria-label="Search the site"
+          aria-autocomplete="list"
+          :aria-controls="query && results.length ? 'inline-search-results' : undefined"
+          :aria-expanded="Boolean(query)"
+          :aria-activedescendant="activeDescendant"
+          autocomplete="off"
+          autocapitalize="off"
+          autocorrect="off"
+          enterkeyhint="go"
+          maxlength="64"
+          placeholder="Search titles and page content…"
+          spellcheck="false"
+          @keydown="handleInputKeydown"
+        />
+        <button
+          v-if="query"
+          type="button"
+          class="inline-search-action"
+          aria-label="Clear search"
+          @click="clearQuery"
         >
-          <a
-            :href="result.id"
-            class="inline-search-result"
-            :class="{ 'is-selected': selectedIndex === index }"
-            @focus="selectResult(index)"
-            @mouseenter="selectResult(index)"
-            @click="closeSearch()"
+          ×
+        </button>
+        <button
+          type="button"
+          class="inline-search-action inline-search-close"
+          aria-label="Close search"
+          @click="closeSearch(true)"
+        >
+          Esc
+        </button>
+      </form>
+
+      <Transition name="search-panel">
+      <div v-if="expanded && (query || loading || loadError)" class="inline-search-panel" :inert="!expanded">
+        <p v-if="loading" class="inline-search-state">Loading search index…</p>
+        <p v-else-if="loadError" class="inline-search-state" role="alert">
+          Search is unavailable. <button type="button" @click="loadIndex">Retry search</button>
+        </p>
+        <ul
+          v-else-if="results.length"
+          id="inline-search-results"
+          role="listbox"
+          aria-label="Search results"
+        >
+          <li
+            v-for="(result, index) in results"
+            :id="`inline-search-item-${index}`"
+            :key="result.id"
+            role="option"
+            :aria-selected="selectedIndex === index"
           >
-            <span v-if="resultContext(result)" class="inline-search-context">
-              {{ resultContext(result) }}
-            </span>
-            <strong>{{ result.title }}</strong>
-          </a>
-        </li>
-      </ul>
-      <p v-else class="inline-search-state">No results for “{{ query }}”</p>
+            <a
+              :href="result.id"
+              class="inline-search-result"
+              :class="{ 'is-selected': selectedIndex === index }"
+              @focus="selectResult(index)"
+              @mouseenter="selectResult(index)"
+              @click="closeSearch()"
+            >
+              <span v-if="resultContext(result)" class="inline-search-context">
+                {{ resultContext(result) }}
+              </span>
+              <strong>{{ result.title }}</strong>
+            </a>
+          </li>
+        </ul>
+        <p v-else class="inline-search-state">No results for “{{ query }}”</p>
+      </div>
+      </Transition>
     </div>
   </div>
 </template>
@@ -324,15 +339,24 @@ onBeforeUnmount(() => {
   width: 44px;
   flex: 0 0 44px;
   min-width: 0;
+  height: 44px;
 }
 
-.InlineSiteSearch.is-expanded {
+.inline-search-surface {
   position: absolute;
-  top: 50%;
-  right: 0;
-  width: min(560px, calc(100vw - 56px));
-  transform: translateY(-50%);
-  z-index: 80;
+  top: 0;
+  left: 0;
+  width: 44px;
+  transform: translate(0, 0);
+  pointer-events: none;
+  transition: width 420ms cubic-bezier(.22, 1, .36, 1), transform 420ms cubic-bezier(.22, 1, .36, 1);
+}
+
+.InlineSiteSearch.is-expanded { z-index: 80; }
+.InlineSiteSearch.is-expanded .inline-search-surface {
+  width: var(--search-width);
+  transform: translate(var(--search-x), var(--search-y));
+  pointer-events: auto;
 }
 
 .inline-search-trigger,
@@ -348,13 +372,22 @@ onBeforeUnmount(() => {
 }
 
 .inline-search-trigger {
+  z-index: 1;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0;
+  transition: opacity 160ms ease 220ms, visibility 0s;
   border: 0;
   background: transparent;
   text-align: left;
+}
+
+.InlineSiteSearch.is-expanded .inline-search-trigger {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 100ms ease, visibility 0s linear 100ms;
 }
 
 .inline-search-trigger::after,
@@ -406,11 +439,38 @@ onBeforeUnmount(() => {
 .inline-search-form {
   display: flex;
   align-items: center;
-  gap: 9px;
-  padding: 0 10px;
-  border-color: var(--site-line-strong);
+  gap: 0;
+  padding: 0;
+  overflow: hidden;
+  border-color: transparent;
   background: var(--site-canvas);
   box-shadow: none;
+  visibility: hidden;
+  transition: border-color 240ms ease, visibility 0s linear 420ms;
+}
+
+.InlineSiteSearch.is-expanded .inline-search-form {
+  visibility: visible;
+  border-color: var(--site-line-strong);
+  transition: border-color 240ms ease, visibility 0s;
+}
+
+.inline-search-form > svg {
+  box-sizing: content-box;
+  width: 19px;
+  height: 19px;
+  padding-inline: 12px;
+  opacity: 1;
+}
+
+.inline-search-form > :is(input, .inline-search-action) {
+  opacity: 0;
+  transition: opacity 100ms ease;
+}
+
+.InlineSiteSearch.is-expanded .inline-search-form > :is(input, .inline-search-action) {
+  opacity: 1;
+  transition: opacity 220ms ease 90ms;
 }
 
 .inline-search-form input {
@@ -532,20 +592,19 @@ onBeforeUnmount(() => {
   border: 0;
 }
 
+/* Mobile geometry is measured from the same icon, including the visible keyboard viewport. */
 @media (max-width: 767.98px) {
-  .InlineSiteSearch.is-expanded {
-    position: fixed;
-    top: var(--search-viewport-top, 10px);
-    right: 12px;
-    left: 12px;
-    width: auto;
-    transform: none;
-  }
+  .inline-search-surface { max-width: calc(100vw - 24px); }
 }
 
+.search-panel-enter-active { transition: opacity 180ms ease 120ms, transform 240ms cubic-bezier(.22, 1, .36, 1) 120ms; }
+.search-panel-leave-active { transition: opacity 100ms ease; }
+.search-panel-enter-from { opacity: 0; transform: translateY(-5px); }
+.search-panel-leave-to { opacity: 0; }
+
 @media (prefers-reduced-motion: reduce) {
-  .InlineSiteSearch {
-    transition: none;
+  .InlineSiteSearch *, .search-panel-enter-active, .search-panel-leave-active {
+    transition: none !important;
   }
 }
 </style>
