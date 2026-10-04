@@ -372,7 +372,7 @@
 .vp-doc .lead {
   margin: 0 0 30px;
   color: var(--site-text-muted);
-  font-size: 16px;
+  font-size: 17px;
   line-height: 1.9;
 }
 
@@ -525,7 +525,7 @@
 
 .vp-doc blockquote:not(.excerpt-quotation) p {
   color: inherit;
-  font-size: 17px;
+  font-size: var(--site-body-size);
   line-height: 1.72;
 }
 
@@ -1260,7 +1260,7 @@
 .vp-doc .excerpt-entry > .excerpt-quotation p {
   margin: 18px 0;
   color: var(--site-text);
-  font-size: 17px;
+  font-size: var(--site-body-size);
   letter-spacing: normal;
   line-height: 1.82;
 }
@@ -1268,7 +1268,7 @@
 .vp-doc .excerpt-entry--markdown > p {
   margin: 18px 0;
   color: var(--site-text);
-  font-size: 17px;
+  font-size: var(--site-body-size);
   letter-spacing: normal;
   line-height: 1.82;
 }
@@ -1288,7 +1288,7 @@
 .vp-doc .excerpt-entry--quotation > blockquote p {
   margin: 18px 0;
   color: var(--site-text);
-  font-size: 17px;
+  font-size: var(--site-body-size);
   letter-spacing: normal;
   line-height: 1.82;
 }
@@ -1323,7 +1323,7 @@
 .vp-doc .excerpt-rendering p {
   margin: 18px 0;
   color: var(--site-text);
-  font-size: 17px;
+  font-size: var(--site-body-size);
   font-style: normal;
   letter-spacing: normal;
   line-height: 1.82;
@@ -1750,18 +1750,10 @@
 }
 
 @media (max-width: 767px) {
-  :root { --site-body-size: 16px; --site-heading-size: 27px; }
+  :root { --site-body-size: 17px; --site-heading-size: 27px; }
   .vp-doc h1 { margin-bottom: 24px; line-height: 1.6; }
   .vp-doc h2 { margin-top: 48px; font-size: 22px; }
   .vp-doc h3 { font-size: 19px; }
-
-  .vp-doc .excerpt-entry > .excerpt-quotation p,
-  .vp-doc .excerpt-entry--markdown > p,
-  .vp-doc .excerpt-entry--quotation > blockquote p,
-  .vp-doc .excerpt-source p,
-  .vp-doc .excerpt-rendering p {
-    font-size: 16px;
-  }
 
   .docs-breadcrumb {
     flex-wrap: wrap;

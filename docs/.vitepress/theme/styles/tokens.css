@@ -53,7 +53,7 @@
   --site-reading: 690px;
   --site-article: var(--site-reading);
   --site-index: 1000px;
-  --site-body-size: 17px;
+  --site-body-size: 18px;
   --site-body-leading: 2;
   --site-heading-size: clamp(30px, 3.15vw, 44px);
   --site-paragraph-gap: 18px;

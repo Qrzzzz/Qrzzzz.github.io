@@ -334,7 +334,7 @@ test("supports Markdown-authored excerpt bodies inside the outer article shell",
 
   assert.match(
     styles,
-    /\.vp-doc \.excerpt-entry--markdown > p\s*\{[^}]*margin:\s*18px 0;[^}]*font-size:\s*17px;[^}]*line-height:\s*1\.82;[^}]*\}/
+    /\.vp-doc \.excerpt-entry--markdown > p\s*\{[^}]*margin:\s*18px 0;[^}]*font-size:\s*var\(--site-body-size\);[^}]*line-height:\s*1\.82;[^}]*\}/
   );
   assert.match(
     styles,
@@ -512,7 +512,7 @@ test("renders simple excerpts as standard body copy without an accent rail", () 
   assert.match(styles, /\.vp-doc blockquote:not\(\.excerpt-quotation\) p/);
   assert.match(
     styles,
-    /\.vp-doc \.excerpt-entry > \.excerpt-quotation p\s*\{[^}]*margin:\s*18px 0;[^}]*font-size:\s*17px;[^}]*line-height:\s*1\.82;[^}]*\}/
+    /\.vp-doc \.excerpt-entry > \.excerpt-quotation p\s*\{[^}]*margin:\s*18px 0;[^}]*font-size:\s*var\(--site-body-size\);[^}]*line-height:\s*1\.82;[^}]*\}/
   );
   assert.match(
     styles,
@@ -520,7 +520,7 @@ test("renders simple excerpts as standard body copy without an accent rail", () 
   );
   assert.match(
     styles,
-    /@media \(max-width: 767px\)[\s\S]*?\.vp-doc \.excerpt-entry > \.excerpt-quotation p[^{]*\{[^}]*font-size:\s*16px;[^}]*\}/
+    /@media \(max-width: 767px\)\s*\{\s*:root\s*\{[^}]*--site-body-size:\s*17px;/
   );
 });
 
