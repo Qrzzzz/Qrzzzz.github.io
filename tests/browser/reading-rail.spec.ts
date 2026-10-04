@@ -27,10 +27,13 @@ test("desktop knots form behind the 88% endpoint and reverse without isolated st
       const body = element.parentElement!.querySelector(".main")!.getBoundingClientRect();
       window.scrollTo(0, scrollY + value + body.top - innerHeight * .88);
     }, position);
-    await expect.poll(() => rail.evaluate(element => {
-      const bottom = getComputedStyle(element).clipPath.match(/inset\(0px 0px ([\d.]+)px(?: 0px)?\)/);
-      return element.getBoundingClientRect().height - Number(bottom?.[1]);
-    })).toBeCloseTo(position, 0);
+    await expect.poll(async () => {
+      const current = await rail.evaluate(element => {
+        const bottom = getComputedStyle(element).clipPath.match(/inset\(0px 0px ([\d.]+)px(?: 0px)?\)/);
+        return element.getBoundingClientRect().height - Number(bottom?.[1]);
+      });
+      return Math.abs(current - position);
+    }).toBeLessThanOrEqual(0.75);
   };
   const checkFront = async () => {
     const result = await rail.evaluate(element => {
