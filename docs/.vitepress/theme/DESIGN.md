@@ -23,8 +23,16 @@ metadata, public routes and VitePress navigation remain the source of truth.
   It extends while scrolling down and retracts while scrolling up; body resize recomputes geometry.
   Shared width, offset, gap, edge and stroke tokens live in `styles/reading-rail.css`.
   Phones (including landscape) reserve 34 px, with a 12 px rail.
+- Desktop reading lines place twelve authored loop variants at sparse, seeded document positions.
+  The endpoint stays at 88% of the viewport. A loop deforms only after its whole segment is behind
+  that endpoint; its added arc length never changes reading progress. Compatible intermediate poses
+  preserve shared tangents, and scrolling upward reverses the same deformation before clipping
+  can cross it. Short viewports omit loops that cannot finish slowly below the navigation; short
+  articles and the article tail leave enough space to complete each loop. Resize changes geometry,
+  not the seeded selection. SVG is never observed by its own redraw callback.
 - Reduced motion makes the home line static and fully drawn; Reading Rail keeps its
-  immediate position updates without animation. Hidden pages and unmount cancel
+  immediate position updates on its original wave, with no loop deformation. Phones also keep
+  that original wave. Hidden pages and unmount cancel
   animation work, release pointer capture and remove listeners.
 - The preserved ASCII pointer trail is a quiet secondary texture, home only.
 - Shared controls use short color/underline changes. Theme switching fades one snapshot
