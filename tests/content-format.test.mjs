@@ -127,11 +127,17 @@ test("keeps hand-written pages on their category-specific metadata and lead cont
       assert.equal(markdownH1.length, 1, `${page.relativePath} 应使用 Markdown 一级标题`);
       const visibleTitle = markdownH1[0].replace(/^#\s+/, "").trim();
       assert.equal(visibleTitle, title, `${page.relativePath} 的 title 与一级标题应一致`);
-      assert.match(
-        unfenced,
-        /^#\s+.+\n\n<p class="lead">.+<\/p>/m,
-        `${page.relativePath} 的一级标题后应有明确导语`
-      );
+      if (page.relativePath === "notes/sangetsuki-translation.md") {
+        // This translation introduces its source in an info block instead of a lead.
+        assert.doesNotMatch(unfenced, /<p class="lead">/);
+        assert.match(unfenced, /^#\s+.+\n\n中文译文与译注由 .+\n\n::: info 原文来源与翻译说明\n/m);
+      } else {
+        assert.match(
+          unfenced,
+          /^#\s+.+\n\n<p class="lead">.+<\/p>/m,
+          `${page.relativePath} 的一级标题后应有明确导语`
+        );
+      }
     }
   }
 });
