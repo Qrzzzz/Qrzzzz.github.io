@@ -314,7 +314,7 @@ test("supports Markdown-authored excerpt bodies inside the outer article shell",
   assert.match(renderedLatestBatch[0], /<blockquote>[\s\S]*?<p>桂花的香，是忽然来的。/);
   assert.match(renderedLatestBatch[1], /<blockquote>[\s\S]*?<p>我大抵是害怕了。<\/p>[\s\S]*?<p>照学校的规规条条把头发剪了/);
   assert.match(renderedLatestBatch[2], /<blockquote class="excerpt-quotation" lang="en">[\s\S]*?<p>Do you hear the people sing\?<br>\s*Singing the song of angry men<br>/);
-  assert.match(renderedLatestBatch[2], /<footer>Herbert Kretzmer（英文歌词），Claude-Michel Schönberg（作曲）；音乐剧 <cite>Les Misérables<\/cite>/);
+  assert.match(renderedLatestBatch[2], /<footer>Herbert Kretzmer \(English lyrics\), Claude-Michel Schönberg \(music\); “<cite><a [^>]+>Do You Hear the People Sing\?<\/a><\/cite>” from the musical <cite>Les Misérables<\/cite>/);
   assert.match(renderedLatestBatch[3], /<blockquote class="excerpt-quotation" lang="en">[\s\S]*?<p>Hating pop music doesn’t make you deep\.<\/p>/);
   assert.match(renderedLatestBatch[4], /<blockquote>[\s\S]*?<p>2020 年，光大证券保荐业务部门负责人/);
   assert.match(renderedLatestBatch[4], /<footer>tombkeeper，<cite><a href="https:\/\/www\.sina\.cn\/news\/detail\/5347753652653895\.html">新浪新闻<\/a><\/cite>/);
