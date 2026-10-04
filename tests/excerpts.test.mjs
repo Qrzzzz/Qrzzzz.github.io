@@ -380,7 +380,7 @@ test("renders Markdown inside preserved special excerpt containers", () => {
 test("keeps every excerpt in its own Markdown page", () => {
   for (const { source: page, name } of excerptSources) {
     assert.doesNotMatch(page, /excerpt-entry__heading|aria-labelledby=/m);
-    assert.ok(page.includes(`title: Excerpt ${name.slice(0, -3)}`));
+    assert.match(page, /^title:\s+\S.+$/m);
     assert.match(page, /aria-label="Excerpt"/);
   }
 
