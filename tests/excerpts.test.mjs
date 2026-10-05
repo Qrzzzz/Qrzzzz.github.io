@@ -327,7 +327,7 @@ test("supports Markdown-authored excerpt bodies inside the outer article shell",
   assert.match(renderedLatestBatch[5], /潮水（焯水）/);
   assert.match(renderedLatestBatch[5], /<footer>她不想死也想去巴黎，<cite><a href="https:\/\/weibo\.com\/7709681873\/RjuN2qDLP">微博<\/a><\/cite>，2026 年 9 月 24 日 00:17<\/footer>/);
   assert.doesNotMatch(fortieth, /utm_source=/);
-  assert.match(renderedLatestBatch[6], /<h1[^>]*>2026-10-04-01\s*<a class="header-anchor"/);
+  assert.match(renderedLatestBatch[6], /<h1[^>]*>从中国访问回来的金正日将军\s*<a class="header-anchor"/);
   assert.match(renderedLatestBatch[6], /<blockquote>[\s\S]*?<p>从中国访问回来金正日爷爷全然不顾身体的疲惫/);
   assert.doesNotMatch(renderedLatestBatch[6], /<footer>|<cite>/);
   assert.doesNotMatch(renderedLatestBatch[6], /<a\s(?!class="header-anchor")/);
