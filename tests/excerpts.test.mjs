@@ -234,9 +234,9 @@ test("supports Markdown-authored excerpt bodies inside the outer article shell",
   assert.match(thirtyNinth, /^> 2020 年，光大证券保荐业务部门负责人/m);
   assert.match(fortieth, /^::: info 校订说明$/m);
   assert.match(fortieth, /^> 染上大荤了……/m);
-  assert.match(fortyFirst, /^# 2026-10-04-01$/m);
-  assert.match(fortyFirst, /^\*\*作者：佚名\*\*$/m);
-  assert.match(fortyFirst, /^## 从中国访问回来的金正日将军$/m);
+  assert.match(fortyFirst, /^# 从中国访问回来的金正日将军$/m);
+  assert.doesNotMatch(fortyFirst, /^\*\*作者：/m);
+  assert.doesNotMatch(fortyFirst, /^## /m);
   assert.match(fortyFirst, /战争总是要有牺牲的。为民族独立事业牺牲的人是伟大的。/);
   assert.doesNotMatch(fortyFirst, /<footer|<cite|<a href=/);
 
