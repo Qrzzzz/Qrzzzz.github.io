@@ -5,6 +5,8 @@ import { fileURLToPath } from "node:url";
 import { collectLibraryRecords } from "../../scripts/lib/content-library.mjs";
 import { inlineEmphasisPlugin } from "./markdown/inline-emphasis.mjs";
 import { mermaidPlugin } from "./markdown/mermaid.mjs";
+import { loadingPoems } from "./theme/loadingPoems.mjs";
+import { bootstrapLoadingPoem, createLoadingPoemPlayer } from "./theme/loadingPoemRuntime.mjs";
 
 const repositoryRoot = fileURLToPath(new URL("../..", import.meta.url));
 const { records: libraryRecords } = collectLibraryRecords(repositoryRoot);
@@ -66,6 +68,11 @@ export default defineConfig({
   },
 
   head: [
+    [
+      "script",
+      { id: "site-loading-bootstrap" },
+      `;(${bootstrapLoadingPoem.toString()})(${JSON.stringify(loadingPoems).replace(/</g, "\\u003c")}, ${createLoadingPoemPlayer.toString()});`
+    ],
     [
       "script",
       { id: "sync-initial-theme-color" },

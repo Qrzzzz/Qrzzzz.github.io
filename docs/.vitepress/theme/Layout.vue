@@ -11,6 +11,7 @@ import NavActions from "./NavActions.vue";
 import NotFound from "./NotFound.vue";
 import ShareImage from "./ShareImage.vue";
 import ReadingRail from "./ReadingRail.vue";
+import SiteLoading from "./SiteLoading.vue";
 
 const { Layout } = DefaultTheme;
 const { frontmatter, isDark, page } = useData();
@@ -108,6 +109,7 @@ onBeforeUnmount(() => {
     :data-page-kind="pageKind"
     :data-page-language="pageLanguage"
   >
+    <SiteLoading />
     <HomeAsciiTrail v-if="clientReady && pageKind === 'home'" />
 
     <Layout>
