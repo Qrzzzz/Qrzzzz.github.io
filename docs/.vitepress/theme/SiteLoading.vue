@@ -108,7 +108,7 @@ onBeforeUnmount(() => {
   position: fixed;
   inset: 0;
   z-index: 100;
-  padding: clamp(40px, 5.6vw, 88px);
+  padding: 0;
   color: var(--site-accent);
   background: var(--site-canvas);
   pointer-events: none;
@@ -125,8 +125,9 @@ onBeforeUnmount(() => {
 }
 .site-loading__heading {
   position: absolute;
-  left: 0;
-  bottom: 0;
+  left: 25%;
+  top: 72%;
+  transform: translate(-50%, -50%);
   width: 152px;
 }
 .site-loading__line { display: block; width: 100%; margin-bottom: 14px; }
@@ -153,10 +154,10 @@ onBeforeUnmount(() => {
 }
 .site-loading__poem-stage {
   position: absolute;
-  inset: 0 0 0 48%;
+  inset: 17.5% 6.5% 14% 54%;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
   font-size: clamp(30px, 2.5vw, 38px);
 }
 .site-loading__poem {
@@ -223,27 +224,24 @@ onBeforeUnmount(() => {
 }
 @keyframes loading-reveal { to { visibility: visible; } }
 @media (max-width: 680px) {
-  .site-loading { padding: 28px; }
-  .site-loading__heading { width: 112px; }
+  .site-loading__heading { left: 25%; top: 83%; width: 112px; }
   .site-loading__title { font-size: 11px; }
   .site-loading__poem-stage {
-    inset: 0 0 116px 24px;
+    inset: 5% 7% 27% 13%;
     font-size: clamp(22px, 6.9vw, 28px);
   }
   .site-loading__poem:lang(en) { font-size: clamp(27px, 8vw, 34px); line-height: 1.32; }
   .site-loading__attribution { margin-top: 22px; font-size: 10px; }
 }
 @media (max-height: 560px) and (min-width: 681px) {
-  .site-loading { padding: 28px 40px; }
   .site-loading__heading { width: 128px; }
-  .site-loading__poem-stage { left: 38%; font-size: clamp(22px, 2.8vw, 26px); }
+  .site-loading__poem-stage { inset: 5% 6.5% 5% 44%; font-size: clamp(22px, 2.8vw, 26px); }
   .site-loading__poem { line-height: 1.4; }
   .site-loading__poem:lang(en) { font-size: clamp(27px, 3.4vw, 32px); line-height: 1.28; }
   .site-loading__attribution { margin-top: 18px; }
 }
 @media (max-height: 600px) and (max-width: 680px) {
-  .site-loading { padding: 24px; }
-  .site-loading__poem-stage { bottom: 96px; font-size: 22px; }
+  .site-loading__poem-stage { bottom: 27%; font-size: 22px; }
   .site-loading__poem:lang(en) { font-size: 27px; }
 }
 @media (prefers-reduced-motion: reduce) {
