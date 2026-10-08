@@ -13,6 +13,9 @@ metadata, public routes and VitePress navigation remain the source of truth.
   edge and opens across the bottom, with a low-opacity field,
   a 1.5 px gradient ink stroke, and a faint dotted signal core. The
   layers share exactly the same geometry and deform as one object.
+- A continuous loop in the lower middle crosses the same stroke before opening
+  toward the right. Phones use a flatter loop beneath the destinations. All joins
+  retain shared tangents, including both passes through the crossing.
 - Hover and drag resolve to a continuous arc-length coordinate on the stroke, never
   to a sampled anchor. Small pulls stay effectively 1:1 before a soft resistance knee;
   tangential motion can slide the deformation center a limited distance instead of
