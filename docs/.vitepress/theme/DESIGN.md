@@ -1,14 +1,15 @@
 # Gesture / blue ink
 
-The home is a name and two destinations inside one continuous gesture. Content,
+The home is a name, two quiet destinations on the left, and a rotating reading
+column on the right. Content,
 metadata, public routes and VitePress navigation remain the source of truth.
 
 - Light: cool paper `#eef2f3`, cobalt `#243ecd`, ink `#172439`.
 - Dark: navy `#151d37`, periwinkle ink `#a7bcff`, text `#f0f4ff`.
 - Interface: sans serif. Reading: the existing local serif subsets. No new font service.
 - The mobile curve is a separate composition. Never crop or scale down the desktop layout.
-- The home gesture is rendered as a restrained three-layer signal: a low-opacity field,
-  a 4.4 px gradient ink stroke (3.7 px on phones), and a fine dotted signal core. The
+- The home gesture sits below the destinations and reading area, with a low-opacity field,
+  a 1.5 px gradient ink stroke, and a faint dotted signal core. The
   layers share exactly the same geometry and deform as one object.
 - Hover and drag resolve to a continuous arc-length coordinate on the stroke, never
   to a sampled anchor. Small pulls stay effectively 1:1 before a soft resistance knee;
@@ -35,6 +36,16 @@ metadata, public routes and VitePress navigation remain the source of truth.
   that original wave. Hidden pages and unmount cancel
   animation work, release pointer capture and remove listeners.
 - The preserved ASCII pointer trail is a quiet secondary texture, home only.
+- Home poetry uses 200 original works by 6 Astra, shuffled without repeats until
+  the bag is exhausted. A cycle counts 60 seconds from the start of typing, then
+  retracts the text before the next work. The loading overlay keeps its own 50
+  works and 30-second cycle. Both share the player but have independent selection state.
+- Pause/Resume and Next remain keyboard accessible; selecting poem text pauses
+  playback. Background and user pauses overlap without consuming reading time.
+  Reduced motion shows full works, and no-JS retains a complete server-rendered poem.
+  The ghost copy reserves authored text geometry; screen readers receive whole
+  text without per-character live announcements. Mobile places poetry above the
+  destinations and uses its own curve composition, with native vertical scrolling.
 - Shared controls use short color/underline changes. Theme switching fades one snapshot
   over a fully visible new theme. Avoid autoplay, floating cards, fake windows and
   independent decorative effects.

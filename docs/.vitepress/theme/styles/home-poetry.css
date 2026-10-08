@@ -1,0 +1,55 @@
+/* Two quiet destinations on the left; a fixed reading column on the right. */
+.gesture-stage { height: max(620px, calc(100svh - 150px)); }
+.home-entry--library { left: 19%; top: 53%; }
+.home-entry--projects { left: 19%; top: 68%; }
+.home-entry { gap: 2px 32px; min-height: 64px; }
+.home-entry__name { font-size: clamp(24px, 2vw, 29px); letter-spacing: -.6px; }
+.home-entry__count { font-size: 11px; }
+.home-entry__arrow { width: 32px; stroke-width: 1.2; }
+.home-gesture__field { stroke-width: 8px; opacity: .045; }
+.home-gesture__ink, .gesture-fallback path { stroke-width: 1.5px; }
+.home-gesture__signal { opacity: .25; stroke-width: .6px; }
+.home-poetry { position: absolute; z-index: 2; inset: 12% 6.5% 15% 54%; display: flex; flex-direction: column; justify-content: center; }
+.home-poem { font-family: var(--site-font-reading); font-size: clamp(28px, 2.4vw, 36px); font-weight: 400; line-height: 1.65; letter-spacing: .025em; overflow-wrap: anywhere; }
+.home-poem:lang(en) { font-family: "Newsreader", var(--site-font-reading); font-size: clamp(36px, 3.1vw, 48px); line-height: 1.32; letter-spacing: -.018em; }
+.home-poem__copy { display: grid; }
+.home-poem__ghost, .home-poem__live { grid-area: 1 / 1; min-width: 0; white-space: pre-wrap; }
+.home-poem__ghost { visibility: hidden; }
+.home-poetry__footer { margin-top: 28px; font-family: var(--site-font-sans); }
+.home-poetry__credit { margin: 0; font-size: 11px; color: var(--site-text-muted); letter-spacing: .02em; }
+.home-poetry__credit span { color: var(--site-text); }
+.home-poetry__controls { display: flex; align-items: center; gap: 12px; height: 44px; margin-top: 4px; color: var(--site-text-muted); font-size: 11px; }
+.home-poetry__controls button { min-height: 44px; min-width: 44px; text-align: left; cursor: pointer; transition: color 160ms ease; }
+.home-poetry__controls button:hover, .home-poetry__controls button:focus-visible { color: var(--site-accent); }
+.home-poem__cursor { display: inline-block; width: .65em; margin-left: .06em; font-family: var(--site-font-mono); font-size: .7em; line-height: 1; color: var(--site-accent); text-shadow: 0 0 3px color-mix(in srgb, var(--site-accent) 40%, transparent), 0 0 8px color-mix(in srgb, var(--site-accent) 16%, transparent); }
+.home-poem:not([data-cursor]) .home-poem__cursor, .home-poem[data-cursor="hidden"] .home-poem__cursor { opacity: 0; }
+.home-poem[data-cursor="blinking"] .home-poem__cursor { animation: home-poem-cursor .6s steps(1, end) 3; }
+@keyframes home-poem-cursor { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+@media (max-width: 1079px) and (min-width: 681px) {
+  .home-poetry { left: 48%; right: 7%; }
+  .home-entry--library, .home-entry--projects { left: 12%; }
+  .home-poem { font-size: 28px; }
+  .home-poem:lang(en) { font-size: 36px; }
+}
+@media (max-width: 680px) {
+  .gesture-stage { height: max(660px, calc(100svh - 150px)); }
+  .home-poetry { inset: 5% 9% 35% 13%; }
+  .home-poem { font-size: clamp(23px, 6.2vw, 28px); line-height: 1.65; }
+  .home-poem:lang(en) { font-size: clamp(28px, 7.4vw, 34px); line-height: 1.32; }
+  .home-poetry__footer { margin-top: 22px; }
+  .home-poetry__credit, .home-poetry__controls { font-size: 10px; }
+  .home-entry--library { left: 20%; top: 72%; }
+  .home-entry--projects { left: 20%; top: 83%; }
+  .home-entry { gap: 2px 28px; min-height: 60px; }
+  .home-entry__name { font-size: 23px; }
+}
+@media (orientation: landscape) and (max-height: 500px) and (min-width: 681px) {
+  .gesture-stage { height: max(410px, calc(100svh - 112px)); }
+  .home-poetry { inset: 7% 7% 10% 48%; }
+  .home-poem { font-size: 24px; line-height: 1.5; }
+  .home-poem:lang(en) { font-size: 30px; line-height: 1.28; }
+  .home-poetry__footer { margin-top: 18px; }
+  .home-entry--library { top: 45%; }
+  .home-entry--projects { top: 65%; }
+}
+@media (prefers-reduced-motion: reduce) { .home-poem__cursor { animation: none !important; } }

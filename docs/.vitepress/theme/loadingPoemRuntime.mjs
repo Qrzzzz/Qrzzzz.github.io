@@ -1,7 +1,8 @@
 /** Shared by the pre-hydration loader and client navigation; no Vue dependency. */
 export function createLoadingPoemPlayer({
   root, poems, random = Math.random, schedule = setTimeout,
-  cancel = clearTimeout, now = () => performance.now()
+  cancel = clearTimeout, now = () => performance.now(),
+  cycleMs = 30000, shuffle = false
 }) {
   const doc = root.ownerDocument;
   const motion = doc.defaultView?.matchMedia?.('(prefers-reduced-motion: reduce)');
@@ -16,6 +17,10 @@ export function createLoadingPoemPlayer({
   let count = 0;
   let startedAt = 0;
   let pausedAt = 0;
+  let paused = false;
+  let suspended = false;
+  let bag = [];
+  let lastId;
 
   function clear() {
     if (timer !== undefined) cancel(timer);
@@ -26,7 +31,7 @@ export function createLoadingPoemPlayer({
   function later(delay, callback) {
     clear();
     task = { delay, callback, due: now() + delay };
-    if (doc.hidden) return;
+    if (suspended) return;
     timer = schedule(() => {
       timer = undefined;
       task = undefined;
@@ -41,7 +46,7 @@ export function createLoadingPoemPlayer({
   }
   function hold() {
     phase('holding', 'hidden');
-    later(Math.max(0, 30000 - (now() - startedAt)), erase);
+    later(Math.max(0, cycleMs - ((suspended ? pausedAt : now()) - startedAt)), erase);
   }
   function complete() {
     if (motion?.matches) { hold(); return; }
@@ -74,12 +79,27 @@ export function createLoadingPoemPlayer({
     }
   }
   function next() {
-    const previous = Number(doc.documentElement.dataset.loadingLastPoem);
-    const candidates = poems.filter(item => item.id !== previous);
+    const previous = shuffle ? lastId : doc.documentElement.dataset.loadingLastPoem;
+    const candidates = poems.filter(item => String(item.id) !== String(previous));
     const pool = candidates.length ? candidates : poems;
-    poem = pool[Math.min(pool.length - 1, Math.floor(Math.max(0, random()) * pool.length))];
+    if (shuffle) {
+      if (!bag.length) {
+        bag = [...poems];
+        for (let i = bag.length - 1; i > 0; i--) {
+          const j = Math.min(i, Math.floor(Math.max(0, random()) * (i + 1)));
+          [bag[i], bag[j]] = [bag[j], bag[i]];
+        }
+        if (bag.length > 1 && String(bag.at(-1).id) === String(previous)) {
+          [bag[0], bag[bag.length - 1]] = [bag[bag.length - 1], bag[0]];
+        }
+      }
+      poem = bag.pop();
+    } else {
+      poem = pool[Math.min(pool.length - 1, Math.floor(Math.max(0, random()) * pool.length))];
+    }
     if (!poem) return;
-    doc.documentElement.dataset.loadingLastPoem = String(poem.id);
+    lastId = poem.id;
+    if (!shuffle) doc.documentElement.dataset.loadingLastPoem = String(poem.id);
     root.dataset.poemId = String(poem.id);
     root.dataset.form = poem.form;
     root.lang = poem.lang;
@@ -87,7 +107,7 @@ export function createLoadingPoemPlayer({
     ghost.textContent = poem.text + '\u00a0_';
     letters = Array.from(poem.text);
     count = motion?.matches ? letters.length : 0;
-    startedAt = now();
+    startedAt = suspended ? pausedAt : now();
     phase('typing', motion?.matches ? 'hidden' : 'typing');
     render();
     if (motion?.matches) hold();
@@ -95,7 +115,10 @@ export function createLoadingPoemPlayer({
   }
   function visibility() {
     if (!active) return;
-    if (doc.hidden) {
+    const shouldSuspend = doc.hidden || paused;
+    if (shouldSuspend === suspended) return;
+    suspended = shouldSuspend;
+    if (suspended) {
       pausedAt = now();
       if (task) task.delay = Math.max(0, task.due - now());
       if (timer !== undefined) cancel(timer);
@@ -119,7 +142,17 @@ export function createLoadingPoemPlayer({
       if (disposed || active) return;
       active = true;
       pausedAt = now();
+      suspended = doc.hidden || paused;
       next();
+    },
+    pause(value = true) {
+      paused = value;
+      visibility();
+    },
+    next() {
+      if (!active || disposed || root.dataset.phase === 'erasing' || root.dataset.phase === 'between') return;
+      clear();
+      erase();
     },
     destroy() {
       active = false;

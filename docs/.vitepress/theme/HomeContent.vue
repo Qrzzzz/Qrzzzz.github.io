@@ -5,6 +5,7 @@ import { data as libraryItems } from "../content/library.data";
 import { PROJECTS } from "../content/projects.mjs";
 import { DESKTOP_GESTURE, MOBILE_GESTURE, gesturePath } from "./gestureGeometry.mjs";
 import { createGestureRuntime } from "./gestureRuntime.mjs";
+import HomePoetry from "./HomePoetry.vue";
 
 const stage = ref<HTMLElement>();
 const svg = ref<SVGSVGElement>();
@@ -30,7 +31,7 @@ onBeforeUnmount(() => runtime?.destroy());
 <template>
   <div class="home-page">
     <h1 class="visually-hidden">Cherry Chu</h1>
-    <section ref="stage" class="gesture-stage" aria-label="Library and projects">
+    <section ref="stage" class="gesture-stage" aria-label="Poetry, library and projects">
       <svg class="gesture-fallback gesture-fallback--desktop" viewBox="0 0 1000 620" preserveAspectRatio="none" aria-hidden="true">
         <path :d="gesturePath(DESKTOP_GESTURE)" />
       </svg>
@@ -64,6 +65,7 @@ onBeforeUnmount(() => runtime?.destroy());
           <svg class="home-entry__arrow" viewBox="0 0 42 24" aria-hidden="true"><path d="M1 12h36M29 4l8 8-8 8" /></svg>
         </a>
       </nav>
+      <HomePoetry />
     </section>
     <footer class="home-colophon">
       <a href="https://github.com/Qrzzzz" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
