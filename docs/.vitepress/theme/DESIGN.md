@@ -8,7 +8,9 @@ metadata, public routes and VitePress navigation remain the source of truth.
 - Dark: navy `#151d37`, periwinkle ink `#a7bcff`, text `#f0f4ff`.
 - Interface: sans serif. Reading: the existing local serif subsets. No new font service.
 - The mobile curve is a separate composition. Never crop or scale down the desktop layout.
-- The home gesture sits below the destinations and reading area, with a low-opacity field,
+- The home destinations sit diagonally on the left, Library above-left (-3 degrees)
+  and Projects below-right (+2 degrees). The home gesture descends along the left
+  edge and opens across the bottom, with a low-opacity field,
   a 1.5 px gradient ink stroke, and a faint dotted signal core. The
   layers share exactly the same geometry and deform as one object.
 - Hover and drag resolve to a continuous arc-length coordinate on the stroke, never
