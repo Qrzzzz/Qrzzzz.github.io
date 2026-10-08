@@ -96,6 +96,7 @@ onBeforeUnmount(() => {
         <div ref="poemRoot" class="site-loading__poem" data-poem-player data-allow-mismatch>
           <div class="site-loading__poem-ghost" data-poem-ghost></div>
           <div class="site-loading__poem-live"><span data-poem-text></span><span class="site-loading__cursor">_</span></div>
+          <p class="site-loading__attribution" lang="en">Words by <span>6 Astra</span></p>
         </div>
       </div>
     </div>
@@ -155,16 +156,17 @@ onBeforeUnmount(() => {
   inset: 0 0 0 48%;
   display: flex;
   align-items: center;
-  font-size: clamp(32px, 2.8vw, 44px);
+  justify-content: flex-end;
+  font-size: clamp(30px, 2.5vw, 38px);
 }
 .site-loading__poem {
   display: grid;
-  width: min(100%, 30ch);
+  width: min(100%, 28ch);
   min-width: 0;
   font-family: var(--site-font-reading);
   color: var(--site-text);
   text-align: left;
-  line-height: 1.55;
+  line-height: 1.6;
   font-weight: 400;
   overflow-wrap: anywhere;
 }
@@ -172,9 +174,9 @@ onBeforeUnmount(() => {
 .site-loading__poem:lang(zh-CN) { letter-spacing: .035em; }
 .site-loading__poem:lang(en) {
   font-family: "Newsreader", var(--site-font-reading);
-  font-size: clamp(40px, 3.7vw, 60px);
-  line-height: 1.28;
-  letter-spacing: -.025em;
+  font-size: clamp(36px, 3.1vw, 50px);
+  line-height: 1.34;
+  letter-spacing: -.018em;
 }
 .site-loading__poem-ghost, .site-loading__poem-live {
   grid-area: 1 / 1;
@@ -182,6 +184,17 @@ onBeforeUnmount(() => {
   min-width: 0;
 }
 .site-loading__poem-ghost { visibility: hidden; }
+.site-loading__attribution {
+  grid-area: 2 / 1;
+  margin: 28px 0 0;
+  font-family: var(--site-font-sans);
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: .02em;
+  color: var(--site-text-muted);
+}
+.site-loading__attribution span { color: var(--site-text); }
 .site-loading__cursor {
   display: inline-block;
   width: .65em;
@@ -218,13 +231,15 @@ onBeforeUnmount(() => {
     font-size: clamp(22px, 6.9vw, 28px);
   }
   .site-loading__poem:lang(en) { font-size: clamp(27px, 8vw, 34px); line-height: 1.32; }
+  .site-loading__attribution { margin-top: 22px; font-size: 10px; }
 }
 @media (max-height: 560px) and (min-width: 681px) {
   .site-loading { padding: 28px 40px; }
   .site-loading__heading { width: 128px; }
-  .site-loading__poem-stage { left: 34%; font-size: clamp(22px, 3vw, 28px); }
+  .site-loading__poem-stage { left: 38%; font-size: clamp(22px, 2.8vw, 26px); }
   .site-loading__poem { line-height: 1.4; }
-  .site-loading__poem:lang(en) { font-size: clamp(28px, 3.7vw, 36px); line-height: 1.28; }
+  .site-loading__poem:lang(en) { font-size: clamp(27px, 3.4vw, 32px); line-height: 1.28; }
+  .site-loading__attribution { margin-top: 18px; }
 }
 @media (max-height: 600px) and (max-width: 680px) {
   .site-loading { padding: 24px; }
