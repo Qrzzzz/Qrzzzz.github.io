@@ -1,5 +1,6 @@
 import { computed, nextTick, onBeforeUnmount, ref, watch } from "vue";
 import { useData } from "vitepress";
+import { fitShareImageLayout } from "./shareImageLayout";
 import { createShareQrCode, embedShareResources, loadShareImageAssets, prepareShareResources } from "./shareImageResources";
 import { SHARE_IMAGE_CHARACTER_LIMIT, SHARE_IMAGE_FORMAT, createShareImageFilename, extractLongformContent, measureLongformHeight, snapshotShareImagePalette, withExportTimeout } from "./shareImageRuntime.mjs";
 
@@ -88,6 +89,7 @@ export function useShareImageExport(pageKind: () => "article" | "excerpt", getEl
       statusMessage.value = "Loading fonts and images…";
       await loadShareImageAssets(element);
       if (!isCurrent()) return;
+      fitShareImageLayout(element);
       stage = "image rendering";
       progress.value = 3;
       statusMessage.value = "Rendering image…";
@@ -95,7 +97,7 @@ export function useShareImageExport(pageKind: () => "article" | "excerpt", getEl
       const { domToBlob } = await withExportTimeout(import("modern-screenshot"));
       if (!isCurrent()) return;
       const blob = await withExportTimeout(domToBlob(element, {
-        backgroundColor: palette["--share-canvas"], width: SHARE_IMAGE_FORMAT.width,
+        backgroundColor: palette["--share-canvas"], width: Math.ceil(element.getBoundingClientRect().width),
         height, scale: SHARE_IMAGE_FORMAT.scale,
         font: { preferredFormat: "woff2" }, timeout: 15000,
         fetch: { placeholderImage: () => { throw new Error("Article image could not be embedded"); } }

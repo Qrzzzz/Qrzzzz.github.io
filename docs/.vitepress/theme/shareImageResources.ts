@@ -52,7 +52,7 @@ export async function prepareShareResources(resources: ShareResource[], palette:
       if (!math) throw new Error("Formula is unavailable");
       svg = math;
       const style = getComputedStyle(math);
-      const ratio = 17 / (parseFloat(style.fontSize) || 17);
+      const ratio = 26 / (parseFloat(style.fontSize) || 26);
       const rect = math.getBoundingClientRect();
       width = rect.width * ratio;
       height = rect.height * ratio;
@@ -90,7 +90,7 @@ export async function loadShareImageAssets(element: HTMLElement) {
   const text = element.textContent || "";
   const style = getComputedStyle(element);
   const families = ["--share-font-reading", "--share-font-sans", "--share-font-mono"].map(token => style.getPropertyValue(token).trim());
-  await withExportTimeout(Promise.all(families.flatMap(family => [400, 700, 750].map(weight => document.fonts.load(`${weight} 17px ${family}`, text)))));
+  await withExportTimeout(Promise.all(families.flatMap(family => [400, 700, 750].map(weight => document.fonts.load(`${weight} 26px ${family}`, text)))));
   await withExportTimeout(Promise.all(Array.from(element.querySelectorAll<HTMLImageElement>("img[src]")).map(image => image.decode())));
 }
 

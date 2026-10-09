@@ -1,6 +1,6 @@
-.share-image-longform__body :deep(h1) { font-size: 28px; }
-.share-image-longform__body :deep(h2) { font-size: 24px; }
-.share-image-longform__body :deep(h3) { font-size: 20px; }
+.share-image-longform__body :deep(h1) { font-size: 34px; }
+.share-image-longform__body :deep(h2) { font-size: 30px; }
+.share-image-longform__body :deep(h3) { font-size: 28px; }
 .share-image-longform__body :deep(:is(h1,h2,h3,h4,h5,h6)) { margin: 32px 0 14px; line-height: 1.5; font-weight: 700; }
 .share-image-longform__body :deep(p) { margin: 0 0 18px; }
 .share-image-longform__body :deep(strong) { color: var(--share-text); font-weight: 750; }
@@ -39,14 +39,14 @@
 .share-image-longform__body :deep(.custom-block .custom-block-title) {
   margin: 0 0 7px;
   color: var(--share-block-accent);
-  font-size: 14px;
+  font-size: 18px;
   font-weight: 720;
   letter-spacing: .01em;
 }
 .share-image-longform__body :deep(.custom-block > :last-child) { margin-bottom: 0; }
 .share-image-longform__body :deep(.custom-block code) { color: var(--share-text); }
 .share-image-longform__body :deep(.custom-block a) { color: var(--share-link); }
-.share-image-longform__body :deep(blockquote) { margin: 22px 0; border-left: 3px solid var(--share-content-accent); padding: 4px 0 4px 18px; color: var(--share-content-muted); }
+.share-image-longform__body :deep(blockquote) { margin: 22px 0; border-left: 3px solid var(--share-content-accent); padding: 4px 0 4px 18px; color: var(--share-text); }
 .share-image-longform__body :deep(blockquote > :last-child) { margin-bottom: 0; }
 .share-image-longform__body :deep(:is(ul,ol)) { margin: 16px 0 22px; padding-left: 26px; }
 .share-image-longform__body :deep(ul) { list-style: disc; }
@@ -60,8 +60,8 @@
 .share-image-longform__body :deep(a) { color: var(--share-link); text-decoration: underline; }
 .share-image-longform__body :deep(img) { display: block; max-width: 100%; height: auto; margin: 18px auto; }
 .share-image-longform__body :deep(figure) { margin: 22px 0; }
-.share-image-longform__body :deep(:is(figcaption,cite)) { font-size: 14px; color: var(--share-text-muted); }
-.share-image-longform__body :deep(table) { width: 100%; table-layout: fixed; border-collapse: collapse; margin: 22px 0; font-size: 14px; }
+.share-image-longform__body :deep(:is(figcaption,cite)) { font-size: 18px; color: var(--share-text-muted); }
+.share-image-longform__body :deep(table) { width: 100%; table-layout: fixed; border-collapse: collapse; margin: 22px 0; font-size: 18px; }
 .share-image-longform__body :deep(:is(th,td)) { border: 1px solid var(--share-line); padding: 8px; }
 .share-image-longform__body :deep([data-share-align="left"]) { text-align: left; }
 .share-image-longform__body :deep([data-share-align="center"]) { text-align: center; }
