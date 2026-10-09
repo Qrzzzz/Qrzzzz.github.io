@@ -130,7 +130,7 @@ test("keeps hand-written pages on their category-specific metadata and lead cont
       if (page.relativePath === "notes/sangetsuki-translation.md") {
         // This translation introduces its source in an info block instead of a lead.
         assert.doesNotMatch(unfenced, /<p class="lead">/);
-        assert.match(unfenced, /^#\s+.+\n\n中文译文与译注由 .+\n\n::: info 原文来源与翻译说明\n/m);
+        assert.match(unfenced, /^#\s+.+\n\n::: info 原文来源与翻译说明\n本篇中文译文与译注由 .+\n/m);
       } else {
         assert.match(
           unfenced,

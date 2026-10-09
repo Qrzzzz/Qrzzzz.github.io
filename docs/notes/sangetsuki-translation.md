@@ -1,5 +1,5 @@
 ---
-title: 《山月记》：译文与译注
+title: 山月记
 collection: library
 kind: article
 published: 2026-10-04
