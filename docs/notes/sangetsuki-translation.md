@@ -12,12 +12,10 @@ tags:
 featured: false
 ---
 
-# 《山月记》：译文与译注
-
-中文译文与译注由 ChatGPT 6.1 Sol 翻译、整理，2026 年 10 月 4 日。
+# 山月记
 
 ::: info 原文来源与翻译说明
-本篇据[青空文库《山月記》](https://www.aozora.gr.jp/cards/000119/files/624_14544.html)所收日文全文整理。篇中汉诗保留原诗，仅统一字形。
+本篇中文译文与译注由 ChatGPT 6.1 Sol 据[青空文库《山月記》](https://www.aozora.gr.jp/cards/000119/files/624_14544.html)所收日文全文整理。篇中汉诗保留原诗，仅统一字形。
 :::
 
 ## 译文
