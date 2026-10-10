@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import test from "node:test";
 
 const library = readFileSync("docs/library/index.md", "utf8");
@@ -114,7 +114,11 @@ test("entry pages share a header and keep collections reachable", () => {
   for (const slug of ["library", "projects", "works", "tools", "docs", "notes", "prompt-collection", "excerpts"]) {
     const source = readFileSync(`docs/${slug}/index.md`, "utf8");
     assert.match(source, /^pageType: index$/m);
-    assert.match(source, /^outline: false$/m);
+    if (slug === "excerpts") {
+      assert.doesNotMatch(source, /^outline: false$/m);
+    } else {
+      assert.match(source, /^outline: false$/m);
+    }
     assert.match(source, /<CatalogHeader /);
   }
   for (const slug of ["notes", "prompt-collection", "excerpts"]) {
@@ -126,4 +130,25 @@ test("entry pages share a header and keep collections reachable", () => {
     readFileSync("docs/.vitepress/theme/styles/catalog.css", "utf8"),
     /\.site-layout\[data-page-kind="index"\] \.library-result\s*\{[^}]*padding: 24px 0 24px 16px;/
   );
+});
+
+test("all excerpts inherit the default page outline", () => {
+  for (const file of readdirSync("docs/excerpts").filter((name) => name.endsWith(".md"))) {
+    const source = readFileSync(`docs/excerpts/${file}`, "utf8");
+    assert.doesNotMatch(source, /^outline:\s*false$/m, `${file} disables the page outline`);
+  }
+});
+
+test("Lu Xun excerpts use traditional 社戲 and discoverable 理水 sections", () => {
+  const shexi = readFileSync("docs/excerpts/2026-10-10-03.md", "utf8");
+  assert.match(shexi, /^lang: zh-TW$/m);
+  assert.match(shexi, /^# 社戲$/m);
+  assert.match(shexi, /zh-hant\/社戲/);
+  assert.match(shexi, /<blockquote class="excerpt-quotation" lang="zh-Hant">/);
+  assert.doesNotMatch(shexi, /Simplified Chinese text/);
+
+  const lishui = readFileSync("docs/excerpts/2026-10-10-04.md", "utf8");
+  for (const section of ["一", "二", "三", "四"]) {
+    assert.ok(lishui.includes(`## ${section}`));
+  }
 });
