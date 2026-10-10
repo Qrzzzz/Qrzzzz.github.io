@@ -2,7 +2,6 @@
 title: Excerpts
 description: A collection of sentences and passages worth remembering.
 lang: en
-outline: false
 aside: false
 pageType: index
 ---
