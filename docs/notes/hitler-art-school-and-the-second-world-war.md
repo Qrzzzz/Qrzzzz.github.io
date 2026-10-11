@@ -14,19 +14,19 @@ featured: false
 
 # 希特勒考上美院以后，二战还会发生吗？
 
-**这次录取很可能会改变希特勒走上政治的道路，从而改变德国最终出现的那种政权。现实里那场第二次世界大战，也就不太可能以近似的形式重演。**但德国的右转、欧洲的战争危险、亚洲的扩张战争，不会跟着一封录取通知书一起消失。
+**这次录取很可能会改变希特勒走上政治的道路，从而改变德国最终出现的那种政权。现实里那场第二次世界大战，也就不太可能以近似的形式重演**。但德国的右转、欧洲的战争危险、亚洲的扩张战争，不会跟着一封录取通知书一起消失。
 
 要谈清楚这件事，先得拆开三个常被揉成一团的问题：德国为什么陷入危机，为什么偏偏是纳粹来利用这场危机，掌权后的德国又为什么会走向那种战争。三者互相关联，却不是同一件事。美院录取几乎动不了第一个；对第二个影响可能很大；到了第三个，则可能通过换掉执政者和权力结构，产生决定性后果。
 
 分叉点定在1907年秋，希特勒第一次申请维也纳美术学院。假设学院录取了他，他正常入学。这样，1908年那次落选就不必再发生——它本来就是第一次失败的结果。
 
-除此之外，不再给他任何额外好处。他还是那个十八岁的奥地利青年：同样的画技、教育、家庭、脾气。母亲照旧重病缠身，也很可能在1907年12月去世。招生委员会发得出录取通知书，却改不动肿瘤的病程。[Hitler, Adolf](https://www.deutsche-biographie.de/dbo068748.html?utm_source=chatgpt.com)
+除此之外，不再给他任何额外好处。他还是那个十八岁的奥地利青年：同样的画技、教育、家庭、脾气。母亲照旧重病缠身，也很可能在1907年12月去世。招生委员会发得出录取通知书，却改不动肿瘤的病程。<sup id="cite-1-1"><a href="#ref-1" role="doc-noteref" aria-label="参考文献 1">[1]</a></sup>
 
 下面我会说某件事“很可能”“大概”或“未必”。“很可能”指的是几乎不受这次变化影响的因果链；“大概”则是有现实依据、但仍有别的走法的判断。真要说“存在可能，但需要额外条件”，就得把条件一条条摆出来，不能偷偷塞进故事里。
 
 1907到1913年的变化，要从生活讲起，而不是从思想讲起。
 
-希特勒不是不会画画。他能画出有商业用途的城市景物和建筑水彩，后来也确实靠卖这类作品糊口。可这和学院要的绘画能力是两码事：他偏重建筑，人物薄弱；想转去正规建筑教育，又被中学学历这类门槛卡住。绘画学院肯收他，不等于同时给了他当建筑师的资格。[Lapham’s Quarterly](https://www.laphamsquarterly.org/roundtable/master-architect?utm_source=chatgpt.com)
+希特勒不是不会画画。他能画出有商业用途的城市景物和建筑水彩，后来也确实靠卖这类作品糊口。可这和学院要的绘画能力是两码事：他偏重建筑，人物薄弱；想转去正规建筑教育，又被中学学历这类门槛卡住。绘画学院肯收他，不等于同时给了他当建筑师的资格。<sup id="cite-2-1"><a href="#ref-2" role="doc-noteref" aria-label="参考文献 2">[2]</a></sup>
 
 所以他比较合理的出路，是建筑表现图、城市风景、商业绘画、插画，或者建筑事务所里的辅助工作。说他可能成为一个普通艺术从业者，有实际依据；说欧洲将迎来一位被耽误的伟大画家，就开始给反事实加滤镜了。
 
@@ -34,7 +34,7 @@ featured: false
 
 中学时的他就不服管、成绩差，还提前离校；偏偏对自己的艺术前途期待极高。进了学院，素描、人体、透视、规定作业和教师批评，都可能重新点起火气。不过，从前讨厌中学课程，并不能证明他一定会讨厌自己主动选的艺术训练。两条路都讲得通：他咽下一部分纪律，慢慢练出能就业的本事；或者对学院失望，中途退学，转去做商业绘画。
 
-那时的学院也不是一台把青年自动加工成温和自由主义者的机器。真进过维也纳美术学院的埃贡·席勒，1909年就因为受不了保守的教学方式走人了。这不能让我们安排希特勒认识席勒，更不能安排两人一起聊现代主义、从此改写人生；它只说明，入学和毕业之间隔着一整段真正的教育过程。[dhm.de](https://www.dhm.de/lemo/biografie/egon-schiele?utm_source=chatgpt.com)
+那时的学院也不是一台把青年自动加工成温和自由主义者的机器。真进过维也纳美术学院的埃贡·席勒，1909年就因为受不了保守的教学方式走人了。这不能让我们安排希特勒认识席勒，更不能安排两人一起聊现代主义、从此改写人生；它只说明，入学和毕业之间隔着一整段真正的教育过程。<sup id="cite-3-1"><a href="#ref-3" role="doc-noteref" aria-label="参考文献 3">[3]</a></sup>
 
 钱的事也一样，录取不会凭空给他添遗产或孤儿抚恤金。学费照样要花，母亲去世也不会因为一张学籍少几分痛苦。但他能得到从前没有的东西：固定课程、同学关系、教师评价，以及通向职业市场的初步人脉。
 
@@ -46,11 +46,11 @@ featured: false
 
 它不保证压住他的自负。录取也可能让他更确信自己天赋过人。他完全可以一边接商业订单，一边鄙视客户的品位，顺便发表很难听的政治意见。欧洲不缺这种人。
 
-民族主义也不会因为入学就退场。维也纳依旧是哈布斯堡帝国的首都，依旧塞满民族竞争、反社会主义政治和形形色色的反犹主义。他后来在这里表现出的泛德意志倾向，对帝国和天主教政治的敌意，都有现实土壤。学院能改他的日常接触，换不掉整座城市。[Hitler, Adolf](https://www.deutsche-biographie.de/dbo068748.html?utm_source=chatgpt.com)
+民族主义也不会因为入学就退场。维也纳依旧是哈布斯堡帝国的首都，依旧塞满民族竞争、反社会主义政治和形形色色的反犹主义。他后来在这里表现出的泛德意志倾向，对帝国和天主教政治的敌意，都有现实土壤。学院能改他的日常接触，换不掉整座城市。<sup id="cite-1-2"><a href="#ref-1" role="doc-noteref" aria-label="参考文献 1">[1]</a></sup>
 
 不过有个常被讲得太满的说法得收回：不能把《我的奋斗》里“我在维也纳认识到犹太人问题”那段，当成他青年时期已形成完整纳粹世界观的可靠记录。
 
-现代研究对这点明显更谨慎。维也纳时期的民族主义倾向有依据，但他自称当时就形成了系统性的反犹世界观，缺乏可靠证据。掌权者写自己的青年时代，往往会把一段混乱生活整理成思想启示录。[Hitler, Adolf](https://www.deutsche-biographie.de/dbo068748.html?language=en&utm_source=chatgpt.com)
+现代研究对这点明显更谨慎。维也纳时期的民族主义倾向有依据，但他自称当时就形成了系统性的反犹世界观，缺乏可靠证据。掌权者写自己的青年时代，往往会把一段混乱生活整理成思想启示录。<sup id="cite-4-1"><a href="#ref-4" role="doc-noteref" aria-label="参考文献 4">[4]</a></sup>
 
 所以，艺术教育可能改变他政治接触和敌意发展的方向，却治不好极端思想。它最站得住的作用，是让他成为一个有职业联系的人，而不是一个道德上更好的人。
 
@@ -66,7 +66,7 @@ featured: false
 
 他仍可能参军，而且这条路相当合理。他的民族主义认同不会自动消失，战争也会打断艺术市场和正常生活。但“参军”和“重演他真实的那段服役经历”要分开。
 
-真实版本里，他以奥地利人身份进了巴伐利亚军队，那是一套需要具体条件的入伍过程。留在维也纳的他，可能面对奥匈军队的征召；已经迁往德国的他，才有机会重走巴伐利亚那条路。外国公民加入某支德国部队，不是战争一爆发就自动办好的手续。[Holocaust Encyclopedia](https://encyclopedia.ushmm.org/content/en/article/adolf-hitler-early-years-1889-1921?utm_source=chatgpt.com)
+真实版本里，他以奥地利人身份进了巴伐利亚军队，那是一套需要具体条件的入伍过程。留在维也纳的他，可能面对奥匈军队的征召；已经迁往德国的他，才有机会重走巴伐利亚那条路。外国公民加入某支德国部队，不是战争一爆发就自动办好的手续。<sup id="cite-5-1"><a href="#ref-5" role="doc-noteref" aria-label="参考文献 5">[5]</a></sup>
 
 军队、入伍时间或所在单位一变，他认识的战友、承担的工作、负伤的机会都会不同。他真实经历过的部队生活、勋章、毒气伤和住院，也就不再是固定背景。连他能不能活下来，都多了新的变数。当然，靠安排他提前战死来解决问题，既缺依据，也是反事实分析里最省事的作弊。
 
@@ -82,35 +82,35 @@ featured: false
 
 这个入口，在1918到1923年，比美院落选重要得多。
 
-真实的希特勒战后留在军队。慕尼黑革命和巴伐利亚苏维埃共和国被镇压后，军方把他纳入反革命宣传和政治教育工作。他的演讲才能在这个环境里被发现，随后又通过军队的活动接触德国工人党。1919年9月那次接触，是一条具体的职业和组织通道，不是什么“他太痛苦，所以决定从政”的心理寓言。[German History in Documents and Images](https://germanhistorydocs.org/en/weimar-germany-1918-1933/hitler-s-first-major-statement-on-anti-semitism-reply-to-adolf-gemlich-september-16-1919?utm_source=chatgpt.com)
+真实的希特勒战后留在军队。慕尼黑革命和巴伐利亚苏维埃共和国被镇压后，军方把他纳入反革命宣传和政治教育工作。他的演讲才能在这个环境里被发现，随后又通过军队的活动接触德国工人党。1919年9月那次接触，是一条具体的职业和组织通道，不是什么“他太痛苦，所以决定从政”的心理寓言。<sup id="cite-6-1"><a href="#ref-6" role="doc-noteref" aria-label="参考文献 6">[6]</a></sup>
 
 美院录取最可能削弱的，正是这条通道的前端。
 
 如果他复员后回去做艺术工作，就不容易长期留在军队、被筛进政治宣传、再进入那个特定的小党。如果艺术工作失败，他仍可能留下，但还得看地点、军方安排和个人表现是否继续接得上。原来的政治入口因此变得不那么容易，却没有彻底消失。
 
-1919年9月，他受军方安排写给阿道夫·格姆利希的那封信，已经把犹太人定义成种族问题，并主张用政治手段将其排除。这是他反犹主义发展的重要书面证据。信也提醒我们：成熟的政治立场是在战后组织环境里一步步形成的，不能整个倒灌回十八岁落榜的那个下午。信里的排除主张，也还不等于后来成形的欧洲灭绝计划。[German History in Documents and Images](https://germanhistorydocs.org/en/weimar-germany-1918-1933/hitler-s-first-major-statement-on-anti-semitism-reply-to-adolf-gemlich-september-16-1919?utm_source=chatgpt.com)
+1919年9月，他受军方安排写给阿道夫·格姆利希的那封信，已经把犹太人定义成种族问题，并主张用政治手段将其排除。这是他反犹主义发展的重要书面证据。信也提醒我们：成熟的政治立场是在战后组织环境里一步步形成的，不能整个倒灌回十八岁落榜的那个下午。信里的排除主张，也还不等于后来成形的欧洲灭绝计划。<sup id="cite-6-2"><a href="#ref-6" role="doc-noteref" aria-label="参考文献 6">[6]</a></sup>
 
 那么，没有这个党务工作者，德国工人党还在不在？
 
 大概还在。
 
-这个党由安东·德雷克斯勒和卡尔·哈勒在1919年1月建立，比希特勒加入更早。它起初只有几十名成员，来自慕尼黑已有的民族主义和极右翼圈子。创办人的反犹主义、反马克思主义和民族主义，不需要希特勒先考一次美院才能成立。[dhm.de](https://www.dhm.de/lemo/kapitel/weimarer-republik/innenpolitik/deutsche-arbeiterpartei?utm_source=chatgpt.com)
+这个党由安东·德雷克斯勒和卡尔·哈勒在1919年1月建立，比希特勒加入更早。它起初只有几十名成员，来自慕尼黑已有的民族主义和极右翼圈子。创办人的反犹主义、反马克思主义和民族主义，不需要希特勒先考一次美院才能成立。<sup id="cite-7-1"><a href="#ref-7" role="doc-noteref" aria-label="参考文献 7">[7]</a></sup>
 
 但工人党的存在，不等于后来那个全国性的纳粹党已经存在。
 
-但希特勒很快成了它最重要的宣传人物；1921年，他以退出相要挟，凭自己对党的价值拿到了大权在握的领导地位。没有他，德雷克斯勒可能继续带一个小组织，可能和其他民族主义组织合并，也可能在争执里慢慢衰落。连后来还用不用同样的党名，都是后续发展，不能从1933年倒着搬回来。[Historisches Lexikon Bayerns](https://www.historisches-lexikon-bayerns.de/Lexikon/Artikel_44553?utm_source=chatgpt.com)
+但希特勒很快成了它最重要的宣传人物；1921年，他以退出相要挟，凭自己对党的价值拿到了大权在握的领导地位。没有他，德雷克斯勒可能继续带一个小组织，可能和其他民族主义组织合并，也可能在争执里慢慢衰落。连后来还用不用同样的党名，都是后续发展，不能从1933年倒着搬回来。<sup id="cite-8-1"><a href="#ref-8" role="doc-noteref" aria-label="参考文献 8">[8]</a></sup>
 
 与此同时，德国的大环境依然危险。
 
-战败、革命、共和国成立和《凡尔赛条约》，都几乎一定会发生。领土损失、军事限制、赔款问题，以及围绕战争责任的争论，仍会侵蚀新政权的合法性。保守派和民族主义者仍可以指责共和国接受了一个屈辱的和平。[Holocaust Encyclopedia](https://encyclopedia.ushmm.org/content/en/article/treaty-of-versailles?series=20&utm_source=chatgpt.com)
+战败、革命、共和国成立和《凡尔赛条约》，都几乎一定会发生。领土损失、军事限制、赔款问题，以及围绕战争责任的争论，仍会侵蚀新政权的合法性。保守派和民族主义者仍可以指责共和国接受了一个屈辱的和平。<sup id="cite-9-1"><a href="#ref-9" role="doc-noteref" aria-label="参考文献 9">[9]</a></sup>
 
-“背后一刀”的说法也不会因为希特勒去画建筑就消失。兴登堡1919年向国民议会调查委员会作证时，就已经参与传播这种解释，把战败责任推给国内政治力量。这套叙事的荒诞之处，是军方最高层先要求结束战争，随后又把执行结束战争的人骂成叛徒。它有自己的权威来源；希特勒后来利用了它，却没发明它。[German History in Documents and Images](https://germanhistorydocs.org/en/weimar-germany-1918-1933/paul-von-hindenburgs-testimony-before-the-parliamentary-investigatory-committee-the-stab-in-the-back-november-18-1919?utm_source=chatgpt.com)
+“背后一刀”的说法也不会因为希特勒去画建筑就消失。兴登堡1919年向国民议会调查委员会作证时，就已经参与传播这种解释，把战败责任推给国内政治力量。这套叙事的荒诞之处，是军方最高层先要求结束战争，随后又把执行结束战争的人骂成叛徒。它有自己的权威来源；希特勒后来利用了它，却没发明它。<sup id="cite-10-1"><a href="#ref-10" role="doc-noteref" aria-label="参考文献 10">[10]</a></sup>
 
-反共产主义动员同样有独立基础。俄国革命的影响、德国工人运动的分裂、巴伐利亚革命和自由军团的暴力，足以让军官、地主、部分中产阶级和企业家把左翼视为现实威胁。慕尼黑的反革命政治，不是等希特勒出现才开门营业的。[Bundesarchiv](https://www.bundesarchiv.de/themen-entdecken/online-entdecken/dokumente-zur-zeitgeschichte/ausrufung-der-raeterepublik-in-muenchen/?utm_source=chatgpt.com)
+反共产主义动员同样有独立基础。俄国革命的影响、德国工人运动的分裂、巴伐利亚革命和自由军团的暴力，足以让军官、地主、部分中产阶级和企业家把左翼视为现实威胁。慕尼黑的反革命政治，不是等希特勒出现才开门营业的。<sup id="cite-11-1"><a href="#ref-11" role="doc-noteref" aria-label="参考文献 11">[11]</a></sup>
 
 1923年的恶性通货膨胀，也怪不到美院头上。
 
-它和战争融资、战后财政困难、赔款争端连在一起；法比占领鲁尔后，德国政府靠支付消极抵抗的费用进一步扩大货币发行，危机随后急剧失控。储蓄被毁、社会地位受威胁，仍然会制造对共和国的敌意。这些机制和希特勒个人的职业无关。[dhm.de](https://www.dhm.de/lemo/kapitel/weimarer-republik/innenpolitik/inflation?utm_source=chatgpt.com)
+它和战争融资、战后财政困难、赔款争端连在一起；法比占领鲁尔后，德国政府靠支付消极抵抗的费用进一步扩大货币发行，危机随后急剧失控。储蓄被毁、社会地位受威胁，仍然会制造对共和国的敌意。这些机制和希特勒个人的职业无关。<sup id="cite-12-1"><a href="#ref-12" role="doc-noteref" aria-label="参考文献 12">[12]</a></sup>
 
 不过，1923年的啤酒馆政变不能照搬。
 
@@ -120,15 +120,15 @@ featured: false
 
 进入1923到1929年，另一个常被忽略的事实浮出来：德国并没有沿着危机一路滑到纳粹掌权。
 
-货币稳定、道威斯计划、美国贷款和经济恢复，让共和国喘了口气。施特雷泽曼推动的外交，带来了洛迦诺安排和德国国际地位的改善。这些政策各有财政、外交和国际利益的基础，比较可能在这条反事实里继续出现。[dhm.de](https://www.dhm.de/lemo/kapitel/weimarer-republik/aussenpolitik/dawesplan?utm_source=chatgpt.com)
+货币稳定、道威斯计划、美国贷款和经济恢复，让共和国喘了口气。施特雷泽曼推动的外交，带来了洛迦诺安排和德国国际地位的改善。这些政策各有财政、外交和国际利益的基础，比较可能在这条反事实里继续出现。<sup id="cite-13-1"><a href="#ref-13" role="doc-noteref" aria-label="参考文献 13">[13]</a></sup>
 
-即便已经有希特勒，纳粹在1928年国会选举里也只拿到2.6%的选票。这个数字足以驳倒一种太顺滑的解释：凡尔赛条约、通胀和民族主义凑齐之后，德国就必然成为纳粹国家。环境能制造不满，却不保证不满永远投给同一个党。[Deutscher Bundestag](https://www.bundestag.de/dokumente/textarchiv/1933-03-05-wahlen33-544990?utm_source=chatgpt.com)
+即便已经有希特勒，纳粹在1928年国会选举里也只拿到2.6%的选票。这个数字足以驳倒一种太顺滑的解释：凡尔赛条约、通胀和民族主义凑齐之后，德国就必然成为纳粹国家。环境能制造不满，却不保证不满永远投给同一个党。<sup id="cite-14-1"><a href="#ref-14" role="doc-noteref" aria-label="参考文献 14">[14]</a></sup>
 
-但这几年，希特勒本人也没闲着。他重整政党，把选举夺权和街头动员结合起来，同时保住党的独立地位。地方组织、宣传、资金和干部网络慢慢长起来，纳粹才能在下一场危机里迅速扩张。大萧条不是把一个不存在的全国性政党从地里震出来的。[dhm.de](https://www.dhm.de/lemo/kapitel/weimarer-republik/innenpolitik/nsdap-1?utm_source=chatgpt.com)
+但这几年，希特勒本人也没闲着。他重整政党，把选举夺权和街头动员结合起来，同时保住党的独立地位。地方组织、宣传、资金和干部网络慢慢长起来，纳粹才能在下一场危机里迅速扩张。大萧条不是把一个不存在的全国性政党从地里震出来的。<sup id="cite-15-1"><a href="#ref-15" role="doc-noteref" aria-label="参考文献 15">[15]</a></sup>
 
 没有他，极右翼仍会存在，但更可能以多个互相竞争的组织出现。民族主义保守党、退伍军人组织、种族主义团体、地方民兵和小型工人党，可以合作，也可以争夺会员和赞助。共同讨厌共和国，不等于共同接受一位领袖。
 
-希特勒坐牢期间，纳粹及其替代组织出现的分裂，是一个有限的提示：这个圈子确实难以自行整合。不过这不是一个干净的“没有希特勒实验”。那时他已经有了名声和组织，大家是在他的影子里竞争；一个从1919年起就没有他的世界，可能长出别的联盟。这个分别不能丢。[dhm.de](https://www.dhm.de/lemo/kapitel/weimarer-republik/innenpolitik/nsdap-1?utm_source=chatgpt.com)
+希特勒坐牢期间，纳粹及其替代组织出现的分裂，是一个有限的提示：这个圈子确实难以自行整合。不过这不是一个干净的“没有希特勒实验”。那时他已经有了名声和组织，大家是在他的影子里竞争；一个从1919年起就没有他的世界，可能长出别的联盟。这个分别不能丢。<sup id="cite-15-2"><a href="#ref-15" role="doc-noteref" aria-label="参考文献 15">[15]</a></sup>
 
 1925年的总统选举，也不该被当成永远不变的背景。
 
@@ -136,7 +136,7 @@ featured: false
 
 1929到1933年，结构性压力重新压过来。
 
-世界经济大萧条很可能照样发生。美国资本收缩、国际贸易下滑、德国对外部信贷的依赖，会继续冲击德国的生产、银行和就业。这一轮的核心是萧条、信贷紧缩和收入下降，不能和1923年的货币失控混成一种永恒的“德国经济很惨”。[dhm.de](https://www.dhm.de/lemo/kapitel/weimarer-republik/industrie-und-wirtschaft/weltwirtschaftskrise?utm_source=chatgpt.com)
+世界经济大萧条很可能照样发生。美国资本收缩、国际贸易下滑、德国对外部信贷的依赖，会继续冲击德国的生产、银行和就业。这一轮的核心是萧条、信贷紧缩和收入下降，不能和1923年的货币失控混成一种永恒的“德国经济很惨”。<sup id="cite-16-1"><a href="#ref-16" role="doc-noteref" aria-label="参考文献 16">[16]</a></sup>
 
 失业者、破产农民、受威胁的小业主和害怕社会革命的人，仍然会寻找激进答案。但没有哪条历史定律规定，他们的票必须投给某个极右翼党。
 
@@ -146,7 +146,7 @@ featured: false
 
 比例代表制下的政党竞争、社会阵营之间的隔阂、总统与议会并存的权力来源，让组阁容易卡壳。总统可以任免总理，在紧急情况下动用第48条；但议会仍有撤销紧急措施和表达不信任的权力。所以第48条不是一张印着“持此券可合法建立无限独裁”的通行证。要走向威权，得靠掌权者一次次绕开或压制议会。
 
-这种选择早于希特勒执政。1930年起，总统内阁越来越依赖总统权力维持统治；一部分保守精英在那之前就想摆脱议会多数的约束。纳粹利用并加速了这个过程，却不是唯一的发动机。[dhm.de](https://www.dhm.de/lemo/kapitel/weimarer-republik/innenpolitik/kabinette-1?utm_source=chatgpt.com)
+这种选择早于希特勒执政。1930年起，总统内阁越来越依赖总统权力维持统治；一部分保守精英在那之前就想摆脱议会多数的约束。纳粹利用并加速了这个过程，却不是唯一的发动机。<sup id="cite-17-1"><a href="#ref-17" role="doc-noteref" aria-label="参考文献 17">[17]</a></sup>
 
 可没有强大的纳粹党，议会里的力量分布也会变。
 
@@ -156,13 +156,13 @@ featured: false
 
 共产党很可能继续壮大，但也不能自动成为赢家。
 
-德共与社民党的分裂，受革命、镇压和共产国际路线的共同影响。1929年后把社民党视为“社会法西斯主义”的政策，进一步堵死左翼合作。这些矛盾不会因为右边少了个领袖就自动化解。失业者增加可以扩大共产党的支持，却不能自动替它拿下军队、警察和全国国家机器。[dhm.de](https://www.dhm.de/lemo/kapitel/weimarer-republik/innenpolitik/kpd.html?utm_source=chatgpt.com)
+德共与社民党的分裂，受革命、镇压和共产国际路线的共同影响。1929年后把社民党视为“社会法西斯主义”的政策，进一步堵死左翼合作。这些矛盾不会因为右边少了个领袖就自动化解。失业者增加可以扩大共产党的支持，却不能自动替它拿下军队、警察和全国国家机器。<sup id="cite-18-1"><a href="#ref-18" role="doc-noteref" aria-label="参考文献 18">[18]</a></sup>
 
 一个共产党统治的德国，需要更大的额外变化：国家强制力量瓦解，左翼形成有效联盟，或者革命在武装冲突中取胜。艺术学院录取并没有直接造成这些条件。所以，共产主义力量更强有充分可能；德国直接变成苏维埃国家，依据明显弱得多。
 
 工业集团也不是一个集体人格。
 
-部分企业家支持纳粹，部分更偏好传统保守派；不同产业、企业和个人之间分歧很大。反工会、反共产主义、希望恢复秩序，确实能推着他们支持威权政治，但推不出“工业资本一定会再雇一个希特勒”。而企业界在1932年底，也没有一致站到希特勒身后。[bpb.de](https://www.bpb.de/themen/erster-weltkrieg-weimar/weimarer-republik/275841/zerstoerung-der-demokratie-1930-1933/?utm_source=chatgpt.com)
+部分企业家支持纳粹，部分更偏好传统保守派；不同产业、企业和个人之间分歧很大。反工会、反共产主义、希望恢复秩序，确实能推着他们支持威权政治，但推不出“工业资本一定会再雇一个希特勒”。而企业界在1932年底，也没有一致站到希特勒身后。<sup id="cite-19-1"><a href="#ref-19" role="doc-noteref" aria-label="参考文献 19">[19]</a></sup>
 
 这就到了最难的问题：如果希特勒没有站出来，谁来接这个位置？
 
@@ -170,11 +170,11 @@ featured: false
 
 最有现成资源的，是胡根贝格和他的德国国家人民党，还有钢盔团这样的退伍军人组织。
 
-胡根贝格有媒体资源、传统右翼关系和明确的反共和国立场。德国国家人民党在1928年仍拿到14.2%的选票，说明民族主义保守派不是一个需要希特勒救活的政治遗址。它的反犹主义、君主主义和社会基础也都真实存在。没有纳粹竞争，它可能保住更多选民，或者成为右翼联盟的中心。[dhm.de](https://www.dhm.de/lemo/kapitel/weimarer-republik/innenpolitik/dnvp?utm_source=chatgpt.com)
+胡根贝格有媒体资源、传统右翼关系和明确的反共和国立场。德国国家人民党在1928年仍拿到14.2%的选票，说明民族主义保守派不是一个需要希特勒救活的政治遗址。它的反犹主义、君主主义和社会基础也都真实存在。没有纳粹竞争，它可能保住更多选民，或者成为右翼联盟的中心。<sup id="cite-20-1"><a href="#ref-20" role="doc-noteref" aria-label="参考文献 20">[20]</a></sup>
 
 但它有个难题：传统社会等级、地主利益和保守精英的那套语言，不容易同时吸引失业工人、激进青年和渴望社会翻转的小业主。胡根贝格能做强硬民族主义政治，也能搞宣传，却缺少证据证明他能复制纳粹那种跨越多个社会群体的群众运动。
 
-鲁登道夫有战争名望和极右翼威望，但军事声望不等于政治整合能力。他在1925年总统选举第一轮只拿到1.1%，至少说明“著名将军加民族主义”不会自动造出大众领袖。当然，这个数字也来自有希特勒存在的现实政治，不能原封不动搬进新世界；它是能力边界的提示，不是判决书。[dhm.de](https://www.dhm.de/lemo/biografie/erich-ludendorff?utm_source=chatgpt.com)
+鲁登道夫有战争名望和极右翼威望，但军事声望不等于政治整合能力。他在1925年总统选举第一轮只拿到1.1%，至少说明“著名将军加民族主义”不会自动造出大众领袖。当然，这个数字也来自有希特勒存在的现实政治，不能原封不动搬进新世界；它是能力边界的提示，不是判决书。<sup id="cite-21-1"><a href="#ref-21" role="doc-noteref" aria-label="参考文献 21">[21]</a></sup>
 
 格雷戈尔·施特拉塞是更值得认真对待的人选。
 
@@ -186,13 +186,13 @@ featured: false
 
 他偏好“社会革命”式的民族主义和更积极的经济干预，这也不会自然让他变成民主派。某些主张可能帮他吸引工人，却可能让保守金主不安。
 
-施莱歇尔曾尝试把施特拉塞拉进一个靠工会支持的政府方案。美国驻德使节当时也把施特拉塞看作有经验的政治人物、组织者和拉票能手。可见他不能被简单贬成替希特勒跑腿的人。可是，能组织、能谈判，和能让所有激进派接受个人最高权威，仍然隔着一段距离。[Office of the Historian](https://history.state.gov/historicaldocuments/frus1932v02/d221?utm_source=chatgpt.com)
+施莱歇尔曾尝试把施特拉塞拉进一个靠工会支持的政府方案。美国驻德使节当时也把施特拉塞看作有经验的政治人物、组织者和拉票能手。可见他不能被简单贬成替希特勒跑腿的人。可是，能组织、能谈判，和能让所有激进派接受个人最高权威，仍然隔着一段距离。<sup id="cite-22-1"><a href="#ref-22" role="doc-noteref" aria-label="参考文献 22">[22]</a></sup>
 
-罗姆的强项是准军事组织和军队圈子的联系。他能推动暴力政治，却很难自然解决“群众民兵和正规军谁支配国家”的冲突。这场冲突后来变得极其尖锐。一个以罗姆为中心的运动，未必更容易拿到军方支持。[dhm.de](https://www.dhm.de/lemo/biografie/ernst-roehm?utm_source=chatgpt.com)
+罗姆的强项是准军事组织和军队圈子的联系。他能推动暴力政治，却很难自然解决“群众民兵和正规军谁支配国家”的冲突。这场冲突后来变得极其尖锐。一个以罗姆为中心的运动，未必更容易拿到军方支持。<sup id="cite-23-1"><a href="#ref-23" role="doc-noteref" aria-label="参考文献 23">[23]</a></sup>
 
-戈培尔能宣传，也有地方组织经验，但他在1920年代中期才进入这条政治路线。他的全国性影响，靠的是后来形成的政党平台和领袖关系。可以合理设想他替别的民族主义运动做宣传，却不能直接把“能写、能讲、懂传播”升级成“能整合全国右翼并夺取国家权力”。[dhm.de](https://www.dhm.de/lemo/biografie/joseph-goebbels?utm_source=chatgpt.com)
+戈培尔能宣传，也有地方组织经验，但他在1920年代中期才进入这条政治路线。他的全国性影响，靠的是后来形成的政党平台和领袖关系。可以合理设想他替别的民族主义运动做宣传，却不能直接把“能写、能讲、懂传播”升级成“能整合全国右翼并夺取国家权力”。<sup id="cite-24-1"><a href="#ref-24" role="doc-noteref" aria-label="参考文献 24">[24]</a></sup>
 
-戈林有战斗机飞行员的名望，也有接近上层社会的条件，是可能连接群众右翼和传统精英的人。但他实际进入全国权力中心的道路，同样借了纳粹党的力。至于希姆莱，1929年接手的党卫队只有约280人；后来那套庞大的警察、集中营和杀戮机器，要掌握国家之后才建得起来，不能算作他的个人随身财产。[Beitrag](https://www.nsdoku.de/lexikon/artikel/goering-hermann-277?utm_source=chatgpt.com)
+戈林有战斗机飞行员的名望，也有接近上层社会的条件，是可能连接群众右翼和传统精英的人。但他实际进入全国权力中心的道路，同样借了纳粹党的力。至于希姆莱，1929年接手的党卫队只有约280人；后来那套庞大的警察、集中营和杀戮机器，要掌握国家之后才建得起来，不能算作他的个人随身财产。<sup id="cite-25-1"><a href="#ref-25" role="doc-noteref" aria-label="参考文献 25">[25]</a></sup>
 
 这些人各有一块能力。缺的是一种已经被历史证明能同时完成许多任务的组合：把互相争执的极右翼组织变成全国运动，把宣传换成选票，维持党内最终裁决权，和传统保守派做交易却不被吞掉，取得军方合作，最后反过来拆掉合作伙伴的独立地位。
 
@@ -202,7 +202,7 @@ featured: false
 
 这样一来，1933年后的保守威权路线，就成了基础更硬的替代主线。
 
-那次权力移交，不是希特勒在一次选举中拿到绝对多数后依法领取总理职位。纳粹1932年7月拿下37.3%，11月又降到33.1%；接着是总统、帕彭、希特勒和其他保守力量之间的权力交易。帕彭等人以为自己能利用并控制他，结果严重低估了纳粹独立组织和街头力量的作用。[Deutscher Bundestag](https://www.bundestag.de/dokumente/textarchiv/1933-03-05-wahlen33-544990?utm_source=chatgpt.com)
+那次权力移交，不是希特勒在一次选举中拿到绝对多数后依法领取总理职位。纳粹1932年7月拿下37.3%，11月又降到33.1%；接着是总统、帕彭、希特勒和其他保守力量之间的权力交易。帕彭等人以为自己能利用并控制他，结果严重低估了纳粹独立组织和街头力量的作用。<sup id="cite-14-2"><a href="#ref-14" role="doc-noteref" aria-label="参考文献 14">[14]</a></sup>
 
 如果不存在那个规模的纳粹党，交易桌上的东西就不一样了。
 
@@ -214,7 +214,7 @@ featured: false
 
 总统、军方、官僚、经济集团和不同保守派之间，仍有权力分配问题。一个靠这些机构上台的总理，不一定能把它们全变成个人工具。兴登堡即使在1934年前后去世，总统和总理的权力也不会自动合并；军队效忠对象的变化，也需要具体的政治决定。
 
-个人独裁是靠打击对手、消灭政党、控制警察、压制冲锋队、重组军事领导层等一系列行动建立的。没有相应的群众党、领导权和国家暴力安排，这些步骤不能照抄。[dhm.de](https://www.dhm.de/lemo/kapitel/ns-regime/etablierung-der-ns-herrschaft/roehm-putsch?utm_source=chatgpt.com)
+个人独裁是靠打击对手、消灭政党、控制警察、压制冲锋队、重组军事领导层等一系列行动建立的。没有相应的群众党、领导权和国家暴力安排，这些步骤不能照抄。<sup id="cite-26-1"><a href="#ref-26" role="doc-noteref" aria-label="参考文献 26">[26]</a></sup>
 
 共和国继续存在，则是一条不能降格为奇迹的竞争路线。
 
@@ -228,11 +228,11 @@ featured: false
 
 不管是保守威权德国、继续存在的魏玛共和国，还是另一种极右翼政权，都很可能要求扩大主权、重新武装，并改变某些战后安排。
 
-这些要求不属于希特勒个人。德国军方早就通过与苏联合作等方式，寻找突破军事限制的空间；赔款也已在1932年的洛桑会议上基本终止；德国争取军备地位平等的外交，同样早于纳粹执政。和平修约不是一个从没试过、只能靠战争实现的梦想。[Bundesarchiv](https://www.bundesarchiv.de/themen-entdecken/online-entdecken/geschichtsgalerien/lipezk-die-geheime-fliegerschule-und-erprobungsstaette-der-reichswehr-in-der-sowjetunion/?utm_source=chatgpt.com)
+这些要求不属于希特勒个人。德国军方早就通过与苏联合作等方式，寻找突破军事限制的空间；赔款也已在1932年的洛桑会议上基本终止；德国争取军备地位平等的外交，同样早于纳粹执政。和平修约不是一个从没试过、只能靠战争实现的梦想。<sup id="cite-27-1"><a href="#ref-27" role="doc-noteref" aria-label="参考文献 27">[27]</a></sup>
 
 东部边界尤其危险。
 
-洛迦诺安排巩固了德国西部边界，却没给东部边界同样的保障。德国对波兰边界的不满并不限于纳粹；军方领导人塞克特甚至设想过与苏联合作，抹掉波兰这个国家。这足以说明，传统军官不是一群被希特勒硬拖进扩张主义的和平主义者。[dhm.de](https://www.dhm.de/lemo/kapitel/weimarer-republik/aussenpolitik/locarno?utm_source=chatgpt.com)
+洛迦诺安排巩固了德国西部边界，却没给东部边界同样的保障。德国对波兰边界的不满并不限于纳粹；军方领导人塞克特甚至设想过与苏联合作，抹掉波兰这个国家。这足以说明，传统军官不是一群被希特勒硬拖进扩张主义的和平主义者。<sup id="cite-28-1"><a href="#ref-28" role="doc-noteref" aria-label="参考文献 28">[28]</a></sup>
 
 但要求修改边界、建立地区优势、恢复军事地位，和不惜不断征服领土、摧毁苏联并发动种族战争之间，仍然隔着政治选择。
 
@@ -246,19 +246,19 @@ featured: false
 
 1936年的莱茵兰，就是一个需要重新推演的节点。
 
-恢复莱茵兰的军事主权，在德国有广泛的政治吸引力，因此仍可能发生。它可以通过谈判发生，也可以由某届德国政府冒险推进。当初选择在那个时机出兵，靠的是希特勒对国际反应的判断和行动方式，不能直接保留成一个日历事件。[bpb.de](https://www.bpb.de/themen/nationalsozialismus-zweiter-weltkrieg/dossier-nationalsozialismus/39576/der-weg-in-den-krieg/?utm_source=chatgpt.com)
+恢复莱茵兰的军事主权，在德国有广泛的政治吸引力，因此仍可能发生。它可以通过谈判发生，也可以由某届德国政府冒险推进。当初选择在那个时机出兵，靠的是希特勒对国际反应的判断和行动方式，不能直接保留成一个日历事件。<sup id="cite-29-1"><a href="#ref-29" role="doc-noteref" aria-label="参考文献 29">[29]</a></sup>
 
 而且，不能让替代政府一边更克制，一边又自动拥有纳粹高速扩军攒下的全部军备和战争能力。财政投入、外汇安排、军队建设和外交反应都会变。后面的战争能不能打、怎么打，都得继承这些变化。
 
 1938年的奥地利和捷克斯洛伐克，更不能直接复制。
 
-德奥合并的民族主义动力，有独立于希特勒的历史基础。但奥地利有自己的政治力量，意大利也有维护奥地利独立的利益。1934年奥地利纳粹发动政变、陶尔斐斯遇害时，墨索里尼曾在布伦纳方向部署军队对德国施压。两个法西斯主义者，不会因为政治分类相近，就自动愿意住进同一套国际联盟。[dhm.de](https://www.dhm.de/lemo/kapitel/ns-regime/aussenpolitik/die-deutsch-italienischen-beziehungen?utm_source=chatgpt.com)
+德奥合并的民族主义动力，有独立于希特勒的历史基础。但奥地利有自己的政治力量，意大利也有维护奥地利独立的利益。1934年奥地利纳粹发动政变、陶尔斐斯遇害时，墨索里尼曾在布伦纳方向部署军队对德国施压。两个法西斯主义者，不会因为政治分类相近，就自动愿意住进同一套国际联盟。<sup id="cite-30-1"><a href="#ref-30" role="doc-noteref" aria-label="参考文献 30">[30]</a></sup>
 
 没有希特勒及其国家支持下的奥地利纳粹活动，那次政变和其后的压力链条都要重新考虑。一个泛德意志政府可能继续争取合并，却可能面对不同的奥地利局势、不同的意大利态度和不同的英法反应。
 
 苏台德地区的民族问题也仍然存在。但当地德意志人的不满，和德国政府最终摧毁捷克斯洛伐克，是两回事。
 
-真实版本里，1938年以保护德意志人为由拿下苏台德，接着1939年3月进入布拉格，吞掉大量非德意志人口，清楚暴露了扩张已经超出民族自决。这一步对英法判断德国意图影响很大，也进一步增强了德国的战略和军事资源。[Holocaust Encyclopedia](https://encyclopedia.ushmm.org/content/en/article/german-prewar-expansion?utm_source=chatgpt.com)
+真实版本里，1938年以保护德意志人为由拿下苏台德，接着1939年3月进入布拉格，吞掉大量非德意志人口，清楚暴露了扩张已经超出民族自决。这一步对英法判断德国意图影响很大，也进一步增强了德国的战略和军事资源。<sup id="cite-31-1"><a href="#ref-31" role="doc-noteref" aria-label="参考文献 31">[31]</a></sup>
 
 在反事实里，民族问题仍可能引发边界谈判、少数族群危机，甚至有限战争；但如果执政者没有相同的目标和风险偏好，事情不必走到摧毁整个捷克斯洛伐克。德国也不能自动获得那次吞并带来的工业、军备和战略位置。
 
@@ -266,39 +266,39 @@ featured: false
 
 英法的政策也得跟着变。
 
-它们的战争记忆、经济困难、帝国负担、对苏联的怀疑，以及美国远离欧洲安全事务的倾向，多半会继续存在。所以对德国的一部分要求作出让步，仍然很合理。国联缺少有效的强制能力，欧洲安全体系也不会突然坚固起来。[Holocaust Encyclopedia](https://encyclopedia.ushmm.org/content/en/article/neville-chamberlain?utm_source=chatgpt.com)
+它们的战争记忆、经济困难、帝国负担、对苏联的怀疑，以及美国远离欧洲安全事务的倾向，多半会继续存在。所以对德国的一部分要求作出让步，仍然很合理。国联缺少有效的强制能力，欧洲安全体系也不会突然坚固起来。<sup id="cite-32-1"><a href="#ref-32" role="doc-noteref" aria-label="参考文献 32">[32]</a></sup>
 
 但绥靖不是一个不看对手行为、每天固定运行的外交程序。
 
 如果德国政府能在取得修约成果后暂时停下，英国更可能把它视为可以达成有限安排的对象。法国仍会担心东欧盟友和德国实力，但西方国家的政策争执可能有不同结果。
 
-反过来，如果替代德国继续吞并邻国，英法仍可能逐渐转向遏制。英国对波兰的保证，和布拉格被占领后的判断直接相关；没有那一步，就不能把保证的时间、范围和随后的宣战全部保留不动。[Holocaust Encyclopedia](https://encyclopedia.ushmm.org/content/en/article/neville-chamberlain?utm_source=chatgpt.com)
+反过来，如果替代德国继续吞并邻国，英法仍可能逐渐转向遏制。英国对波兰的保证，和布拉格被占领后的判断直接相关；没有那一步，就不能把保证的时间、范围和随后的宣战全部保留不动。<sup id="cite-32-2"><a href="#ref-32" role="doc-noteref" aria-label="参考文献 32">[32]</a></sup>
 
 苏联也不会从地图上退场。
 
 斯大林的统治、工业化、国内恐怖和安全焦虑，有独立的历史动力。莫斯科仍可能在与德国合作、同西方建立安全安排、扩大缓冲地带之间权衡。德国右翼反共产主义，也不妨碍国家之间做务实交易，1920年代的德苏关系已经说明这一点。
 
-但1939年的《德苏互不侵犯条约》，尤其是秘密划分东欧势力范围的安排，是在特定的德国战争计划、英法苏谈判和战略判断中产生的。没有同样的德国威胁和机会，苏联不必签同样的条约。[Holocaust Encyclopedia](https://encyclopedia.ushmm.org/content/en/article/german-soviet-pact?utm_source=chatgpt.com)
+但1939年的《德苏互不侵犯条约》，尤其是秘密划分东欧势力范围的安排，是在特定的德国战争计划、英法苏谈判和战略判断中产生的。没有同样的德国威胁和机会，苏联不必签同样的条约。<sup id="cite-33-1"><a href="#ref-33" role="doc-noteref" aria-label="参考文献 33">[33]</a></sup>
 
 所以苏联后来进入波兰、对芬兰开战、吞并波罗的海国家的时机与方式，也不能逐项照抄。它仍有强制扩张的可能，却需要自己的机会和决策。为了让二战继续发生，直接安排斯大林代替希特勒入侵全欧洲，不过是换了个人按历史开关。
 
 意大利的法西斯主义，很可能继续存在。
 
-墨索里尼的崛起和1922年取得政权，不依赖希特勒。他的殖民野心和地中海战略，也不会因为德国换了政权就消失。意大利仍可能侵略埃塞俄比亚，或者制造其他殖民战争。[dhm.de](https://www.dhm.de/lemo/biografie/benito-mussolini?utm_source=chatgpt.com)
+墨索里尼的崛起和1922年取得政权，不依赖希特勒。他的殖民野心和地中海战略，也不会因为德国换了政权就消失。意大利仍可能侵略埃塞俄比亚，或者制造其他殖民战争。<sup id="cite-34-1"><a href="#ref-34" role="doc-noteref" aria-label="参考文献 34">[34]</a></sup>
 
-但侵略的具体时机、遭制裁后的选择，以及与德国结盟的程度，都会受欧洲局势影响。意大利一度和英法一起反对德国扩军，后来才在埃塞俄比亚战争及其外交后果中进一步靠近德国。“罗马—柏林轴心”是一条发展出来的关系，不是法西斯主义附带的出厂设置。[dhm.de](https://www.dhm.de/lemo/kapitel/ns-regime/aussenpolitik/die-deutsch-italienischen-beziehungen?utm_source=chatgpt.com)
+但侵略的具体时机、遭制裁后的选择，以及与德国结盟的程度，都会受欧洲局势影响。意大利一度和英法一起反对德国扩军，后来才在埃塞俄比亚战争及其外交后果中进一步靠近德国。“罗马—柏林轴心”是一条发展出来的关系，不是法西斯主义附带的出厂设置。<sup id="cite-30-2"><a href="#ref-30" role="doc-noteref" aria-label="参考文献 30">[30]</a></sup>
 
 如果没有1940年法国的迅速失败，墨索里尼也不会面对同样的低成本参战幻觉。他仍可能误判、仍可能挑起战争，但不能保留同一个机会，却删掉制造机会的德国战争。
 
 日本的扩张，最能说明这个玩笑的边界。
 
-1931年的满洲事变早于希特勒出任德国总理。日本军方的力量、在中国东北的利益、帝国扩张和国内政治机制，都有自己的因果链。希特勒考上美院，几乎没有直接途径阻止这些发展。日本在中国的侵略战争，多半仍然会发生。[Office of the Historian](https://history.state.gov/milestones/1921-1936/mukden-incident?utm_source=chatgpt.com)
+1931年的满洲事变早于希特勒出任德国总理。日本军方的力量、在中国东北的利益、帝国扩张和国内政治机制，都有自己的因果链。希特勒考上美院，几乎没有直接途径阻止这些发展。日本在中国的侵略战争，多半仍然会发生。<sup id="cite-35-1"><a href="#ref-35" role="doc-noteref" aria-label="参考文献 35">[35]</a></sup>
 
-1937年全面战争，以及随后与美国关系的恶化，也有相当强的独立动力。中国不会因为欧洲少了一个纳粹领袖，就自动获得和平。[Office of the Historian](https://history.state.gov/milestones/1937-1945/pearl-harbor?utm_source=chatgpt.com)
+1937年全面战争，以及随后与美国关系的恶化，也有相当强的独立动力。中国不会因为欧洲少了一个纳粹领袖，就自动获得和平。<sup id="cite-36-1"><a href="#ref-36" role="doc-noteref" aria-label="参考文献 36">[36]</a></sup>
 
 但太平洋战争也不能精确复制到1941年12月。
 
-欧洲战争削弱了英法荷在亚洲的地位，法国失败又改变了印度支那的处境；日本南进、美国制裁和双方的战略判断都受这些变化影响。如果欧洲没有那场战争，日本仍可能与美国冲突，却要面对不同的殖民势力、兵力安排和外交选择。珍珠港不是只由日本国内一组条件按时触发的闹钟。[Office of the Historian](https://history.state.gov/milestones/1937-1945/pearl-harbor?utm_source=chatgpt.com)
+欧洲战争削弱了英法荷在亚洲的地位，法国失败又改变了印度支那的处境；日本南进、美国制裁和双方的战略判断都受这些变化影响。如果欧洲没有那场战争，日本仍可能与美国冲突，却要面对不同的殖民势力、兵力安排和外交选择。珍珠港不是只由日本国内一组条件按时触发的闹钟。<sup id="cite-36-2"><a href="#ref-36" role="doc-noteref" aria-label="参考文献 36">[36]</a></sup>
 
 于是，欧洲和亚洲可能仍有大规模战争，却未必合并成我们熟悉的那场全球战争。参与者、联盟、战争顺序和升级机制，都可能不同。
 
@@ -338,7 +338,7 @@ featured: false
 
 大概率仍然存在的，是一战及德国战败、战后修约要求、经济危机、民族主义、反犹主义、反共产主义、保守精英的威权倾向，以及意大利和日本各自的扩张动力。它们足以维持一个危险的世界，却不足以保证同一个结局。
 
-**现实中的第二次世界大战，不会以近似形式发生。**这句话不只是说开战日期可能换一天，而是说，从纳粹夺权到连续吞并、摧毁东欧国家、发动对苏种族战争，再到各战场合并成全球战争的整套机制，很可能无法原样形成。
+**现实中的第二次世界大战，不会以近似形式发生**。这句话不只是说开战日期可能换一天，而是说，从纳粹夺权到连续吞并、摧毁东欧国家、发动对苏种族战争，再到各战场合并成全球战争的整套机制，很可能无法原样形成。
 
 欧洲最站得住的替代路线，是一个仍然强烈要求修约的德国，在保守威权和议会制度之间竞争，伴随军备扩张、外交危机和局部战争的危险。它可能避免全面大战，也可能在更晚的危机里失控。德国最后会落到哪种制度，我说不准；能肯定的是，现实那条战争路径已经裂开了一道大口子。
 
@@ -347,3 +347,42 @@ featured: false
 它改变的，是这个青年后来有没有机会成为组织者、有没有组织可以被他统合、有没有传统精英愿意把国家交到他手里。欧洲原本就有足够多的危机；问题在于，谁把它们接起来，接成什么，又在可以停下的时候选择继续走多远。
 
 一所学校未必能消除那些危机。它却可能改变那个把许多危机接成同一场灾难的人。
+
+## 参考文献
+
+1. <span id="ref-1"></span>[Hitler, Adolf](https://www.deutsche-biographie.de/dbo068748.html)。<a href="#cite-1-1" aria-label="返回参考文献 1 的第 1 处引用">↩1</a> <a href="#cite-1-2" aria-label="返回参考文献 1 的第 2 处引用">↩2</a>
+2. <span id="ref-2"></span>[Lapham’s Quarterly](https://www.laphamsquarterly.org/roundtable/master-architect)。<a href="#cite-2-1" aria-label="返回参考文献 2 的第 1 处引用">↩</a>
+3. <span id="ref-3"></span>[dhm.de](https://www.dhm.de/lemo/biografie/egon-schiele)。<a href="#cite-3-1" aria-label="返回参考文献 3 的第 1 处引用">↩</a>
+4. <span id="ref-4"></span>[Hitler, Adolf](https://www.deutsche-biographie.de/dbo068748.html?language=en)。<a href="#cite-4-1" aria-label="返回参考文献 4 的第 1 处引用">↩</a>
+5. <span id="ref-5"></span>[Holocaust Encyclopedia](https://encyclopedia.ushmm.org/content/en/article/adolf-hitler-early-years-1889-1921)。<a href="#cite-5-1" aria-label="返回参考文献 5 的第 1 处引用">↩</a>
+6. <span id="ref-6"></span>[German History in Documents and Images](https://germanhistorydocs.org/en/weimar-germany-1918-1933/hitler-s-first-major-statement-on-anti-semitism-reply-to-adolf-gemlich-september-16-1919)。<a href="#cite-6-1" aria-label="返回参考文献 6 的第 1 处引用">↩1</a> <a href="#cite-6-2" aria-label="返回参考文献 6 的第 2 处引用">↩2</a>
+7. <span id="ref-7"></span>[dhm.de](https://www.dhm.de/lemo/kapitel/weimarer-republik/innenpolitik/deutsche-arbeiterpartei)。<a href="#cite-7-1" aria-label="返回参考文献 7 的第 1 处引用">↩</a>
+8. <span id="ref-8"></span>[Historisches Lexikon Bayerns](https://www.historisches-lexikon-bayerns.de/Lexikon/Artikel_44553)。<a href="#cite-8-1" aria-label="返回参考文献 8 的第 1 处引用">↩</a>
+9. <span id="ref-9"></span>[Holocaust Encyclopedia](https://encyclopedia.ushmm.org/content/en/article/treaty-of-versailles?series=20)。<a href="#cite-9-1" aria-label="返回参考文献 9 的第 1 处引用">↩</a>
+10. <span id="ref-10"></span>[German History in Documents and Images](https://germanhistorydocs.org/en/weimar-germany-1918-1933/paul-von-hindenburgs-testimony-before-the-parliamentary-investigatory-committee-the-stab-in-the-back-november-18-1919)。<a href="#cite-10-1" aria-label="返回参考文献 10 的第 1 处引用">↩</a>
+11. <span id="ref-11"></span>[Bundesarchiv](https://www.bundesarchiv.de/themen-entdecken/online-entdecken/dokumente-zur-zeitgeschichte/ausrufung-der-raeterepublik-in-muenchen/)。<a href="#cite-11-1" aria-label="返回参考文献 11 的第 1 处引用">↩</a>
+12. <span id="ref-12"></span>[dhm.de](https://www.dhm.de/lemo/kapitel/weimarer-republik/innenpolitik/inflation)。<a href="#cite-12-1" aria-label="返回参考文献 12 的第 1 处引用">↩</a>
+13. <span id="ref-13"></span>[dhm.de](https://www.dhm.de/lemo/kapitel/weimarer-republik/aussenpolitik/dawesplan)。<a href="#cite-13-1" aria-label="返回参考文献 13 的第 1 处引用">↩</a>
+14. <span id="ref-14"></span>[Deutscher Bundestag](https://www.bundestag.de/dokumente/textarchiv/1933-03-05-wahlen33-544990)。<a href="#cite-14-1" aria-label="返回参考文献 14 的第 1 处引用">↩1</a> <a href="#cite-14-2" aria-label="返回参考文献 14 的第 2 处引用">↩2</a>
+15. <span id="ref-15"></span>[dhm.de](https://www.dhm.de/lemo/kapitel/weimarer-republik/innenpolitik/nsdap-1)。<a href="#cite-15-1" aria-label="返回参考文献 15 的第 1 处引用">↩1</a> <a href="#cite-15-2" aria-label="返回参考文献 15 的第 2 处引用">↩2</a>
+16. <span id="ref-16"></span>[dhm.de](https://www.dhm.de/lemo/kapitel/weimarer-republik/industrie-und-wirtschaft/weltwirtschaftskrise)。<a href="#cite-16-1" aria-label="返回参考文献 16 的第 1 处引用">↩</a>
+17. <span id="ref-17"></span>[dhm.de](https://www.dhm.de/lemo/kapitel/weimarer-republik/innenpolitik/kabinette-1)。<a href="#cite-17-1" aria-label="返回参考文献 17 的第 1 处引用">↩</a>
+18. <span id="ref-18"></span>[dhm.de](https://www.dhm.de/lemo/kapitel/weimarer-republik/innenpolitik/kpd.html)。<a href="#cite-18-1" aria-label="返回参考文献 18 的第 1 处引用">↩</a>
+19. <span id="ref-19"></span>[bpb.de](https://www.bpb.de/themen/erster-weltkrieg-weimar/weimarer-republik/275841/zerstoerung-der-demokratie-1930-1933/)。<a href="#cite-19-1" aria-label="返回参考文献 19 的第 1 处引用">↩</a>
+20. <span id="ref-20"></span>[dhm.de](https://www.dhm.de/lemo/kapitel/weimarer-republik/innenpolitik/dnvp)。<a href="#cite-20-1" aria-label="返回参考文献 20 的第 1 处引用">↩</a>
+21. <span id="ref-21"></span>[dhm.de](https://www.dhm.de/lemo/biografie/erich-ludendorff)。<a href="#cite-21-1" aria-label="返回参考文献 21 的第 1 处引用">↩</a>
+22. <span id="ref-22"></span>[Office of the Historian](https://history.state.gov/historicaldocuments/frus1932v02/d221)。<a href="#cite-22-1" aria-label="返回参考文献 22 的第 1 处引用">↩</a>
+23. <span id="ref-23"></span>[dhm.de](https://www.dhm.de/lemo/biografie/ernst-roehm)。<a href="#cite-23-1" aria-label="返回参考文献 23 的第 1 处引用">↩</a>
+24. <span id="ref-24"></span>[dhm.de](https://www.dhm.de/lemo/biografie/joseph-goebbels)。<a href="#cite-24-1" aria-label="返回参考文献 24 的第 1 处引用">↩</a>
+25. <span id="ref-25"></span>[Beitrag](https://www.nsdoku.de/lexikon/artikel/goering-hermann-277)。<a href="#cite-25-1" aria-label="返回参考文献 25 的第 1 处引用">↩</a>
+26. <span id="ref-26"></span>[dhm.de](https://www.dhm.de/lemo/kapitel/ns-regime/etablierung-der-ns-herrschaft/roehm-putsch)。<a href="#cite-26-1" aria-label="返回参考文献 26 的第 1 处引用">↩</a>
+27. <span id="ref-27"></span>[Bundesarchiv](https://www.bundesarchiv.de/themen-entdecken/online-entdecken/geschichtsgalerien/lipezk-die-geheime-fliegerschule-und-erprobungsstaette-der-reichswehr-in-der-sowjetunion/)。<a href="#cite-27-1" aria-label="返回参考文献 27 的第 1 处引用">↩</a>
+28. <span id="ref-28"></span>[dhm.de](https://www.dhm.de/lemo/kapitel/weimarer-republik/aussenpolitik/locarno)。<a href="#cite-28-1" aria-label="返回参考文献 28 的第 1 处引用">↩</a>
+29. <span id="ref-29"></span>[bpb.de](https://www.bpb.de/themen/nationalsozialismus-zweiter-weltkrieg/dossier-nationalsozialismus/39576/der-weg-in-den-krieg/)。<a href="#cite-29-1" aria-label="返回参考文献 29 的第 1 处引用">↩</a>
+30. <span id="ref-30"></span>[dhm.de](https://www.dhm.de/lemo/kapitel/ns-regime/aussenpolitik/die-deutsch-italienischen-beziehungen)。<a href="#cite-30-1" aria-label="返回参考文献 30 的第 1 处引用">↩1</a> <a href="#cite-30-2" aria-label="返回参考文献 30 的第 2 处引用">↩2</a>
+31. <span id="ref-31"></span>[Holocaust Encyclopedia](https://encyclopedia.ushmm.org/content/en/article/german-prewar-expansion)。<a href="#cite-31-1" aria-label="返回参考文献 31 的第 1 处引用">↩</a>
+32. <span id="ref-32"></span>[Holocaust Encyclopedia](https://encyclopedia.ushmm.org/content/en/article/neville-chamberlain)。<a href="#cite-32-1" aria-label="返回参考文献 32 的第 1 处引用">↩1</a> <a href="#cite-32-2" aria-label="返回参考文献 32 的第 2 处引用">↩2</a>
+33. <span id="ref-33"></span>[Holocaust Encyclopedia](https://encyclopedia.ushmm.org/content/en/article/german-soviet-pact)。<a href="#cite-33-1" aria-label="返回参考文献 33 的第 1 处引用">↩</a>
+34. <span id="ref-34"></span>[dhm.de](https://www.dhm.de/lemo/biografie/benito-mussolini)。<a href="#cite-34-1" aria-label="返回参考文献 34 的第 1 处引用">↩</a>
+35. <span id="ref-35"></span>[Office of the Historian](https://history.state.gov/milestones/1921-1936/mukden-incident)。<a href="#cite-35-1" aria-label="返回参考文献 35 的第 1 处引用">↩</a>
+36. <span id="ref-36"></span>[Office of the Historian](https://history.state.gov/milestones/1937-1945/pearl-harbor)。<a href="#cite-36-1" aria-label="返回参考文献 36 的第 1 处引用">↩1</a> <a href="#cite-36-2" aria-label="返回参考文献 36 的第 2 处引用">↩2</a>
