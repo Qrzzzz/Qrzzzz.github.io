@@ -45,7 +45,6 @@ test("uses excerpt previews as display titles without changing their page titles
       kind: "excerpt",
       title: "偶拾 · 2026-07-17 · 03",
       preview: "棋局结束时，国王与卒子归入同一盒中。",
-      description: "偶然遇见，值得留下的一段文字。",
       status: "stable"
     })
   );
@@ -82,7 +81,6 @@ test("matches available descriptions, excerpt previews, tags, and content type",
       kind: "excerpt",
       title: "偶拾 01",
       preview: "棋局结束时，国王与卒子归入同一盒中。",
-      description: "偶然遇见，值得留下的一段文字。",
       status: "stable",
       tags: ["人生"]
     })
@@ -98,6 +96,7 @@ test("matches available descriptions, excerpt previews, tags, and content type",
   assert.equal(matchesLibraryItem(excerpt, "人生"), true);
   assert.equal(matchesLibraryItem(excerpt, "偶拾"), true);
   assert.equal(matchesLibraryItem(article, "DeepSeek"), true);
+  assert.equal(Object.hasOwn(excerpt, "description"), false);
   assert.equal(Object.hasOwn(article, "description"), false);
   assert.equal(matchesLibraryItem(article, "长期研究"), false);
   assert.equal(matchesLibraryItem(article, "不存在"), false);

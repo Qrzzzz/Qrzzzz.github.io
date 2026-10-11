@@ -89,9 +89,9 @@ export function normalizeLibraryItem(page: LibrarySourcePage): LibraryItem {
   const preview =
     typeof frontmatter.preview === "string" ? frontmatter.preview.trim() : "";
   const description =
-    frontmatter.kind === "article"
-      ? undefined
-      : requiredText(frontmatter.description, "description");
+    frontmatter.kind === "prompt"
+      ? requiredText(frontmatter.description, "description")
+      : undefined;
 
   return {
     url: requiredText(page.url, "url"),

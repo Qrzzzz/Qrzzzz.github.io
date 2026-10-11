@@ -16,7 +16,7 @@ title: 内容写作规范
 
 集合与项目入口页使用 `pageType: index`，通过共享的 `CatalogHeader` 组件生成唯一的一级标题和导语，不再重复写 Markdown 一级标题。这些页面关闭侧栏目录，使用一致的宽版布局；文章和文档正文继续遵循下方的阅读排版规则。
 
-Excerpts 条目不设正文标题，也不添加隐藏标题。Frontmatter 的 `title` 仅以 `Excerpt YYYY-MM-DD-NN` 作为英文内部标号；分享图不展示该标号、日期标题或含编号的网址，保留正文、出处与原文二维码。
+Excerpts 条目不设正文标题，也不添加隐藏标题，并不写 `description`。Frontmatter 的 `title` 仅以 `Excerpt YYYY-MM-DD-NN` 作为英文内部标号；列表与翻页使用 `preview`。分享图不展示该标号、日期标题或含编号的网址，保留正文、出处与原文二维码。
 
 署名、日期和机构信息较多的长文可使用 `ArticleHeader` 包裹原有一级标题、导语、作者和日期；机构、邮箱等补充信息放入其 `details` 插槽。组件只在页面显式使用时出现，不添加空元数据。详情使用原生折叠语义，分享长图会完整展开；不得删改署名或原始资料信息。可参考[私人约定的边界与对抗自由](../notes/identity-v-custom-room-legitimacy.md)的写法。
 

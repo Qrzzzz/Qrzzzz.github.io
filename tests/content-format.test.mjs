@@ -92,6 +92,7 @@ test("keeps hand-written pages on their category-specific metadata and lead cont
     const description = frontmatterValue(page.frontmatter, "description");
     const omitsDescription =
       (page.relativePath.startsWith("notes/") && page.relativePath !== "notes/index.md") ||
+      /^excerpts\/\d.*\.md$/.test(page.relativePath) ||
       page.relativePath === "guide/getting-started.md" ||
       page.relativePath === "guide/writing-style.md";
     assert.ok(title, `${page.relativePath} 缺少 title`);

@@ -104,12 +104,12 @@ export function validateLibraryRecords(records, indexes = []) {
       errors.push(`${relativePath} 缺少 title。`);
     }
     if (
-      frontmatter.kind === "article" &&
+      (frontmatter.kind === "article" || frontmatter.kind === "excerpt") &&
       Object.hasOwn(frontmatter, "description")
     ) {
-      errors.push(`${relativePath} 是文章，不应提供 description。`);
+      errors.push(`${relativePath} 是${frontmatter.kind === "article" ? "文章" : "偶拾"}，不应提供 description。`);
     } else if (
-      frontmatter.kind !== "article" &&
+      frontmatter.kind === "prompt" &&
       !isNonEmptyText(frontmatter.description)
     ) {
       errors.push(`${relativePath} 缺少 description。`);
