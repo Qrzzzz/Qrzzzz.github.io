@@ -3,6 +3,7 @@ import { test, expect } from "@playwright/test";
 test("the home gesture yields to a pull, leaves links fixed and settles completely", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/");
+  await expect(page.locator(".site-loading")).toBeHidden();
   const stage = page.locator(".gesture-stage");
   await expect(stage).toHaveAttribute("data-gesture-ready", "true");
   const ink = page.locator(".home-gesture__ink");
@@ -35,6 +36,7 @@ test("touch can pull the line and then scroll a document normally", async ({ bro
   const context = await browser.newContext({ baseURL, viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
   const page = await context.newPage();
   await page.goto("/");
+  await expect(page.locator(".site-loading")).toBeHidden();
   const stage = page.locator(".gesture-stage");
   await expect(stage).toHaveAttribute("data-gesture-ready", "true");
   const ink = page.locator(".home-gesture__ink");
@@ -56,6 +58,7 @@ test("touch can pull the line and then scroll a document normally", async ({ bro
   expect(await page.evaluate(() => scrollY)).toBe(0);
 
   await page.goto("/notes/identity-v-custom-room-legitimacy.html");
+  await expect(page.locator(".site-loading")).toBeHidden();
   const line = page.locator(".reading-rail");
   await expect(line).toHaveAttribute("data-progress", /\d/);
   const before = Number(await line.getAttribute("data-progress"));

@@ -45,6 +45,12 @@ metadata, public routes and VitePress navigation remain the source of truth.
   the bag is exhausted. A cycle counts 60 seconds from the start of typing, then
   retracts the text before the next work. The loading overlay keeps its own 50
   works and 30-second cycle. Both share the player but have independent selection state.
+- Full document visits show the loading screen before application resources, with
+  its existing styles and theme tokens inlined from their source files. Main styles
+  load without blocking that first paint; no-JS keeps ordinary blocking styles.
+  Dismissal waits for app readiness, styles, and at least 700 ms after a painted
+  loading frame. Internal navigation keeps the 180 ms anti-flicker delay. Broken
+  startup releases the server-rendered page after the existing three-minute limit.
 - Pause/Resume and Next remain keyboard accessible; selecting poem text pauses
   playback. Background and user pauses overlap without consuming reading time.
   Reduced motion shows full works, and no-JS retains a complete server-rendered poem.

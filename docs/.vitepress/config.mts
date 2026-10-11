@@ -2,11 +2,16 @@ import { tokenizeSearch } from "./content/search.mjs";
 import { normalizeLibraryItem, sortLibraryItems } from "./content/library";
 import { defineConfig } from "vitepress";
 import { fileURLToPath } from "node:url";
+import { readFileSync } from "node:fs";
 import { collectLibraryRecords } from "../../scripts/lib/content-library.mjs";
 import { inlineEmphasisPlugin } from "./markdown/inline-emphasis.mjs";
 import { mermaidPlugin } from "./markdown/mermaid.mjs";
 import { loadingPoems } from "./theme/loadingPoems.mjs";
 import { bootstrapLoadingPoem, createLoadingPoemPlayer } from "./theme/loadingPoemRuntime.mjs";
+import { prepareLoadingHtml } from "./theme/loadingBootHtml.mjs";
+
+const loadingSource = readFileSync(new URL("./theme/SiteLoading.vue", import.meta.url), "utf8");
+const loadingTokens = readFileSync(new URL("./theme/styles/tokens.css", import.meta.url), "utf8");
 
 const repositoryRoot = fileURLToPath(new URL("../..", import.meta.url));
 const { records: libraryRecords } = collectLibraryRecords(repositoryRoot);
@@ -132,7 +137,11 @@ export default defineConfig({
       context.pageData.frontmatter.lang,
       context.pageData.relativePath
     );
-    return code.replace(/<html lang="[^"]*"/, `<html lang="${lang}"`);
+    return prepareLoadingHtml(
+      code.replace(/<html lang="[^"]*"/, `<html lang="${lang}"`),
+      loadingSource,
+      loadingTokens
+    );
   },
 
   transformHead() {

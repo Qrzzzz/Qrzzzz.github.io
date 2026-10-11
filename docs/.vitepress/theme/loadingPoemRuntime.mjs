@@ -169,35 +169,53 @@ export function createLoadingPoemPlayer({
 export function bootstrapLoadingPoem(poems, createPlayer) {
   const doc = document;
   let player;
-  let delay;
+  let dismissal;
   let watchdog;
   let done = false;
+  let ready = false;
+  let shownAt;
   const observer = new MutationObserver(attach);
   function attach() {
-    if (done || player || delay !== undefined) return;
+    if (done || player) return;
     const root = doc.querySelector('.site-loading [data-poem-player]');
     if (!root) return;
     observer.disconnect();
-    delay = setTimeout(() => {
-      delay = undefined;
+    player = createPlayer({ root, poems });
+    player.start();
+    // Start the minimum exposure after a painted frame, not while HTML is arriving.
+    requestAnimationFrame(() => requestAnimationFrame(() => {
       if (done) return;
-      player = createPlayer({ root, poems });
-      player.start();
-    }, 180);
+      shownAt = performance.now();
+      settle();
+    }));
+  }
+  function settle() {
+    if (done || !ready || shownAt === undefined) return;
+    const styles = [...doc.querySelectorAll('link[data-site-boot-style]')];
+    if (styles.some(link => !link.sheet && link.dataset.siteStyleReady !== 'true')) return;
+    clearTimeout(dismissal);
+    dismissal = setTimeout(finish, Math.max(0, 700 - (performance.now() - shownAt)));
+  }
+  function appReady() {
+    ready = true;
+    settle();
   }
   function finish() {
     done = true;
     observer.disconnect();
-    clearTimeout(delay);
+    clearTimeout(dismissal);
     clearTimeout(watchdog);
     player?.destroy();
     doc.documentElement.classList.remove('site-boot-loading');
-    doc.removeEventListener('site-loading-ready', finish);
+    doc.removeEventListener('site-loading-ready', appReady);
+    doc.removeEventListener('site-loading-style-ready', settle);
+    doc.dispatchEvent(new Event('site-loading-finished'));
   }
   doc.documentElement.classList.add('site-boot-loading');
-  doc.addEventListener('site-loading-ready', finish, { once: true });
+  doc.addEventListener('site-loading-ready', appReady, { once: true });
+  doc.addEventListener('site-loading-style-ready', settle);
   observer.observe(doc.documentElement, { childList: true, subtree: true });
   attach();
-  // Only a broken app startup needs this fallback; normal loads finish immediately.
+  // A broken app startup must still release the server-rendered reading surface.
   watchdog = setTimeout(finish, 180000);
 }

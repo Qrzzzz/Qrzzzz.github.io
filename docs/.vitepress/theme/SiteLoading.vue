@@ -57,15 +57,24 @@ const complete: NonNullable<typeof router.onAfterRouteChange> = async (to) => {
   }
 };
 
-onMounted(() => {
-  document.dispatchEvent(new Event("site-loading-ready"));
+function finishBoot() {
   finish();
   boot.value = false;
+}
+
+onMounted(() => {
+  document.addEventListener("site-loading-finished", finishBoot, { once: true });
+  if (document.documentElement.classList.contains("site-boot-loading")) {
+    document.dispatchEvent(new Event("site-loading-ready"));
+  } else {
+    finishBoot();
+  }
   router.onBeforePageLoad = start;
   router.onAfterRouteChange = complete;
 });
 
 onBeforeUnmount(() => {
+  document.removeEventListener("site-loading-finished", finishBoot);
   finish();
   if (router.onBeforePageLoad === start) router.onBeforePageLoad = before;
   if (router.onAfterRouteChange === complete) router.onAfterRouteChange = after;
@@ -116,7 +125,7 @@ onBeforeUnmount(() => {
 }
 .site-loading--boot { visibility: hidden; }
 :global(html.site-boot-loading .site-loading--boot) {
-  animation: loading-reveal 0s 180ms forwards;
+  visibility: visible;
 }
 .site-loading__composition {
   position: relative;
@@ -222,7 +231,6 @@ onBeforeUnmount(() => {
   0%, 60%, 100% { opacity: .7; transform: translateY(0); }
   30% { opacity: 1; transform: translateY(-1px); }
 }
-@keyframes loading-reveal { to { visibility: visible; } }
 @media (max-width: 680px) {
   .site-loading__heading { left: 25%; top: 83%; width: 112px; }
   .site-loading__title { font-size: 11px; }
