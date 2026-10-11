@@ -132,6 +132,9 @@ test("keeps hand-written pages on their category-specific metadata and lead cont
         // This translation introduces its source in an info block instead of a lead.
         assert.doesNotMatch(unfenced, /<p class="lead">/);
         assert.match(unfenced, /^#\s+.+\n\n::: info 原文来源与翻译说明\n本篇中文译文与译注由 .+\n/m);
+      } else if (page.relativePath === "notes/hitler-art-school-and-the-second-world-war.md") {
+        // The counterfactual keeps its opening judgment inside the source body.
+        assert.doesNotMatch(unfenced, /<p class="lead">/);
       } else {
         assert.match(
           unfenced,
