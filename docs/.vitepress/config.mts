@@ -252,7 +252,8 @@ export default defineConfig({
 
     socialLinks: [
       {
-        icon: "github",
+        icon: { svg: '<span class="site-icon site-icon--external-link" aria-hidden="true"></span>' },
+        ariaLabel: "View Qrzzzz on GitHub (opens in a new window)",
         link: "https://github.com/Qrzzzz"
       }
     ],

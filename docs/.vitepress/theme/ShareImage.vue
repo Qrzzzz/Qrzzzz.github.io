@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import SiteIcon from "./SiteIcon.vue";
 import { ref } from "vue";
 import ShareImageCanvas from "./ShareImageCanvas.vue";
 import { useShareImageExport } from "./useShareImageExport";
@@ -22,7 +23,7 @@ const { truncate, rendering, progress, preparedImage, copying, copyButton, expor
         <button type="button" class="share-image-entry__button" :disabled="copying" @click="prepareImage">Regenerate image</button>
       </template>
       <button v-else type="button" class="share-image-entry__button" :disabled="rendering" :aria-busy="rendering" @click="prepareImage">
-        <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 5h14v14H5zM8 15l3-3 2 2 2-2 3 3M15.5 9h.01" /></svg>
+        <SiteIcon name="image" />
         {{ rendering ? "Preparing…" : "Export article image" }}
       </button>
     </div>
@@ -107,7 +108,7 @@ const { truncate, rendering, progress, preparedImage, copying, copyButton, expor
   outline-offset: 3px;
 }
 
-.share-image-entry__button svg {
+.share-image-entry__button .site-icon {
   width: 16px;
   height: 16px;
   fill: none;

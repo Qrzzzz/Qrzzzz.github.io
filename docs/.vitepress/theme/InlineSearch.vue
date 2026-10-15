@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import SiteIcon from "./SiteIcon.vue";
 import { tokenizeSearch, rankSearchResults, createSearchLoader } from "../content/search.mjs";
 import localSearchIndex from "@localSearchIndex";
 import type MiniSearch from "minisearch";
@@ -237,20 +238,14 @@ onBeforeUnmount(() => {
       :inert="expanded"
       @click="openSearch"
     >
-      <svg aria-hidden="true" viewBox="0 0 24 24">
-        <circle cx="11" cy="11" r="6.5" />
-        <path d="m16 16 4 4" />
-      </svg>
+      <SiteIcon name="search" />
       <span class="inline-search-placeholder">Search the site…</span>
       <kbd>Ctrl K</kbd>
     </button>
 
     <div class="inline-search-surface" :inert="!expanded">
       <form class="inline-search-form" role="search" @submit.prevent="">
-        <svg aria-hidden="true" viewBox="0 0 24 24">
-          <circle cx="11" cy="11" r="6.5" />
-          <path d="m16 16 4 4" />
-        </svg>
+        <SiteIcon name="search" />
         <label class="visually-hidden" for="inline-site-search-input">Search the site</label>
         <input
           id="inline-site-search-input"
@@ -279,7 +274,7 @@ onBeforeUnmount(() => {
           aria-label="Clear search"
           @click="clearQuery"
         >
-          ×
+          <SiteIcon name="x" />
         </button>
         <button
           type="button"
@@ -404,8 +399,8 @@ onBeforeUnmount(() => {
   color: var(--site-text);
 }
 
-.inline-search-trigger svg,
-.inline-search-form > svg {
+.inline-search-trigger .site-icon,
+.inline-search-form > .site-icon {
   width: 19px;
   height: 19px;
   flex: 0 0 auto;
@@ -456,11 +451,11 @@ onBeforeUnmount(() => {
   transition: border-color 240ms ease, visibility 0s;
 }
 
-.inline-search-form > svg {
+.inline-search-form > .site-icon {
   box-sizing: content-box;
   width: 19px;
   height: 19px;
-  padding-inline: 12px;
+  margin-inline: 12px;
   opacity: 1;
 }
 

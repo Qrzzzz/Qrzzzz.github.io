@@ -68,6 +68,13 @@ metadata, public routes and VitePress navigation remain the source of truth.
   over a fully visible new theme. Avoid autoplay, floating cards, fake windows and
   independent decorative effects.
 
+- UI icons use the pinned official Lucide static SVGs through `SiteIcon.vue` and
+  `styles/icons.css`. Menu, outline, external links and code-copy controls share that
+  source. Artwork remains in its illustration components. The circular floating
+  control is the sole return-to-top entry; empty local navigation is hidden.
+- The serif wordmark uses color and a faint underline for hover/focus feedback,
+  with opacity on press and reduced-motion support.
+
 Run `npm run check`, `npm run docs:e2e` and `npm run docs:audit` before publication.
 The browser suite covers touch capture, native scrolling, outline navigation,
 reduced motion, responsive widths, search, history, theme and full article export.

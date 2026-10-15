@@ -26,11 +26,11 @@
 .VPNavBarHamburger { display: none !important; width: 44px; height: 44px; }
 .VPNavScreen { background: var(--site-canvas); overscroll-behavior: contain; }
 .site-layout .VPNavScreenMenuLink { display: flex; align-items: center; justify-content: space-between; gap: 24px; min-height: 62px; padding: 14px 2px; border-bottom: 1px solid var(--site-line); color: var(--site-text); font-family: var(--site-font-reading); font-size: 26px; font-weight: 400; line-height: 1.2; letter-spacing: -.015em; }
-.site-layout .VPNavScreenMenuLink::after { content: ""; flex: 0 0 6px; width: 6px; height: 6px; margin-right: 4px; border-top: 1px solid currentColor; border-right: 1px solid currentColor; color: var(--site-text-faint); transform: rotate(45deg); transition: transform var(--site-motion-short), color var(--site-motion-short); }
+.site-layout .VPNavScreenMenuLink::after { content: ""; flex: 0 0 18px; width: 18px; height: 18px; margin-right: 4px; color: var(--site-text-faint); transition: transform var(--site-motion-short), color var(--site-motion-short); }
 .site-layout .VPNavScreenMenuLink:hover,
 .site-layout .VPNavScreenMenuLink:focus-visible { color: var(--site-link); }
 .site-layout .VPNavScreenMenuLink:hover::after,
-.site-layout .VPNavScreenMenuLink:focus-visible::after { color: var(--site-link); transform: translateX(3px) rotate(45deg); }
+.site-layout .VPNavScreenMenuLink:focus-visible::after { color: var(--site-link); transform: translateX(3px); }
 .site-layout .VPNavScreen .container { max-width: 440px; padding: 24px 0 40px; }
 .site-layout .VPNavScreenAppearance { margin-top: 20px; min-height: 52px; padding: 8px 2px; border-radius: 0; background: transparent; }
 .site-layout .VPNavScreenAppearance .text { color: var(--site-text-muted); font-family: var(--site-font-sans); font-size: 12px; font-weight: 400; letter-spacing: .025em; }
@@ -183,3 +183,14 @@ html.theme-is-switching .site-layout :where(a, button, p, h1, h2, h3, input, pat
   .VPNavBar :is(.VPNavBarMenu, .NavActions, .VPNavBarHamburger, .VPNavBarTitle) { transition: none; }
   .site-layout .VPNavScreenMenuLink::after { transition: none; }
 }
+
+/* Empty local navigation only duplicated the floating control. Keep real outlines and sidebar access. */
+.site-layout .VPLocalNav.empty:not(.has-sidebar),
+.site-layout .VPLocalNav.empty .VPLocalNavOutlineDropdown,
+.site-layout .VPLocalNavOutlineDropdown .header { display: none; }
+.VPNavBarTitle .title { position: relative; transition: color 160ms ease, opacity 160ms ease; }
+.VPNavBarTitle .title::after { content: ""; position: absolute; left: 0; right: 0; bottom: 5px; height: 1px; background: currentColor; opacity: 0; transition: opacity 160ms ease; }
+.VPNavBarTitle .title:hover, .VPNavBarTitle .title:focus-visible { color: var(--site-link); }
+.VPNavBarTitle .title:hover::after, .VPNavBarTitle .title:focus-visible::after { opacity: .45; }
+.VPNavBarTitle .title:active { opacity: .7; }
+@media (prefers-reduced-motion: reduce) { .VPNavBarTitle .title, .VPNavBarTitle .title::after { transition: none; } }

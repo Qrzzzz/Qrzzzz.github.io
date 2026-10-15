@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import SiteIcon from "./SiteIcon.vue";
 import { computed, nextTick, onBeforeUnmount, ref } from "vue";
 import { useData } from "vitepress";
 import {
@@ -73,13 +74,8 @@ onBeforeUnmount(() => {
       <span class="theme-toggle__track" aria-hidden="true">
         <span class="theme-toggle__thumb">
           <span class="theme-toggle__icon">
-            <svg class="theme-toggle__sun" viewBox="0 0 24 24">
-              <circle cx="12" cy="12" r="4" />
-              <path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
-            </svg>
-            <svg class="theme-toggle__moon" viewBox="0 0 24 24">
-              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z" />
-            </svg>
+            <SiteIcon name="sun" class="theme-toggle__sun" />
+            <SiteIcon name="moon" class="theme-toggle__moon" />
           </span>
         </span>
       </span>
@@ -93,9 +89,7 @@ onBeforeUnmount(() => {
       aria-label="View Qrzzzz on GitHub (opens in a new window)"
       title="GitHub"
     >
-      <svg aria-hidden="true" viewBox="0 0 24 24">
-        <path d="M12 2.8a9.2 9.2 0 0 0-2.9 17.9c.5.1.6-.2.6-.4v-1.8c-2.8.6-3.4-1.2-3.4-1.2-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 0 1.6 1.1 1.6 1.1.9 1.6 2.4 1.1 3 .8.1-.7.4-1.1.7-1.4-2.3-.3-4.6-1.1-4.6-4.6 0-1 .4-1.9 1-2.5-.1-.3-.4-1.3.1-2.6 0 0 .8-.3 2.7 1a9.2 9.2 0 0 1 4.9 0c1.9-1.3 2.7-1 2.7-1 .5 1.3.2 2.3.1 2.6.6.6 1 1.5 1 2.5 0 3.5-2.4 4.3-4.6 4.6.4.3.7.9.7 1.8v2.6c0 .3.2.5.7.4A9.2 9.2 0 0 0 12 2.8Z" />
-      </svg>
+      <SiteIcon name="external-link" />
     </a>
   </div>
 </template>
@@ -180,14 +174,14 @@ onBeforeUnmount(() => {
 
 .theme-toggle__icon {
   position: absolute;
-  inset: 9px;
+  inset: 7px;
 }
 
-.theme-toggle__icon svg {
+.theme-toggle__icon .site-icon {
   position: absolute;
   inset: 0;
-  width: 14px;
-  height: 14px;
+  width: 18px;
+  height: 18px;
   fill: none;
   stroke: currentColor;
   stroke-linecap: round;
@@ -227,11 +221,11 @@ onBeforeUnmount(() => {
   text-decoration: none;
 }
 
-.nav-github > svg {
+.nav-github > .site-icon {
   width: 18px;
   height: 18px;
   flex: 0 0 auto;
-  fill: currentColor;
+
 }
 
 @media (max-width: 767.98px) {
@@ -245,7 +239,7 @@ onBeforeUnmount(() => {
 @media (prefers-reduced-motion: reduce) {
   .theme-toggle__track,
   .theme-toggle__thumb,
-  .theme-toggle__icon svg,
+  .theme-toggle__icon .site-icon,
   .theme-toggle,
   .nav-github {
     transition: none;

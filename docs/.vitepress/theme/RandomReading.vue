@@ -3,6 +3,7 @@ let previousReadingUrl = "";
 </script>
 
 <script setup lang="ts">
+import SiteIcon from "./SiteIcon.vue";
 import { nextTick, onMounted, ref } from "vue";
 import { useRouter, withBase } from "vitepress";
 import { data as libraryItems } from "../content/library.data";
@@ -26,7 +27,7 @@ onMounted(async () => {
 <template>
   <main class="random-reading" lang="en">
     <slot />
-    <a v-if="destination" :href="withBase(destination)">Read a page <span aria-hidden="true">↗</span></a>
+    <a v-if="destination" :href="withBase(destination)">Read a page <SiteIcon name="arrow-up-right" /></a>
     <a :href="withBase('/library/')">Browse the Library</a>
   </main>
 </template>

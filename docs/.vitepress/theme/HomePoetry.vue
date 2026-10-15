@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import SiteIcon from "./SiteIcon.vue";
 import { onBeforeUnmount, onMounted, ref } from "vue";
 import collection from "./homePoems.json";
 import { createLoadingPoemPlayer } from "./loadingPoemRuntime.mjs";
@@ -68,7 +69,7 @@ onBeforeUnmount(() => {
         <template v-if="ready">
         <button type="button" :aria-pressed="paused" @click="togglePause">{{ paused ? "Resume" : "Pause" }}</button>
         <span aria-hidden="true">·</span>
-        <button type="button" @click="next">Next <span aria-hidden="true">↗</span></button>
+        <button type="button" @click="next">Next <SiteIcon name="arrow-up-right" /></button>
         </template>
       </div>
     </div>

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import SiteIcon from "./SiteIcon.vue";
 import { nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { useData } from "vitepress";
 
@@ -87,9 +88,6 @@ onBeforeUnmount(() => {
     :title="page.relativePath === 'library/index.md' ? 'Back to filters' : 'Back to top'"
     @click="returnToTop"
   >
-    <span class="back-to-top__icon" aria-hidden="true">
-      <span />
-    </span>
-    <span class="back-to-top__label">{{ page.relativePath === "library/index.md" ? "Filters" : "Top" }}</span>
+    <SiteIcon name="arrow-up" class="back-to-top__icon" />
   </button>
 </template>

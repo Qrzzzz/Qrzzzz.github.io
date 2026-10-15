@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import SiteIcon from "./SiteIcon.vue";
 import { withBase } from "vitepress";
 import HomePoetry from "./HomePoetry.vue";
 import collection from "./homePoems.json";
@@ -20,8 +21,8 @@ const poems = [...loadingPoems, ...collection.items];
       <h1 id="not-found-title">Page not found.</h1>
       <p class="site-not-found__description">The link may have changed, or the page may no longer be here.</p>
       <nav class="site-not-found__links" aria-label="Find your way">
-        <a :href="withBase('/')">Return home <span aria-hidden="true">↗</span></a>
-        <a :href="withBase('/random')">Read something random <span aria-hidden="true">↗</span></a>
+        <a :href="withBase('/')">Return home <SiteIcon name="arrow-up-right" /></a>
+        <a :href="withBase('/random')">Read something random <SiteIcon name="arrow-up-right" /></a>
       </nav>
     </div>
 
