@@ -128,7 +128,7 @@ test("keeps accessible theme, search and external profile actions", () => {
   assert.match(component, /https:\/\/github\.com\/Qrzzzz/);
 });
 
-test("uses one gliding marker for the four desktop top navigation links", () => {
+test("uses one gliding marker for the desktop top navigation links", () => {
   const layout = readFileSync("docs/.vitepress/theme/Layout.vue", "utf8");
   const marker = readFileSync("docs/.vitepress/theme/topNavigationMarker.ts", "utf8");
   const styles = readFileSync("docs/.vitepress/theme/styles/site.css", "utf8");

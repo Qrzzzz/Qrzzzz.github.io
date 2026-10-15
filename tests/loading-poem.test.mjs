@@ -144,6 +144,24 @@ test('homepage exhausts its shuffle bag before repeating and leaves loader state
   h.player.destroy();
 });
 
+test('404 cycles through all 250 existing poems without repeats or changing the loader selection', () => {
+  const poems = [...loadingPoems, ...homeCollection.items];
+  assert.equal(poems.length, 250);
+  assert.equal(new Set(poems.map(poem => String(poem.id))).size, 250);
+  const h = harness({ poems, cycleMs: 60000, shuffle: true, reduced: true });
+  h.doc.documentElement.dataset.loadingLastPoem = '24';
+  h.player.start();
+  const ids = new Set();
+  for (let i = 0; i < poems.length; i++) {
+    ids.add(h.root.dataset.poemId);
+    h.tick(60000);
+  }
+  assert.equal(ids.size, 250);
+  assert.equal(h.doc.documentElement.dataset.loadingLastPoem, '24');
+  h.player.destroy();
+  assert.equal(h.tasks.size, 0);
+});
+
 test('Next retracts the current poem, tolerates repeated clicks and pause freezes typing', () => {
   const h = harness({ poems: homeCollection.items, cycleMs: 60000, shuffle: true });
   h.player.start(); h.tick(200);

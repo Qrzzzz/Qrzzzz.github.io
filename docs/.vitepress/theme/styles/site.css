@@ -8,26 +8,32 @@
 .VPNavBar .container { max-width: var(--site-max); }
 .VPNavBar .content { min-width: 0; }
 .VPNavBar .content-body { gap: 8px; background: transparent !important; }
-.VPNavBarTitle .title { height: 44px; min-height: 44px; border: 0; font-size: 18px; font-weight: 400; letter-spacing: -.7px; }
+.VPNavBarTitle .title { height: 44px; min-height: 44px; border: 0; font-family: var(--site-font-brand); font-size: 24px; font-weight: 400; line-height: 1.2; letter-spacing: -.02em; word-spacing: .05em; white-space: nowrap; }
 .VPNavBarTitle { display: flex; align-items: center; height: var(--vp-nav-height); }
 .VPNavBarMenu { position: relative; align-items: center; gap: 8px; }
-.VPNavBar .VPNavBarMenuLink { position: relative; z-index: 1; height: 44px; padding: 0 10px; color: var(--site-text-muted); font-size: 12px; font-weight: 400; line-height: 44px; transition: color var(--site-motion-short); }
+.VPNavBar .VPNavBarMenuLink { position: relative; z-index: 1; height: 44px; padding: 0 10px; color: var(--site-text-muted); font-family: var(--site-font-reading); font-size: 14px; font-weight: 400; line-height: 44px; transition: color var(--site-motion-short); }
 .VPNavBar .VPNavBarMenuLink.active,
 .VPNavBar .VPNavBarMenuLink:hover { color: var(--site-link); }
 .VPNavBar .top-nav-marker { position: absolute; z-index: 2; top: 0; left: 0; width: 0; height: 1px; background: var(--site-link); opacity: 0; pointer-events: none; transform: translate3d(0, 0, 0); transition: transform 320ms var(--site-ease), width 320ms var(--site-ease), opacity 120ms ease; will-change: transform, width; }
 .VPNavBar .top-nav-marker.is-ready.is-visible { opacity: 1; }
 .VPNavBar .top-nav-marker.is-preparing { transition: none; }
 .VPNavBarSearch, .VPNavBarAppearance, .VPNavBarTranslations, .VPNavBarSocialLinks, .VPNavBarExtra { display: none !important; }
-.site-layout[data-page-kind="home"] .VPNavBarMenuLink:not([href^="/about"]) { display: none; }
+.site-layout[data-page-kind="home"] .VPNavBarMenuLink:not([href^="/about"]):not([href^="/random"]) { display: none; }
 .site-layout[data-page-kind="home"] .nav-github { display: none; }
 .site-layout .NavActions { border: 0; padding: 0; margin-left: 0; gap: 4px; }
 .site-layout .theme-toggle, .site-layout .nav-github { height: 44px; width: 44px; border-radius: 3px; }
 .VPNavBar :is(.VPNavBarMenu, .NavActions, .VPNavBarHamburger, .VPNavBarTitle) { transition: opacity 180ms ease 220ms, visibility 0s; }
-.VPNavBar:has(.InlineSiteSearch.is-expanded) :is(.VPNavBarMenu, .NavActions, .VPNavBarHamburger) { visibility: hidden; pointer-events: none; opacity: 0; transition: opacity 120ms ease, visibility 0s linear 120ms; }
 .VPNavBarHamburger { display: none !important; width: 44px; height: 44px; }
-.VPNavScreen { background: var(--site-canvas); }
-.site-layout .VPNavScreenMenuLink { display: flex; align-items: center; min-height: 68px; color: var(--site-text); font-size: 26px; font-weight: 400; }
-.site-layout .VPNavScreen .container { padding-top: 36px; }
+.VPNavScreen { background: var(--site-canvas); overscroll-behavior: contain; }
+.site-layout .VPNavScreenMenuLink { display: flex; align-items: center; justify-content: space-between; gap: 24px; min-height: 62px; padding: 14px 2px; border-bottom: 1px solid var(--site-line); color: var(--site-text); font-family: var(--site-font-reading); font-size: 26px; font-weight: 400; line-height: 1.2; letter-spacing: -.015em; }
+.site-layout .VPNavScreenMenuLink::after { content: ""; flex: 0 0 6px; width: 6px; height: 6px; margin-right: 4px; border-top: 1px solid currentColor; border-right: 1px solid currentColor; color: var(--site-text-faint); transform: rotate(45deg); transition: transform var(--site-motion-short), color var(--site-motion-short); }
+.site-layout .VPNavScreenMenuLink:hover,
+.site-layout .VPNavScreenMenuLink:focus-visible { color: var(--site-link); }
+.site-layout .VPNavScreenMenuLink:hover::after,
+.site-layout .VPNavScreenMenuLink:focus-visible::after { color: var(--site-link); transform: translateX(3px) rotate(45deg); }
+.site-layout .VPNavScreen .container { max-width: 440px; padding: 24px 0 40px; }
+.site-layout .VPNavScreenAppearance { margin-top: 20px; min-height: 52px; padding: 8px 2px; border-radius: 0; background: transparent; }
+.site-layout .VPNavScreenAppearance .text { color: var(--site-text-muted); font-family: var(--site-font-sans); font-size: 12px; font-weight: 400; letter-spacing: .025em; }
 .VPLocalNav { border-bottom: 1px solid var(--site-line); background: var(--site-canvas); }
 .VPLocalNav .container { min-height: 48px; }
 .VPLocalNav .menu, .VPLocalNav .outline { min-height: 48px; }
@@ -116,7 +122,9 @@ html.theme-is-switching .site-layout :where(a, button, p, h1, h2, h3, input, pat
 @media (max-width: 680px) {
   :root { --site-nav-height: 72px; }
   .VPNavBar > .wrapper { padding-inline: 22px; }
-  .VPNavBarTitle .title { font-size: 17px; }
+  .VPNavBarTitle .title { font-size: 22px; }
+  .site-layout .VPNavScreen { padding-inline: 22px; }
+  .site-layout .VPNavScreenMenuLink { min-height: 58px; font-size: 24px; }
   .VPNavBar .content-body { gap: 0; }
   .site-layout .nav-github { display: none; }
   .VPNavBar:has(.InlineSiteSearch.is-expanded) .VPNavBarTitle { visibility: hidden; pointer-events: none; opacity: 0; transition: opacity 120ms ease, visibility 0s linear 120ms; }
@@ -137,6 +145,7 @@ html.theme-is-switching .site-layout :where(a, button, p, h1, h2, h3, input, pat
 }
 @media (max-width: 359px) {
   .VPNavBar > .wrapper { padding-inline: 16px; }
+  .site-layout .VPNavScreen { padding-inline: 16px; }
   .home-entry { gap: 3px 14px; }
   .home-entry__name { font-size: 22px; }
 }
@@ -172,4 +181,5 @@ html.theme-is-switching .site-layout :where(a, button, p, h1, h2, h3, input, pat
 
 @media (prefers-reduced-motion: reduce) {
   .VPNavBar :is(.VPNavBarMenu, .NavActions, .VPNavBarHamburger, .VPNavBarTitle) { transition: none; }
+  .site-layout .VPNavScreenMenuLink::after { transition: none; }
 }

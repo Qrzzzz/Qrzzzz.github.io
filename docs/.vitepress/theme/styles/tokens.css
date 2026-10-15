@@ -42,7 +42,7 @@
 
   --site-font-reading: "Site Proportional Punctuation", "Newsreader", "Site Han Serif", serif;
   --site-font-sans: "Site Proportional Punctuation", "Site Han Sans", sans-serif;
-  --site-font-brand: var(--site-font-sans);
+  --site-font-brand: var(--site-font-reading);
   --site-font-mono: "Maple Mono", monospace;
 
   --site-max: 1320px;

@@ -22,7 +22,6 @@ type InlineSearchResult = SearchResult & SearchDocument;
 const root = ref<HTMLElement>();
 const panelHeight = ref(430);
 const surfaceWidth = ref(44);
-const surfaceX = ref(0);
 const surfaceY = ref(0);
 const trigger = ref<HTMLButtonElement>();
 const input = ref<HTMLInputElement>();
@@ -114,9 +113,11 @@ function measureSurface() {
   const viewport = window.visualViewport;
   const top = viewport?.offsetTop ?? 0;
   const mobile = window.matchMedia("(max-width: 767.98px)").matches;
-  const right = root.value.parentElement?.getBoundingClientRect().right ?? window.innerWidth - 28;
-  surfaceWidth.value = mobile ? (viewport?.width ?? window.innerWidth) - 24 : Math.min(560, window.innerWidth - 56);
-  surfaceX.value = mobile ? (viewport?.offsetLeft ?? 0) + 12 - anchor.left : Math.min(0, right - anchor.left - surfaceWidth.value);
+  const title = root.value.closest(".VPNavBar")?.querySelector(".VPNavBarTitle")?.getBoundingClientRect();
+  const coversTitle = window.matchMedia("(max-width: 680px)").matches;
+  const left = coversTitle ? (viewport?.offsetLeft ?? 0) + 12 : Math.max(28, (title?.right ?? 0) + 24);
+  // The icon's right edge stays fixed throughout the width animation.
+  surfaceWidth.value = Math.max(44, Math.min(560, anchor.right - left));
   surfaceY.value = mobile ? top + 10 - anchor.top : 0;
   const bottom = anchor.top + surfaceY.value + 44;
   panelHeight.value = Math.max(0, Math.min(430, top + (viewport?.height ?? window.innerHeight) - bottom - 20));
@@ -224,7 +225,7 @@ onBeforeUnmount(() => {
 
 <template>
   <div ref="root" class="InlineSiteSearch" :class="{ 'is-expanded': expanded }"
-    :style="{ '--search-panel-height': `${panelHeight}px`, '--search-width': `${surfaceWidth}px`, '--search-x': `${surfaceX}px`, '--search-y': `${surfaceY}px` }">
+    :style="{ '--search-panel-height': `${panelHeight}px`, '--search-width': `${surfaceWidth}px`, '--search-y': `${surfaceY}px` }">
     <button
       ref="trigger"
       type="button"
@@ -345,9 +346,9 @@ onBeforeUnmount(() => {
 .inline-search-surface {
   position: absolute;
   top: 0;
-  left: 0;
+  right: 0;
   width: 44px;
-  transform: translate(0, 0);
+  transform: translateY(0);
   pointer-events: none;
   transition: width 420ms cubic-bezier(.22, 1, .36, 1), transform 420ms cubic-bezier(.22, 1, .36, 1);
 }
@@ -355,7 +356,7 @@ onBeforeUnmount(() => {
 .InlineSiteSearch.is-expanded { z-index: 80; }
 .InlineSiteSearch.is-expanded .inline-search-surface {
   width: var(--search-width);
-  transform: translate(var(--search-x), var(--search-y));
+  transform: translateY(var(--search-y));
   pointer-events: auto;
 }
 

@@ -133,10 +133,18 @@ export default defineConfig({
   },
 
   transformHtml(code, _id, context) {
-    const lang = pageLanguage(
+    const isNotFound = context.page === "404.md";
+    const lang = isNotFound ? "en" : pageLanguage(
       context.pageData.frontmatter.lang,
       context.pageData.relativePath
     );
+    // VitePress leaves the 404 app empty for client routing. Keep its rendered
+    // recovery links and poem available without JS, outside the hydration root.
+    if (isNotFound) {
+      code = code.replace('<div id="app"></div>', () =>
+        `<div id="app"></div><noscript>${context.content}</noscript>`
+      );
+    }
     return prepareLoadingHtml(
       code.replace(/<html lang="[^"]*"/, `<html lang="${lang}"`),
       loadingSource,
@@ -193,6 +201,11 @@ export default defineConfig({
         text: "About",
         link: "/about",
         activeMatch: "^/about(?:/|$)"
+      },
+      {
+        text: "Random",
+        link: "/random",
+        activeMatch: "^/random(?:\\.html)?$"
       }
     ],
 

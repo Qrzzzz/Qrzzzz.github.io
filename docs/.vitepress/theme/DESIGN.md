@@ -6,7 +6,8 @@ metadata, public routes and VitePress navigation remain the source of truth.
 
 - Light: cool paper `#eef2f3`, cobalt `#243ecd`, ink `#172439`.
 - Dark: navy `#151d37`, periwinkle ink `#a7bcff`, text `#f0f4ff`.
-- Interface: sans serif. Reading: the existing local serif subsets. No new font service.
+- The wordmark and desktop/mobile navigation use the existing reading serif.
+  Controls and metadata use sans serif. No new font service.
 - The mobile curve is a separate composition. Never crop or scale down the desktop layout.
 - The home destinations sit diagonally on the left, Library above-left (-3 degrees)
   and Projects below-right (+2 degrees). The home gesture descends along the left
@@ -45,6 +46,12 @@ metadata, public routes and VitePress navigation remain the source of truth.
   the bag is exhausted. A cycle counts 60 seconds from the start of typing, then
   retracts the text before the next work. The loading overlay keeps its own 50
   works and 30-second cycle. Both share the player but have independent selection state.
+- The 404 reading column combines those 250 works in its own shuffled bag and
+  reuses HomePoetry's 60-second player, pause, selection and Next controls.
+  The error and recovery links sit left of the poetry; phones stack both in normal flow.
+- Search expands left from the fixed right edge of its icon, preserving the tabs
+  and site tools to its right. Random opens one note or excerpt from the generated
+  Library catalog and replaces its intermediary URL so Back returns to the prior page.
 - Full document visits show the loading screen before application resources, with
   its existing styles and theme tokens inlined from their source files. Main styles
   load without blocking that first paint; no-JS keeps ordinary blocking styles.

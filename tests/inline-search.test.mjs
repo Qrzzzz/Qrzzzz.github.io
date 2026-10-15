@@ -37,7 +37,7 @@ test("mounts an accessible inline search instead of the VitePress modal trigger"
   assert.match(siteStyles, /\.VPNavBarSearch[^{}]*\{\s*display:\s*none/s);
 });
 
-test("isolates the expanded search from overlapping navigation controls", () => {
+test("anchors expanded search to the icon's right edge and keeps right-side controls available", () => {
   const component = readFileSync("docs/.vitepress/theme/InlineSearch.vue", "utf8");
   const navActions = readFileSync("docs/.vitepress/theme/NavActions.vue", "utf8");
   const siteStyles = readFileSync("docs/.vitepress/theme/styles/site.css", "utf8");
@@ -48,10 +48,9 @@ test("isolates the expanded search from overlapping navigation controls", () => 
   );
   assert.match(component, /@media \(max-width:\s*767\.98px\)/);
   assert.match(navActions, /@media \(max-width:\s*767\.98px\)/);
-  assert.match(
-    siteStyles,
-    /\.VPNavBar:has\(\.InlineSiteSearch\.is-expanded\) :is\(\.VPNavBarMenu, \.NavActions, \.VPNavBarHamburger\)\s*\{[^}]*visibility:\s*hidden;[^}]*pointer-events:\s*none/s
-  );
+  assert.match(component, /\.inline-search-surface\s*\{[^}]*right:\s*0;/s);
+  assert.doesNotMatch(component, /--search-x|surfaceX/);
+  assert.doesNotMatch(siteStyles, /:has\(\.InlineSiteSearch\.is-expanded\) :is\([^)]*(?:NavActions|VPNavBarMenu|VPNavBarHamburger)/);
   assert.match(
     siteStyles,
     /@media \(max-width:\s*680px\)[\s\S]*?\.VPNavBar:has\(\.InlineSiteSearch\.is-expanded\) \.VPNavBarTitle\s*\{[^}]*visibility:\s*hidden;[^}]*pointer-events:\s*none/s

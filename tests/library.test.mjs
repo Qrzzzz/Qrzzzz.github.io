@@ -24,14 +24,15 @@ const libraryResultMarker = readFileSync(
   "utf8"
 );
 
-test("defines four non-overlapping top-level navigation areas", () => {
+test("defines the content destinations and a separate Random reading entry", () => {
   const nav = config.match(/nav:\s*\[([\s\S]*?)\],\s*\n\s*sidebar:/)?.[1] ?? "";
 
   for (const entry of [
     ['"Docs"', '"/docs/"'],
     ['"Projects"', '"/projects/"'],
     ['"Library"', '"/library/"'],
-    ['"About"', '"/about"']
+    ['"About"', '"/about"'],
+    ['"Random"', '"/random"']
   ]) {
     assert.ok(
       nav.includes(`text: ${entry[0]}`) && nav.includes(`link: ${entry[1]}`),

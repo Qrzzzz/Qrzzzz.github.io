@@ -19,6 +19,7 @@ const HomeAsciiTrail = defineAsyncComponent(() => import("./HomeAsciiTrail.vue")
 const clientReady = ref(false);
 
 type PageKind =
+  | "not-found"
   | "home"
   | "article"
   | "excerpt"
@@ -28,6 +29,7 @@ type PageKind =
   | "general";
 
 const pageKind = computed<PageKind>(() => {
+  if (page.value.isNotFound) return "not-found";
   const relativePath = page.value.relativePath.replace(/\\/g, "/");
 
   if (frontmatter.value.layout === "home" || relativePath === "index.md") {
@@ -67,6 +69,7 @@ const isShareablePage = computed(() => {
 });
 
 const pageLanguage = computed(() => {
+  if (page.value.isNotFound) return "en";
   const lang = frontmatter.value.lang;
   return typeof lang === "string" && /^[a-z]{2,3}(?:-[a-z0-9]+)*$/i.test(lang)
     ? lang

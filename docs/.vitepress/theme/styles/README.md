@@ -6,7 +6,7 @@
 - `catalog.css`: index headers and collection/project layout, including the single-column 639px layout.
 - `gesture-content.css`: gesture-era controls, hover motion and surface treatment; do not add body typography overrides here.
 - `reading-rail.css`: the only owner of Reading Rail geometry and document edge spacing, including the 959px mobile boundary and low-height landscape spacing.
-- `InlineSearch.vue`: search layout, result typography and visible-viewport sizing. `site.css` only hides neighboring navigation while search is open.
+- `InlineSearch.vue`: search layout, result typography and visible-viewport sizing. Its right edge stays at the trigger while it expands left; `site.css` hides only the mobile title underneath it.
 - `ArticleHeader.vue`: optional article metadata layout. Its native details remain available to keyboard users and are expanded by the existing longform exporter.
 
 Change the owning rule instead of appending a later override. Preserve necessary article/document/index differences. Verify 320, 390, 844, 1024 and 1440px in both themes, and verify real keyboard/zoom behavior separately from viewport emulation.
