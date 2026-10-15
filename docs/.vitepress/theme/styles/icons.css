@@ -56,7 +56,8 @@
 .site-layout .VPNavBarHamburger .container > span { display: none; }
 .site-layout .VPNavScreenMenuLink::after { background: currentColor; mask: var(--site-icon-chevron-right) center / contain no-repeat; }
 .site-layout :is(.vp-external-link-icon, .vp-doc a[href*='://'], .vp-doc a[target='_blank'])::after { --icon: var(--site-icon-arrow-up-right); }
-.site-layout .vp-doc div[class*='language-'] > button.copy { background-image: none; }
+.site-layout .vp-doc div[class*='language-'] > button.copy,
+.site-layout .vp-doc div[class*='language-'] > button.copy.copied { background-image: none; }
 .site-layout .vp-doc div[class*='language-'] > button.copy::after { content: ""; position: absolute; inset: 11px; background: currentColor; mask: var(--site-icon-copy) center / contain no-repeat; }
 .site-layout .vp-doc div[class*='language-'] > button.copy.copied::after { mask-image: var(--site-icon-check); }
 .site-layout .VPSocialLink > .site-icon { width: 20px; height: 20px; }
