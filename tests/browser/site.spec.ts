@@ -24,7 +24,7 @@ test("mobile documentation sources occupy a readable row across layout breakpoin
 
 test("search is lazy, finds Chinese words and navigates with the keyboard", async ({ page }) => {
   const indexes: string[] = [];
-  page.on("request", request => { if (request.url().includes("@localSearchIndexroot")) indexes.push(request.url()); });
+  page.on("request", request => { if (request.url().includes("/search-index/root.json")) indexes.push(request.url()); });
   await page.goto("/", { waitUntil: "networkidle" });
   expect(indexes).toHaveLength(0);
   await page.getByRole("button", { name: "Search the site", exact: true }).click();
