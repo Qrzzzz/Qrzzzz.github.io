@@ -133,7 +133,7 @@ test("styles structured article content and live format demonstrations", () => {
   assert.match(styles, /\.vp-doc \.custom-block\.danger\s*\{/);
   assert.match(
     styles,
-    /\.vp-doc \.custom-block\s*\{[^}]*border:\s*1px solid var\(--site-line\)[^}]*border-inline-start-width:\s*3px[^}]*border-radius:\s*var\(--site-radius-md\)/s
+    /\.vp-doc \.custom-block\s*\{[^}]*border:\s*1px solid color-mix\(in srgb, var\(--site-line\) 65%, transparent\)[^}]*border-inline-start:\s*2px solid var\(--site-text-muted\)[^}]*border-radius:\s*3px/s
   );
   assert.match(
     styles,
