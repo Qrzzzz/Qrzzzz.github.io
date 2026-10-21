@@ -35,6 +35,9 @@
 .site-icon--moon { --icon: var(--site-icon-moon); }
 .site-icon--external-link { --icon: var(--site-icon-external-link); }
 .site-icon--image { --icon: var(--site-icon-image); }
+/* Unmodified Invertocat from https://brand.github.com/GitHub_Logos.zip. */
+.site-icon--github { --icon: url("../assets/github-invertocat.svg"); color: #24292f; }
+.dark .site-icon--github { color: #fff; }
 .site-layout .vpi-align-left { --icon: var(--site-icon-align-left); }
 .site-layout .vpi-square-pen { --icon: var(--site-icon-square-pen); }
 .site-layout .vpi-plus { --icon: var(--site-icon-plus); }

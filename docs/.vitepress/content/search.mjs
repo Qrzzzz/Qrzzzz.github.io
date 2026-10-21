@@ -25,3 +25,37 @@ export function createSearchLoader() {
     return loads.get(key);
   };
 }
+
+export function searchPhrases(query) {
+  return String(query).normalize("NFKC").toLowerCase().match(/\p{Script=Han}{2,}/gu) ?? [];
+}
+
+function displayTerms(query) {
+  const phrases = searchPhrases(query);
+  return [...new Set([...phrases, ...tokenizeSearch(query).filter(term =>
+    !/^\p{Script=Han}$/u.test(term) || !phrases.some(phrase => phrase.includes(term))
+  )])];
+}
+
+export function searchExcerpt(text, query, length = 130) {
+  const value = String(text ?? "").replace(/\s+/g, " ").trim();
+  if (!value) return "";
+  const terms = displayTerms(query);
+  const lower = value.toLowerCase();
+  const hits = terms.map(term => lower.indexOf(term)).filter(index => index >= 0);
+  const start = Math.max(0, (hits.length ? Math.min(...hits) : 0) - 28);
+  const end = Math.min(value.length, start + length);
+  return `${start ? "…" : ""}${value.slice(start, end)}${end < value.length ? "…" : ""}`;
+}
+
+export function highlightSearch(text, query) {
+  const value = String(text ?? "");
+  const terms = displayTerms(query).sort((a, b) => b.length - a.length);
+  if (!terms.length) return [{ text: value, match: false }];
+  const escaped = terms.map(term => term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+  const expression = new RegExp(`(${escaped.join("|")})`, "giu");
+  return value.split(expression).filter(Boolean).map(part => ({
+    text: part,
+    match: terms.includes(part.toLowerCase())
+  }));
+}

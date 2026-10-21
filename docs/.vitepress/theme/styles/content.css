@@ -552,40 +552,41 @@
   --site-surface: var(--site-content-surface);
   --site-text-muted: var(--site-content-muted);
 
-  border: 1px solid var(--site-line);
-  border-inline-start-width: 3px;
-  border-radius: var(--site-radius-md);
+  border: 1px solid color-mix(in srgb, var(--site-line) 65%, transparent);
+  border-inline-start: 2px solid var(--site-text-muted);
+  border-radius: 3px;
   margin: 26px 0;
-  padding: 16px 18px;
-  background: var(--site-surface);
+  padding: 18px 20px;
+  background: color-mix(in srgb, var(--site-surface) 48%, var(--site-canvas));
 }
 
 .vp-doc .custom-block.info {
   border-inline-start-color: var(--site-text-muted);
-  background: color-mix(in srgb, var(--site-text-muted) 6%, var(--site-surface));
+  background: color-mix(in srgb, var(--site-text-muted) 3%, var(--site-canvas));
 }
 
 .vp-doc .custom-block.tip {
   border-inline-start-color: var(--vp-c-success-1);
-  background: color-mix(in srgb, var(--vp-c-success-1) 7%, var(--site-surface));
+  background: color-mix(in srgb, var(--vp-c-success-1) 4%, var(--site-canvas));
 }
 
 .vp-doc .custom-block.warning {
   border-inline-start-color: var(--vp-c-warning-1);
-  background: color-mix(in srgb, var(--vp-c-warning-1) 7%, var(--site-surface));
+  background: color-mix(in srgb, var(--vp-c-warning-1) 4%, var(--site-canvas));
 }
 
 .vp-doc .custom-block.danger {
   border-inline-start-color: var(--vp-c-danger-1);
-  background: color-mix(in srgb, var(--vp-c-danger-1) 7%, var(--site-surface));
+  background: color-mix(in srgb, var(--vp-c-danger-1) 4%, var(--site-canvas));
 }
 
 .vp-doc .custom-block .custom-block-title {
   margin: 0 0 7px;
   color: var(--site-text);
-  font-size: 14px;
-  font-weight: 720;
-  letter-spacing: 0.01em;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 1.5;
 }
 
 .vp-doc .custom-block.info .custom-block-title {
@@ -703,8 +704,8 @@
 }
 
 /* Keep prose readable while tables, code and diagrams use document width. */
-.site-layout:is([data-page-kind="article"], [data-page-kind="document"]) .vp-doc > div > :is(p, ul, ol, dl, blockquote, h1, h2, h3, h4, h5, h6),
-.site-layout:is([data-page-kind="article"], [data-page-kind="document"]) .vp-doc > :is(p, ul, ol, dl, blockquote, h1, h2, h3, h4, h5, h6) {
+.site-layout:is([data-page-kind="article"], [data-page-kind="document"]) .vp-doc > div > :is(p, ul, ol, dl, blockquote, h1, h2, h3, h4, h5, h6, .custom-block, .sync-notice),
+.site-layout:is([data-page-kind="article"], [data-page-kind="document"]) .vp-doc > :is(p, ul, ol, dl, blockquote, h1, h2, h3, h4, h5, h6, .custom-block, .sync-notice) {
   max-width: var(--site-reading);
 }
 

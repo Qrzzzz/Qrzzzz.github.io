@@ -68,9 +68,17 @@ metadata, public routes and VitePress navigation remain the source of truth.
   over a fully visible new theme. Avoid autoplay, floating cards, fake windows and
   independent decorative effects.
 
+- Information boxes share prose width and use a light tint, fine border, restrained
+  left rule and compact title; tables, code and diagrams retain their wider measure.
+- Production search fetches `/search-index/<locale>.json`, emitted from the same
+  VitePress index used in development. Failed loads are uncached so Retry can make
+  a fresh request. Results include plain-text excerpts with Vue-rendered highlighting.
+  Titleless excerpts receive a heading only in the search render, linking to their
+  existing article anchor; their visible page markup stays titleless.
+  Esc stays a small keycap with hover/focus feedback and an unobtrusive tooltip.
 - UI icons use the pinned official Lucide static SVGs through `SiteIcon.vue` and
   `styles/icons.css`. Menu, outline, external links and code-copy controls share that
-  source. Artwork remains in its illustration components. The circular floating
+  source. GitHub links use the official Invertocat asset. Artwork remains in its illustration components. The circular floating
   control is the sole return-to-top entry; empty local navigation is hidden.
 - The serif wordmark uses color and a faint underline for hover/focus feedback,
   with opacity on press and reduced-motion support.

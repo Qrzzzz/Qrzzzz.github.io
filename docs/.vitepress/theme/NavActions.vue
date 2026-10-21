@@ -89,7 +89,7 @@ onBeforeUnmount(() => {
       aria-label="View Qrzzzz on GitHub (opens in a new window)"
       title="GitHub"
     >
-      <SiteIcon name="external-link" />
+      <SiteIcon name="github" />
     </a>
   </div>
 </template>

@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import SiteIcon from "./SiteIcon.vue";
-import { tokenizeSearch, rankSearchResults, createSearchLoader } from "../content/search.mjs";
+import { tokenizeSearch, rankSearchResults, createSearchLoader, searchExcerpt, highlightSearch, searchPhrases } from "../content/search.mjs";
 import localSearchIndex from "@localSearchIndex";
-import type MiniSearch from "minisearch";
+import MiniSearch from "minisearch";
 import type { SearchResult } from "minisearch";
 import { computed, markRaw, nextTick, onBeforeUnmount, onMounted, ref, shallowRef, watch } from "vue";
-import { useData, useRouter } from "vitepress";
+import { useData, useRouter, withBase } from "vitepress";
 import {
   isSearchShortcut,
   moveSearchSelection,
@@ -40,7 +40,15 @@ const router = useRouter();
 const results = computed<InlineSearchResult[]>(() => {
   const value = query.value.trim();
   if (!value || !searchIndex.value) return [];
-  return rankSearchResults(searchIndex.value.search(value)) as InlineSearchResult[];
+  const phrases = searchPhrases(value);
+  const matches = searchIndex.value.search(value, {
+    combineWith: "AND",
+    fuzzy: term => /\p{Script=Han}/u.test(term) ? false : 0.2
+  }) as InlineSearchResult[];
+  return rankSearchResults(matches.filter(result => {
+    const content = [result.title, ...(result.titles ?? []), result.text ?? ""].join(" ").normalize("NFKC").toLowerCase();
+    return phrases.every(phrase => content.includes(phrase));
+  })) as InlineSearchResult[];
 });
 
 const activeDescendant = computed(() =>
@@ -61,6 +69,8 @@ async function loadIndex() {
   const loader = localSearchIndex[locale];
   if (!loader) {
     searchIndex.value = undefined;
+    loading.value = false;
+    loadError.value = true;
     return;
   }
 
@@ -69,17 +79,27 @@ async function loadIndex() {
   loadError.value = false;
   try {
     const loaded = await cachedLoad(locale, async () => {
-      const [{ default: MiniSearchClass }, module] = await Promise.all([
-        import("minisearch"),
-        loader()
-      ]);
+      let serialized: string;
+      if (import.meta.env.DEV) {
+        serialized = (await loader()).default;
+      } else {
+        const response = await fetch(withBase(`/search-index/${encodeURIComponent(locale)}.json`), {
+          cache: "no-cache",
+          signal: AbortSignal.timeout(30000)
+        });
+        if (!response.ok) throw new Error(`Search index HTTP ${response.status}`);
+        if (!response.headers.get("content-type")?.includes("json")) {
+          throw new Error("The search index response is not JSON");
+        }
+        serialized = await response.text();
+      }
       const options = theme.value.search?.provider === "local"
         ? theme.value.search.options?.miniSearch
         : undefined;
       return markRaw(
-        MiniSearchClass.loadJSON<SearchDocument>(module.default, {
+        MiniSearch.loadJSON<SearchDocument>(serialized, {
           fields: ["title", "titles", "text"],
-          storeFields: ["title", "titles"],
+          storeFields: ["title", "titles", "text"],
           searchOptions: {
             fuzzy: 0.2,
             prefix: true,
@@ -92,7 +112,8 @@ async function loadIndex() {
       );
     });
     if (current === loadGeneration) searchIndex.value = loaded;
-  } catch {
+  } catch (error) {
+    console.warn("[site-search] Could not load the search index", error);
     if (current === loadGeneration) loadError.value = true;
   } finally {
     if (current === loadGeneration) loading.value = false;
@@ -149,11 +170,7 @@ function handleDocumentPointerDown(event: PointerEvent) {
 }
 
 function handleInputKeydown(event: KeyboardEvent) {
-  if (event.key === "Escape") {
-    event.preventDefault();
-    closeSearch(true);
-    return;
-  }
+  if (event.isComposing) return;
 
   if (event.key === "ArrowDown" || event.key === "ArrowUp") {
     event.preventDefault();
@@ -226,6 +243,7 @@ onBeforeUnmount(() => {
 
 <template>
   <div ref="root" class="InlineSiteSearch" :class="{ 'is-expanded': expanded }"
+    @keydown.esc.prevent.stop="closeSearch(true)"
     :style="{ '--search-panel-height': `${panelHeight}px`, '--search-width': `${surfaceWidth}px`, '--search-y': `${surfaceY}px` }">
     <button
       ref="trigger"
@@ -256,7 +274,7 @@ onBeforeUnmount(() => {
           aria-label="Search the site"
           aria-autocomplete="list"
           :aria-controls="query && results.length ? 'inline-search-results' : undefined"
-          :aria-expanded="Boolean(query)"
+          :aria-expanded="Boolean(query && results.length && !loading && !loadError)"
           :aria-activedescendant="activeDescendant"
           autocomplete="off"
           autocapitalize="off"
@@ -280,17 +298,20 @@ onBeforeUnmount(() => {
           type="button"
           class="inline-search-action inline-search-close"
           aria-label="Close search"
+          aria-describedby="inline-search-close-tip"
           @click="closeSearch(true)"
         >
-          Esc
+          <kbd>Esc</kbd>
+          <span id="inline-search-close-tip" class="inline-search-tooltip" role="tooltip">Close search</span>
         </button>
       </form>
 
       <Transition name="search-panel">
       <div v-if="expanded && (query || loading || loadError)" class="inline-search-panel" :inert="!expanded">
-        <p v-if="loading" class="inline-search-state">Loading search index…</p>
+        <p v-if="loading" class="inline-search-state" role="status">Loading search index…</p>
         <p v-else-if="loadError" class="inline-search-state" role="alert">
-          Search is unavailable. <button type="button" @click="loadIndex">Retry search</button>
+          <span>Search could not load. Please try again.</span>
+          <button type="button" @click="loadIndex">Retry search</button>
         </p>
         <ul
           v-else-if="results.length"
@@ -313,14 +334,13 @@ onBeforeUnmount(() => {
               @mouseenter="selectResult(index)"
               @click="closeSearch()"
             >
-              <span v-if="resultContext(result)" class="inline-search-context">
-                {{ resultContext(result) }}
-              </span>
-              <strong>{{ result.title }}</strong>
+              <strong><template v-for="(part, partIndex) in highlightSearch(result.title, query)" :key="partIndex"><mark v-if="part.match">{{ part.text }}</mark><template v-else>{{ part.text }}</template></template></strong>
+              <span v-if="resultContext(result)" class="inline-search-context">{{ resultContext(result) }}</span>
+              <span v-if="result.text" class="inline-search-excerpt"><template v-for="(part, partIndex) in highlightSearch(searchExcerpt(result.text, query), query)" :key="partIndex"><mark v-if="part.match">{{ part.text }}</mark><template v-else>{{ part.text }}</template></template></span>
             </a>
           </li>
         </ul>
-        <p v-else class="inline-search-state">No results for “{{ query }}”</p>
+        <p v-else class="inline-search-state" role="status">No results for “{{ query }}”</p>
       </div>
       </Transition>
     </div>
@@ -447,6 +467,7 @@ onBeforeUnmount(() => {
 
 .InlineSiteSearch.is-expanded .inline-search-form {
   visibility: visible;
+  overflow: visible;
   border-color: var(--site-line-strong);
   transition: border-color 240ms ease, visibility 0s;
 }
@@ -489,24 +510,61 @@ onBeforeUnmount(() => {
 }
 
 .inline-search-action {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
   min-width: 44px;
   height: 40px;
   border: 0;
-  border-radius: 7px;
+  border-radius: 3px;
   background: transparent;
   color: var(--site-text-muted);
   font-size: 17px;
+  cursor: pointer;
+  transition: color 140ms ease, background-color 140ms ease, border-color 140ms ease;
 }
 
-.inline-search-action:hover {
+.inline-search-action:hover,
+.inline-search-action:focus-visible {
   background: var(--site-surface-subtle);
   color: var(--site-text);
 }
 
 .inline-search-close {
-  padding-inline: 7px;
+  position: relative;
+  min-width: 36px;
+  height: 30px;
+  margin-inline: 2px 6px;
+  padding: 0 6px;
+  border: 1px solid transparent;
   font-family: var(--site-font-sans);
-  font-size: 10px;
+  font-size: 11px;
+  line-height: 1;
+}
+.inline-search-close kbd { font: inherit; }
+.inline-search-close:hover,
+.inline-search-close:focus-visible { border-color: var(--site-line); background: var(--site-accent-soft); color: var(--site-link); }
+.inline-search-tooltip {
+  position: absolute;
+  z-index: 2;
+  top: calc(100% + 12px);
+  right: -1px;
+  padding: 7px 9px;
+  border: 1px solid var(--site-line);
+  border-radius: 3px;
+  background: var(--site-canvas);
+  color: var(--site-text-muted);
+  font-size: 11px;
+  line-height: 1.4;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 120ms ease, visibility 0s linear 120ms;
+}
+.inline-search-close:focus-visible .inline-search-tooltip { opacity: 1; visibility: visible; transition-delay: 0s; }
+@media (hover: hover) {
+  .inline-search-close:hover .inline-search-tooltip { opacity: 1; visibility: visible; transition-delay: 220ms; }
 }
 
 .inline-search-panel {
@@ -553,9 +611,10 @@ onBeforeUnmount(() => {
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   overflow: hidden;
-  font-size: 13px;
-  font-weight: 650;
-  line-height: 1.35;
+  font-family: var(--site-font-reading);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.5;
   text-overflow: ellipsis;
   overflow-wrap: anywhere;
 }
@@ -568,6 +627,17 @@ onBeforeUnmount(() => {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.inline-search-excerpt {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  color: var(--site-text-muted);
+  font-size: 12px;
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+}
+.inline-search-result mark { padding: 0; border-radius: 0; background: var(--site-accent-soft); color: var(--site-link); }
 
 .inline-search-state {
   margin: 0;
@@ -576,6 +646,9 @@ onBeforeUnmount(() => {
   font-size: 13px;
   text-align: center;
 }
+.inline-search-state[role="alert"] { display: grid; justify-items: center; gap: 8px; }
+.inline-search-state button { min-height: 32px; padding: 4px 10px; border: 1px solid var(--site-line); border-radius: 3px; color: var(--site-link); cursor: pointer; }
+.inline-search-state button:hover, .inline-search-state button:focus-visible { background: var(--site-accent-soft); border-color: var(--site-link); }
 
 .visually-hidden {
   position: absolute;

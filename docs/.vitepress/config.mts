@@ -9,6 +9,7 @@ import { mermaidPlugin } from "./markdown/mermaid.mjs";
 import { loadingPoems } from "./theme/loadingPoems.mjs";
 import { bootstrapLoadingPoem, createLoadingPoemPlayer } from "./theme/loadingPoemRuntime.mjs";
 import { prepareLoadingHtml } from "./theme/loadingBootHtml.mjs";
+import { searchAssets, renderSearchContent } from "./searchAssets";
 
 const loadingSource = readFileSync(new URL("./theme/SiteLoading.vue", import.meta.url), "utf8");
 const loadingTokens = readFileSync(new URL("./theme/styles/tokens.css", import.meta.url), "utf8");
@@ -59,6 +60,7 @@ function pageLanguage(value: unknown, relativePath = "") {
 }
 
 export default defineConfig({
+  vite: { plugins: [searchAssets()] },
   lang: "zh-CN",
   title: "Qrzzzz",
   description: "Projects, tools, documentation, and writing by Cherry Chu.",
@@ -252,7 +254,7 @@ export default defineConfig({
 
     socialLinks: [
       {
-        icon: { svg: '<span class="site-icon site-icon--external-link" aria-hidden="true"></span>' },
+        icon: { svg: '<span class="site-icon site-icon--github" aria-hidden="true"></span>' },
         ariaLabel: "View Qrzzzz on GitHub (opens in a new window)",
         link: "https://github.com/Qrzzzz"
       }
@@ -261,7 +263,8 @@ export default defineConfig({
     search: {
       provider: "local",
       options: {
-        miniSearch: { options: { tokenize: tokenizeSearch } },
+        _render: renderSearchContent,
+        miniSearch: { options: { tokenize: tokenizeSearch, storeFields: ["title", "titles", "text"] } },
         translations: {
           button: {
             buttonText: "Search the site…",
