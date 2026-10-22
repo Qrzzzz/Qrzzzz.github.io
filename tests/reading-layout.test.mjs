@@ -33,11 +33,8 @@ test("renders document headings in solid ink and the reading typeface", () => {
   assert.match(styles, /@media \(forced-colors: active\)/);
 });
 
-test("separates the bottom reading progress from the surface back-to-top control", () => {
+test("keeps the surface back-to-top control", () => {
   assert.match(styles, /\.back-to-top\s*\{[\s\S]*?background:\s*var\(--site-surface\)/);
-  assert.match(styles, /\.page-progress\s*\{[\s\S]*?bottom:\s*0[\s\S]*?height:\s*3px/);
-  assert.match(styles, /\.page-progress::after\s*\{[\s\S]*?background:\s*var\(--site-accent\)/);
-  assert.match(styles, /transform:\s*scaleX\(var\(--page-progress-scale, 0\)\)/);
   assert.doesNotMatch(styles, /--back-top-progress|conic-gradient\(/);
   assert.doesNotMatch(styles, /\.back-to-top__progress/);
 });

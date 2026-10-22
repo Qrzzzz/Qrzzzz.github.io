@@ -5,17 +5,12 @@ import { useData } from "vitepress";
 
 const { page } = useData();
 const visible = ref(false);
-const progress = ref(0);
 let frame = 0;
 
 function updateScrollState() {
   frame = 0;
-  const scrollRange = document.documentElement.scrollHeight - window.innerHeight;
   const threshold = Math.min(760, Math.max(520, window.innerHeight * 0.72));
   visible.value = window.scrollY >= threshold;
-  progress.value = scrollRange > 0
-    ? Math.min(1, Math.max(0, window.scrollY / scrollRange))
-    : 0;
 }
 
 function scheduleUpdate() {
@@ -72,11 +67,6 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div
-    class="page-progress"
-    :style="{ '--page-progress-scale': progress }"
-    aria-hidden="true"
-  />
   <button
     class="back-to-top"
     type="button"

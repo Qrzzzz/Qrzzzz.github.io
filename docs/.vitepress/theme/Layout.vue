@@ -10,7 +10,6 @@ import InlineSearch from "./InlineSearch.vue";
 import NavActions from "./NavActions.vue";
 import NotFound from "./NotFound.vue";
 import ShareImage from "./ShareImage.vue";
-import ReadingRail from "./ReadingRail.vue";
 import SiteLoading from "./SiteLoading.vue";
 
 const { Layout } = DefaultTheme;
@@ -130,9 +129,6 @@ onBeforeUnmount(() => {
       </template>
       <template #doc-bottom>
         <BackToTop />
-      </template>
-      <template #doc-top>
-        <ReadingRail :key="page.relativePath" />
       </template>
       <template #home-hero-before>
         <HomeContent />

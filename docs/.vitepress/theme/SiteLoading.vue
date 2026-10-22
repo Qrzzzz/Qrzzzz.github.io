@@ -93,10 +93,6 @@ onBeforeUnmount(() => {
   >
     <div class="site-loading__composition" aria-hidden="true">
       <div class="site-loading__heading">
-        <svg class="site-loading__line" viewBox="0 0 400 130" fill="none">
-          <path class="site-loading__trace" d="M12 88C77 88 89 18 156 18S219 112 279 88S334 31 388 31" />
-          <path class="site-loading__ink" pathLength="100" d="M12 88C77 88 89 18 156 18S219 112 279 88S334 31 388 31" />
-        </svg>
         <div class="site-loading__title">
           <span v-for="(letter, index) in 'loading'" :key="index" :style="{ '--letter': index }">{{ letter }}</span>
         </div>
@@ -129,23 +125,17 @@ onBeforeUnmount(() => {
 }
 .site-loading__composition {
   position: relative;
-  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 40px;
+  width: min(100% - 96px, 640px);
   height: 100%;
+  margin-inline: auto;
+  padding-block: 40px;
 }
 .site-loading__heading {
-  position: absolute;
-  left: 25%;
-  top: 72%;
-  transform: translate(-50%, -50%);
-  width: 152px;
-}
-.site-loading__line { display: block; width: 100%; margin-bottom: 14px; }
-.site-loading__trace, .site-loading__ink { stroke: currentColor; stroke-linecap: round; }
-.site-loading__trace { stroke-width: 1; opacity: .16; }
-.site-loading__ink {
-  stroke-width: 3;
-  stroke-dasharray: 28 72;
-  animation: loading-ink 2.6s ease-in-out infinite;
+  flex: 0 0 auto;
 }
 .site-loading__title {
   display: flex;
@@ -162,11 +152,10 @@ onBeforeUnmount(() => {
   animation-delay: calc(var(--letter) * 90ms);
 }
 .site-loading__poem-stage {
-  position: absolute;
-  inset: 17.5% 6.5% 14% 54%;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  min-width: 0;
+  max-height: 100%;
+  overflow-y: auto;
   font-size: clamp(30px, 2.5vw, 38px);
 }
 .site-loading__poem {
@@ -223,37 +212,31 @@ onBeforeUnmount(() => {
 .site-loading__poem:not([data-cursor]) .site-loading__cursor { opacity: 0; }
 [data-cursor="blinking"] .site-loading__cursor { animation: loading-cursor .6s steps(1, end) 3; }
 @keyframes loading-cursor { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-@keyframes loading-ink {
-  from { stroke-dashoffset: 28; }
-  to { stroke-dashoffset: -100; }
-}
 @keyframes loading-letter {
   0%, 60%, 100% { opacity: .7; transform: translateY(0); }
   30% { opacity: 1; transform: translateY(-1px); }
 }
 @media (max-width: 680px) {
-  .site-loading__heading { left: 25%; top: 83%; width: 112px; }
+  .site-loading__composition { width: calc(100% - 64px); gap: 28px; }
   .site-loading__title { font-size: 11px; }
   .site-loading__poem-stage {
-    inset: 5% 7% 27% 13%;
     font-size: clamp(22px, 6.9vw, 28px);
   }
   .site-loading__poem:lang(en) { font-size: clamp(27px, 8vw, 34px); line-height: 1.32; }
   .site-loading__attribution { margin-top: 22px; font-size: 10px; }
 }
 @media (max-height: 560px) and (min-width: 681px) {
-  .site-loading__heading { width: 128px; }
-  .site-loading__poem-stage { inset: 5% 6.5% 5% 44%; font-size: clamp(22px, 2.8vw, 26px); }
+  .site-loading__composition { gap: 24px; padding-block: 24px; }
+  .site-loading__poem-stage { font-size: clamp(22px, 2.8vw, 26px); }
   .site-loading__poem { line-height: 1.4; }
   .site-loading__poem:lang(en) { font-size: clamp(27px, 3.4vw, 32px); line-height: 1.28; }
   .site-loading__attribution { margin-top: 18px; }
 }
 @media (max-height: 600px) and (max-width: 680px) {
-  .site-loading__poem-stage { bottom: 27%; font-size: 22px; }
+  .site-loading__poem-stage { font-size: 22px; }
   .site-loading__poem:lang(en) { font-size: 27px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .site-loading__ink { animation: none; stroke-dasharray: none; }
   .site-loading__title span { animation: none; }
   .site-loading__cursor { animation: none; }
 }

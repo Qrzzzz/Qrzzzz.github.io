@@ -1,7 +1,6 @@
 /* Reading and collections use the same ink, spacing and restrained controls. */
 .site-layout .VPDoc { padding-top: 48px; }
 .vp-doc .custom-block, .vp-doc .project-docs-sync.sync-notice { border-radius: 3px; box-shadow: none; }
-.site-layout .page-progress { display: none; }
 .site-layout .VPDocFooter .pager-link { border: 0; border-top: 1px solid var(--site-line); border-radius: 0; padding: 20px 0; background: transparent; }
 .site-layout .VPDocFooter .pager-link:hover { border-top-color: var(--site-link); }
 .site-layout .VPDocFooter .pager-link .title { font-size: 15px; }

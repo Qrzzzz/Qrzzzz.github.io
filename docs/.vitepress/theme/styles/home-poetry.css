@@ -1,13 +1,23 @@
-/* Two quiet destinations on the left; a fixed reading column on the right. */
-.gesture-stage { height: max(620px, calc(100svh - 150px)); }
-.home-entry--library { left: 18%; top: 22%; transform: rotate(-3deg); }
-.home-entry--projects { left: 26%; top: 40%; transform: rotate(2deg); }
-.home-entry { transform-origin: left center; }
-.home-entry { gap: 2px 32px; min-height: 64px; }
-.home-entry__name { font-size: clamp(24px, 2vw, 29px); letter-spacing: -.6px; }
-.home-entry__count { font-size: 11px; }
-.home-entry__arrow { width: 32px; stroke-width: 1.2; }
-.home-poetry { position: absolute; z-index: 2; inset: 12% 6.5% 15% 54%; display: flex; flex-direction: column; justify-content: center; }
+/* Poetry and staggered destinations make the composition; all content stays in flow. */
+.site-layout[data-page-kind="home"] .VPHome { margin-bottom: 0; }
+.site-layout[data-page-kind="home"] .VPFooter { display: none; }
+.home-page { width: min(100% - 96px, 1160px); margin-inline: auto; }
+.home-composition { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.1fr); align-items: center; gap: clamp(64px, 8vw, 128px); min-height: max(580px, calc(100svh - var(--site-nav-height) - 78px)); padding: 72px 0 88px; }
+.home-composition > .home-poetry { grid-column: 2; grid-row: 1; }
+.home-composition > .home-actions { grid-column: 1; grid-row: 1; }
+.home-actions { display: grid; gap: 72px; align-content: center; padding-left: 8%; padding-bottom: 80px; }
+.home-entry { position: relative; z-index: 2; display: grid; grid-template-columns: auto 36px; align-content: center; gap: 2px 32px; width: max-content; min-height: 76px; transform-origin: left center; color: var(--site-text); text-decoration: none; transition: color 180ms ease; }
+.home-entry--library { transform: rotate(-3deg); }
+.home-entry--projects { margin-left: 20%; transform: rotate(2deg); }
+.home-entry__name { font-family: var(--site-font-reading); font-size: clamp(32px, 3vw, 42px); font-weight: 400; line-height: 1.25; letter-spacing: -.025em; }
+.home-entry__count { font-family: var(--site-font-sans); font-size: 11px; color: var(--site-text-muted); font-variant-numeric: tabular-nums; }
+.home-entry__arrow { align-self: center; grid-column: 2; grid-row: 1 / 3; width: 36px; height: 24px; stroke-width: 1.3; transition: transform var(--site-motion-settle) var(--site-ease); }
+.home-entry:hover, .home-entry:focus-visible { color: var(--site-link); }
+.home-entry:is(:hover, :focus-visible) .home-entry__arrow { transform: translateX(6px); }
+.home-colophon { display: flex; gap: 28px; align-items: center; min-height: 78px; padding-block: 12px; color: var(--site-text-muted); font-size: 12px; }
+.home-colophon a { display: flex; gap: 4px; align-items: center; min-height: 44px; }
+.home-colophon a:hover { color: var(--site-link); }
+.home-poetry { min-width: 0; display: flex; flex-direction: column; justify-content: center; }
 .home-poem { font-family: var(--site-font-reading); font-size: clamp(28px, 2.4vw, 36px); font-weight: 400; line-height: 1.65; letter-spacing: .025em; overflow-wrap: anywhere; }
 .home-poem:lang(en) { font-family: "Newsreader", var(--site-font-reading); font-size: clamp(36px, 3.1vw, 48px); line-height: 1.32; letter-spacing: -.018em; }
 .home-poem__copy { display: grid; }
@@ -24,31 +34,35 @@
 .home-poem[data-cursor="blinking"] .home-poem__cursor { animation: home-poem-cursor .6s steps(1, end) 3; }
 @keyframes home-poem-cursor { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 @media (max-width: 1079px) and (min-width: 681px) {
-  .home-poetry { left: 48%; right: 7%; }
-  .home-entry--library { left: 14%; }
-  .home-entry--projects { left: 22%; }
+  .home-page { width: calc(100% - 64px); }
+  .home-composition { grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 48px; }
+  .home-actions { padding-left: 0; }
+  .home-entry { column-gap: 20px; }
   .home-poem { font-size: 28px; }
   .home-poem:lang(en) { font-size: 36px; }
 }
 @media (max-width: 680px) {
-  .gesture-stage { height: max(660px, calc(100svh - 150px)); }
-  .home-poetry { inset: 5% 9% 35% 13%; }
+  .home-page { width: calc(100% - 48px); }
+  .home-composition { grid-template-columns: minmax(0, 1fr); gap: 48px; min-height: calc(100svh - 150px); padding: 32px 0 44px; }
+  .home-composition > .home-poetry { grid-column: 1; grid-row: 1; min-height: 340px; padding-inline: 8px; }
+  .home-composition > .home-actions { grid-column: 1; grid-row: 2; }
   .home-poem { font-size: clamp(23px, 6.2vw, 28px); line-height: 1.65; }
   .home-poem:lang(en) { font-size: clamp(28px, 7.4vw, 34px); line-height: 1.32; }
   .home-poetry__footer { margin-top: 22px; }
   .home-poetry__credit, .home-poetry__controls { font-size: 10px; }
-  .home-entry--library { left: 18%; top: 72%; }
-  .home-entry--projects { left: 48%; top: 83%; }
-  .home-entry { gap: 2px 28px; min-height: 60px; }
-  .home-entry__name { font-size: 23px; }
+  .home-actions { gap: 26px; padding: 0 4%; }
+  .home-entry--projects { justify-self: end; margin: 0; }
+  .home-entry { gap: 2px 24px; min-height: 66px; }
+  .home-entry__name { font-size: 30px; }
+  .home-colophon { min-height: 72px; font-size: 11px; }
 }
 @media (orientation: landscape) and (max-height: 500px) and (min-width: 681px) {
-  .gesture-stage { height: max(410px, calc(100svh - 112px)); }
-  .home-poetry { inset: 7% 7% 10% 48%; }
+  .home-composition { min-height: calc(100svh - 112px); padding-block: 40px; }
+  .home-actions { gap: 40px; padding-bottom: 32px; }
   .home-poem { font-size: 24px; line-height: 1.5; }
   .home-poem:lang(en) { font-size: 30px; line-height: 1.28; }
   .home-poetry__footer { margin-top: 18px; }
-  .home-entry--library { top: 22%; }
-  .home-entry--projects { top: 46%; }
+  .home-colophon { min-height: 56px; padding-block: 6px; }
 }
-@media (prefers-reduced-motion: reduce) { .home-poem__cursor { animation: none !important; } }
+@media (max-width: 359px) { .home-page { width: calc(100% - 40px); } .home-composition > .home-poetry { padding-inline: 0; } }
+@media (prefers-reduced-motion: reduce) { .home-poem__cursor { animation: none !important; } .home-entry__arrow { transform: none !important; } }

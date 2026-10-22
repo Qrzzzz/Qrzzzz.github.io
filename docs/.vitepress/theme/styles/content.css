@@ -128,27 +128,6 @@
   background: color-mix(in srgb, var(--site-accent) 45%, white);
 }
 
-.page-progress {
-  position: fixed;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 30;
-  height: 3px;
-  background: color-mix(in srgb, var(--site-line) 62%, transparent);
-  pointer-events: none;
-}
-
-.page-progress::after {
-  position: absolute;
-  inset: 0;
-  background: var(--site-accent);
-  box-shadow: 0 -1px 8px color-mix(in srgb, var(--site-accent) 32%, transparent);
-  content: "";
-  transform: scaleX(var(--page-progress-scale, 0));
-  transform-origin: left center;
-}
-
 .back-to-top {
   position: fixed;
   right: max(20px, calc((100vw - var(--vp-layout-max-width)) / 2 + 24px));
