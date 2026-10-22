@@ -10,18 +10,22 @@ metadata, public routes and VitePress navigation remain the source of truth.
   Controls and metadata use sans serif. No new font service.
 - The mobile curve is a separate composition. Never crop or scale down the desktop layout.
 - The home destinations sit diagonally on the left, Library above-left (-3 degrees)
-  and Projects below-right (+2 degrees). The home gesture descends along the left
-  edge and opens across the bottom, with a low-opacity field,
-  a 1.5 px gradient ink stroke, and a faint dotted signal core. The
-  layers share exactly the same geometry and deform as one object.
-- A continuous loop in the lower middle crosses the same stroke before opening
-  toward the right. Phones use a flatter loop beneath the destinations. All joins
-  retain shared tangents, including both passes through the crossing.
+  and Projects below-right (+2 degrees). A single blue stroke enters diagonally
+  from the side, sweeps through the left negative space and leaves toward the right.
+  Desktop uses 1.6 px ink and phones 1.5 px, with no glow or dotted core.
+- A loose loop crosses itself with distinct tangents. Its uniformly scaled geometry
+  stays round across viewport aspect ratios; phones use a separate lower-left
+  composition with room beneath Library and beside Projects. Entry and exit handles
+  preserve tangent and curvature at the loop boundaries.
+- Static ink uses the authored cubic path. Dense samples serve hit projection;
+  deformation renders every fourth sample to reduce serialization and paint work.
 - Hover and drag resolve to a continuous arc-length coordinate on the stroke, never
   to a sampled anchor. Small pulls stay effectively 1:1 before a soft resistance knee;
   tangential motion can slide the deformation center a limited distance instead of
   pinning one material point. Pointer tracking uses a short direct-response filter and
-  release uses a critically damped return with no bounce. Off-canvas endpoint constraints
+  release carries a small bounded velocity into a critically damped return. Drag
+  is limited to 56 px on desktop and 28 px on phones, with a broad deformation field.
+  Off-canvas endpoint constraints
   and protected link space remain fixed, and the animation loop stops at rest.
 - Only the 44 px stroke hit area captures touch. Everything else keeps native scrolling.
 - The document margin follows native page scrolling; there is no nested reading viewport.

@@ -1,10 +1,11 @@
-import { sampleGesture, projectOnGesture, limitPull, deformGesture, pointsPath } from './gestureGeometry.mjs';
+import { gestureSegments, gesturePath, sampleGesture, projectOnGesture, limitPull, deformGesture, pointsPath } from './gestureGeometry.mjs';
 
 /** Event-driven, bounded deformation. No idle animation and no scroll interception. */
 export function createGestureRuntime({ host, svg, ink, hit, layers = /** @type {SVGPathElement[]} */ ([]), window: win, document: doc }) {
   const reduced = win.matchMedia('(prefers-reduced-motion: reduce)');
   const fine = win.matchMedia('(hover: hover) and (pointer: fine)');
   let points = [], width = 0, height = 0, frame = 0, last = 0;
+  let restPath = '';
   let x = 0, y = 0, targetX = 0, targetY = 0, center = 0, targetCenter = 0;
   let vx = 0, vy = 0, centerV = 0;
   let drag = null, destroyed = false, zones = [];
@@ -15,7 +16,7 @@ export function createGestureRuntime({ host, svg, ink, hit, layers = /** @type {
     removers.push(() => target.removeEventListener(name, callback, options));
   }
   function draw() {
-    let deformed = deformGesture(points, center, x, y, width <= 680 ? 110 : 175);
+    let deformed = deformGesture(points, center, x, y, width <= 680 ? 145 : 215);
     // Navigation has its own stable space, including while pulling the curve.
     deformed = deformed.map((p, i) => {
       const original = points[i];
@@ -28,7 +29,7 @@ export function createGestureRuntime({ host, svg, ink, hit, layers = /** @type {
       }
       return { x: original.x + (p.x - original.x) * weight, y: original.y + (p.y - original.y) * weight };
     });
-    const d = pointsPath(deformed);
+    const d = x || y ? pointsPath(deformed) : restPath;
     for (const layer of layers) layer?.setAttribute('d', d);
     ink.setAttribute('d', d);
     hit.setAttribute('d', d);
@@ -53,13 +54,16 @@ export function createGestureRuntime({ host, svg, ink, hit, layers = /** @type {
     const dt = dtMs / 1000;
     last = time;
     if (drag) {
+      const previousX = x, previousY = y;
       // Pointer motion should feel attached, not filtered through a slow spring.
       const pullAlpha = 1 - Math.exp(-dtMs / 10);
       const centerAlpha = 1 - Math.exp(-dtMs / 18);
       x += (targetX - x) * pullAlpha;
       y += (targetY - y) * pullAlpha;
       center += (targetCenter - center) * centerAlpha;
-      vx = vy = centerV = 0;
+      vx = Math.max(-180, Math.min(180, (x - previousX) / dt));
+      vy = Math.max(-180, Math.min(180, (y - previousY) / dt));
+      centerV = 0;
     } else {
       const omega = targetX || targetY ? 22 : 18;
       const sx = criticalStep(x, vx, targetX, omega, dt);
@@ -85,10 +89,15 @@ export function createGestureRuntime({ host, svg, ink, hit, layers = /** @type {
   function release(event) {
     if (event && drag && event.pointerId !== drag.id) return;
     const id = drag?.id;
+    const wasDragging = Boolean(drag);
     drag = null;
     if (id !== undefined && hit.hasPointerCapture?.(id)) hit.releasePointerCapture(id);
     targetX = targetY = 0;
-    vx = vy = centerV = 0;
+    if (wasDragging) {
+      const carry = event?.type === 'pointercancel' ? 0 : .15;
+      vx *= carry; vy *= carry;
+    }
+    centerV = 0;
     host.dataset.pulling = 'false';
     wake();
   }
@@ -104,8 +113,9 @@ export function createGestureRuntime({ host, svg, ink, hit, layers = /** @type {
     width = r.width; height = r.height;
     if (!width || !height) return;
     points = sampleGesture(width, height);
+    restPath = gesturePath(gestureSegments(width, height));
     svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
-    zones = [...host.querySelectorAll('.home-entry')].map(el => {
+    zones = [...host.querySelectorAll('.home-entry, .home-poetry')].map(el => {
       const z = el.getBoundingClientRect();
       return { left: z.left - r.left - 20, right: z.right - r.left + 20, top: z.top - r.top - 16, bottom: z.bottom - r.top + 16 };
     });
@@ -124,12 +134,12 @@ export function createGestureRuntime({ host, svg, ink, hit, layers = /** @type {
     if (drag) {
       const dx = p.x - drag.x, dy = p.y - drag.y;
       const tangential = dx * drag.tx + dy * drag.ty;
-      const slideLimit = width <= 680 ? 58 : 96;
+      const slideLimit = width <= 680 ? 20 : 40;
       const slide = Math.max(-slideLimit, Math.min(slideLimit, tangential * .34));
       const pull = limitPull(
         dx - drag.tx * slide,
         dy - drag.ty * slide,
-        width <= 680 ? 82 : 124
+        width <= 680 ? 28 : 56
       );
       targetX = drag.baseX + pull.x;
       targetY = drag.baseY + pull.y;
@@ -185,7 +195,7 @@ export function createGestureRuntime({ host, svg, ink, hit, layers = /** @type {
   listen(hit, 'pointerdown', down);
   listen(hit, 'pointerup', release);
   listen(hit, 'pointercancel', release);
-  listen(hit, 'lostpointercapture', release);
+  listen(hit, 'lostpointercapture', event => { if (drag) release(event); });
   listen(host, 'focusin', focus);
   listen(host, 'focusout', () => { if (!drag) release(); });
   listen(win, 'blur', reset);
