@@ -99,18 +99,18 @@ try {
   assert.ok(existsSync(excerptHtml), "验收构建缺少第三则偶拾页面");
   const excerpt = readFileSync(excerptHtml, "utf8");
   assert.equal(
-    (excerpt.match(/class="excerpt-rendering"/g) ?? []).length,
+    (excerpt.match(/class="excerpt-translation"/g) ?? []).length,
     2,
-    "第三则偶拾没有渲染为两栏中文表达"
+    "第三则偶拾没有渲染为两段单栏中文内容"
   );
   assert.match(
     excerpt,
-    /<blockquote><p>公道世间唯白发，<br>\s*贵人头上不曾饶。<\/p><\/blockquote><cite>杜牧《送隐者一绝》<\/cite>/,
+    /<p>公道世间唯白发，<br>\s*贵人头上不曾饶。<\/p>[\s\S]*?<div class="excerpt-attribution"[^>]*>\s*<p>杜牧《送隐者一绝》<\/p>/,
     "第三则偶拾的古典近义表达结构缺失"
   );
   assert.doesNotMatch(
     excerpt,
-    /<code>&lt;div class="excerpt-rendering"&gt;/,
+    /<code>&lt;section class="excerpt-translation"/,
     "第三则偶拾的网页错误显示了 HTML 源码"
   );
 
