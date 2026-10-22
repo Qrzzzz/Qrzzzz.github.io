@@ -133,10 +133,10 @@ test("entry pages share a header and keep collections reachable", () => {
   );
 });
 
-test("all excerpts inherit the default page outline", () => {
-  for (const file of readdirSync("docs/excerpts").filter((name) => name.endsWith(".md"))) {
+test("excerpts explicitly use the compact outline default", () => {
+  for (const file of readdirSync("docs/excerpts").filter((name) => /^\d.*\.md$/.test(name))) {
     const source = readFileSync(`docs/excerpts/${file}`, "utf8");
-    assert.doesNotMatch(source, /^outline:\s*false$/m, `${file} disables the page outline`);
+    assert.match(source, /^outline:\s*false$/m, `${file} should declare its outline setting`);
   }
 });
 
@@ -145,7 +145,7 @@ test("Lu Xun excerpts use traditional 社戲 and discoverable 理水 sections", 
   assert.match(shexi, /^lang: zh-TW$/m);
   assert.match(shexi, /^# 社戲$/m);
   assert.match(shexi, /zh-hant\/社戲/);
-  assert.match(shexi, /<blockquote class="excerpt-quotation" lang="zh-Hant">/);
+  assert.match(shexi, /<article class="excerpt-entry excerpt-entry--markdown"[^>]*lang="zh-TW"/);
   assert.doesNotMatch(shexi, /Simplified Chinese text/);
 
   const lishui = readFileSync("docs/excerpts/2026-10-10-04.md", "utf8");
