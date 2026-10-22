@@ -11,7 +11,7 @@ export async function runThemeTransition({
   windowObject,
   origin,
   update,
-  duration = 260
+  duration = 360
 }) {
   let didUpdate = false;
   const applyUpdate = async () => {
@@ -42,7 +42,7 @@ export async function runThemeTransition({
   try {
     const transition = documentObject.startViewTransition(applyUpdate);
     await transition.ready;
-    root.animate(
+    const animation = root.animate(
       { opacity: [1, 0] },
       {
         duration,
@@ -51,6 +51,8 @@ export async function runThemeTransition({
         pseudoElement: "::view-transition-old(root)"
       }
     );
+    await animation?.finished;
+    await transition.finished;
     return true;
   } catch {
     await applyUpdate();

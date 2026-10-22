@@ -77,6 +77,6 @@ description: 记录本次内容变更、发布步骤与线上验证结果。
 
 ## 新增或维护 Excerpts
 
-摘录遵循[Excerpts 新增与维护规范](/guide/writing-style#excerpts-新增与维护)。每篇使用独立的日期文件，原题用 H1，正文使用 Markdown；无题片段不拟标题。出处、译文和说明按固定顺序排列，没有的信息直接省略。
+摘录遵循[Excerpts 新增与维护规范](/guide/writing-style#excerpts-新增与维护)。每篇使用独立的日期文件，仅完整且有明确原题的作品使用 H1（`complete: true`）；节选与无题内容不加 H1（`complete: false`），原作题名只在文末出处提及。正文使用 Markdown。出处、译文和说明按固定顺序排列，没有的信息直接省略。
 
 新增时先确定原题、原文语言及已知来源，再创建 `docs/excerpts/YYYY-MM-DD-NN.md`。修订已有内容时保留文件名、ID 和首次收录日期，只更新 `updated`。Library 与 Excerpts 索引自动发现元数据，无需手写列表；发布前复核正文、分行、出处链接和分享长图。

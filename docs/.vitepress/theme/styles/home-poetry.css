@@ -25,7 +25,8 @@
 .home-poem__ghost { visibility: hidden; }
 .home-poetry__footer { margin-top: 28px; font-family: var(--site-font-sans); }
 .home-poetry__credit { margin: 0; font-size: 11px; color: var(--site-text-muted); letter-spacing: .02em; }
-.home-poetry__credit span { color: var(--site-text); }
+.home-poetry__credit a, .home-poetry__credit a:hover { color: var(--site-text); text-decoration: none; background: none; cursor: default; transition: none; }
+.home-poetry__credit a::after { display: none; }
 .home-poetry__controls { display: flex; align-items: center; gap: 12px; height: 44px; margin-top: 4px; color: var(--site-text-muted); font-size: 11px; }
 .home-poetry__controls button { min-height: 44px; min-width: 44px; text-align: left; cursor: pointer; transition: color 160ms ease; }
 .home-poetry__controls button:hover, .home-poetry__controls button:focus-visible { color: var(--site-accent); }
@@ -44,8 +45,8 @@
 @media (max-width: 680px) {
   .home-page { width: calc(100% - 48px); }
   .home-composition { grid-template-columns: minmax(0, 1fr); gap: 48px; min-height: calc(100svh - 150px); padding: 32px 0 44px; }
-  .home-composition > .home-poetry { grid-column: 1; grid-row: 1; min-height: 340px; padding-inline: 8px; }
-  .home-composition > .home-actions { grid-column: 1; grid-row: 2; }
+  .home-composition > .home-poetry { grid-column: 1; grid-row: 2; min-height: 300px; padding-inline: 8px; }
+  .home-composition > .home-actions { grid-column: 1; grid-row: 1; }
   .home-poem { font-size: clamp(23px, 6.2vw, 28px); line-height: 1.65; }
   .home-poem:lang(en) { font-size: clamp(28px, 7.4vw, 34px); line-height: 1.32; }
   .home-poetry__footer { margin-top: 22px; }

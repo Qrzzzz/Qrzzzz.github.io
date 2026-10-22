@@ -10,8 +10,7 @@ metadata, public routes and VitePress navigation remain the source of truth.
   Controls and metadata use sans serif. No new font service.
 - Home uses a centered, content-sized composition: staggered destinations on the left,
   a generous poetry column on the right. Library keeps its -3 degree tilt and Projects
-  its +2 degree tilt. On phones, poetry comes first and the destinations step diagonally
-  below it. No decorative SVG paths or reserved drawing margins.
+  its +2 degree tilt. On phones, the destinations step diagonally above the poetry. No decorative SVG paths or reserved drawing margins.
 - Documents use symmetric outer padding, a 690px prose measure and a separate outline.
   Collections retain their wider 1000px measure. On smaller sidebar layouts the outline
   moves into native local navigation; phones use 24px edges (20px at 320px).
@@ -19,7 +18,7 @@ metadata, public routes and VitePress navigation remain the source of truth.
   The 404 uses its large typographic number, recovery links and a separate poem column;
   phones stack the content without decorative dividers.
 - The preserved ASCII pointer trail is a quiet secondary texture, home only.
-- Home poetry uses 200 original works by 6 Astra, shuffled without repeats until
+- Home poetry uses 200 original works by ChatGPT 6 Astra, shuffled without repeats until
   the bag is exhausted. A cycle counts 60 seconds from the start of typing, then
   retracts the text before the next work. The loading overlay keeps its own 50
   works and 30-second cycle. Both share the player but have independent selection state.
@@ -27,7 +26,7 @@ metadata, public routes and VitePress navigation remain the source of truth.
   reuses HomePoetry's 60-second player, pause, selection and Next controls.
   The error and recovery links sit left of the poetry; phones stack both in normal flow.
 - Search expands left from the fixed right edge of its icon, preserving the tabs
-  and site tools to its right. Random opens one note or excerpt from the generated
+  and site tools to its right. Phones open a full-width row below the navbar. Random opens one note or excerpt from the generated
   Library catalog and replaces its intermediary URL so Back returns to the prior page.
 - Full document visits show the loading screen before application resources, with
   its existing styles and theme tokens inlined from their source files. Main styles
@@ -39,8 +38,8 @@ metadata, public routes and VitePress navigation remain the source of truth.
   playback. Background and user pauses overlap without consuming reading time.
   Reduced motion shows full works, and no-JS retains a complete server-rendered poem.
   The ghost copy reserves authored text geometry; screen readers receive whole
-  text without per-character live announcements. Mobile places poetry above the
-  destinations, with native vertical scrolling.
+  text without per-character live announcements. Mobile places destinations above the
+  poetry, with native vertical scrolling.
 - Shared controls use short color/underline changes. Theme switching fades one snapshot
   over a fully visible new theme. Avoid autoplay, floating cards, fake windows and
   independent decorative effects.
@@ -57,7 +56,7 @@ metadata, public routes and VitePress navigation remain the source of truth.
   `styles/icons.css`. Menu, outline, external links and code-copy controls share that
   source. GitHub links use the official Invertocat asset. The circular floating
   control is the sole return-to-top entry; empty local navigation is hidden.
-- The serif wordmark uses color and a faint underline for hover/focus feedback,
+- The variable serif wordmark gains weight with a left-to-right marker on hover/focus,
   with opacity on press and reduced-motion support.
 
 Run `npm run check`, `npm run docs:e2e` and `npm run docs:audit` before publication.
@@ -65,6 +64,10 @@ The browser suite covers native scrolling, outline navigation,
 reduced motion, responsive widths, search, history, theme and full article export.
 
 - Excerpts use the Markdown-first standard in `/guide/writing-style#excerpts-新增与维护`.
-  Real original titles are H1 with matching metadata. Untitled fragments keep only an
-  internal identifier. Prose remains Markdown inside one article shell; optional
+  Only complete works with original titles use H1 and complete: true. All fragments
+  use complete: false and an internal identifier; original titles appear in attribution. Prose remains Markdown inside one article shell; optional
   attribution follows each original/translation, with editorial notes last.
+
+- Attribution is right-aligned at 14px; reading text is 20px on desktop and 18px on phones.
+- Poem credits link quietly to ChatGPT without hover decoration. Mobile menu appearance
+  uses the navbar control alone. Back-to-top uses interruptible quintic easing and avoids the footer.

@@ -42,10 +42,10 @@ description: 记录搜索功能的选型、接入步骤和发布后的验证结�
 
 ### 元数据与标题
 
-所有条目声明 `collection: library`、`kind: excerpt`、`preview`、`published`、`updated`、`status`、`lang`、`tags`、`featured` 和 `outline`。`published` 保留首次收录日期；内容或格式修订时更新 `updated`，不把原作发表日期填入这两个字段。默认使用 `outline: false`；只有确需章节导航的长篇才显式开启目录。
+所有条目声明 `collection: library`、`kind: excerpt`、`complete`、`preview`、`published`、`updated`、`status`、`lang`、`tags`、`featured` 和 `outline`。`published` 保留首次收录日期；内容或格式修订时更新 `updated`，不把原作发表日期填入这两个字段。默认使用 `outline: false`；只有确需章节导航的长篇才显式开启目录。
 
-- 文章、诗词、书籍或章节有明确原题时，使用 `# 原作标题`，并让 `title` 与之相同。节选保留原题，节选位置在出处中说明；不把来源网站名、作者名或一句摘要拟成标题。
-- 无题短句、对话和片段直接进入正文，`title` 使用 `Excerpt YYYY-MM-DD-NN`。不新增 H1，不添加隐藏标题。
+- 只有确认收录完整原文、且作品本身有明确原题时，才设置 `complete: true`，使用 `# 原文标题`，并让 `title` 与之相同。完整性按独立作品判断，不把一段、几句或一节当作全文；不得生造标题。
+- 所有节选、片段及无题内容设置 `complete: false`，直接进入正文，`title` 使用 `Excerpt YYYY-MM-DD-NN`，不添加 H1。已知原作题名只写在文末出处。
 - 原作内部章节使用 `##`、`###`，保留其真实层次。双语页面只有原作题名使用 H1；明确存在的译文题名使用 H2。
 - `preview` 取忠于正文的代表性句子或短摘录，不重复编号或机械拼接作者、日期。
 - `lang` 按正文主语言填写，如 `zh-CN`、`zh-TW`、`en`、`ja`。原文与译文混排时，每个语言区块分别标记；不转换原文的简繁体、语言或用词。
@@ -56,9 +56,10 @@ description: 记录搜索功能的选型、接入步骤和发布后的验证结�
 
 ```md
 ---
-title: 端午的鸭蛋
+title: Excerpt 2026-10-15-02
 collection: library
 kind: excerpt
+complete: false
 preview: 筷子头一扎下去，吱——红油就冒出来了。
 published: 2026-10-15
 updated: 2026-10-22
@@ -73,8 +74,6 @@ outline: false
 
 <article class="excerpt-entry excerpt-entry--markdown" id="excerpt-2026-10-15-02" lang="zh-CN" aria-label="Excerpt">
 
-# 端午的鸭蛋
-
 筷子头一扎下去，吱——红油就冒出来了。
 
 <div class="excerpt-attribution">
@@ -86,7 +85,7 @@ outline: false
 </article>
 ```
 
-无题时省略正文 H1，元数据 `title` 改用对应文件的内部标号。没有独立署名、出处或链接时，省略整个 `excerpt-attribution` 区块，不留空容器，不添加“佚名”“来源待考”等占位文字。
+节选及无题内容省略正文 H1，元数据 `title` 改用对应文件的内部标号。没有独立署名、出处或链接时，省略整个 `excerpt-attribution` 区块，不留空容器，不添加“佚名”“来源待考”等占位文字。
 
 散文段落之间留一个空行，不靠全角空格手工缩进；诗歌用行尾反斜杠明确分行，用空行分节。原文内部确有引用时才使用 `>`。保留数学公式、列表及嵌套引用；日文 `ruby` 注音等 Markdown 无法表达的标记作为明确例外保留。不要在格式整理时润色原文、修正未核实的讹误或改变原有强调。
 
@@ -94,7 +93,7 @@ outline: false
 
 固定顺序为：原作标题（可选）、原文、原文署名与出处（可选）、译文一、对应译文出处（可选）、其他译文及各自出处、必要的校订或编者说明（可选）。全端使用单栏，不把不同文本的出处集中堆到最后。
 
-出处使用 `excerpt-attribution`，内部仍写 Markdown，按“作者或说话人、作品或出版来源、版本／章节／页码／日期、链接”排列。只写已知信息，允许仅有署名或链接；出处前不加破折号。网站发布日期与本站收录日期分别表达，不混用。已有来源、转录、校对和版本信息完整保留。
+出处使用 `excerpt-attribution`，内部仍写 Markdown，按“作者或说话人、作品或出版来源、版本／章节／页码／日期、链接”排列。只写已知信息，允许仅有署名或链接；出处前不加破折号。网站发布日期与本站收录日期分别表达，不混用。已有来源、转录、校对和版本信息完整保留。完整作品的题名已在 H1 出现时，文末不再单独重复，只保留作者、独立出处、版本及链接；章节、版本定位所需的题名仍可保留，例如“曹雪芹（清），《红楼梦》第二十七回《葬花吟》（程高通行本）。”。出处统一右对齐，字号小于正文，不通过手动空格或行内样式排版。
 
 原文出处后增加一个 `excerpt-translations` 区块，每份译文放在独立的 `excerpt-translation` 中。容器前后保留空行，确保其中的 Markdown 被解析：
 

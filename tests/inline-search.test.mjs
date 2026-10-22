@@ -51,10 +51,9 @@ test("anchors expanded search to the icon's right edge and keeps right-side cont
   assert.match(component, /\.inline-search-surface\s*\{[^}]*right:\s*0;/s);
   assert.doesNotMatch(component, /--search-x|surfaceX/);
   assert.doesNotMatch(siteStyles, /:has\(\.InlineSiteSearch\.is-expanded\) :is\([^)]*(?:NavActions|VPNavBarMenu|VPNavBarHamburger)/);
-  assert.match(
-    siteStyles,
-    /@media \(max-width:\s*680px\)[\s\S]*?\.VPNavBar:has\(\.InlineSiteSearch\.is-expanded\) \.VPNavBarTitle\s*\{[^}]*visibility:\s*hidden;[^}]*pointer-events:\s*none/s
-  );
+  assert.match(component, /nav\?\.getBoundingClientRect/);
+  assert.match(component, /--search-right/);
+  assert.doesNotMatch(siteStyles, /VPNavBarTitle\s*\{[^}]*visibility:\s*hidden/s);
 });
 
 test("uses the top navigation and native mobile screen without a sidebar drawer", () => {

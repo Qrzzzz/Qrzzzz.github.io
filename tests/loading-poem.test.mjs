@@ -109,7 +109,7 @@ test('switching motion preference mid-stream finishes the text and keeps the 30-
 
 const homeCollection = JSON.parse(fs.readFileSync(new URL('../docs/.vitepress/theme/homePoems.json', import.meta.url), 'utf8'));
 test('homepage collection preserves 200 distinct original works and attribution', () => {
-  assert.equal(homeCollection.author, '6 Astra');
+  assert.equal(homeCollection.author, 'ChatGPT 6 Astra');
   assert.equal(homeCollection.items.length, 200);
   assert.equal(new Set(homeCollection.items.map(p => p.text.replace(/\s/gu, ''))).size, 200);
   assert.deepEqual(homeCollection.items.map(p => p.id), Array.from({length: 200}, (_, i) => `home-${String(i + 1).padStart(3, '0')}`));

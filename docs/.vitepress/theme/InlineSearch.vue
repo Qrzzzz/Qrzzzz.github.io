@@ -24,6 +24,8 @@ const root = ref<HTMLElement>();
 const panelHeight = ref(430);
 const surfaceWidth = ref(44);
 const surfaceY = ref(0);
+const surfaceRight = ref(0);
+const compact = ref(false);
 const trigger = ref<HTMLButtonElement>();
 const input = ref<HTMLInputElement>();
 const expanded = ref(false);
@@ -135,14 +137,18 @@ function measureSurface() {
   const viewport = window.visualViewport;
   const top = viewport?.offsetTop ?? 0;
   const mobile = window.matchMedia("(max-width: 767.98px)").matches;
-  const title = root.value.closest(".VPNavBar")?.querySelector(".VPNavBarTitle")?.getBoundingClientRect();
-  const coversTitle = window.matchMedia("(max-width: 680px)").matches;
-  const left = coversTitle ? (viewport?.offsetLeft ?? 0) + 12 : Math.max(28, (title?.right ?? 0) + 24);
-  // The icon's right edge stays fixed throughout the width animation.
-  surfaceWidth.value = Math.max(44, Math.min(560, anchor.right - left));
-  surfaceY.value = mobile ? top + 10 - anchor.top : 0;
-  const bottom = anchor.top + surfaceY.value + 44;
-  panelHeight.value = Math.max(0, Math.min(430, top + (viewport?.height ?? window.innerHeight) - bottom - 20));
+  compact.value = mobile;
+  const nav = root.value.closest(".VPNavBar");
+  const title = nav?.querySelector(".VPNavBarTitle")?.getBoundingClientRect();
+  const left = Math.max(28, (title?.right ?? 0) + 24);
+  // Desktop grows left from the trigger; mobile uses its own row below the navigation.
+  surfaceWidth.value = mobile
+    ? Math.max(44, (viewport?.width ?? window.innerWidth) - 24)
+    : Math.max(44, Math.min(560, anchor.right - left));
+  surfaceRight.value = mobile ? anchor.right - ((viewport?.offsetLeft ?? 0) + (viewport?.width ?? window.innerWidth) - 12) : 0;
+  surfaceY.value = mobile ? Math.max(top + 8, (nav?.getBoundingClientRect().bottom ?? top + 72) + 8) - anchor.top : 0;
+  const bottom = anchor.top + surfaceY.value + (mobile ? 48 : 44);
+  panelHeight.value = Math.max(0, Math.min(430, top + (viewport?.height ?? window.innerHeight) - bottom - 16));
 }
 
 function updateViewport() {
@@ -244,7 +250,7 @@ onBeforeUnmount(() => {
 <template>
   <div ref="root" class="InlineSiteSearch" :class="{ 'is-expanded': expanded }"
     @keydown.esc.prevent.stop="closeSearch(true)"
-    :style="{ '--search-panel-height': `${panelHeight}px`, '--search-width': `${surfaceWidth}px`, '--search-y': `${surfaceY}px` }">
+    :style="{ '--search-panel-height': `${panelHeight}px`, '--search-width': `${surfaceWidth}px`, '--search-y': `${surfaceY}px`, '--search-right': `${surfaceRight}px` }">
     <button
       ref="trigger"
       type="button"
@@ -281,7 +287,7 @@ onBeforeUnmount(() => {
           autocorrect="off"
           enterkeyhint="go"
           maxlength="64"
-          placeholder="Search titles and page content…"
+          :placeholder="compact ? 'Search this site…' : 'Search titles and page content…'"
           spellcheck="false"
           @keydown="handleInputKeydown"
         />
@@ -292,7 +298,7 @@ onBeforeUnmount(() => {
           aria-label="Clear search"
           @click="clearQuery"
         >
-          <SiteIcon name="x" />
+          <SiteIcon name="delete" />
         </button>
         <button
           type="button"
@@ -302,6 +308,7 @@ onBeforeUnmount(() => {
           @click="closeSearch(true)"
         >
           <kbd>Esc</kbd>
+          <SiteIcon name="x" class="inline-search-close-icon" />
           <span id="inline-search-close-tip" class="inline-search-tooltip" role="tooltip">Close search</span>
         </button>
       </form>
@@ -542,6 +549,7 @@ onBeforeUnmount(() => {
   line-height: 1;
 }
 .inline-search-close kbd { font: inherit; }
+.inline-search-close-icon { display: none; }
 .inline-search-close:hover,
 .inline-search-close:focus-visible { border-color: var(--site-line); background: var(--site-accent-soft); color: var(--site-link); }
 .inline-search-tooltip {
@@ -664,6 +672,17 @@ onBeforeUnmount(() => {
 /* Mobile geometry is measured from the same icon, including the visible keyboard viewport. */
 @media (max-width: 767.98px) {
   .inline-search-surface { max-width: calc(100vw - 24px); }
+  .InlineSiteSearch.is-expanded .inline-search-surface { right: var(--search-right); }
+  .inline-search-form { height: 48px; border-radius: 7px; }
+  .inline-search-form input { font-size: 16px; line-height: 1.4; }
+  .inline-search-close { width: 44px; min-width: 44px; height: 44px; margin: 0 2px 0 0; padding: 0; }
+  .inline-search-close kbd { display: none; }
+  .inline-search-close-icon { display: block; width: 20px; height: 20px; }
+  .inline-search-tooltip { display: none; }
+  .inline-search-panel { border-radius: 7px; }
+  .inline-search-result { padding: 12px 10px; }
+  .inline-search-result strong { font-size: 17px; }
+  .inline-search-excerpt { font-size: 13px; }
 }
 
 .search-panel-enter-active { transition: opacity 180ms ease 120ms, transform 240ms cubic-bezier(.22, 1, .36, 1) 120ms; }

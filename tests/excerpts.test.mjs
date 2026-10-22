@@ -76,11 +76,15 @@ test("keeps every excerpt in its own Markdown page", () => {
     const headings = article.querySelectorAll("h1");
     assert.ok(headings.length <= 1, name);
     if (headings.length) {
+      assert.equal(meta.complete, true, name);
       const heading = headings[0].cloneNode(true);
       heading.querySelectorAll(".header-anchor").forEach(n => n.remove());
       assert.equal(heading.textContent.trim(), meta.title, name);
       assert.equal(article.firstElementChild.localName, "h1", name);
-    } else assert.equal(meta.title, `Excerpt ${name.slice(0, -3)}`, name);
+    } else {
+      assert.equal(meta.complete, false, name);
+      assert.equal(meta.title, `Excerpt ${name.slice(0, -3)}`, name);
+    }
     for (const note of article.querySelectorAll(":scope > .excerpt-notes")) {
       assert.equal(note.nextElementSibling?.className ?? "excerpt-notes", "excerpt-notes", name);
     }
@@ -158,7 +162,7 @@ test("renders simple excerpts as standard body copy without an accent rail", () 
   assert.match(styles, /\.excerpt-entry\s*\{[^}]*max-width:\s*none;[^}]*border-inline-start:\s*0;[^}]*padding-inline-start:\s*0;/);
   assert.match(styles, /\.vp-doc \.excerpt-entry > p,[\s\S]*?line-height:\s*1\.82/);
   assert.match(styles, /\.excerpt-entry \.excerpt-attribution\s*\{[^}]*text-align:\s*right;/);
-  assert.match(styles, /@media \(max-width: 767px\)\s*\{\s*:root\s*\{[^}]*--site-body-size:\s*17px;/);
+  assert.match(styles, /@media \(max-width: 767px\)\s*\{\s*:root\s*\{[^}]*--site-body-size:\s*18px;/);
 });
 
 test("renders translations across the full excerpt width", () => {

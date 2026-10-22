@@ -77,6 +77,17 @@ const readmeProjects = Object.freeze([
     statusLabel: "Live benchmark · Web",
     sourcePath: "README.md",
     homepage: "https://qrzzzz.github.io/pelican-bike-benchmark/"
+  },
+  {
+    slug: "openrevo",
+    repository: "Qrzzzz/OpenRevo",
+    title: "OpenRevo",
+    description: "Monitor supported MECHREVO laptops and switch audited performance modes on Windows 11.",
+    summary: "A native Windows 11 app for MECHREVO hardware monitoring and performance control on audited models.",
+    status: "maintained",
+    statusLabel: "Maintained · Windows 11",
+    sourcePath: "README.md",
+    homepage: "https://github.com/Qrzzzz/OpenRevo"
   }
 ]);
 export const PROJECTS = Object.freeze([

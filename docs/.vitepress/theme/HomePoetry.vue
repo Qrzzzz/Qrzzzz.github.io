@@ -64,7 +64,7 @@ onBeforeUnmount(() => {
       <p class="visually-hidden">{{ readable }}</p>
     </div>
     <div class="home-poetry__footer" lang="en">
-      <p class="home-poetry__credit">Words by <span>6 Astra</span></p>
+      <p class="home-poetry__credit">Words by <a class="poem-author" href="https://chatgpt.com/" target="_blank" rel="noopener noreferrer">ChatGPT 6 Astra</a></p>
       <div class="home-poetry__controls" aria-label="Poem controls">
         <template v-if="ready">
         <button type="button" :aria-pressed="paused" @click="togglePause">{{ paused ? "Resume" : "Pause" }}</button>

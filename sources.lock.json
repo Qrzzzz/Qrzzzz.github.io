@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "resolvedAt": "2026-09-30T00:40:00.000Z",
+  "resolvedAt": "2026-10-22T08:00:00.000Z",
   "sources": [
     {
       "slug": "lyrics-card-generator",
@@ -41,6 +41,11 @@
       "slug": "pelican-bike-benchmark",
       "repository": "Qrzzzz/pelican-bike-benchmark",
       "commit": "b40263d9aa3c3e045907691826e296e038891e8a"
+    },
+    {
+      "slug": "openrevo",
+      "repository": "Qrzzzz/OpenRevo",
+      "commit": "dd882ef4c5149898494450552eaf5d1896cf1dd4"
     }
   ]
 }

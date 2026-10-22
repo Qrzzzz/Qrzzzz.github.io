@@ -32,8 +32,7 @@
 .site-layout .VPNavScreenMenuLink:hover::after,
 .site-layout .VPNavScreenMenuLink:focus-visible::after { color: var(--site-link); transform: translateX(3px); }
 .site-layout .VPNavScreen .container { max-width: 440px; padding: 24px 0 40px; }
-.site-layout .VPNavScreenAppearance { margin-top: 20px; min-height: 52px; padding: 8px 2px; border-radius: 0; background: transparent; }
-.site-layout .VPNavScreenAppearance .text { color: var(--site-text-muted); font-family: var(--site-font-sans); font-size: 12px; font-weight: 400; letter-spacing: .025em; }
+.site-layout .VPNavScreenAppearance { display: none; }
 .VPLocalNav { border-bottom: 1px solid var(--site-line); background: var(--site-canvas); }
 .VPLocalNav .container { min-height: 48px; }
 .VPLocalNav .menu, .VPLocalNav .outline { min-height: 48px; }
@@ -93,7 +92,6 @@ html.theme-is-switching .site-layout :where(a, button, p, h1, h2, h3, input, pat
   .site-layout .VPNavScreenMenuLink { min-height: 58px; font-size: 24px; }
   .VPNavBar .content-body { gap: 0; }
   .site-layout .nav-github { display: none; }
-  .VPNavBar:has(.InlineSiteSearch.is-expanded) .VPNavBarTitle { visibility: hidden; pointer-events: none; opacity: 0; transition: opacity 120ms ease, visibility 0s linear 120ms; }
   .VPLocalNav .container { padding-inline: 22px; }
 }
 @media (max-width: 359px) {
@@ -124,9 +122,30 @@ html.theme-is-switching .site-layout :where(a, button, p, h1, h2, h3, input, pat
 .site-layout .VPLocalNav.empty:not(.has-sidebar),
 .site-layout .VPLocalNav.empty .VPLocalNavOutlineDropdown,
 .site-layout .VPLocalNavOutlineDropdown .header { display: none; }
-.VPNavBarTitle .title { position: relative; transition: color 160ms ease, opacity 160ms ease; }
-.VPNavBarTitle .title::after { content: ""; position: absolute; left: 0; right: 0; bottom: 5px; height: 1px; background: currentColor; opacity: 0; transition: opacity 160ms ease; }
-.VPNavBarTitle .title:hover, .VPNavBarTitle .title:focus-visible { color: var(--site-link); }
-.VPNavBarTitle .title:hover::after, .VPNavBarTitle .title:focus-visible::after { opacity: .45; }
-.VPNavBarTitle .title:active { opacity: .7; }
-@media (prefers-reduced-motion: reduce) { .VPNavBarTitle .title, .VPNavBarTitle .title::after { transition: none; } }
+/* Variable-weight wordmark and a single restrained marker sweep. */
+.VPNavBarTitle .title > span { position: relative; }
+.VPNavBarTitle .title {
+  position: relative;
+  isolation: isolate;
+  width: 6.25em;
+  font-variation-settings: "wght" 400;
+  transition: font-variation-settings 440ms cubic-bezier(.22, 1, .36, 1), opacity 160ms ease;
+}
+.VPNavBarTitle .title > span::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: -2px;
+  right: -2px;
+  bottom: .06em;
+  height: .42em;
+  background: color-mix(in srgb, #eed66a 65%, transparent);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 440ms cubic-bezier(.22, 1, .36, 1);
+}
+.dark .VPNavBarTitle .title > span::after { background: color-mix(in srgb, var(--site-accent) 30%, transparent); }
+.VPNavBarTitle .title:is(:hover, :focus-visible) { color: var(--site-text); font-variation-settings: "wght" 650; }
+.VPNavBarTitle .title:is(:hover, :focus-visible) > span::after { transform: scaleX(1); }
+.VPNavBarTitle .title:active { opacity: .72; }
+@media (prefers-reduced-motion: reduce) { .VPNavBarTitle .title, .VPNavBarTitle .title > span::after { transition: none; } }

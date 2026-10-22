@@ -30,6 +30,7 @@
 .site-icon--arrow-left { --icon: var(--site-icon-arrow-left); }
 .site-icon--arrow-up-right { --icon: var(--site-icon-arrow-up-right); }
 .site-icon--search { --icon: var(--site-icon-search); }
+.site-icon--delete { --icon: var(--site-icon-delete); }
 .site-icon--x { --icon: var(--site-icon-x); }
 .site-icon--sun { --icon: var(--site-icon-sun); }
 .site-icon--moon { --icon: var(--site-icon-moon); }

@@ -3,7 +3,6 @@ import SiteIcon from "./SiteIcon.vue";
 import { computed, nextTick, onBeforeUnmount, ref } from "vue";
 import { useData } from "vitepress";
 import {
-  canAnimateThemeTransition,
   runThemeTransition
 } from "./themeTransitionRuntime.mjs";
 
@@ -20,12 +19,6 @@ async function toggleTheme(event: MouseEvent) {
   if (switching.value) return;
   switching.value = true;
   const targetIsDark = !isDark.value;
-  const supportsFade = canAnimateThemeTransition(
-    document,
-    window,
-    toggleButton.value
-  );
-  if (!supportsFade) document.documentElement.classList.add("theme-is-switching");
 
   try {
     await runThemeTransition({
@@ -40,7 +33,7 @@ async function toggleTheme(event: MouseEvent) {
   } finally {
     window.clearTimeout(resetTimer);
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const resetDelay = reducedMotion ? 40 : supportsFade ? 380 : 460;
+    const resetDelay = reducedMotion ? 0 : typeof document.startViewTransition === "function" ? 60 : 360;
     resetTimer = window.setTimeout(() => {
       switching.value = false;
       document.documentElement.classList.remove("theme-is-switching");
@@ -64,7 +57,7 @@ onBeforeUnmount(() => {
       ref="toggleButton"
       type="button"
       class="theme-toggle"
-      :class="{ 'is-dark': isDark, 'is-switching': switching }"
+      :class="{ 'is-switching': switching }"
       role="switch"
       :aria-label="toggleLabel"
       :aria-checked="isDark"
@@ -132,89 +125,33 @@ onBeforeUnmount(() => {
 
 .theme-toggle {
   display: grid;
-  flex: 0 0 40px;
+  flex: 0 0 44px;
   place-items: center;
   padding: 0;
   cursor: pointer;
 }
 
-.theme-toggle__track {
-  position: relative;
-  display: block;
-  width: 32px;
-  height: 32px;
-  border: 0;
-  border-radius: 7px;
-  background: transparent;
-}
-
-.theme-toggle__thumb {
-  position: absolute;
-  inset: 0;
+.theme-toggle__track, .theme-toggle__thumb, .theme-toggle__icon {
   display: grid;
   place-items: center;
-  border-radius: 7px;
-  background: transparent;
-  box-shadow: none;
-  color: inherit;
-  transition:
-    color 250ms ease,
-    transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
+  width: 24px;
+  height: 24px;
 }
-
-.theme-toggle.is-dark .theme-toggle__thumb {
-  color: var(--site-link);
-  transform: rotate(8deg);
-}
-
-.theme-toggle:hover .theme-toggle__thumb,
-.theme-toggle:focus-visible .theme-toggle__thumb {
-  color: var(--site-accent-hover);
-}
-
-.theme-toggle__icon {
-  position: absolute;
-  inset: 7px;
-}
-
 .theme-toggle__icon .site-icon {
-  position: absolute;
-  inset: 0;
-  width: 18px;
-  height: 18px;
-  fill: none;
-  stroke: currentColor;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-width: 2;
-  transition:
-    opacity 180ms ease,
-    transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
+  grid-area: 1 / 1;
+  width: 20px;
+  height: 20px;
+  transform-origin: center;
+  transition: opacity 240ms ease, transform 360ms cubic-bezier(.22, 1, .36, 1);
 }
-
-.theme-toggle__sun {
-  opacity: 1;
-  transform: rotate(0deg) scale(1);
-}
-
-.theme-toggle__moon {
-  opacity: 0;
-  transform: rotate(-45deg) scale(0.5);
-}
-
-.theme-toggle.is-dark .theme-toggle__sun {
-  opacity: 0;
-  transform: rotate(45deg) scale(0.5);
-}
-
-.theme-toggle.is-dark .theme-toggle__moon {
-  opacity: 1;
-  transform: rotate(0deg) scale(1);
-}
+.theme-toggle__sun { opacity: 1; transform: rotate(0) scale(1); }
+.theme-toggle__moon { opacity: 0; transform: rotate(-80deg) scale(.55); }
+:global(.dark .theme-toggle__sun) { opacity: 0; transform: rotate(80deg) scale(.55); }
+:global(.dark .theme-toggle__moon) { opacity: 1; transform: rotate(0) scale(1); }
 
 .nav-github {
   display: inline-flex;
-  flex: 0 0 40px;
+  flex: 0 0 44px;
   align-items: center;
   justify-content: center;
   padding: 0;

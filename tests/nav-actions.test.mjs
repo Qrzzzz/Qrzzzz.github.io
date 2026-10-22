@@ -64,7 +64,7 @@ test("fades the old snapshot over a fully visible new theme", async () => {
   assert.equal(updates, 1);
   assert.equal(animations.length, 1);
   assert.equal(animations[0].options.pseudoElement, "::view-transition-old(root)");
-  assert.equal(animations[0].options.duration, 260);
+  assert.equal(animations[0].options.duration, 360);
   assert.deepEqual(animations[0].frames.opacity, [1, 0]);
 });
 
@@ -110,7 +110,7 @@ test("updates colors without blanking the page when view transitions are unavail
   );
 
   assert.equal(updates, 1);
-  assert.deepEqual(delays, [260]);
+  assert.deepEqual(delays, [360]);
   assert.deepEqual(classChanges, [
     "add:theme-is-switching",
     "remove:theme-is-switching"

@@ -101,7 +101,7 @@ onBeforeUnmount(() => {
         <div ref="poemRoot" class="site-loading__poem" data-poem-player data-allow-mismatch>
           <div class="site-loading__poem-ghost" data-poem-ghost></div>
           <div class="site-loading__poem-live"><span data-poem-text></span><span class="site-loading__cursor">_</span></div>
-          <p class="site-loading__attribution" lang="en">Words by <span>6 Astra</span></p>
+          <p class="site-loading__attribution" lang="en">Words by <a href="https://chatgpt.com/" target="_blank" rel="noopener noreferrer" tabindex="-1">ChatGPT 6 Astra</a></p>
         </div>
       </div>
     </div>
@@ -193,7 +193,7 @@ onBeforeUnmount(() => {
   letter-spacing: .02em;
   color: var(--site-text-muted);
 }
-.site-loading__attribution span { color: var(--site-text); }
+.site-loading__attribution a, .site-loading__attribution a:hover { color: var(--site-text); text-decoration: none; background: none; cursor: default; pointer-events: auto; }
 .site-loading__cursor {
   display: inline-block;
   width: .65em;
