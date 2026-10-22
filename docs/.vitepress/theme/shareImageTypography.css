@@ -66,3 +66,10 @@
 .share-image-longform__body :deep([data-share-align="left"]) { text-align: left; }
 .share-image-longform__body :deep([data-share-align="center"]) { text-align: center; }
 .share-image-longform__body :deep([data-share-align="right"]) { text-align: right; }
+
+.share-image-longform__body :deep(.excerpt-translations) { margin-top: 36px; }
+.share-image-longform__body :deep(.excerpt-translation + .excerpt-translation) { margin-top: 36px; }
+.share-image-longform__body :deep(.excerpt-notes) { margin-top: 36px; }
+.share-image-longform__body :deep(.excerpt-attribution) { margin: 24px 0; color: var(--share-text-muted); font-size: 18px; text-align: right; }
+.share-image-longform__body :deep(.excerpt-attribution p) { margin: 0; }
+.share-image-longform__body :deep(.excerpt-translation-label) { color: var(--share-text-muted); font-size: 18px; }

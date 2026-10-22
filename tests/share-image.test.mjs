@@ -28,7 +28,7 @@ test("exports a nested article title and all collapsed author metadata", () => {
   assert.equal(input.querySelector("details").hasAttribute("open"), false);
 });
 
-test("exports every excerpt without a title while preserving its complete body", () => {
+test("exports every excerpt without an invented title while preserving original H1 and complete body", () => {
   for (const name of readdirSync("docs/excerpts").filter(name => /^\d.*\.md$/.test(name))) {
     const text = readFileSync(`docs/excerpts/${name}`, "utf8");
     const body = text.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, "");

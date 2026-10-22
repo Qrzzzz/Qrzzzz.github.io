@@ -1130,130 +1130,52 @@
   grid-template-columns: 124px minmax(0, 1fr) 24px;
 }
 
-/* Titleless excerpt pages */
-
+/* Markdown excerpts: real titles, prose, optional attribution and translations. */
 .site-layout[data-page-kind="excerpt"] .VPDoc .content-container {
   max-width: var(--site-article);
 }
-
 .excerpt-entry {
   max-width: none;
   border-inline-start: 0;
-  margin: clamp(46px, 9vw, 88px) 0 72px;
+  margin: 0 0 56px;
   padding-inline-start: 0;
 }
-
-.vp-doc .excerpt-entry > .excerpt-quotation {
-  border: 0;
-  margin: 0;
-  padding: 0;
-  background: transparent;
-  color: inherit;
-}
-
-.vp-doc .excerpt-entry > .excerpt-quotation p {
+.vp-doc .excerpt-entry > p,
+.vp-doc .excerpt-translation > p {
   margin: 18px 0;
   color: var(--site-text);
   font-size: var(--site-body-size);
   letter-spacing: normal;
   line-height: 1.82;
 }
-
-.vp-doc .excerpt-entry--markdown > p {
-  margin: 18px 0;
-  color: var(--site-text);
-  font-size: var(--site-body-size);
-  letter-spacing: normal;
-  line-height: 1.82;
-}
-
-.vp-doc .excerpt-entry > .excerpt-quotation footer {
-  text-align: right;
-}
-
-.vp-doc .excerpt-entry--quotation > blockquote {
-  border: 0;
-  margin: 0;
-  padding: 0;
-  background: transparent;
-  color: inherit;
-}
-
-.vp-doc .excerpt-entry--quotation > blockquote p {
-  margin: 18px 0;
-  color: var(--site-text);
-  font-size: var(--site-body-size);
-  letter-spacing: normal;
-  line-height: 1.82;
-}
-
-.vp-doc .excerpt-entry--quotation > blockquote footer {
-  text-align: right;
-}
-
-.excerpt-entry--parallel {
-  max-width: none;
-  border-inline-start: 0;
-  padding-inline-start: 0;
-}
-
-.vp-doc .excerpt-source {
-  border: 0;
-  margin: 0;
-  padding: 0;
-  background: transparent;
-}
-
-.vp-doc .excerpt-source blockquote,
-.vp-doc .excerpt-rendering blockquote {
-  border: 0;
-  margin: 0;
-  padding: 0;
-  background: transparent;
-  color: inherit;
-}
-
-.vp-doc .excerpt-source p,
-.vp-doc .excerpt-rendering p {
-  margin: 18px 0;
-  color: var(--site-text);
-  font-size: var(--site-body-size);
-  font-style: normal;
-  letter-spacing: normal;
-  line-height: 1.82;
-}
-
-.vp-doc .excerpt-source figcaption {
-  margin-top: 12px;
+.vp-doc .excerpt-entry > :first-child,
+.vp-doc .excerpt-translation > :first-child { margin-top: 0; }
+.vp-doc .excerpt-entry .excerpt-attribution {
+  margin: 28px 0 0;
   color: var(--site-text-muted);
   font-size: 13px;
-  line-height: 1.6;
+  line-height: 1.7;
   text-align: right;
+  overflow-wrap: anywhere;
 }
-
-.excerpt-renderings {
+.vp-doc .excerpt-entry .excerpt-attribution p {
+  margin: 0;
+  color: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+.vp-doc .excerpt-attribution a { color: inherit; }
+.vp-doc .excerpt-attribution a:is(:hover, :focus-visible) { color: var(--site-link); }
+.excerpt-translations {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 28px;
-  margin-top: 28px;
+  gap: 40px;
+  margin-top: 40px;
 }
-
-.vp-doc .excerpt-rendering blockquote > :first-child {
-  margin-top: 0;
-}
-
-.vp-doc .excerpt-rendering blockquote > :last-child {
-  margin-bottom: 0;
-}
-
-.vp-doc .excerpt-rendering cite {
-  display: block;
-  margin-top: 12px;
-  color: var(--site-text-muted);
-  font-size: 13px;
-  font-style: normal;
-  text-align: right;
-}
+.excerpt-translation { min-width: 0; }
+.vp-doc .excerpt-translation-label { margin-bottom: 18px; color: var(--site-text-muted); font-size: 12px; }
+.vp-doc .excerpt-translation-label p { margin: 0; color: inherit; font-size: inherit; }
+.excerpt-notes { margin-top: 40px; }
 
 .project-docs-sync:not(.sync-notice) {
   display: grid;

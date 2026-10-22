@@ -1,7 +1,7 @@
 export const SHARE_IMAGE_CHARACTER_LIMIT = 3000;
 
-const contentTags = new Set("h1 h2 h3 h4 h5 h6 p blockquote ul ol li hr pre code strong em del s a br img figure figcaption cite table thead tbody tfoot tr th td dl dt dd sup sub details summary div".split(" "));
-const contentClasses = new Set(["custom-block", "custom-block-title", "info", "tip", "warning", "danger", "text-emphasis"]);
+const contentTags = new Set("h1 h2 h3 h4 h5 h6 p blockquote ul ol li hr pre code strong em del s a br img figure figcaption cite table thead tbody tfoot tr th td dl dt dd sup sub details summary div section ruby rb rt rp".split(" "));
+const contentClasses = new Set(["custom-block", "custom-block-title", "info", "tip", "warning", "danger", "text-emphasis", "excerpt-attribution", "excerpt-translations", "excerpt-translation", "excerpt-notes", "excerpt-translation-label"]);
 const excluded = 'script, style, template, noscript, button, input, select, textarea, nav, .header-anchor, .line-numbers-wrapper, .lang, .share-image-entry, [data-share-image-exclude]';
 const segmenter = new Intl.Segmenter(undefined, { granularity: "grapheme" });
 const languagePattern = /^[a-z]{2,3}(?:-[a-z0-9]{2,8})*$/i;
@@ -98,14 +98,17 @@ export function extractLongformContent(source, fallbackTitle = "Untitled article
   const titleOutput = doc.createElement("div");
   if (titleNode) for (const child of titleNode.childNodes) copy(child, titleOutput, false, false);
   for (const child of source.childNodes) copy(child, output, true);
-  const totalCharacters = countShareCharacters(output.textContent);
+  // Markdown attributions stay beside the text they identify, outside the prose budget.
+  const bodyCharacters = () => countShareCharacters(output.textContent) - [...output.querySelectorAll(".excerpt-attribution")]
+    .reduce((total, node) => total + countShareCharacters(node.textContent), 0);
+  const totalCharacters = bodyCharacters();
   const truncated = options.limit > 0 && totalCharacters > options.limit;
   if (truncated) truncateShareContent(output, options.limit);
   const retained = new Set([...output.querySelectorAll("[data-share-resource]"), ...metadata.querySelectorAll("[data-share-resource]"), ...attribution.querySelectorAll("[data-share-resource]")].map(node => node.getAttribute("data-share-resource")));
   return {
     title: pageKind === "excerpt" ? "" : titleOutput.textContent.trim() || String(fallbackTitle),
     html: output.innerHTML, metadataHtml: metadata.innerHTML, attributionHtml: attribution.innerHTML,
-    totalCharacters, characterCount: countShareCharacters(output.textContent), truncated,
+    totalCharacters, characterCount: bodyCharacters(), truncated,
     resources: resources.filter(resource => retained.has(resource.id))
   };
 }
@@ -116,6 +119,7 @@ function truncateShareContent(root, limit) {
   // Keep complete structural units. Ordinary prose may end at a nearby sentence
   // boundary; HTML is never sliced and Unicode graphemes are never split.
   function visit(node) {
+    if (node.nodeType === 1 && node.matches(".excerpt-attribution")) return;
     if (stopped) { node.remove(); return; }
     if (node.nodeType === 3) {
       const characters = graphemes(node.textContent || "");

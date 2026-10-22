@@ -16,7 +16,7 @@ title: 内容写作规范
 
 集合与项目入口页使用 `pageType: index`，通过共享的 `CatalogHeader` 组件生成唯一的一级标题和导语，不再重复写 Markdown 一级标题。这些页面关闭侧栏目录，使用一致的宽版布局；文章和文档正文继续遵循下方的阅读排版规则。
 
-Excerpts 条目不设正文标题，也不添加隐藏标题，并不写 `description`。Frontmatter 的 `title` 仅以 `Excerpt YYYY-MM-DD-NN` 作为英文内部标号；列表与翻页使用 `preview`。分享图不展示该标号、日期标题或含编号的网址，保留正文、出处与原文二维码。
+Excerpts 按下方的[新增与维护规范](#excerpts-新增与维护)编写。有明确原作标题时，Frontmatter 的 `title` 与正文 H1 一致；无题片段使用 `Excerpt YYYY-MM-DD-NN` 作为内部标号，不补正文标题或隐藏标题。条目不写 `description`，列表与翻页使用 `preview`。分享图保留真实原题、正文与出处，省略内部标号和含编号的网址，保留原文二维码。
 
 署名、日期和机构信息较多的长文可使用 `ArticleHeader` 包裹原有一级标题、导语、作者和日期；机构、邮箱等补充信息放入其 `details` 插槽。组件只在页面显式使用时出现，不添加空元数据。详情使用原生折叠语义，分享长图会完整展开；不得删改署名或原始资料信息。可参考[私人约定的边界与对抗自由](../notes/identity-v-custom-room-legitimacy.md)的写法。
 
@@ -35,6 +35,98 @@ description: 记录搜索功能的选型、接入步骤和发布后的验证结�
 - `description` 不写“这是一个关于……的页面”之类空泛句式，应直接说明内容，例如“比较三种备份方案的成本、恢复时间与适用范围”。
 - 页面语言不是简体中文时，增加 `lang`，例如 `lang: en` 或 `lang: ja`。
 - 不用粗体段落模拟标题，也不为了获得更小的字号而跳过标题层级。
+
+## Excerpts 新增与维护
+
+每篇摘录独立保存为 `docs/excerpts/YYYY-MM-DD-NN.md`。日期表示本站收录日期，同一天的序号使用两位数字；已发布文件不因格式整理或题名调整而改名，以保留 URL。`docs/excerpts/index.md` 是自动聚合入口，不在其中手工追加条目。
+
+### 元数据与标题
+
+所有条目声明 `collection: library`、`kind: excerpt`、`preview`、`published`、`updated`、`status`、`lang`、`tags`、`featured` 和 `outline`。`published` 保留首次收录日期；内容或格式修订时更新 `updated`，不把原作发表日期填入这两个字段。默认使用 `outline: false`；只有确需章节导航的长篇才显式开启目录。
+
+- 文章、诗词、书籍或章节有明确原题时，使用 `# 原作标题`，并让 `title` 与之相同。节选保留原题，节选位置在出处中说明；不把来源网站名、作者名或一句摘要拟成标题。
+- 无题短句、对话和片段直接进入正文，`title` 使用 `Excerpt YYYY-MM-DD-NN`。不新增 H1，不添加隐藏标题。
+- 原作内部章节使用 `##`、`###`，保留其真实层次。双语页面只有原作题名使用 H1；明确存在的译文题名使用 H2。
+- `preview` 取忠于正文的代表性句子或短摘录，不重复编号或机械拼接作者、日期。
+- `lang` 按正文主语言填写，如 `zh-CN`、`zh-TW`、`en`、`ja`。原文与译文混排时，每个语言区块分别标记；不转换原文的简繁体、语言或用词。
+
+### Markdown 正文与统一外壳
+
+正文直接使用 Markdown。段落、标题、链接、列表、数学公式及文中引用由构建过程生成 HTML；只为文章外壳、语言、出处和译文分区保留必要容器。不要手写 `<p>`、`<h1>` 或整篇 HTML 引用块，不给整篇摘录逐行添加 `>`。
+
+```md
+---
+title: 端午的鸭蛋
+collection: library
+kind: excerpt
+preview: 筷子头一扎下去，吱——红油就冒出来了。
+published: 2026-10-15
+updated: 2026-10-22
+status: stable
+lang: zh-CN
+tags:
+  - 汪曾祺
+  - 散文
+featured: false
+outline: false
+---
+
+<article class="excerpt-entry excerpt-entry--markdown" id="excerpt-2026-10-15-02" lang="zh-CN" aria-label="Excerpt">
+
+# 端午的鸭蛋
+
+筷子头一扎下去，吱——红油就冒出来了。
+
+<div class="excerpt-attribution">
+
+汪曾祺，《端午的鸭蛋》。[中国作家网书摘](https://www.chinawriter.com.cn/n1/2018/1127/c405084-30428152.html)。
+
+</div>
+
+</article>
+```
+
+无题时省略正文 H1，元数据 `title` 改用对应文件的内部标号。没有独立署名、出处或链接时，省略整个 `excerpt-attribution` 区块，不留空容器，不添加“佚名”“来源待考”等占位文字。
+
+散文段落之间留一个空行，不靠全角空格手工缩进；诗歌用行尾反斜杠明确分行，用空行分节。原文内部确有引用时才使用 `>`。保留数学公式、列表及嵌套引用；日文 `ruby` 注音等 Markdown 无法表达的标记作为明确例外保留。不要在格式整理时润色原文、修正未核实的讹误或改变原有强调。
+
+### 出处、译文与说明的顺序
+
+固定顺序为：原作标题（可选）、原文、原文署名与出处（可选）、译文一、对应译文出处（可选）、其他译文及各自出处、必要的校订或编者说明（可选）。全端使用单栏，不把不同文本的出处集中堆到最后。
+
+出处使用 `excerpt-attribution`，内部仍写 Markdown，按“作者或说话人、作品或出版来源、版本／章节／页码／日期、链接”排列。只写已知信息，允许仅有署名或链接；出处前不加破折号。网站发布日期与本站收录日期分别表达，不混用。已有来源、转录、校对和版本信息完整保留。
+
+原文出处后增加一个 `excerpt-translations` 区块，每份译文放在独立的 `excerpt-translation` 中。容器前后保留空行，确保其中的 Markdown 被解析：
+
+```md
+<section class="excerpt-translations" aria-label="中文译文">
+
+<section class="excerpt-translation" lang="zh-CN" aria-label="中文译文">
+
+译文正文。
+
+<div class="excerpt-attribution">
+
+已知的译者、译本出处或原文链接。
+
+</div>
+
+</section>
+
+</section>
+```
+
+仅有一份译文时也沿用同一结构。没有译者或译本信息就省略出处，不补造署名；不为译文添加“译文一”等大标题。有独立译名才使用 H2。多份译文保持已有顺序，新增条目按编选顺序排列。意译、中文改写和关联诗句应说明其性质；必要时在正文前使用 `excerpt-translation-label` 小型说明区，内部仍写 Markdown，不把关联诗句冒充翻译。
+
+校订、来源或转录说明统一放入文章最后的 `excerpt-notes` 区块，紧随所有文本及对应出处。原有提示块及其中的说明文字保留，说明语言通过容器的 `lang` 标记。
+
+### 新增与修订流程
+
+1. 确认是否存在明确原题、原作语言、分行以及已知出处，选用对应结构。
+2. 新建独立日期文件，填写元数据和与文件编号一致的 `excerpt-` ID；修订已有条目保留文件名、ID 和 `published`。
+3. 写入 Markdown 正文，再按固定顺序添加实际存在的出处、译文和说明。Library、Excerpts 列表、随机入口与翻页会从元数据自动发现条目。
+4. 对照来源复核文字、诗行、链接、注音和公式；同时查看手机与桌面、明暗主题及分享长图，确认真实标题和对应出处得到保留。
+5. 按[本地开发与发布](/guide/getting-started)的流程完成检查、提交及发布。检查规则应遍历实际条目，避免只为新文章追加手工数量或旧 HTML 格式断言。
 
 ## Mermaid 图表
 

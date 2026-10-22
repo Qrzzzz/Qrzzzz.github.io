@@ -63,3 +63,8 @@ metadata, public routes and VitePress navigation remain the source of truth.
 Run `npm run check`, `npm run docs:e2e` and `npm run docs:audit` before publication.
 The browser suite covers native scrolling, outline navigation,
 reduced motion, responsive widths, search, history, theme and full article export.
+
+- Excerpts use the Markdown-first standard in `/guide/writing-style#excerpts-新增与维护`.
+  Real original titles are H1 with matching metadata. Untitled fragments keep only an
+  internal identifier. Prose remains Markdown inside one article shell; optional
+  attribution follows each original/translation, with editorial notes last.
