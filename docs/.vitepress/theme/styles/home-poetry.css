@@ -30,6 +30,12 @@
   font-variation-settings: "wght" 650;
   background-size: 100% .42em;
 }
+/* Replay the full brush stroke on activation, including an already hovered link. */
+.home-entry.is-activating .home-entry__name { animation: home-entry-activate 440ms cubic-bezier(.22, 1, .36, 1) both; }
+@keyframes home-entry-activate {
+  from { font-variation-settings: "wght" 400; background-size: 0% .42em; }
+  to { font-variation-settings: "wght" 650; background-size: 100% .42em; }
+}
 .home-entry__count { font-family: var(--site-font-sans); font-size: 11px; color: var(--site-text-muted); font-variant-numeric: tabular-nums; }
 .home-entry__arrow { align-self: center; grid-column: 2; grid-row: 1 / 3; width: 36px; height: 24px; stroke-width: 1.3; transition: transform var(--site-motion-settle) var(--site-ease); }
 .home-entry:hover, .home-entry:focus-visible { color: var(--site-link); }
@@ -86,4 +92,4 @@
   .home-colophon { min-height: 56px; padding-block: 6px; }
 }
 @media (max-width: 359px) { .home-page { width: calc(100% - 40px); } .home-composition > .home-poetry { padding-inline: 0; } }
-@media (prefers-reduced-motion: reduce) { .home-poem__cursor { animation: none !important; } .home-entry__arrow { transform: none !important; } .home-entry__name { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .home-poem__cursor { animation: none !important; } .home-entry__arrow { transform: none !important; } .home-entry__name { transition: none; animation: none !important; } }

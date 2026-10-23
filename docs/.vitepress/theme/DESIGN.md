@@ -59,6 +59,8 @@ metadata, public routes and VitePress navigation remain the source of truth.
 - The variable serif wordmark gains weight with a left-to-right marker on hover/focus,
   with opacity on press and reduced-motion support. Home destination labels share the
   variable-weight and left-to-right marker feedback on hover and keyboard focus.
+  Normal activation replays the 440ms stroke before client navigation; modified clicks
+  retain native link behavior, and reduced motion navigates immediately.
 
 Run `npm run check`, `npm run docs:e2e` and `npm run docs:audit` before publication.
 The browser suite covers native scrolling, outline navigation,
