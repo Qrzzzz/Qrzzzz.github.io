@@ -10,6 +10,7 @@ const router = useRouter();
 const activating = ref<string | null>(null);
 let navigationTimer: ReturnType<typeof setTimeout> | undefined;
 
+// The explicit _self targets keep VitePress capture navigation from preceding this handler.
 function activateEntry(event: MouseEvent, entry: string) {
   const link = event.currentTarget as HTMLAnchorElement;
   if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey ||
@@ -30,12 +31,12 @@ onBeforeUnmount(() => clearTimeout(navigationTimer));
     <h1 class="visually-hidden">Cherry Chu</h1>
     <section class="home-composition" aria-label="Poetry, library and projects">
       <nav class="home-actions" aria-label="Primary destinations">
-        <a class="home-entry home-entry--library" :href="withBase('/library/')" :class="{ 'is-activating': activating === 'library' }" @click="activateEntry($event, 'library')">
+        <a class="home-entry home-entry--library" target="_self" :href="withBase('/library/')" :class="{ 'is-activating': activating === 'library' }" @click="activateEntry($event, 'library')">
           <span class="home-entry__name">Library</span>
           <span class="home-entry__count">{{ libraryItems.length }}</span>
           <SiteIcon name="arrow-right" class="home-entry__arrow" />
         </a>
-        <a class="home-entry home-entry--projects" :href="withBase('/projects/')" :class="{ 'is-activating': activating === 'projects' }" @click="activateEntry($event, 'projects')">
+        <a class="home-entry home-entry--projects" target="_self" :href="withBase('/projects/')" :class="{ 'is-activating': activating === 'projects' }" @click="activateEntry($event, 'projects')">
           <span class="home-entry__name">Projects</span>
           <span class="home-entry__count">{{ PROJECTS.length }}</span>
           <SiteIcon name="arrow-right" class="home-entry__arrow" />
