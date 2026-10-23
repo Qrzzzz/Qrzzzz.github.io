@@ -9,7 +9,27 @@
 .home-entry { position: relative; z-index: 2; display: grid; grid-template-columns: auto 36px; align-content: center; gap: 2px 32px; width: max-content; min-height: 76px; transform-origin: left center; color: var(--site-text); text-decoration: none; transition: color 180ms ease; }
 .home-entry--library { transform: rotate(-3deg); }
 .home-entry--projects { margin-left: 20%; transform: rotate(2deg); }
-.home-entry__name { font-family: var(--site-font-reading); font-size: clamp(32px, 3vw, 42px); font-weight: 400; line-height: 1.25; letter-spacing: -.025em; }
+.home-entry__name {
+  --home-entry-marker: color-mix(in srgb, #eed66a 65%, transparent);
+  width: fit-content;
+  font-family: var(--site-font-reading);
+  font-size: clamp(32px, 3vw, 42px);
+  font-weight: 400;
+  font-variation-settings: "wght" 400;
+  line-height: 1.25;
+  letter-spacing: -.025em;
+  white-space: nowrap;
+  background-image: linear-gradient(var(--home-entry-marker), var(--home-entry-marker));
+  background-repeat: no-repeat;
+  background-position: left calc(100% - .06em);
+  background-size: 0% .42em;
+  transition: font-variation-settings 440ms cubic-bezier(.22, 1, .36, 1), background-size 440ms cubic-bezier(.22, 1, .36, 1);
+}
+.dark .home-entry__name { --home-entry-marker: color-mix(in srgb, var(--site-accent) 30%, transparent); }
+.home-entry:is(:hover, :focus-visible) .home-entry__name {
+  font-variation-settings: "wght" 650;
+  background-size: 100% .42em;
+}
 .home-entry__count { font-family: var(--site-font-sans); font-size: 11px; color: var(--site-text-muted); font-variant-numeric: tabular-nums; }
 .home-entry__arrow { align-self: center; grid-column: 2; grid-row: 1 / 3; width: 36px; height: 24px; stroke-width: 1.3; transition: transform var(--site-motion-settle) var(--site-ease); }
 .home-entry:hover, .home-entry:focus-visible { color: var(--site-link); }
@@ -66,4 +86,4 @@
   .home-colophon { min-height: 56px; padding-block: 6px; }
 }
 @media (max-width: 359px) { .home-page { width: calc(100% - 40px); } .home-composition > .home-poetry { padding-inline: 0; } }
-@media (prefers-reduced-motion: reduce) { .home-poem__cursor { animation: none !important; } .home-entry__arrow { transform: none !important; } }
+@media (prefers-reduced-motion: reduce) { .home-poem__cursor { animation: none !important; } .home-entry__arrow { transform: none !important; } .home-entry__name { transition: none; } }

@@ -57,7 +57,8 @@ metadata, public routes and VitePress navigation remain the source of truth.
   source. GitHub links use the official Invertocat asset. The circular floating
   control is the sole return-to-top entry; empty local navigation is hidden.
 - The variable serif wordmark gains weight with a left-to-right marker on hover/focus,
-  with opacity on press and reduced-motion support.
+  with opacity on press and reduced-motion support. Home destination labels share the
+  variable-weight and left-to-right marker feedback on hover and keyboard focus.
 
 Run `npm run check`, `npm run docs:e2e` and `npm run docs:audit` before publication.
 The browser suite covers native scrolling, outline navigation,
