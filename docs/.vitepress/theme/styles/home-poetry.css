@@ -10,7 +10,7 @@
 .home-entry--library { transform: rotate(-3deg); }
 .home-entry--projects { margin-left: 20%; transform: rotate(2deg); }
 .home-entry__name {
-  --home-entry-marker: color-mix(in srgb, #eed66a 65%, transparent);
+  --home-entry-marker: var(--site-hover-marker);
   width: fit-content;
   font-family: var(--site-font-reading);
   font-size: clamp(32px, 3vw, 42px);
@@ -25,7 +25,6 @@
   background-size: 0% .42em;
   transition: font-variation-settings 440ms cubic-bezier(.22, 1, .36, 1), background-size 440ms cubic-bezier(.22, 1, .36, 1);
 }
-.dark .home-entry__name { --home-entry-marker: color-mix(in srgb, var(--site-accent) 30%, transparent); }
 .home-entry:is(:hover, :focus-visible) .home-entry__name {
   font-variation-settings: "wght" 650;
   background-size: 100% .42em;

@@ -10,6 +10,7 @@
   --site-line: #d2d9e2;
   --site-line-strong: #a3b1c5;
   --site-accent: #243ecd;
+  --site-hover-marker: color-mix(in srgb, var(--site-accent) 30%, transparent);
   --site-accent-hover: #243ecd;
   --site-accent-soft: rgba(36, 62, 205, 0.06);
   --site-selection: rgba(36, 62, 205, 0.18);
@@ -98,6 +99,7 @@
   --site-line: #303b58;
   --site-line-strong: #536487;
   --site-accent: #a7bcff;
+  --site-hover-marker: color-mix(in srgb, var(--site-accent) 34%, transparent);
   --site-link: #a7bcff;
   --site-home-wash: #303b58;
   --site-content-accent: #a7bcff;

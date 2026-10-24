@@ -139,12 +139,11 @@ html.theme-is-switching .site-layout :where(a, button, p, h1, h2, h3, input, pat
   right: -2px;
   bottom: .06em;
   height: .42em;
-  background: color-mix(in srgb, #eed66a 65%, transparent);
+  background: var(--site-hover-marker);
   transform: scaleX(0);
   transform-origin: left center;
   transition: transform 440ms cubic-bezier(.22, 1, .36, 1);
 }
-.dark .VPNavBarTitle .title > span::after { background: color-mix(in srgb, var(--site-accent) 30%, transparent); }
 .VPNavBarTitle .title:is(:hover, :focus-visible) { color: var(--site-text); font-variation-settings: "wght" 650; }
 .VPNavBarTitle .title:is(:hover, :focus-visible) > span::after { transform: scaleX(1); }
 .VPNavBarTitle .title:active { opacity: .72; }
