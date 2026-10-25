@@ -14,12 +14,10 @@
 .site-layout .library-filter--active { color: var(--site-link); }
 .site-layout .library-search input { border: 0; border-bottom: 1px solid var(--site-line); border-radius: 0; background: transparent; padding-inline: 0; box-shadow: none; }
 .site-layout .library-search input:focus { border-color: var(--site-link); }
-.site-layout .project-catalog .content-index-title { font-family: var(--site-font-sans); font-weight: 400; font-size: 24px; letter-spacing: -.6px; }
 .site-layout .content-index-row::after { transition: transform 260ms var(--site-ease); }
 .site-layout .content-index-row:hover::after { transform: translateX(4px); }
 @media (max-width: 680px) {
   .site-layout .library-toolbar__filters { gap: 16px; flex-wrap: wrap; }
   .site-layout .library-filter { padding-inline: 0; }
-  .site-layout .project-catalog .content-index-title { font-size: 22px; }
   .site-layout .project-catalog .content-index-summary { display: block; }
 }

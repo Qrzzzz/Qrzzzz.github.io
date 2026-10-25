@@ -14,13 +14,12 @@ pageType: index
     <h2 id="product-docs-title">Product documentation</h2>
   </header>
   <div class="hub-list">
-    <article class="hub-entry">
+    <a class="hub-entry catalog-entry" href="/projects/lyrics-card-generator/docs/">
       <div class="hub-entry__body">
-        <h3>Lyrics Card Generator</h3>
+        <h3 class="catalog-entry__title">Lyrics Card Generator</h3>
         <p>Guides to importing songs, editing lyrics and translations, styling cards, and exporting images.</p>
       </div>
-      <a class="hub-entry__action" href="/projects/lyrics-card-generator/docs/">Open docs</a>
-    </article>
+    </a>
   </div>
 </section>
 
@@ -29,19 +28,17 @@ pageType: index
     <h2 id="maintainer-docs-title">Maintainer handbook</h2>
   </header>
   <div class="hub-list">
-    <article class="hub-entry">
+    <a class="hub-entry catalog-entry" href="/guide/getting-started">
       <div class="hub-entry__body">
-        <h3>Local development and publishing</h3>
+        <h3 class="catalog-entry__title">Local development and publishing</h3>
         <p>Set up, check, and publish this site from a local checkout.</p>
       </div>
-      <a class="hub-entry__action" href="/guide/getting-started">Open handbook</a>
-    </article>
-    <article class="hub-entry">
+    </a>
+    <a class="hub-entry catalog-entry" href="/guide/writing-style">
       <div class="hub-entry__body">
-        <h3>Writing style guide</h3>
+        <h3 class="catalog-entry__title">Writing style guide</h3>
         <p>Formatting conventions for headings, prose, links, quotations, code, tables, and media.</p>
       </div>
-      <a class="hub-entry__action" href="/guide/writing-style">Open guide</a>
-    </article>
+    </a>
   </div>
 </section>

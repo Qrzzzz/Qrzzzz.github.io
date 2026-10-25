@@ -74,3 +74,7 @@ reduced motion, responsive widths, search, history, theme and full article expor
 - Attribution is right-aligned at 14px; reading text is 20px on desktop and 18px on phones.
 - Poem credits link quietly to ChatGPT without hover decoration. Mobile menu appearance
   uses the navbar control alone. Back-to-top uses interruptible quintic easing and avoids the footer.
+
+- Docs and Projects use whole-row catalog links, reading-serif destination titles (24px / 21px),
+  quieter descriptions (16px / 15px), Lucide arrows, marker hover and visible keyboard focus.
+  Docs retains its two groups; Projects retains status metadata below descriptions on phones.
