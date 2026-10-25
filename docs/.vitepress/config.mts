@@ -109,6 +109,11 @@ export default defineConfig({
   transformPageData(pageData) {
     const record = libraryRecords.find(item => item.relativePath === pageData.relativePath.replaceAll("\\", "/"));
     if (record) Object.assign(pageData.frontmatter, record.frontmatter);
+    // Editorial excerpt dates survive repository-wide formatting commits.
+    if (record?.frontmatter.kind === "excerpt") {
+      const editorialDate = record.frontmatter.updated ?? record.frontmatter.published;
+      pageData.lastUpdated = Date.parse(`${editorialDate}T00:00:00+08:00`);
+    }
     const sourcePath = pageData.relativePath
       .replace(/(^|\/)index\.md$/, "$1")
       .replace(/\.md$/, ".html");

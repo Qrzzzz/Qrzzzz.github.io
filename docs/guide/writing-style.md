@@ -42,7 +42,7 @@ description: 记录搜索功能的选型、接入步骤和发布后的验证结�
 
 ### 元数据与标题
 
-所有条目声明 `collection: library`、`kind: excerpt`、`complete`、`preview`、`published`、`updated`、`status`、`lang`、`tags`、`featured` 和 `outline`。`published` 保留首次收录日期；内容或格式修订时更新 `updated`，不把原作发表日期填入这两个字段。默认使用 `outline: false`；只有确需章节导航的长篇才显式开启目录。
+所有条目声明 `collection: library`、`kind: excerpt`、`complete`、`preview`、`published`、`updated`、`status`、`lang`、`tags`、`featured` 和 `outline`。`published` 保留首次收录日期；实质内容修订时更新 `updated`，纯格式调整保留原日期，不把原作发表日期填入这两个字段。默认使用 `outline: false`；只有确需章节导航的长篇才显式开启目录。
 
 - 只有确认收录完整原文、且作品本身有明确原题时，才设置 `complete: true`，使用 `# 原文标题`，并让 `title` 与之相同。完整性按独立作品判断，不把一段、几句或一节当作全文；不得生造标题。
 - 所有节选、片段及无题内容设置 `complete: false`，直接进入正文，`title` 使用 `Excerpt YYYY-MM-DD-NN`，不添加 H1。已知原作题名只写在文末出处。
