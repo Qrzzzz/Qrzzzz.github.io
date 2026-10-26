@@ -3,7 +3,17 @@ import type { DefaultTheme } from "vitepress/theme";
 
 /** Titleless excerpts still need a heading in VitePress's search-only render. */
 export const renderSearchContent: NonNullable<DefaultTheme.LocalSearchOptions["_render"]> = (src, env, md) => {
-  const html = md.render(src, env);
+  // VitePress's search section parser expects the anchor directly before </hN>.
+  // Render canonical headings for indexing, without the page-only paint wrapper.
+  const renderEnv: typeof env & { siteSearchRender?: boolean } = env;
+  const previousSearchRender = renderEnv.siteSearchRender;
+  renderEnv.siteSearchRender = true;
+  let html: string;
+  try { html = md.render(src, renderEnv); }
+  finally {
+    if (previousSearchRender === undefined) delete renderEnv.siteSearchRender;
+    else renderEnv.siteSearchRender = previousSearchRender;
+  }
   if (env.frontmatter?.search === false) return "";
   if (env.frontmatter?.kind !== "excerpt" || /<h1\b/i.test(html)) return html;
   const title = md.utils.escapeHtml(String(env.frontmatter.preview || env.frontmatter.title || "Excerpt"));

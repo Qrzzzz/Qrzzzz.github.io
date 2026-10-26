@@ -16,3 +16,4 @@ Change the owning rule instead of appending a later override. Preserve necessary
 - `effects/`: Vue Bits adaptations for proximity weight, once-only fades and search selection geometry. Sources and the pinned license are recorded in `effects/README.md`. Native menu staging stays in `site.css`.
 
 - `heading-feedback.css`: shared H1/H2 variable-weight hover and per-line marker, including keyboard focus, reduced motion and print fallbacks. Markdown wrapping is owned by `markdown/heading-feedback.mjs`; component titles use the same inline class.
+  Static search renders opt out of the paint wrapper through `siteSearchRender`, preserving VitePress heading/anchor section extraction.
