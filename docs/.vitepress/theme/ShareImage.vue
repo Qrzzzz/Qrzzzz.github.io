@@ -76,9 +76,9 @@ const { truncate, rendering, progress, preparedImage, copying, copyButton, expor
   color: var(--site-text-muted);
   cursor: pointer;
   font: inherit;
-  font-size: 13px;
+  font-size: var(--site-ui-size);
   font-weight: 600;
-  transition: color 160ms ease, transform 160ms ease;
+  transition: color var(--site-motion-short) ease, transform var(--site-motion-short) ease;
 }
 
 .share-image-entry__button:hover:not(:disabled) {
@@ -93,7 +93,7 @@ const { truncate, rendering, progress, preparedImage, copying, copyButton, expor
 
 .share-image-entry__button--primary {
   padding: 0 18px;
-  border-radius: 6px;
+  border-radius: var(--site-radius-md);
   background: var(--site-text);
   color: var(--site-canvas);
 }
@@ -121,7 +121,7 @@ const { truncate, rendering, progress, preparedImage, copying, copyButton, expor
 .share-image-status {
   flex-basis: 100%;
   color: var(--site-text-muted);
-  font-size: 12px;
+  font-size: var(--site-ui-size);
   text-align: right;
 }
 
@@ -134,7 +134,7 @@ const { truncate, rendering, progress, preparedImage, copying, copyButton, expor
   gap: 12px;
   color: var(--site-text-muted);
   font-family: var(--site-font-sans);
-  font-size: 12px;
+  font-size: var(--site-ui-size);
 }
 .share-image-progress progress {
   appearance: none;
@@ -161,7 +161,7 @@ const { truncate, rendering, progress, preparedImage, copying, copyButton, expor
 
 
 
-.share-image-option { display: inline-flex; min-height: 44px; align-items: center; gap: 9px; color: var(--site-text-muted); font-family: var(--site-font-sans); font-size: 12px; cursor: pointer; }
+.share-image-option { display: inline-flex; min-height: 44px; align-items: center; gap: 9px; color: var(--site-text-muted); font-family: var(--site-font-sans); font-size: var(--site-ui-size); cursor: pointer; }
 .share-image-option input { width: 15px; height: 15px; margin: 0; accent-color: var(--site-accent); }
 .share-image-option input:focus-visible { outline: 2px solid var(--site-link); outline-offset: 3px; }
 .share-image-option:has(input:disabled) { cursor: wait; opacity: .6; }

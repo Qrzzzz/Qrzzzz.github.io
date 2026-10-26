@@ -5,6 +5,7 @@ import { onBeforeUnmount, ref } from "vue";
 import { data as libraryItems } from "../content/library.data";
 import { PROJECTS } from "../content/projects.mjs";
 import HomePoetry from "./HomePoetry.vue";
+import VariableProximity from "./effects/VariableProximity.vue";
 
 const router = useRouter();
 const activating = ref<string | null>(null);
@@ -32,12 +33,12 @@ onBeforeUnmount(() => clearTimeout(navigationTimer));
     <section class="home-composition" aria-label="Poetry, library and projects">
       <nav class="home-actions" aria-label="Primary destinations">
         <a class="home-entry home-entry--library" target="_self" :href="withBase('/library/')" :class="{ 'is-activating': activating === 'library' }" @click="activateEntry($event, 'library')">
-          <span class="home-entry__name">Library</span>
+          <span class="home-entry__name"><VariableProximity label="Library" :disabled="activating !== null" /></span>
           <span class="home-entry__count">{{ libraryItems.length }}</span>
           <SiteIcon name="arrow-right" class="home-entry__arrow" />
         </a>
         <a class="home-entry home-entry--projects" target="_self" :href="withBase('/projects/')" :class="{ 'is-activating': activating === 'projects' }" @click="activateEntry($event, 'projects')">
-          <span class="home-entry__name">Projects</span>
+          <span class="home-entry__name"><VariableProximity label="Projects" :disabled="activating !== null" /></span>
           <span class="home-entry__count">{{ PROJECTS.length }}</span>
           <SiteIcon name="arrow-right" class="home-entry__arrow" />
         </a>

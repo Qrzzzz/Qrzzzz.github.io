@@ -50,6 +50,11 @@
   --site-ease: cubic-bezier(.2, .7, .25, 1);
   --site-motion-short: 180ms;
   --site-motion-settle: 320ms;
+  --site-motion-panel: 200ms;
+  --site-motion-fade: 220ms;
+  --site-motion-step: 30ms;
+  --site-ui-size: 14px;
+  --site-ui-meta-size: 12px;
   /* Reading measures are shared; document media may use the wider container. */
   --site-reading: 690px;
   --site-article: var(--site-reading);

@@ -13,21 +13,21 @@ pageType: index
   <header class="hub-section__header">
     <h2 id="product-docs-title">Product documentation</h2>
   </header>
-  <div class="hub-list">
+  <CatalogList class="hub-list">
     <a class="hub-entry catalog-entry" href="/projects/lyrics-card-generator/docs/">
       <div class="hub-entry__body">
         <h3 class="catalog-entry__title">Lyrics Card Generator</h3>
         <p>Guides to importing songs, editing lyrics and translations, styling cards, and exporting images.</p>
       </div>
     </a>
-  </div>
+  </CatalogList>
 </section>
 
 <section class="hub-section" aria-labelledby="maintainer-docs-title">
   <header class="hub-section__header">
     <h2 id="maintainer-docs-title">Maintainer handbook</h2>
   </header>
-  <div class="hub-list">
+  <CatalogList class="hub-list">
     <a class="hub-entry catalog-entry" href="/guide/getting-started">
       <div class="hub-entry__body">
         <h3 class="catalog-entry__title">Local development and publishing</h3>
@@ -40,5 +40,5 @@ pageType: index
         <p>Formatting conventions for headings, prose, links, quotations, code, tables, and media.</p>
       </div>
     </a>
-  </div>
+  </CatalogList>
 </section>

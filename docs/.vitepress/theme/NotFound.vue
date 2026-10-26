@@ -2,6 +2,7 @@
 import SiteIcon from "./SiteIcon.vue";
 import { withBase } from "vitepress";
 import HomePoetry from "./HomePoetry.vue";
+import FadeContent from "./effects/FadeContent.vue";
 import collection from "./homePoems.json";
 import { loadingPoems } from "./loadingPoems.mjs";
 
@@ -10,7 +11,7 @@ const poems = [...loadingPoems, ...collection.items];
 
 <template>
   <main class="site-not-found" aria-labelledby="not-found-title" lang="en">
-    <div class="site-not-found__message">
+    <FadeContent class="site-not-found__message">
       <p class="site-not-found__eyebrow">A WRONG TURN</p>
       <div class="site-not-found__visual" aria-hidden="true">
         <span>404</span>
@@ -21,7 +22,7 @@ const poems = [...loadingPoems, ...collection.items];
         <a :href="withBase('/')">Return home <SiteIcon name="arrow-up-right" /></a>
         <a :href="withBase('/random')">Read something random <SiteIcon name="arrow-up-right" /></a>
       </nav>
-    </div>
+    </FadeContent>
 
     <aside class="site-not-found__reading" aria-label="Poetry">
       <p class="site-not-found__eyebrow">A POEM FOR THE DETOUR</p>

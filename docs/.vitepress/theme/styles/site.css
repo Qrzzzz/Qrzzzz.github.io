@@ -33,6 +33,20 @@
 .site-layout .VPNavScreenMenuLink:focus-visible::after { color: var(--site-link); transform: translateX(3px); }
 .site-layout .VPNavScreen .container { max-width: 440px; padding: 24px 0 40px; }
 .site-layout .VPNavScreenAppearance { display: none; }
+/* Staggered Menu adaptation: retain VitePress's dialog, focus trap and scroll lock. */
+.site-layout .VPNavScreenMenuLink { animation: site-menu-arrive var(--site-motion-panel) var(--site-ease) both; animation-delay: calc(var(--menu-index, 0) * var(--site-motion-step)); }
+.site-layout .VPNavScreenMenuLink:nth-child(2) { --menu-index: 1; }
+.site-layout .VPNavScreenMenuLink:nth-child(3) { --menu-index: 2; }
+.site-layout .VPNavScreenMenuLink:nth-child(4) { --menu-index: 3; }
+.site-layout .VPNavScreenMenuLink:nth-child(5) { --menu-index: 4; }
+@keyframes site-menu-arrive { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) {
+  .site-layout .VPNavScreenMenuLink { animation: none; }
+  .site-layout .VPNavScreen, .site-layout .VPNavScreen .container { transition: none !important; }
+  .site-layout .VPNavScreen.fade-enter-from .container, .site-layout .VPNavScreen.fade-leave-to .container { transform: none; }
+  .site-layout .library-result-marker, .site-layout .library-result-marker__ink { transition: none !important; }
+}
+
 .VPLocalNav { border-bottom: 1px solid var(--site-line); background: var(--site-canvas); }
 .VPLocalNav .container { min-height: 48px; }
 .VPLocalNav .menu, .VPLocalNav .outline { min-height: 48px; }

@@ -7,6 +7,7 @@ import DefaultTheme from "vitepress/theme";
 import BackToTop from "./BackToTop.vue";
 import HomeContent from "./HomeContent.vue";
 import InlineSearch from "./InlineSearch.vue";
+import VariableProximity from "./effects/VariableProximity.vue";
 import NavActions from "./NavActions.vue";
 import NotFound from "./NotFound.vue";
 import ShareImage from "./ShareImage.vue";
@@ -115,6 +116,9 @@ onBeforeUnmount(() => {
     <HomeAsciiTrail v-if="clientReady && pageKind === 'home'" />
 
     <Layout>
+      <template #nav-bar-title-after>
+        <VariableProximity label="Cherry Chu" :radius="90" />
+      </template>
       <template #nav-bar-content-before>
         <InlineSearch />
       </template>

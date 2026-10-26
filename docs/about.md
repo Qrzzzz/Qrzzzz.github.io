@@ -4,9 +4,13 @@ description: What lives here, how it is maintained, and where the source project
 lang: en
 ---
 
+<FadeContent as="header">
+
 # About
 
 <p class="lead">A public home for Cherry Chu's projects, documentation, tools, articles, prompts, and excerpts.</p>
+
+</FadeContent>
 
 ## Content and maintenance
 

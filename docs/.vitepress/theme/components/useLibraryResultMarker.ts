@@ -1,13 +1,13 @@
-import { ref } from "vue";
+import { onBeforeUnmount, onMounted, ref } from "vue";
 
-export function useLibraryResultMarker() {
+export function useLibraryResultMarker(selector = ".library-result") {
   const resultsRef = ref<HTMLElement | null>(null);
   const markerRef = ref<HTMLElement | null>(null);
   let hoveredResult: HTMLElement | null = null;
 
   function resolveResult(target: EventTarget | null) {
     if (!(target instanceof Element)) return null;
-    const result = target.closest<HTMLElement>(".library-result");
+    const result = target.closest<HTMLElement>(selector);
     if (!result || !resultsRef.value?.contains(result)) return null;
     return result;
   }
@@ -74,6 +74,24 @@ export function useLibraryResultMarker() {
     if (hoveredResult?.isConnected) activateMarker(hoveredResult);
     else deactivateMarker();
   }
+
+  let resizeObserver: ResizeObserver | undefined;
+  function refreshGeometry() {
+    const result = hoveredResult?.isConnected ? hoveredResult : focusedResult();
+    if (result) setMarkerGeometry(result);
+    else deactivateMarker();
+  }
+  onMounted(() => {
+    window.addEventListener("resize", refreshGeometry, { passive: true });
+    if (resultsRef.value && typeof ResizeObserver !== "undefined") {
+      resizeObserver = new ResizeObserver(refreshGeometry);
+      resizeObserver.observe(resultsRef.value);
+    }
+  });
+  onBeforeUnmount(() => {
+    resizeObserver?.disconnect();
+    window.removeEventListener("resize", refreshGeometry);
+  });
 
   return {
     resultsRef,

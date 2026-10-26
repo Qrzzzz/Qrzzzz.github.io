@@ -14,7 +14,7 @@
 .site-layout .library-filter--active { color: var(--site-link); }
 .site-layout .library-search input { border: 0; border-bottom: 1px solid var(--site-line); border-radius: 0; background: transparent; padding-inline: 0; box-shadow: none; }
 .site-layout .library-search input:focus { border-color: var(--site-link); }
-.site-layout .content-index-row::after { transition: transform 260ms var(--site-ease); }
+.site-layout .content-index-row::after { transition: transform var(--site-motion-settle) var(--site-ease); }
 .site-layout .content-index-row:hover::after { transform: translateX(4px); }
 @media (max-width: 680px) {
   .site-layout .library-toolbar__filters { gap: 16px; flex-wrap: wrap; }

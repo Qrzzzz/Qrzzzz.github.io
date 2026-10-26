@@ -136,7 +136,7 @@
   height: 20px;
   background: currentColor;
   mask: var(--site-icon-arrow-right) center / contain no-repeat;
-  transition: transform 260ms var(--site-ease);
+  transition: transform var(--site-motion-settle) var(--site-ease);
 }
 .site-layout[data-page-kind="index"] .catalog-entry:focus-visible {
   outline: 2px solid var(--site-accent);

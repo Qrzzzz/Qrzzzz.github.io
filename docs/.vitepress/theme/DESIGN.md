@@ -78,3 +78,23 @@ reduced motion, responsive widths, search, history, theme and full article expor
 - Docs and Projects use whole-row catalog links, reading-serif destination titles (24px / 21px),
   quieter descriptions (16px / 15px), Lucide arrows, marker hover and visible keyboard focus.
   Docs retains its two groups; Projects retains status metadata below descriptions on phones.
+
+## Shared motion
+
+- Motion uses feedback (180ms), settling (320ms), menu items (200ms with 30ms stagger)
+  and once-only fades (220ms). The previously approved 440ms home click stroke stays intact.
+- Vue Bits Variable Proximity adapts only the existing weight axis (400–600) for the
+  wordmark and two home entries. Fine mouse pointers opt in; keyboard, touch, reduced
+  motion and home activation retain the original feedback. Idle pointer effects do no work.
+- Docs, Projects, Library and collections share the same moving row marker. Catalog
+  title ink remains the label treatment; the obsolete static inset bar is removed.
+- Search keeps its combobox/listbox IDs, result ranking, retry, native scrolling and
+  keyboard model. Animated List contributes a sliding selected background and short
+  opacity entrances, capped at 96ms of staggering.
+- The existing mobile dialog uses Staggered Menu item staging, retaining its native
+  focus trap, Escape behavior and background inert state.
+- Fade Content applies once to index headers, About's introduction and 404's message.
+  Text is visible in SSR/no-JS output; reading bodies, poems, ASCII and exported images
+  receive no reveal effects. No global animation dependency is added.
+- Reduced motion disables proximity, fades, list entrances, marker movement and menu
+  staging. Sources and license: `effects/README.md` and `/licenses/vue-bits/LICENSE`.

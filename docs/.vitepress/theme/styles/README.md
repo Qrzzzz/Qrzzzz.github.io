@@ -8,7 +8,9 @@
 - `gesture-content.css`: shared controls, hover motion and surface treatment; do not add body typography overrides here.
 - `document-layout.css`: document/outline composition, sidebar spacing and symmetric mobile margins.
 - `home-poetry.css`: content-sized home composition, staggered destinations and shared poem typography.
-- `InlineSearch.vue`: search layout, result typography and visible-viewport sizing. Its right edge stays at the trigger while it expands left; `site.css` hides only the mobile title underneath it.
+- `InlineSearch.vue`: search layout, result typography and visible-viewport sizing. Desktop expansion stays anchored to the trigger; phones use a full-width row below the navbar. The result highlighter reuses the existing listbox and its scroll container.
 - `ArticleHeader.vue`: optional article metadata layout. Its native details remain available to keyboard users and are expanded by the existing longform exporter.
 
 Change the owning rule instead of appending a later override. Preserve necessary article/document/index differences. Verify 320, 390, 844, 1024 and 1440px in both themes, and verify real keyboard/zoom behavior separately from viewport emulation.
+
+- `effects/`: Vue Bits adaptations for proximity weight, once-only fades and search selection geometry. Sources and the pinned license are recorded in `effects/README.md`. Native menu staging stays in `site.css`.

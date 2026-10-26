@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import SiteIcon from "./SiteIcon.vue";
+import { useAnimatedSearchList } from "./effects/useAnimatedSearchList";
 import { tokenizeSearch, rankSearchResults, createSearchLoader, searchExcerpt, highlightSearch, searchPhrases } from "../content/search.mjs";
 import localSearchIndex from "@localSearchIndex";
 import MiniSearch from "minisearch";
@@ -21,6 +22,7 @@ type SearchDocument = {
 type InlineSearchResult = SearchResult & SearchDocument;
 
 const root = ref<HTMLElement>();
+const resultsRoot = ref<HTMLElement>();
 const panelHeight = ref(430);
 const surfaceWidth = ref(44);
 const surfaceY = ref(0);
@@ -52,6 +54,8 @@ const results = computed<InlineSearchResult[]>(() => {
     return phrases.every(phrase => content.includes(phrase));
   })) as InlineSearchResult[];
 });
+
+const { selectionStyle, selectionReady, syncSelection } = useAnimatedSearchList(resultsRoot, selectedIndex, results);
 
 const activeDescendant = computed(() =>
   selectedIndex.value >= 0 ? `inline-search-item-${selectedIndex.value}` : undefined
@@ -218,6 +222,7 @@ watch(query, () => {
 watch(selectedIndex, () => nextTick(() => {
   if (selectedIndex.value < 0) return;
   document.getElementById(`inline-search-item-${selectedIndex.value}`)?.scrollIntoView({ block: "nearest" });
+  syncSelection();
 }));
 watch(localeIndex, () => {
   loadGeneration++;
@@ -320,8 +325,9 @@ onBeforeUnmount(() => {
           <span>Search could not load. Please try again.</span>
           <button type="button" @click="loadIndex">Retry search</button>
         </p>
+        <div v-else-if="results.length" ref="resultsRoot" class="inline-search-results-motion">
+        <span class="inline-search-selection" :class="{ 'is-ready': selectionReady }" :style="selectionStyle" aria-hidden="true"></span>
         <ul
-          v-else-if="results.length"
           id="inline-search-results"
           role="listbox"
           aria-label="Search results"
@@ -330,6 +336,7 @@ onBeforeUnmount(() => {
             v-for="(result, index) in results"
             :id="`inline-search-item-${index}`"
             :key="result.id"
+            :style="{ '--search-result-delay': `${Math.min(index, 4) * 24}ms` }"
             role="option"
             :aria-selected="selectedIndex === index"
           >
@@ -347,6 +354,7 @@ onBeforeUnmount(() => {
             </a>
           </li>
         </ul>
+        </div>
         <p v-else class="inline-search-state" role="status">No results for “{{ query }}”</p>
       </div>
       </Transition>
@@ -591,6 +599,21 @@ onBeforeUnmount(() => {
   box-shadow: 0 14px 32px color-mix(in srgb, var(--site-canvas) 70%, transparent);
 }
 
+.inline-search-results-motion { position: relative; }
+.inline-search-selection {
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  left: 6px;
+  right: 6px;
+  pointer-events: none;
+  border-radius: var(--site-radius-sm);
+  background: var(--site-surface-subtle);
+}
+.inline-search-selection.is-ready { transition: transform var(--site-motion-settle) var(--site-ease), height var(--site-motion-settle) var(--site-ease), opacity var(--site-motion-short) ease; }
+.inline-search-panel li { position: relative; z-index: 1; animation: search-result-arrive var(--site-motion-short) var(--site-ease) both; animation-delay: var(--search-result-delay, 0ms); }
+@keyframes search-result-arrive { from { opacity: 0; } to { opacity: 1; } }
+
 .inline-search-panel ul {
   margin: 0;
   padding: 6px;
@@ -611,7 +634,7 @@ onBeforeUnmount(() => {
 
 .inline-search-result:hover,
 .inline-search-result.is-selected {
-  background: var(--site-surface-subtle);
+  color: var(--site-link);
 }
 
 .inline-search-result strong {
@@ -651,11 +674,11 @@ onBeforeUnmount(() => {
   margin: 0;
   padding: 18px;
   color: var(--site-text-muted);
-  font-size: 13px;
+  font-size: var(--site-ui-size);
   text-align: center;
 }
 .inline-search-state[role="alert"] { display: grid; justify-items: center; gap: 8px; }
-.inline-search-state button { min-height: 32px; padding: 4px 10px; border: 1px solid var(--site-line); border-radius: 3px; color: var(--site-link); cursor: pointer; }
+.inline-search-state button { min-height: 44px; padding: 4px 12px; border: 1px solid var(--site-line); border-radius: 3px; color: var(--site-link); cursor: pointer; }
 .inline-search-state button:hover, .inline-search-state button:focus-visible { background: var(--site-accent-soft); border-color: var(--site-link); }
 
 .visually-hidden {
@@ -673,13 +696,13 @@ onBeforeUnmount(() => {
 @media (max-width: 767.98px) {
   .inline-search-surface { max-width: calc(100vw - 24px); }
   .InlineSiteSearch.is-expanded .inline-search-surface { right: var(--search-right); }
-  .inline-search-form { height: 48px; border-radius: 7px; }
+  .inline-search-form { height: 48px; border-radius: var(--site-radius-lg); }
   .inline-search-form input { font-size: 16px; line-height: 1.4; }
   .inline-search-close { width: 44px; min-width: 44px; height: 44px; margin: 0 2px 0 0; padding: 0; }
   .inline-search-close kbd { display: none; }
   .inline-search-close-icon { display: block; width: 20px; height: 20px; }
   .inline-search-tooltip { display: none; }
-  .inline-search-panel { border-radius: 7px; }
+  .inline-search-panel { border-radius: var(--site-radius-lg); }
   .inline-search-result { padding: 12px 10px; }
   .inline-search-result strong { font-size: 17px; }
   .inline-search-excerpt { font-size: 13px; }
@@ -691,8 +714,10 @@ onBeforeUnmount(() => {
 .search-panel-leave-to { opacity: 0; }
 
 @media (prefers-reduced-motion: reduce) {
+  .search-panel-enter-from, .search-panel-leave-to { transform: none; }
   .InlineSiteSearch *, .search-panel-enter-active, .search-panel-leave-active {
     transition: none !important;
+    animation: none !important;
   }
 }
 </style>
