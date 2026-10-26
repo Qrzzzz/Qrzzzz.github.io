@@ -11,7 +11,7 @@ pageType: index
 
 <section class="hub-section" aria-labelledby="product-docs-title">
   <header class="hub-section__header">
-    <h2 id="product-docs-title">Product documentation</h2>
+    <h2 id="product-docs-title"><span class="heading-feedback">Product documentation</span></h2>
   </header>
   <CatalogList class="hub-list">
     <a class="hub-entry catalog-entry" href="/projects/lyrics-card-generator/docs/">
@@ -25,7 +25,7 @@ pageType: index
 
 <section class="hub-section" aria-labelledby="maintainer-docs-title">
   <header class="hub-section__header">
-    <h2 id="maintainer-docs-title">Maintainer handbook</h2>
+    <h2 id="maintainer-docs-title"><span class="heading-feedback">Maintainer handbook</span></h2>
   </header>
   <CatalogList class="hub-list">
     <a class="hub-entry catalog-entry" href="/guide/getting-started">

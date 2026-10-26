@@ -1,0 +1,45 @@
+/* Primary titles and major sections share the existing blue marker and variable weight. */
+.site-layout .vp-doc :is(h1, h2),
+.site-layout .site-not-found h1 {
+  --heading-weight-rest: 600;
+  --heading-weight-active: 700;
+  font-variation-settings: "wght" var(--heading-weight-rest);
+  transition: font-variation-settings var(--site-motion-settle) var(--site-ease);
+}
+.site-layout[data-page-kind="index"] .vp-doc .catalog-header h1,
+.site-layout .site-not-found h1 {
+  --heading-weight-rest: 400;
+  --heading-weight-active: 650;
+}
+.site-layout[data-page-kind="index"] .vp-doc .hub-section__header h2 {
+  --heading-weight-rest: 500;
+  --heading-weight-active: 650;
+}
+.site-layout .heading-feedback {
+  background-image: linear-gradient(var(--site-hover-marker), var(--site-hover-marker));
+  background-position: left calc(100% - .06em);
+  background-size: 0% .38em;
+  background-repeat: no-repeat;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  transition: background-size var(--site-motion-settle) var(--site-ease);
+}
+@media (hover: hover) {
+  .site-layout .vp-doc :is(h1, h2):hover,
+  .site-layout .site-not-found h1:hover { font-variation-settings: "wght" var(--heading-weight-active); }
+  .site-layout :is(h1, h2):hover > .heading-feedback { background-size: 100% .38em; }
+}
+.site-layout .vp-doc :is(h1, h2):focus-within,
+.site-layout .site-not-found h1:focus-within { font-variation-settings: "wght" var(--heading-weight-active); }
+.site-layout :is(h1, h2):focus-within > .heading-feedback { background-size: 100% .38em; }
+@media (prefers-reduced-motion: reduce) {
+  .site-layout .vp-doc :is(h1, h2), .site-layout .site-not-found h1,
+  .site-layout .heading-feedback { transition: none; }
+}
+@media (forced-colors: active) {
+  .site-layout .heading-feedback { background-image: none; }
+}
+@media print {
+  .site-layout .heading-feedback { background-image: none; }
+  .site-layout .vp-doc :is(h1, h2), .site-layout .site-not-found h1 { font-variation-settings: "wght" var(--heading-weight-rest); }
+}

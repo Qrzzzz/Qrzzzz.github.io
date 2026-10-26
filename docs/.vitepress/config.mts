@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 import { readFileSync } from "node:fs";
 import { collectLibraryRecords } from "../../scripts/lib/content-library.mjs";
 import { inlineEmphasisPlugin } from "./markdown/inline-emphasis.mjs";
+import { headingFeedbackPlugin } from "./markdown/heading-feedback.mjs";
 import { mermaidPlugin } from "./markdown/mermaid.mjs";
 import { loadingPoems } from "./theme/loadingPoems.mjs";
 import { bootstrapLoadingPoem, createLoadingPoemPlayer } from "./theme/loadingPoemRuntime.mjs";
@@ -179,7 +180,7 @@ export default defineConfig({
     math: true,
     lineNumbers: false,
     codeCopyButtonTitle: "Copy code",
-    config(md) { inlineEmphasisPlugin(md); mermaidPlugin(md); }
+    config(md) { inlineEmphasisPlugin(md); headingFeedbackPlugin(md); mermaidPlugin(md); }
   },
 
   themeConfig: {

@@ -14,7 +14,7 @@ defineProps<{
     <a v-if="parent && parentHref" class="catalog-header__parent" :href="parentHref">
       <SiteIcon name="arrow-left" /> {{ parent }}
     </a>
-    <h1>{{ title }}</h1>
+    <h1><span class="heading-feedback">{{ title }}</span></h1>
     <p class="catalog-header__description">{{ description }}</p>
   </FadeContent>
 </template>

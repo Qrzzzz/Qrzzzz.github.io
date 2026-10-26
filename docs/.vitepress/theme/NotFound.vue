@@ -16,7 +16,7 @@ const poems = [...loadingPoems, ...collection.items];
       <div class="site-not-found__visual" aria-hidden="true">
         <span>404</span>
       </div>
-      <h1 id="not-found-title">Page not found.</h1>
+      <h1 id="not-found-title"><span class="heading-feedback">Page not found.</span></h1>
       <p class="site-not-found__description">The link may have changed, or the page may no longer be here.</p>
       <nav class="site-not-found__links" aria-label="Find your way">
         <a :href="withBase('/')">Return home <SiteIcon name="arrow-up-right" /></a>

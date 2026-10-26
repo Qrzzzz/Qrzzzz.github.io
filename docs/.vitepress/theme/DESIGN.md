@@ -98,3 +98,8 @@ reduced motion, responsive widths, search, history, theme and full article expor
   receive no reveal effects. No global animation dependency is added.
 - Reduced motion disables proximity, fades, list entrances, marker movement and menu
   staging. Sources and license: `effects/README.md` and `/licenses/vue-bits/LICENSE`.
+
+- Primary page titles and major H2 sections share variable-weight and blue-marker hover.
+  Markdown headings receive a semantic inline paint layer, with each wrapped line marked
+  separately. Catalog and 404 titles use the same class. Anchors, heading text, dates,
+  body text and image-export typography remain intact; reduced motion removes transitions.
