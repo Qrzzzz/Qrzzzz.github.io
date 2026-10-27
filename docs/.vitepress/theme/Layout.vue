@@ -3,6 +3,7 @@ import { computed, defineAsyncComponent, nextTick, onBeforeUnmount, onMounted, r
 import { useData } from "vitepress";
 import { createNavigationAccessibility } from "./navigationAccessibility";
 import { createTopNavigationMarker } from "./topNavigationMarker";
+import { createHeadingMarker } from "./effects/headingMarker";
 import DefaultTheme from "vitepress/theme";
 import BackToTop from "./BackToTop.vue";
 import HomeContent from "./HomeContent.vue";
@@ -87,22 +88,26 @@ function syncDocumentMetadata() {
 
 const navigationAccessibility = createNavigationAccessibility();
 const topNavigationMarker = createTopNavigationMarker();
+const headingMarker = createHeadingMarker();
 onMounted(() => {
   clientReady.value = true;
   syncDocumentMetadata();
   nextTick(syncDocumentMetadata);
   navigationAccessibility.mount();
   topNavigationMarker.mount();
+  headingMarker.mount();
 });
 watch([isDark, pageLanguage], syncDocumentMetadata, { flush: "sync" });
 watch(() => page.value.relativePath, () => nextTick(() => {
   syncDocumentMetadata();
   navigationAccessibility.sync();
   topNavigationMarker.sync();
+  headingMarker.sync();
 }), { flush: "post" });
 onBeforeUnmount(() => {
   navigationAccessibility.destroy();
   topNavigationMarker.destroy();
+  headingMarker.destroy();
 });
 </script>
 

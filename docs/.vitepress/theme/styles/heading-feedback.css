@@ -43,3 +43,20 @@
   .site-layout .heading-feedback { background-image: none; }
   .site-layout .vp-doc :is(h1, h2), .site-layout .site-not-found h1 { font-variation-settings: "wght" var(--heading-weight-rest); }
 }
+
+/* Runtime strokes follow actual line boxes and finish each line before the next. */
+.site-layout :is(h1, h2)[data-sequential-marker] {
+  position: relative;
+  isolation: isolate;
+}
+.site-layout [data-sequential-marker] > .heading-feedback { background-image: none; }
+.site-layout .heading-marker-stroke {
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  background: var(--site-hover-marker);
+  transform-origin: left center;
+}
+@media (forced-colors: active), print {
+  .site-layout .heading-marker-stroke { display: none; }
+}

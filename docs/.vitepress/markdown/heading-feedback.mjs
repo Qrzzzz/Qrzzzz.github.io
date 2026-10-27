@@ -1,4 +1,4 @@
-// Paint a separate inline layer so a wrapping title gets one stroke per line.
+// Paint a separate inline layer so a wrapping title can be measured without splitting its text.
 // Preserve the original heading, anchor and inline Markdown semantics.
 export function headingFeedbackPlugin(markdown) {
   const renderToken = (tokens, index, options, _env, renderer) => renderer.renderToken(tokens, index, options);
