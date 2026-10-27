@@ -1,5 +1,4 @@
 import { test, expect } from "@playwright/test";
-import { readFileSync } from "node:fs";
 
 test("mobile documentation sources occupy a readable row across layout breakpoints", async ({ page }) => {
   await page.goto("/projects/lyrics-card-generator/docs/");
@@ -147,42 +146,4 @@ test("theme and language survive client navigation; tools keep their separate or
   await page.getByRole("link", { name: "Library", exact: true }).click();
   await expect(page.locator("html")).toHaveAttribute("lang", "en");
   await expect(page.locator("html")).toHaveClass(/dark/);
-});
-
-test("full article export offers clipboard copy and a dynamic-height PNG download", async ({ page, context }) => {
-  await context.grantPermissions(["clipboard-read", "clipboard-write"]);
-  await page.goto("/notes/why-this-site.html");
-  const downloads: string[] = [];
-  page.on("download", download => downloads.push(download.suggestedFilename()));
-  await page.getByRole("button", { name: "Export article image", exact: true }).click();
-  const copy = page.getByRole("button", { name: "Copy image to clipboard", exact: true });
-  await expect(copy).toBeFocused();
-  expect(downloads).toHaveLength(0);
-  await copy.click();
-  await expect(page.getByRole("status")).toContainText("Image copied to clipboard");
-  const clipboard = await page.evaluate(async () => {
-    const [item] = await navigator.clipboard.read();
-    const blob = await item.getType("image/png");
-    const bitmap = await createImageBitmap(blob);
-    const result = { width: bitmap.width, height: bitmap.height };
-    bitmap.close();
-    return result;
-  });
-  expect(clipboard.width).toBe(1080);
-  expect(clipboard.height).toBeGreaterThan(1440);
-  const download = page.waitForEvent("download");
-  await page.getByRole("button", { name: "Download image", exact: true }).click();
-  const file = await (await download).path();
-  const image = readFileSync(file!);
-  expect(image.subarray(1, 4).toString()).toBe("PNG");
-  expect(image.readUInt32BE(16)).toBe(1080);
-  expect(image.readUInt32BE(20)).toBeGreaterThan(1440);
-  expect(image.readUInt32BE(20)).toBe(clipboard.height);
-  await expect(page.getByRole("status")).toContainText("Image downloaded");
-  await page.evaluate(() => {
-    Object.defineProperty(navigator.clipboard, "write", { configurable: true, value: () => Promise.reject(new DOMException("Denied", "NotAllowedError")) });
-  });
-  await copy.click();
-  await expect(page.getByRole("status")).toContainText("Retry or download it instead");
-  await expect(page.getByRole("button", { name: "Download image", exact: true })).toBeEnabled();
 });

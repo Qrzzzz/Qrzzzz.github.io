@@ -26,14 +26,11 @@
     "node": ">=24 <25"
   },
   "dependencies": {
-    "mermaid": "11.17.2",
-    "modern-screenshot": "^4.7.0",
-    "qrcode": "^1.5.4"
+    "mermaid": "11.17.2"
   },
   "devDependencies": {
     "@playwright/test": "1.63.0",
     "@types/node": "^24.0.0",
-    "@types/qrcode": "^1.5.6",
     "linkedom": "^0.18.13",
     "lucide-static": "1.57.0",
     "markdown-it-mathjax3": "^4.3.2",

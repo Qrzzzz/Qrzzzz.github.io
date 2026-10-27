@@ -11,7 +11,6 @@ import InlineSearch from "./InlineSearch.vue";
 import VariableProximity from "./effects/VariableProximity.vue";
 import NavActions from "./NavActions.vue";
 import NotFound from "./NotFound.vue";
-import ShareImage from "./ShareImage.vue";
 import SiteLoading from "./SiteLoading.vue";
 
 const { Layout } = DefaultTheme;
@@ -59,14 +58,6 @@ const pageKind = computed<PageKind>(() => {
   }
 
   return "general";
-});
-
-const isShareablePage = computed(() => {
-  const relativePath = page.value.relativePath.replace(/\\/g, "/");
-  return (
-    (pageKind.value === "article" || pageKind.value === "excerpt") &&
-    !relativePath.endsWith("index.md")
-  );
 });
 
 const pageLanguage = computed(() => {
@@ -129,12 +120,6 @@ onBeforeUnmount(() => {
       </template>
       <template #nav-bar-content-after>
         <NavActions />
-      </template>
-      <template #doc-footer-before>
-        <ShareImage
-          v-if="isShareablePage && (pageKind === 'article' || pageKind === 'excerpt')"
-          :page-kind="pageKind"
-        />
       </template>
       <template #doc-bottom>
         <BackToTop />

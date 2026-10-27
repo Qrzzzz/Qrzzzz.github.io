@@ -20,9 +20,10 @@ metadata, public routes and VitePress navigation remain the source of truth.
 - The preserved ASCII pointer trail is a quiet secondary texture, home only.
 - Home poetry uses 200 original works by ChatGPT 6 Astra, shuffled without repeats until
   the bag is exhausted. A cycle counts 60 seconds from the start of typing, then
-  retracts the text before the next work. The loading overlay keeps its own 50
-  works and 30-second cycle. Both share the player but have independent selection state.
-- The 404 reading column combines those 250 works in its own shuffled bag and
+  retracts the text before the next work. Both first-paint and client-navigation
+  loading overlays use the full 250-work collection from `sitePoems.mjs`, with the existing 30-second cycle and independent
+  selection state. First-paint poems remain inline so they require no additional request.
+- The 404 reading column uses that same collection in its own shuffled bag and
   reuses HomePoetry's 60-second player, pause, selection and Next controls.
   The error and recovery links sit left of the poetry; phones stack both in normal flow.
 - Search expands left from the fixed right edge of its icon, preserving the tabs
@@ -44,6 +45,8 @@ metadata, public routes and VitePress navigation remain the source of truth.
   over a fully visible new theme. Avoid autoplay, floating cards, fake windows and
   independent decorative effects.
 
+- Article footers retain the native, lightweight edit-source link. Image export,
+  character limits, generation progress and export-only dependencies are removed.
 - Information boxes share prose width and use a light tint, fine border, restrained
   left rule and compact title; tables, code and diagrams retain their wider measure.
 - Production search fetches `/search-index/<locale>.json`, emitted from the same
@@ -64,7 +67,7 @@ metadata, public routes and VitePress navigation remain the source of truth.
 
 Run `npm run check`, `npm run docs:e2e` and `npm run docs:audit` before publication.
 The browser suite covers native scrolling, outline navigation,
-reduced motion, responsive widths, search, history, theme and full article export.
+reduced motion, responsive widths, search, history, theme and reading navigation.
 
 - Excerpts use the Markdown-first standard in `/guide/writing-style#excerpts-新增与维护`.
   Only complete works with original titles use H1 and complete: true. All fragments
@@ -94,7 +97,7 @@ reduced motion, responsive widths, search, history, theme and full article expor
 - The existing mobile dialog uses Staggered Menu item staging, retaining its native
   focus trap, Escape behavior and background inert state.
 - Fade Content applies once to index headers, About's introduction and 404's message.
-  Text is visible in SSR/no-JS output; reading bodies, poems, ASCII and exported images
+  Text is visible in SSR/no-JS output; reading bodies, poems and ASCII
   receive no reveal effects. No global animation dependency is added.
 - Reduced motion disables proximity, fades, list entrances, marker movement and menu
   staging. Sources and license: `effects/README.md` and `/licenses/vue-bits/LICENSE`.
@@ -102,4 +105,4 @@ reduced motion, responsive widths, search, history, theme and full article expor
 - Primary page titles and major H2 sections share variable-weight and blue-marker hover.
   Markdown headings receive a semantic inline paint layer, with wrapped lines marked
   sequentially: each stroke finishes before the next begins, at a consistent drawing speed. Catalog and 404 titles use the same class. Anchors, heading text, dates,
-  body text and image-export typography remain intact; reduced motion removes transitions.
+  body text remain intact; reduced motion removes transitions.

@@ -73,6 +73,9 @@ html.theme-is-switching .site-layout :where(a, button, p, h1, h2, h3, input, pat
 .VPFooter { border-top: 1px solid var(--site-line); background: var(--site-canvas); }
 .VPFooter .message, .VPFooter .copyright { color: var(--site-text-muted); font-family: var(--site-font-sans); font-size: 11px; font-weight: 400; }
 .VPDocFooter .edit-info { gap: 12px; color: var(--site-text-faint); font-family: var(--site-font-sans); font-size: 12px; }
+.VPDocFooter .edit-link-button { min-height: 44px; color: var(--site-text-muted); font-size: var(--site-ui-size); font-weight: 400; }
+.VPDocFooter .edit-link-button:hover { color: var(--site-link); }
+.VPDocFooter .edit-link-button:focus-visible { outline: 2px solid var(--site-link); outline-offset: 3px; }
 
 @media (min-width: 960px) {
   .site-layout .VPSidebar .curtain { top: calc(-1 * var(--vp-nav-height)); }

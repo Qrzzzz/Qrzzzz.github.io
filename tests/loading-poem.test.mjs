@@ -2,9 +2,10 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import fs from 'node:fs';
 import { loadingPoems } from '../docs/.vitepress/theme/loadingPoems.mjs';
+import { sitePoems } from '../docs/.vitepress/theme/sitePoems.mjs';
 import { createLoadingPoemPlayer } from '../docs/.vitepress/theme/loadingPoemRuntime.mjs';
 
-function harness({ random = () => 0, reduced = false, poems = loadingPoems, ...options } = {}) {
+function harness({ random = () => 0, reduced = false, poems = sitePoems, ...options } = {}) {
   let time = 0;
   let id = 0;
   const tasks = new Map();
@@ -70,9 +71,9 @@ test('streaming retains geometry, blinks briefly, and reverses at 30 seconds bef
 });
 
 test('every poem can be randomly chosen without repeated consecutive selections', () => {
-  for (let i = 0; i < 50; i++) {
-    const h = harness({ random: () => (i + .5) / 50 }); h.player.start();
-    assert.equal(Number(h.root.dataset.poemId), i + 1);
+  for (let i = 0; i < sitePoems.length; i++) {
+    const h = harness({ random: () => (i + .5) / sitePoems.length }); h.player.start();
+    assert.equal(h.root.dataset.poemId, String(sitePoems[i].id));
     const first = h.root.dataset.poemId;
     h.tick(34000); assert.notEqual(h.root.dataset.poemId, first);
     h.player.destroy();
@@ -145,7 +146,7 @@ test('homepage exhausts its shuffle bag before repeating and leaves loader state
 });
 
 test('404 cycles through all 250 existing poems without repeats or changing the loader selection', () => {
-  const poems = [...loadingPoems, ...homeCollection.items];
+  const poems = sitePoems;
   assert.equal(poems.length, 250);
   assert.equal(new Set(poems.map(poem => String(poem.id))).size, 250);
   const h = harness({ poems, cycleMs: 60000, shuffle: true, reduced: true });

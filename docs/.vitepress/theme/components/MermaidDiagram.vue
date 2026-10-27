@@ -41,7 +41,7 @@ onBeforeUnmount(() => { generation++; stop?.(); if (root.value) diagramTasks.del
     <p v-if="state === 'pending'" role="status">Rendering diagram…</p>
     <p v-if="state === 'error'" role="alert">Could not render this diagram. Check the source for syntax errors.</p>
     <div v-if="svg" class="mermaid-diagram__canvas" tabindex="0" role="region" aria-label="Diagram; scroll horizontally to explore" v-html="svg"></div>
-    <details :open="state !== 'ready'" data-share-image-exclude>
+    <details :open="state !== 'ready'">
       <summary>View Mermaid source</summary>
       <pre><code>{{ source }}</code></pre>
     </details>

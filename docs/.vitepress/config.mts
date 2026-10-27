@@ -7,7 +7,7 @@ import { collectLibraryRecords } from "../../scripts/lib/content-library.mjs";
 import { inlineEmphasisPlugin } from "./markdown/inline-emphasis.mjs";
 import { headingFeedbackPlugin } from "./markdown/heading-feedback.mjs";
 import { mermaidPlugin } from "./markdown/mermaid.mjs";
-import { loadingPoems } from "./theme/loadingPoems.mjs";
+import { sitePoems } from "./theme/sitePoems.mjs";
 import { bootstrapLoadingPoem, createLoadingPoemPlayer } from "./theme/loadingPoemRuntime.mjs";
 import { prepareLoadingHtml } from "./theme/loadingBootHtml.mjs";
 import { searchAssets, renderSearchContent } from "./searchAssets";
@@ -79,7 +79,7 @@ export default defineConfig({
     [
       "script",
       { id: "site-loading-bootstrap" },
-      `;(${bootstrapLoadingPoem.toString()})(${JSON.stringify(loadingPoems).replace(/</g, "\\u003c")}, ${createLoadingPoemPlayer.toString()});`
+      `;(${bootstrapLoadingPoem.toString()})(${JSON.stringify(sitePoems).replace(/</g, "\\u003c")}, ${createLoadingPoemPlayer.toString()});`
     ],
     [
       "script",

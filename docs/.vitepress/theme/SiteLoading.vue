@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { nextTick, onBeforeUnmount, onMounted, ref } from "vue";
 import { useRouter } from "vitepress";
-import { loadingPoems } from "./loadingPoems.mjs";
+import { sitePoems } from "./sitePoems.mjs";
 import { createLoadingPoemPlayer } from "./loadingPoemRuntime.mjs";
 
 const router = useRouter();
@@ -41,7 +41,7 @@ const start: NonNullable<typeof router.onBeforePageLoad> = async (to) => {
     await nextTick();
     if (!visible.value || pending !== to || !poemRoot.value) return;
     player?.destroy();
-    player = createLoadingPoemPlayer({ root: poemRoot.value, poems: loadingPoems });
+    player = createLoadingPoemPlayer({ root: poemRoot.value, poems: sitePoems });
     player.start();
   }, 180);
   // A stalled request must never leave the reading surface covered indefinitely.
@@ -85,6 +85,7 @@ onBeforeUnmount(() => {
   <div
     v-if="visible"
     class="site-loading"
+    :data-poem-count="sitePoems.length"
     :class="{ 'site-loading--boot': boot }"
     role="status"
     aria-live="polite"

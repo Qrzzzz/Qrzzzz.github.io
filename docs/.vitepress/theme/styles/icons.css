@@ -9,7 +9,6 @@
   --site-icon-sun: url("lucide-static/icons/sun.svg");
   --site-icon-moon: url("lucide-static/icons/moon.svg");
   --site-icon-external-link: url("lucide-static/icons/external-link.svg");
-  --site-icon-image: url("lucide-static/icons/image.svg");
   --site-icon-chevron-right: url("lucide-static/icons/chevron-right.svg");
   --site-icon-menu: url("lucide-static/icons/menu.svg");
   --site-icon-align-left: url("lucide-static/icons/align-left.svg");
@@ -35,7 +34,6 @@
 .site-icon--sun { --icon: var(--site-icon-sun); }
 .site-icon--moon { --icon: var(--site-icon-moon); }
 .site-icon--external-link { --icon: var(--site-icon-external-link); }
-.site-icon--image { --icon: var(--site-icon-image); }
 /* Unmodified Invertocat from https://brand.github.com/GitHub_Logos.zip. */
 .site-icon--github { --icon: url("../assets/github-invertocat.svg"); color: #24292f; }
 .dark .site-icon--github { color: #fff; }

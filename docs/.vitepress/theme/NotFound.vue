@@ -3,10 +3,7 @@ import SiteIcon from "./SiteIcon.vue";
 import { withBase } from "vitepress";
 import HomePoetry from "./HomePoetry.vue";
 import FadeContent from "./effects/FadeContent.vue";
-import collection from "./homePoems.json";
-import { loadingPoems } from "./loadingPoems.mjs";
-
-const poems = [...loadingPoems, ...collection.items];
+import { sitePoems } from "./sitePoems.mjs";
 </script>
 
 <template>
@@ -26,7 +23,7 @@ const poems = [...loadingPoems, ...collection.items];
 
     <aside class="site-not-found__reading" aria-label="Poetry">
       <p class="site-not-found__eyebrow">A POEM FOR THE DETOUR</p>
-      <HomePoetry :poems="poems" label="A poem for the detour" />
+      <HomePoetry :poems="sitePoems" label="A poem for the detour" />
     </aside>
   </main>
 </template>
