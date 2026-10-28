@@ -12,12 +12,37 @@ let player: ReturnType<typeof createLoadingPoemPlayer> | undefined;
 let pending = "";
 let reveal: ReturnType<typeof setTimeout> | undefined;
 let bailout: ReturnType<typeof setTimeout> | undefined;
+let recoveryTimer: ReturnType<typeof setTimeout> | undefined;
 const before = router.onBeforePageLoad;
 const after = router.onAfterRouteChange;
 
 function clearTimers() {
   clearTimeout(reveal);
   clearTimeout(bailout);
+  clearTimeout(recoveryTimer);
+}
+
+function showRecovery() {
+  const controls = document.querySelector<HTMLElement>('.site-loading [data-loading-recovery]');
+  if (controls) controls.hidden = false;
+}
+
+function continueReading() {
+  if (boot.value) return; // The standalone bootstrap owns first-paint recovery.
+  finish();
+  void nextTick(() => {
+    const main = document.querySelector<HTMLElement>('main');
+    if (!main) return;
+    if (!main.hasAttribute('tabindex')) {
+      main.setAttribute('tabindex', '-1');
+      main.addEventListener('blur', () => main.removeAttribute('tabindex'), { once: true });
+    }
+    main.focus({ preventScroll: true });
+  });
+}
+
+function retryLoading() {
+  if (!boot.value) window.location.reload();
 }
 
 function finish() {
@@ -45,7 +70,8 @@ const start: NonNullable<typeof router.onBeforePageLoad> = async (to) => {
     player.start();
   }, 180);
   // A stalled request must never leave the reading surface covered indefinitely.
-  bailout = setTimeout(finish, 180000);
+  recoveryTimer = setTimeout(showRecovery, 6000);
+  bailout = setTimeout(finish, 12000);
 };
 
 const complete: NonNullable<typeof router.onAfterRouteChange> = async (to) => {
@@ -106,10 +132,16 @@ onBeforeUnmount(() => {
         </div>
       </div>
     </div>
+    <div class="site-loading__recovery" data-loading-recovery data-allow-mismatch="attribute" hidden role="group" aria-label="Loading options">
+      <p>Still loading. You can continue reading or try again.</p>
+      <button type="button" data-loading-continue @click="continueReading">Continue reading</button>
+      <button type="button" data-loading-retry @click="retryLoading">Retry</button>
+    </div>
   </div>
 </template>
 
 <style scoped>
+.site-loading, .site-loading * { box-sizing: border-box; }
 .site-loading {
   position: fixed;
   inset: 0;
@@ -121,6 +153,28 @@ onBeforeUnmount(() => {
   overflow: hidden;
 }
 .site-loading--boot { visibility: hidden; }
+.site-loading__recovery[hidden] { display: none; }
+.site-loading__recovery {
+  position: absolute;
+  bottom: max(16px, env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 0 24px;
+  width: min(100% - 64px, 640px);
+  background: var(--site-canvas);
+  color: var(--site-text-muted);
+  font-family: var(--site-font-sans);
+  font-size: 14px;
+  line-height: 1.6;
+  pointer-events: auto;
+}
+.site-loading__recovery p { flex-basis: 100%; margin: 0; }
+.site-loading__recovery button { border: 0; padding: 0; background: transparent; font: inherit; min-height: 44px; color: var(--site-accent); text-decoration: underline; text-underline-offset: 4px; cursor: pointer; }
+.site-loading__recovery button:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+.site-loading:has([data-loading-recovery]:not([hidden])) .site-loading__composition { height: calc(100% - 124px); padding-bottom: 16px; }
 :global(html.site-boot-loading .site-loading--boot) {
   visibility: visible;
 }
@@ -188,7 +242,7 @@ onBeforeUnmount(() => {
   grid-area: 2 / 1;
   margin: 28px 0 0;
   font-family: var(--site-font-sans);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 400;
   line-height: 1.4;
   letter-spacing: .02em;
@@ -219,12 +273,12 @@ onBeforeUnmount(() => {
 }
 @media (max-width: 680px) {
   .site-loading__composition { width: calc(100% - 64px); gap: 28px; }
-  .site-loading__title { font-size: 11px; }
+  .site-loading__title { font-size: 12px; }
   .site-loading__poem-stage {
     font-size: clamp(22px, 6.9vw, 28px);
   }
   .site-loading__poem:lang(en) { font-size: clamp(27px, 8vw, 34px); line-height: 1.32; }
-  .site-loading__attribution { margin-top: 22px; font-size: 10px; }
+  .site-loading__attribution { margin-top: 22px; font-size: 12px; }
 }
 @media (max-height: 560px) and (min-width: 681px) {
   .site-loading__composition { gap: 24px; padding-block: 24px; }

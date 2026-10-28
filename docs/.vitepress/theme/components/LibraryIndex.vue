@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { formatSiteDate } from "../siteDate.mjs";
 import {
   computed,
   onBeforeUnmount,
@@ -114,7 +115,7 @@ onBeforeUnmount(() => {
       <p class="library-stats">
         {{ libraryItems.length }} entries
         <template v-if="latestUpdated">
-          · Last updated <time :datetime="latestUpdated">{{ latestUpdated }}</time>
+          · Last updated <time :datetime="latestUpdated">{{ formatSiteDate(latestUpdated) }}</time>
         </template>
       </p>
     </header>
@@ -155,7 +156,7 @@ onBeforeUnmount(() => {
           <span class="library-result__meta">
             {{ LIBRARY_KIND_LABELS[item.kind] }}
             <span class="library-result__mobile-state">
-              · {{ item.updated }}<template v-if="item.status === 'archived'"> · {{ LIBRARY_STATUS_LABELS[item.status] }}</template>
+              · {{ formatSiteDate(item.updated) }}<template v-if="item.status === 'archived'"> · {{ LIBRARY_STATUS_LABELS[item.status] }}</template>
             </span>
           </span>
           <span class="library-result__content">
@@ -173,7 +174,7 @@ onBeforeUnmount(() => {
             </span>
           </span>
           <span class="library-result__date">
-            <time :datetime="item.updated">{{ item.updated }}</time>
+            <time :datetime="item.updated">{{ formatSiteDate(item.updated) }}</time>
             <span v-if="item.status === 'archived'">{{ LIBRARY_STATUS_LABELS[item.status] }}</span>
           </span>
         </a>

@@ -50,10 +50,11 @@
 .VPLocalNav { border-bottom: 1px solid var(--site-line); background: var(--site-canvas); }
 .VPLocalNav .container { min-height: 48px; }
 .VPLocalNav .menu, .VPLocalNav .outline { min-height: 48px; }
+.VPLocalNav .VPLocalNavOutlineDropdown > button { min-height: 44px; }
 .VPDocAsideOutline .outline-link { transition: color var(--site-motion-short); }
 .VPDocAsideOutline .outline-marker { background: var(--site-accent); transition: top 240ms var(--site-ease), height 240ms var(--site-ease), opacity 160ms; }
 .VPDocAsideOutline .outline-title { font-size: 12px; font-weight: 400; margin-bottom: 16px; }
-.VPDocAsideOutline .outline-link { font-size: 12px; line-height: 1.75; padding-block: 6px; }
+.VPDocAsideOutline .outline-link { font-size: var(--site-ui-size); line-height: 1.75; padding-block: 6px; }
 .VPDocAsideOutline .outline-link.active { color: var(--site-link); }
 .VPDocAside .content { border-left-color: var(--site-line); }
 .VPDocAside .outline-link:focus-visible, .VPSidebarItem .link:focus-visible { outline-offset: -2px; }
@@ -71,7 +72,7 @@ html.theme-is-switching .site-layout :where(a, button, p, h1, h2, h3, input, pat
 /* Document shell. */
 .site-layout .VPDoc { position: relative; }
 .VPFooter { border-top: 1px solid var(--site-line); background: var(--site-canvas); }
-.VPFooter .message, .VPFooter .copyright { color: var(--site-text-muted); font-family: var(--site-font-sans); font-size: 11px; font-weight: 400; }
+.VPFooter .message, .VPFooter .copyright { color: var(--site-text-muted); font-family: var(--site-font-sans); font-size: var(--site-ui-meta-size); font-weight: 400; }
 .VPDocFooter .edit-info { gap: 12px; color: var(--site-text-faint); font-family: var(--site-font-sans); font-size: 12px; }
 .VPDocFooter .edit-link-button { min-height: 44px; color: var(--site-text-muted); font-size: var(--site-ui-size); font-weight: 400; }
 .VPDocFooter .edit-link-button:hover { color: var(--site-link); }

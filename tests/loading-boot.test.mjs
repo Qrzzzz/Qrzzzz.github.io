@@ -68,7 +68,9 @@ test('boot waits for both the application and full stylesheet without another mi
 
 test('broken startup releases SSR and listeners even if no loading root arrived', () => {
   const h = bootHarness({ rootPresent: false });
-  h.tick(180000);
+  h.tick(11999);
+  assert.equal(h.counts().ended, 0);
+  h.tick(1);
   assert.ok(!h.classes.has('site-boot-loading'));
   assert.equal(h.counts().ended, 1);
   assert.equal(h.listeners.size, 0);

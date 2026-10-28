@@ -33,8 +33,10 @@ metadata, public routes and VitePress navigation remain the source of truth.
   its existing styles and theme tokens inlined from their source files. Main styles
   load without blocking that first paint; no-JS keeps ordinary blocking styles.
   Dismissal waits for app readiness, styles, and at least 700 ms after a painted
-  loading frame. Internal navigation keeps the 180 ms anti-flicker delay. Broken
-  startup releases the server-rendered page after the existing three-minute limit.
+  loading frame. Internal navigation keeps the 180 ms anti-flicker delay. Slow loading offers Continue reading and Retry after six seconds.
+  First-paint recovery uses native handlers, so it works without the app bundle.
+  A failed resource offers recovery immediately and releases SSR within six seconds;
+  other stalled loads release after twelve seconds.
 - Pause/Resume and Next remain keyboard accessible; selecting poem text pauses
   playback. Background and user pauses overlap without consuming reading time.
   Reduced motion shows full works, and no-JS retains a complete server-rendered poem.
@@ -47,6 +49,14 @@ metadata, public routes and VitePress navigation remain the source of truth.
 
 - Article footers retain the native, lightweight edit-source link. Image export,
   character limits, generation progress and export-only dependencies are removed.
+- Dates in page metadata, Library and collections use the shared English day formatter
+  (`Oct 28, 2026`), with a fixed Asia/Shanghai calendar. Stored editorial dates stay intact.
+  `SiteLastUpdated.vue` replaces the pinned default-theme footer component through a
+  narrow Vite alias; review this adapter when upgrading VitePress.
+- About shares the catalog header but keeps a reading-width body and no local outline.
+  Helper text uses 12px metadata and 14px controls; prose and verse sizes stay separate.
+- Mobile search paints one continuous surface behind the input and results, including
+  their gap. Filter buttons retain their thin marker with at least 44px click width.
 - Information boxes share prose width and use a light tint, fine border, restrained
   left rule and compact title; tables, code and diagrams retain their wider measure.
 - Production search fetches `/search-index/<locale>.json`, emitted from the same

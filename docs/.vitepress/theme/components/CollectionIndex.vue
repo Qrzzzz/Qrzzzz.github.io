@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { formatSiteDate } from "../siteDate.mjs";
 import { computed } from "vue";
 import { data as libraryItems } from "../../content/library.data";
 import {
@@ -52,7 +53,7 @@ const {
       <span class="library-result__meta">
         {{ LIBRARY_KIND_LABELS[item.kind] }}
         <span class="library-result__mobile-state">
-          · {{ item.updated }} · {{ LIBRARY_STATUS_LABELS[item.status] }}
+          · {{ formatSiteDate(item.updated) }} · {{ LIBRARY_STATUS_LABELS[item.status] }}
         </span>
       </span>
       <span class="library-result__content">
@@ -70,7 +71,7 @@ const {
         </span>
       </span>
       <span class="library-result__date">
-        <time :datetime="item.updated">{{ item.updated }}</time>
+        <time :datetime="item.updated">{{ formatSiteDate(item.updated) }}</time>
         <span>{{ LIBRARY_STATUS_LABELS[item.status] }}</span>
       </span>
     </a>

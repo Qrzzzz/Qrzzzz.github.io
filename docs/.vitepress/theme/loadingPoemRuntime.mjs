@@ -171,6 +171,8 @@ export function bootstrapLoadingPoem(poems, createPlayer) {
   let player;
   let dismissal;
   let watchdog;
+  let recoveryTimer;
+  let failed = false;
   let done = false;
   let ready = false;
   let shownAt;
@@ -182,6 +184,7 @@ export function bootstrapLoadingPoem(poems, createPlayer) {
     observer.disconnect();
     player = createPlayer({ root, poems });
     player.start();
+    if (failed) showRecovery();
     // Start the minimum exposure after a painted frame, not while HTML is arriving.
     requestAnimationFrame(() => requestAnimationFrame(() => {
       if (done) return;
@@ -200,22 +203,56 @@ export function bootstrapLoadingPoem(poems, createPlayer) {
     ready = true;
     settle();
   }
+  function showRecovery() {
+    const controls = doc.querySelector('.site-loading [data-loading-recovery]');
+    if (controls) controls.hidden = false;
+  }
+  function resourceFailed(event) {
+    if (!['SCRIPT', 'LINK'].includes(event.target?.tagName)) return;
+    failed = true;
+    showRecovery();
+    clearTimeout(watchdog);
+    watchdog = setTimeout(finish, 6000);
+  }
+  function action(event) {
+    if (!event.target?.closest?.('.site-loading [data-loading-recovery]')) return;
+    if (event.target.closest('[data-loading-continue]')) {
+      finish();
+      const main = doc.querySelector('main');
+      if (main) {
+        const hadTabindex = main.hasAttribute('tabindex');
+        if (!hadTabindex) {
+          main.setAttribute('tabindex', '-1');
+          main.addEventListener('blur', () => main.removeAttribute('tabindex'), { once: true });
+        }
+        main.focus({ preventScroll: true });
+      }
+    } else if (event.target.closest('[data-loading-retry]')) doc.defaultView?.location.reload();
+  }
   function finish() {
+    if (done) return;
     done = true;
     observer.disconnect();
     clearTimeout(dismissal);
     clearTimeout(watchdog);
+    clearTimeout(recoveryTimer);
     player?.destroy();
     doc.documentElement.classList.remove('site-boot-loading');
     doc.removeEventListener('site-loading-ready', appReady);
     doc.removeEventListener('site-loading-style-ready', settle);
+    doc.removeEventListener('click', action);
+    doc.removeEventListener('error', resourceFailed, true);
     doc.dispatchEvent(new Event('site-loading-finished'));
   }
   doc.documentElement.classList.add('site-boot-loading');
   doc.addEventListener('site-loading-ready', appReady, { once: true });
   doc.addEventListener('site-loading-style-ready', settle);
+  // Native event handlers work even when the application bundle never starts.
+  doc.addEventListener('click', action);
+  doc.addEventListener('error', resourceFailed, true);
   observer.observe(doc.documentElement, { childList: true, subtree: true });
   attach();
-  // A broken app startup must still release the server-rendered reading surface.
-  watchdog = setTimeout(finish, 180000);
+  recoveryTimer = setTimeout(showRecovery, 6000);
+  // A broken startup must release SSR quickly, including when no root arrived.
+  watchdog = setTimeout(finish, 12000);
 }

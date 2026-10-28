@@ -61,7 +61,16 @@ function pageLanguage(value: unknown, relativePath = "") {
 }
 
 export default defineConfig({
-  vite: { plugins: [searchAssets()] },
+  vite: {
+    plugins: [searchAssets()],
+    resolve: {
+      // Preserve the native footer layout while formatting dates consistently.
+      alias: [{
+        find: /^.*\/VPDocFooterLastUpdated\.vue$/,
+        replacement: fileURLToPath(new URL("./theme/components/SiteLastUpdated.vue", import.meta.url))
+      }]
+    }
+  },
   lang: "zh-CN",
   title: "Qrzzzz",
   description: "Projects, tools, documentation, and writing by Cherry Chu.",

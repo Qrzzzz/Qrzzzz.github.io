@@ -696,6 +696,15 @@ onBeforeUnmount(() => {
 @media (max-width: 767.98px) {
   .inline-search-surface { max-width: calc(100vw - 24px); }
   .InlineSiteSearch.is-expanded .inline-search-surface { right: var(--search-right); }
+  .InlineSiteSearch.is-expanded .inline-search-surface::before {
+    content: "";
+    position: absolute;
+    inset: -8px -12px;
+    z-index: -1;
+    background: var(--site-canvas);
+    pointer-events: none;
+  }
+  .inline-search-panel { position: relative; top: auto; margin-top: 8px; }
   .inline-search-form { height: 48px; border-radius: var(--site-radius-lg); }
   .inline-search-form input { font-size: 16px; line-height: 1.4; }
   .inline-search-close { width: 44px; min-width: 44px; height: 44px; margin: 0 2px 0 0; padding: 0; }

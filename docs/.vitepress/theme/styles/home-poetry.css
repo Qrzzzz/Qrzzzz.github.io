@@ -35,11 +35,11 @@
   from { font-variation-settings: "wght" 400; background-size: 0% .42em; }
   to { font-variation-settings: "wght" 650; background-size: 100% .42em; }
 }
-.home-entry__count { font-family: var(--site-font-sans); font-size: 11px; color: var(--site-text-muted); font-variant-numeric: tabular-nums; }
+.home-entry__count { font-family: var(--site-font-sans); font-size: var(--site-ui-meta-size); color: var(--site-text-muted); font-variant-numeric: tabular-nums; }
 .home-entry__arrow { align-self: center; grid-column: 2; grid-row: 1 / 3; width: 36px; height: 24px; stroke-width: 1.3; transition: transform var(--site-motion-settle) var(--site-ease); }
 .home-entry:hover, .home-entry:focus-visible { color: var(--site-link); }
 .home-entry:is(:hover, :focus-visible) .home-entry__arrow { transform: translateX(6px); }
-.home-colophon { display: flex; gap: 28px; align-items: center; min-height: 78px; padding-block: 12px; color: var(--site-text-muted); font-size: 12px; }
+.home-colophon { display: flex; gap: 28px; align-items: center; min-height: 78px; padding-block: 12px; color: var(--site-text-muted); font-size: var(--site-ui-meta-size); }
 .home-colophon a { display: flex; gap: 4px; align-items: center; min-height: 44px; }
 .home-colophon a:hover { color: var(--site-link); }
 .home-poetry { min-width: 0; display: flex; flex-direction: column; justify-content: center; }
@@ -49,10 +49,10 @@
 .home-poem__ghost, .home-poem__live { grid-area: 1 / 1; min-width: 0; white-space: pre-wrap; }
 .home-poem__ghost { visibility: hidden; }
 .home-poetry__footer { margin-top: 28px; font-family: var(--site-font-sans); }
-.home-poetry__credit { margin: 0; font-size: 11px; color: var(--site-text-muted); letter-spacing: .02em; }
+.home-poetry__credit { margin: 0; font-size: var(--site-ui-meta-size); color: var(--site-text-muted); letter-spacing: .02em; }
 .home-poetry__credit a, .home-poetry__credit a:hover { color: var(--site-text); text-decoration: none; background: none; cursor: default; transition: none; }
 .home-poetry__credit a::after { display: none; }
-.home-poetry__controls { display: flex; align-items: center; gap: 12px; height: 44px; margin-top: 4px; color: var(--site-text-muted); font-size: 11px; }
+.home-poetry__controls { display: flex; align-items: center; gap: 12px; height: 44px; margin-top: 4px; color: var(--site-text-muted); font-size: var(--site-ui-size); }
 .home-poetry__controls button { min-height: 44px; min-width: 44px; text-align: left; cursor: pointer; transition: color 160ms ease; }
 .home-poetry__controls button:hover, .home-poetry__controls button:focus-visible { color: var(--site-accent); }
 .home-poem__cursor { display: inline-block; width: .65em; margin-left: .06em; font-family: var(--site-font-mono); font-size: .7em; line-height: 1; color: var(--site-accent); text-shadow: 0 0 3px color-mix(in srgb, var(--site-accent) 40%, transparent), 0 0 8px color-mix(in srgb, var(--site-accent) 16%, transparent); }
@@ -75,12 +75,12 @@
   .home-poem { font-size: clamp(23px, 6.2vw, 28px); line-height: 1.65; }
   .home-poem:lang(en) { font-size: clamp(28px, 7.4vw, 34px); line-height: 1.32; }
   .home-poetry__footer { margin-top: 22px; }
-  .home-poetry__credit, .home-poetry__controls { font-size: 10px; }
+  .home-poetry__credit { font-size: var(--site-ui-meta-size); }
   .home-actions { gap: 26px; padding: 0 4%; }
   .home-entry--projects { justify-self: end; margin: 0; }
   .home-entry { gap: 2px 24px; min-height: 66px; }
   .home-entry__name { font-size: 30px; }
-  .home-colophon { min-height: 72px; font-size: 11px; }
+  .home-colophon { min-height: 72px; font-size: var(--site-ui-meta-size); }
 }
 @media (orientation: landscape) and (max-height: 500px) and (min-width: 681px) {
   .home-composition { min-height: calc(100svh - 112px); padding-block: 40px; }

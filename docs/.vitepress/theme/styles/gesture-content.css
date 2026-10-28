@@ -6,7 +6,7 @@
 .site-layout .VPDocFooter .pager-link .title { font-size: 15px; }
 .site-layout :is(.library-result, .content-index-row, .hub-entry, .project-link-row, .project-link-card, .project-docs-card) { border-radius: 0; transition: color 180ms ease, border-color 180ms ease, background-color 180ms ease; }
 .site-layout :is(.library-result, .content-index-row, .hub-entry):hover { background: transparent; }
-.site-layout .library-filter { position: relative; z-index: 1; padding: 9px 6px; border: 0; border-radius: 0; background: transparent; min-height: 44px; font-size: 12px; font-weight: 400; }
+.site-layout .library-filter { position: relative; z-index: 1; padding: 9px 6px; border: 0; border-radius: 0; background: transparent; min-height: 44px; min-width: 44px; font-size: var(--site-ui-size); font-weight: 400; }
 .site-layout .library-toolbar__filters { position: relative; gap: 20px; }
 .site-layout .library-filter-marker { position: absolute; z-index: 2; top: 0; left: 0; width: 0; height: 1px; background: var(--site-link); opacity: 0; pointer-events: none; transform: translate3d(0, 0, 0); transition: transform 320ms var(--site-ease), width 320ms var(--site-ease), opacity 120ms ease; will-change: transform, width; }
 .site-layout .library-filter-marker.is-ready { opacity: 1; }
@@ -17,7 +17,7 @@
 .site-layout .content-index-row::after { transition: transform var(--site-motion-settle) var(--site-ease); }
 .site-layout .content-index-row:hover::after { transform: translateX(4px); }
 @media (max-width: 680px) {
-  .site-layout .library-toolbar__filters { gap: 16px; flex-wrap: wrap; }
-  .site-layout .library-filter { padding-inline: 0; }
+  .site-layout .library-toolbar__filters { gap: 8px; flex-wrap: wrap; }
+  .site-layout .library-filter { padding-inline: 6px; }
   .site-layout .project-catalog .content-index-summary { display: block; }
 }

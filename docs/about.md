@@ -2,15 +2,14 @@
 title: About
 description: What lives here, how it is maintained, and where the source projects are hosted.
 lang: en
+pageType: index
+aside: false
+outline: false
 ---
 
-<FadeContent as="header">
+<CatalogHeader title="About" description="A public home for Cherry Chu's projects, documentation, tools, articles, prompts, and excerpts." />
 
-# About
-
-<p class="lead">A public home for Cherry Chu's projects, documentation, tools, articles, prompts, and excerpts.</p>
-
-</FadeContent>
+<div class="about-reading">
 
 ## Content and maintenance
 
@@ -20,3 +19,5 @@ Content is organized by subject rather than publication date. Articles and docum
 
 - [Cherry Chu on GitHub](https://github.com/Qrzzzz)
 - [Lyrics Card Generator repository](https://github.com/Qrzzzz/lyrics-card-generator)
+
+</div>
