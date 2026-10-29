@@ -1,5 +1,16 @@
 const readmeProjects = Object.freeze([
   {
+    slug: "lexora",
+    repository: "Qrzzzz/lexora",
+    title: "Lexora",
+    description: "Study vocabulary and knowledge cards in a focused, browser-based workspace.",
+    summary: "Study vocabulary and knowledge cards with recall, spelling, importable JSON decks, and locally saved progress.",
+    status: "online",
+    statusLabel: "Live · Web",
+    sourcePath: "README.md",
+    homepage: "https://qrzzzz.github.io/lexora/"
+  },
+  {
     slug: "lyrics-card-generator-android",
     repository: "Qrzzzz/lyrics-card-generator-android",
     title: "Lyrics Card Generator Android",

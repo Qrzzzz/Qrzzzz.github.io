@@ -1,11 +1,16 @@
 {
   "schemaVersion": 1,
-  "resolvedAt": "2026-10-22T08:00:00.000Z",
+  "resolvedAt": "2026-10-29T12:42:34.202Z",
   "sources": [
     {
       "slug": "lyrics-card-generator",
       "repository": "Qrzzzz/lyrics-card-generator",
       "commit": "86598166ea41d8b4fd082fe8d50cd47e67fec2b7"
+    },
+    {
+      "slug": "lexora",
+      "repository": "Qrzzzz/lexora",
+      "commit": "0a3022323d4e12deb04cb76cf000254be7786490"
     },
     {
       "slug": "lyrics-card-generator-android",
