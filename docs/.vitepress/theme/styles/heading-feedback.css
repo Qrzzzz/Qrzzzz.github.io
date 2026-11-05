@@ -17,7 +17,7 @@
 }
 .site-layout .heading-feedback {
   background-image: linear-gradient(var(--site-hover-marker), var(--site-hover-marker));
-  background-position: left calc(100% - .06em);
+  background-position: left calc(100% - var(--site-marker-inset));
   background-size: 0% .38em;
   background-repeat: no-repeat;
   box-decoration-break: clone;
@@ -55,6 +55,7 @@
   z-index: -1;
   pointer-events: none;
   background: var(--site-hover-marker);
+  translate: 0 calc(-1 * var(--site-marker-inset));
   transform-origin: left center;
 }
 @media (forced-colors: active), print {

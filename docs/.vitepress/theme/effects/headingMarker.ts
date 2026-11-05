@@ -61,7 +61,7 @@ export function createHeadingMarker() {
       const stroke = strokes[index];
       Object.assign(stroke.style, {
         left: `${row.left - bounds.left - active!.clientLeft}px`,
-        top: `${row.bottom - bounds.top - active!.clientTop - fontSize * .44}px`,
+        top: `${row.bottom - bounds.top - active!.clientTop - fontSize * .38}px`,
         width: `${row.right - row.left}px`, height: `${fontSize * .38}px`
       });
       if (!restart) return;

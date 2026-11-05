@@ -21,7 +21,8 @@
   white-space: nowrap;
   background-image: linear-gradient(var(--home-entry-marker), var(--home-entry-marker));
   background-repeat: no-repeat;
-  background-position: left calc(100% - .06em);
+  /* This grid item includes the extra space from its 1.25 line height. */
+  background-position: left calc(100% - var(--site-marker-inset) - .14em);
   background-size: 0% .42em;
   transition: font-variation-settings 440ms cubic-bezier(.22, 1, .36, 1), background-size 440ms cubic-bezier(.22, 1, .36, 1);
 }

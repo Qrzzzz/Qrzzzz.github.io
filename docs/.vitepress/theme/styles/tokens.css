@@ -11,6 +11,7 @@
   --site-line-strong: #a3b1c5;
   --site-accent: #243ecd;
   --site-hover-marker: color-mix(in srgb, var(--site-accent) 30%, transparent);
+  --site-marker-inset: .24em;
   --site-accent-hover: #243ecd;
   --site-accent-soft: rgba(36, 62, 205, 0.06);
   --site-selection: rgba(36, 62, 205, 0.18);

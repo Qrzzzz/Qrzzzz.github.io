@@ -155,7 +155,7 @@
   letter-spacing: -.02em;
   line-height: 1.35;
   overflow-wrap: anywhere;
-  background: linear-gradient(var(--site-hover-marker), var(--site-hover-marker)) left calc(100% - .06em) / 0% .38em no-repeat;
+  background: linear-gradient(var(--site-hover-marker), var(--site-hover-marker)) left calc(100% - var(--site-marker-inset)) / 0% .38em no-repeat;
   transition: color 180ms ease, font-variation-settings 320ms var(--site-ease), background-size 320ms var(--site-ease);
 }
 .site-layout[data-page-kind="index"] .catalog-entry:is(:hover, :focus-visible) .catalog-entry__title {

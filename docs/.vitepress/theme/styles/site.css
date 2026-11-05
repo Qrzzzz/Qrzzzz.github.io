@@ -155,7 +155,7 @@ html.theme-is-switching .site-layout :where(a, button, p, h1, h2, h3, input, pat
   z-index: -1;
   left: -2px;
   right: -2px;
-  bottom: .06em;
+  bottom: var(--site-marker-inset);
   height: .42em;
   background: var(--site-hover-marker);
   transform: scaleX(0);
