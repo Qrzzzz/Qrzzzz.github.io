@@ -1,5 +1,44 @@
 import { test, expect } from "@playwright/test";
 
+test("Library preloads only visible destinations and reuses them on a direct click", async ({ page }) => {
+  await page.setViewportSize({ width: 1200, height: 900 });
+  const requests: string[] = [];
+  page.on("request", r => { if (/\/assets\/(?:notes|excerpts|prompt-collection)_[^/]+\.md\.[^.]+\.js$/.test(r.url())) requests.push(r.url()); });
+  await page.goto("/library/");
+  await page.getByRole("button", { name: "Articles", exact: true }).click();
+  const article = page.locator('.library-result[href*="/notes/"]').first();
+  const href = (await article.getAttribute("href"))!;
+  const filename = href.slice(1).replace(/\.html$/, '').replaceAll('/', '_') + '.md.';
+  await expect.poll(() => requests.filter(url => url.includes(filename)).length).toBe(1);
+  // Wait for the actual prefetched response, not merely the inserted link.
+  await expect.poll(() => page.evaluate(name => performance.getEntriesByType('resource').some(e => e.name.includes(name)), filename)).toBe(true);
+  const visible = await page.locator('.library-result').evaluateAll(es => es.filter(e => { const r=e.getBoundingClientRect(); return r.top < innerHeight && r.bottom > 0; }).length);
+  expect(requests.length).toBeLessThanOrEqual(visible + 1);
+  await article.evaluate(el => (el as HTMLAnchorElement).click());
+  await expect(page).toHaveURL(new RegExp(href.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '$'));
+  await expect(page.locator('.library-results')).toHaveCount(0);
+  expect(requests.filter(url => url.includes(filename))).toHaveLength(1);
+});
+
+test("slow article navigation shows the original full-screen poem only until ready", async ({ page }) => {
+  await page.addInitScript(() => Object.defineProperty(navigator, 'connection', { value: { saveData: true }, configurable: true }));
+  await page.goto('/library/');
+  await expect(page.locator('.site-loading')).toHaveCount(0);
+  const article = page.locator('.library-result[href*="/notes/"]').first();
+  let release!: () => void;
+  const gate = new Promise<void>(resolve => { release = resolve; });
+  await page.route('**/assets/notes_*.js', async route => { await gate; await route.continue(); });
+  try {
+    await article.evaluate(el => (el as HTMLAnchorElement).click());
+    const loading = page.locator('.site-loading');
+    await expect(loading).toBeVisible();
+    await expect(loading.locator('[data-poem-player]')).toBeVisible();
+    expect(await loading.evaluate(el => { const r=el.getBoundingClientRect(); return r.width===innerWidth && r.height===innerHeight; })).toBe(true);
+  } finally { release(); }
+  await expect(page.locator('.site-loading')).toHaveCount(0);
+  await expect(page.locator('.library-results')).toHaveCount(0);
+});
+
 test("server-rendered reading remains available while application JS is stalled", async ({ page }) => {
   let release!: () => void;
   const gate = new Promise<void>(resolve => { release = resolve; });

@@ -16,6 +16,7 @@ import {
 } from "../../content/library";
 import LibraryToolbar from "./LibraryToolbar.vue";
 import { useLibraryResultMarker } from "./useLibraryResultMarker";
+import { useVisiblePagePrefetch } from "../useVisiblePagePrefetch";
 
 const query = ref("");
 const activeKind = ref<LibraryKind | "all">("all");
@@ -37,6 +38,7 @@ const filteredItems = computed(() =>
       matchesLibraryItem(item, query.value)
   )
 );
+useVisiblePagePrefetch(resultsRef, filteredItems);
 
 function restoreUrlState() {
   const parameters = new URLSearchParams(window.location.search);
