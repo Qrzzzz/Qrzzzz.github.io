@@ -176,16 +176,27 @@ export function bootstrapLoadingPoem(poems, createPlayer) {
   let done = false;
   let ready = false;
   let shownAt;
+  let collection = Array.isArray(poems) ? poems : undefined;
+  let poemRoot;
+  function play() {
+    if (done || player || !poemRoot || !collection) return;
+    player = createPlayer({ root: poemRoot, poems: collection });
+    player.start();
+  }
+  if (!collection) Promise.resolve(poems).then(items => {
+    collection = items;
+    play();
+  }).catch(() => { /* Poetry must never delay or prevent reading. */ });
   const observer = new MutationObserver(attach);
   function attach() {
     if (done || player) return;
     const root = doc.querySelector('.site-loading [data-poem-player]');
     if (!root) return;
     observer.disconnect();
-    player = createPlayer({ root, poems });
-    player.start();
+    poemRoot = root;
+    play();
     if (failed) showRecovery();
-    // Start the minimum exposure after a painted frame, not while HTML is arriving.
+    // Release ready content after a painted frame without a forced reading delay.
     requestAnimationFrame(() => requestAnimationFrame(() => {
       if (done) return;
       shownAt = performance.now();
@@ -197,7 +208,7 @@ export function bootstrapLoadingPoem(poems, createPlayer) {
     const styles = [...doc.querySelectorAll('link[data-site-boot-style]')];
     if (styles.some(link => !link.sheet && link.dataset.siteStyleReady !== 'true')) return;
     clearTimeout(dismissal);
-    dismissal = setTimeout(finish, Math.max(0, 700 - (performance.now() - shownAt)));
+    dismissal = setTimeout(finish, 0);
   }
   function appReady() {
     ready = true;

@@ -4,7 +4,7 @@ import { useData } from "vitepress";
 import { createNavigationAccessibility } from "./navigationAccessibility";
 import { createTopNavigationMarker } from "./topNavigationMarker";
 import { createHeadingMarker } from "./effects/headingMarker";
-import DefaultTheme from "vitepress/theme";
+import DefaultTheme from "vitepress/theme-without-fonts";
 import BackToTop from "./BackToTop.vue";
 import HomeContent from "./HomeContent.vue";
 import InlineSearch from "./InlineSearch.vue";

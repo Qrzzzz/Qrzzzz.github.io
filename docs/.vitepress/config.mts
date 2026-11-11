@@ -7,10 +7,10 @@ import { collectLibraryRecords } from "../../scripts/lib/content-library.mjs";
 import { inlineEmphasisPlugin } from "./markdown/inline-emphasis.mjs";
 import { headingFeedbackPlugin } from "./markdown/heading-feedback.mjs";
 import { mermaidPlugin } from "./markdown/mermaid.mjs";
-import { sitePoems } from "./theme/sitePoems.mjs";
 import { bootstrapLoadingPoem, createLoadingPoemPlayer } from "./theme/loadingPoemRuntime.mjs";
 import { prepareLoadingHtml } from "./theme/loadingBootHtml.mjs";
 import { searchAssets, renderSearchContent } from "./searchAssets";
+import { bootPoems, bootPoemsPath } from "./bootPoems";
 
 const loadingSource = readFileSync(new URL("./theme/SiteLoading.vue", import.meta.url), "utf8");
 const loadingTokens = readFileSync(new URL("./theme/styles/tokens.css", import.meta.url), "utf8");
@@ -62,7 +62,7 @@ function pageLanguage(value: unknown, relativePath = "") {
 
 export default defineConfig({
   vite: {
-    plugins: [searchAssets()],
+    plugins: [searchAssets(), bootPoems()],
     resolve: {
       // Preserve the native footer layout while formatting dates consistently.
       alias: [{
@@ -88,7 +88,7 @@ export default defineConfig({
     [
       "script",
       { id: "site-loading-bootstrap" },
-      `;(${bootstrapLoadingPoem.toString()})(${JSON.stringify(sitePoems).replace(/</g, "\\u003c")}, ${createLoadingPoemPlayer.toString()});`
+      `;(${bootstrapLoadingPoem.toString()})(fetch(${JSON.stringify(bootPoemsPath)}).then(r => { if (!r.ok) throw new Error("Poems unavailable"); return r.json(); }), ${createLoadingPoemPlayer.toString()});`
     ],
     [
       "script",

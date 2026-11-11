@@ -22,7 +22,7 @@ metadata, public routes and VitePress navigation remain the source of truth.
   the bag is exhausted. A cycle counts 60 seconds from the start of typing, then
   retracts the text before the next work. Both first-paint and client-navigation
   loading overlays use the full 250-work collection from `sitePoems.mjs`, with the existing 30-second cycle and independent
-  selection state. First-paint poems remain inline so they require no additional request.
+  selection state. First-paint poems load from a content-hashed, cacheable collection.
 - The 404 reading column uses that same collection in its own shuffled bag and
   reuses HomePoetry's 60-second player, pause, selection and Next controls.
   The error and recovery links sit left of the poetry; phones stack both in normal flow.
@@ -32,8 +32,8 @@ metadata, public routes and VitePress navigation remain the source of truth.
 - Full document visits show the loading screen before application resources, with
   its existing styles and theme tokens inlined from their source files. Main styles
   load without blocking that first paint; no-JS keeps ordinary blocking styles.
-  Dismissal waits for app readiness, styles, and at least 700 ms after a painted
-  loading frame. Internal navigation keeps the 180 ms anti-flicker delay. Slow loading offers Continue reading and Retry after six seconds.
+  Dismissal waits for app readiness, styles, and a painted loading frame, without a fixed minimum duration.
+  Poetry requests never block dismissal. Internal navigation keeps the 180 ms anti-flicker delay. Slow loading offers Continue reading and Retry after six seconds.
   First-paint recovery uses native handlers, so it works without the app bundle.
   A failed resource offers recovery immediately and releases SSR within six seconds;
   other stalled loads release after twelve seconds.

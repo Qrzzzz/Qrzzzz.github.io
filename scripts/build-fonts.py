@@ -43,9 +43,10 @@ for folder, source, family, prefix in [
     latin = sorted(p for p in points if p < 0x300)
     common = [p for p,_ in counts.most_common() if p in points and p not in latin]
     rest = sorted(points - set(latin) - set(common))
-    shards = [latin] + [common[i:i+768] for i in range(0,len(common),768)] + [rest[i:i+2048] for i in range(0,len(rest),2048)]
+    shards = [latin] + [common[i:i+192] for i in range(0,len(common),192)] + [rest[i:i+768] for i in range(0,len(rest),768)]
     for index, chars in enumerate(shards):
-        filename = f'{prefix}-{index:02}.woff2'
+        revision = hashlib.sha256((fingerprint + ranges(chars)).encode()).hexdigest()[:10]
+        filename = f'{prefix}-{index:02}-{revision}.woff2'
         target = OUT / filename
         stamp = ROOT / 'output/font-sources' / f'{prefix}-{index:02}.sha256'
         if target.exists() and stamp.exists() and stamp.read_text() == fingerprint:
@@ -67,7 +68,7 @@ for folder, source, family, prefix in [
             if entry.nameID in (1,3,4,6,16):
                 value = family.replace(' ', '') if entry.nameID == 6 else family
                 entry.string = value.encode(entry.getEncoding())
-        filename = f'{prefix}-{index:02}.woff2'
+        filename = f'{prefix}-{index:02}-{revision}.woff2'
         font.flavor = 'woff2'
         font.save(OUT / filename)
         font.close()
@@ -80,10 +81,14 @@ for source, family, style, weight, filename in [
     ('newsreader/Newsreader-Italic[opsz,wght].ttf','Newsreader','italic','200 800','newsreader-italic.woff2'),
 ]:
     font=TTFont(FONTS/source)
+    points = set(font.getBestCmap())
+    sub = subset.Subsetter()
+    sub.populate(unicodes=points)
+    sub.subset(font)
     font.flavor='woff2'
     font.save(OUT/filename)
     font.close()
-    css.append(f'@font-face {{ font-family: "{family}"; font-style: {style}; font-weight: {weight}; font-display: swap; src: url("/fonts/web/{filename}") format("woff2"); }}')
+    css.append(f'@font-face {{ font-family: "{family}"; font-style: {style}; font-weight: {weight}; font-display: swap; src: url("/fonts/web/{filename}") format("woff2"); unicode-range: {ranges(points)}; }}')
 punctuation_range = ranges(PROPORTIONAL_PUNCTUATION_CODEPOINTS)
 for style, filename in [('normal','newsreader.woff2'),('italic','newsreader-italic.woff2')]:
     css.append(f'@font-face {{ font-family: "Site Proportional Punctuation"; font-style: {style}; font-weight: 200 800; font-display: swap; src: url("/fonts/web/{filename}") format("woff2"); unicode-range: {punctuation_range}; }}')

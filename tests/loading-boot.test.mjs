@@ -5,7 +5,7 @@ import { readFileSync } from 'node:fs';
 import { bootstrapLoadingPoem } from '../docs/.vitepress/theme/loadingPoemRuntime.mjs';
 import { prepareLoadingHtml } from '../docs/.vitepress/theme/loadingBootHtml.mjs';
 
-function bootHarness({ rootPresent = true, stylesheetPending = false } = {}) {
+function bootHarness({ rootPresent = true, stylesheetPending = false, poems = [] } = {}) {
   let time = 0, id = 0, starts = 0, destroys = 0, ended = 0;
   const tasks = new Map(), listeners = new Map(), classes = new Set();
   const style = { sheet: stylesheetPending ? null : {}, dataset: {} };
@@ -18,13 +18,13 @@ function bootHarness({ rootPresent = true, stylesheetPending = false } = {}) {
     dispatchEvent(event) { if (event.type === 'site-loading-finished') ended++; listeners.get(event.type)?.(); }
   };
   function schedule(fn, delay) { tasks.set(++id, { fn, at: time + delay }); return id; }
-  const context = vm.createContext({ document, Event, performance: { now: () => time },
+  const context = vm.createContext({ document, Event, poems, performance: { now: () => time },
     setTimeout: schedule, clearTimeout: timer => tasks.delete(timer),
     requestAnimationFrame: fn => schedule(fn, 16),
     MutationObserver: class { observe() {} disconnect() {} },
     createPlayer: () => ({ start() { starts++; }, destroy() { destroys++; } })
   });
-  vm.runInContext(`(${bootstrapLoadingPoem.toString()})([], createPlayer)`, context);
+  vm.runInContext(`(${bootstrapLoadingPoem.toString()})(poems, createPlayer)`, context);
   function tick(ms) {
     const end = time + ms;
     while (true) {
@@ -41,10 +41,10 @@ function bootHarness({ rootPresent = true, stylesheetPending = false } = {}) {
   };
 }
 
-test('fast boot waits 700ms after painted frames and then cleans up once', () => {
+test('fast boot releases ready content after painted frames and cleans up once', () => {
   const h = bootHarness();
   assert.equal(h.counts().starts, 1);
-  h.ready(); h.tick(731);
+  h.ready(); h.tick(31);
   assert.ok(h.classes.has('site-boot-loading'));
   h.tick(1);
   assert.ok(!h.classes.has('site-boot-loading'));
@@ -64,6 +64,20 @@ test('boot waits for both the application and full stylesheet without another mi
   assert.equal(slowApp.counts().ended, 0);
   slowApp.ready(); slowApp.tick(0);
   assert.equal(slowApp.counts().ended, 1);
+});
+
+test('a delayed or failed poem request never blocks ready content or restarts a dismissed player', async () => {
+  let resolve;
+  const h = bootHarness({ poems: new Promise(done => { resolve = done; }) });
+  h.ready(); h.tick(32);
+  assert.equal(h.counts().ended, 1);
+  resolve([]);
+  await new Promise(setImmediate);
+  assert.equal(h.counts().starts, 0);
+  const failed = bootHarness({ poems: Promise.reject(new Error('offline')) });
+  failed.ready(); failed.tick(32);
+  await new Promise(setImmediate);
+  assert.equal(failed.counts().ended, 1);
 });
 
 test('broken startup releases SSR and listeners even if no loading root arrived', () => {
