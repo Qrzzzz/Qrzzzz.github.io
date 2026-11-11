@@ -116,6 +116,21 @@ function fixture() {
   return { root, source, output, publicOutput };
 }
 
+test("links repository siblings at the pinned commit without importing outside docs", () => {
+  const { root, source, output, publicOutput } = fixture();
+  try {
+    mkdirSync(path.join(path.dirname(source), ".github"), { recursive: true });
+    writeFileSync(path.join(path.dirname(source), ".github/PULL_REQUEST_TEMPLATE.md"), "# Template");
+    writeFileSync(path.join(source, "desktop.md"), "# Desktop\n\n[Template](../.github/PULL_REQUEST_TEMPLATE.md#checklist)\n");
+    importLyricsCardDocs({ sourceRoot: source, outputRoot: output, publicOutputRoot: publicOutput, commitSha: SHA, importedAt: IMPORTED_AT });
+    const content = readFileSync(path.join(output, "desktop/index.md"), "utf8");
+    assert.ok(content.includes(`${UPSTREAM_REPOSITORY}/blob/${SHA}/.github/PULL_REQUEST_TEMPLATE.md#checklist`));
+    assert.equal(existsSync(path.join(output, ".github")), false);
+    writeFileSync(path.join(source, "desktop.md"), "# Desktop\n\n[Missing](../../missing.md)\n");
+    assert.throws(() => importLyricsCardDocs({ sourceRoot: source, outputRoot: output, publicOutputRoot: publicOutput, commitSha: SHA, importedAt: IMPORTED_AT }), /链接超出 docs/);
+  } finally { rmSync(root, { recursive: true, force: true }); }
+});
+
 test("imports stable routes, links, assets and metadata", () => {
   const { root, source, output, publicOutput } = fixture();
   try {

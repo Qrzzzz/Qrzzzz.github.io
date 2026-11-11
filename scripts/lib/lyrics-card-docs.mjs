@@ -613,7 +613,7 @@ function insertAfterFirstHeading(content, insertedContent) {
   return output;
 }
 
-function createResolver({ sourceRoot, sourcePath, markdownBySource, directoryIndexes, errors }) {
+function createResolver({ sourceRoot, sourcePath, commitSha, markdownBySource, directoryIndexes, errors }) {
   return (rawTarget) => {
     const destination = splitDestination(rawTarget);
     const originalHref = destination.href;
@@ -639,6 +639,14 @@ function createResolver({ sourceRoot, sourcePath, markdownBySource, directoryInd
       : normalizeRelative(path.posix.join(path.posix.dirname(sourcePath), decodedPath));
 
     if (!resolved || resolved.startsWith("../")) {
+      // Repository files outside docs remain upstream links, never local imports.
+      const repositoryPath = path.posix.normalize(path.posix.join("docs", resolved));
+      const repositoryFile = path.join(path.dirname(sourceRoot), ...repositoryPath.split("/"));
+      if (resolved && !repositoryPath.startsWith("../") &&
+          existsSync(repositoryFile) && statSync(repositoryFile).isFile()) {
+        destination.href = `${UPSTREAM_REPOSITORY}/blob/${commitSha}/${encodeRoutePath(repositoryPath)}${tail}`;
+        return joinDestination(destination);
+      }
       errors.push(`${sourcePath}: 链接超出 docs/ 范围 ${originalHref}`);
       return rawTarget;
     }
@@ -1041,6 +1049,7 @@ function importLyricsCardDocsInto({
     const rewritten = rewriteLinks(body, {
       sourceRoot: absoluteSource,
       sourcePath: entry.sourcePath,
+      commitSha: resolvedSha,
       markdownBySource,
       directoryIndexes,
       errors

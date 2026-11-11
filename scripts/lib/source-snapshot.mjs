@@ -61,7 +61,7 @@ export function syncProjectSnapshot(root, { refresh = false, lockFile = SOURCE_L
     if (git(["-C", cache, "remote", "get-url", "origin"]) !== expectedRemote) throw new Error(`Unexpected cache remote: ${cache}`);
     try { git(["-C", cache, "cat-file", "-e", `${entry.commit}^{commit}`]); }
     catch { git(["-C", cache, "fetch", "origin", entry.commit, "--depth", "1"]); }
-    git(["-C", cache, "sparse-checkout", "set", "--no-cone", "/README.md", entry.slug === "lyrics-card-generator" ? "/docs/" : `/${PROJECTS.find(p => p.slug === entry.slug).sourcePath}`]);
+    git(["-C", cache, "sparse-checkout", "set", "--no-cone", "/README.md", ...(entry.slug === "lyrics-card-generator" ? ["/docs/", "/.github/"] : [`/${PROJECTS.find(p => p.slug === entry.slug).sourcePath}`])]);
     git(["-C", cache, "checkout", "--detach", "--force", entry.commit]);
     sources.set(entry.slug, cache);
   }
