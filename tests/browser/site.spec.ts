@@ -1,5 +1,51 @@
 import { test, expect } from "@playwright/test";
 
+test("server-rendered reading remains available while application JS is stalled", async ({ page }) => {
+  let release!: () => void;
+  const gate = new Promise<void>(resolve => { release = resolve; });
+  await page.route("**/assets/app.*.js", async route => { await gate; await route.continue(); });
+  try {
+    await page.goto("/library/", { waitUntil: "commit" });
+    await expect(page.locator("main")).toBeVisible();
+    await expect(page.locator(".library-result").first()).toBeVisible();
+    expect(await page.locator("body").evaluate(el => getComputedStyle(el).visibility)).toBe("visible");
+    await expect(page.locator(".site-loading")).toHaveCount(0);
+  } finally { release(); }
+  await page.waitForLoadState("domcontentloaded");
+});
+
+test("late layout CSS never reveals an unstyled reading surface", async ({ page }) => {
+  let release!: () => void;
+  const gate = new Promise<void>(resolve => { release = resolve; });
+  await page.route("**/assets/style.*.css", async route => { await gate; await route.continue(); });
+  try {
+    await page.goto("/library/", { waitUntil: "commit" });
+    await page.waitForTimeout(300);
+    expect(await page.evaluate(() => performance.getEntriesByType("paint").length)).toBe(0);
+  } finally { release(); }
+  await page.waitForLoadState("domcontentloaded");
+  await expect(page.locator("main")).toBeVisible();
+});
+
+test("home destinations start navigation without an animation timer", async ({ page }) => {
+  await page.goto("/");
+  const delay = await page.evaluate(async () => {
+    const start = performance.now();
+    const changed = new Promise<number>(resolve => {
+      const original = history.pushState;
+      history.pushState = function (...args) {
+        history.pushState = original;
+        original.apply(this, args);
+        resolve(performance.now() - start);
+      };
+    });
+    (document.querySelector(".home-entry--library") as HTMLAnchorElement).click();
+    return changed;
+  });
+  expect(delay).toBeLessThan(400);
+  await expect(page).toHaveURL(/\/library\/$/);
+});
+
 test("mobile documentation sources occupy a readable row across layout breakpoints", async ({ page }) => {
   await page.goto("/projects/lyrics-card-generator/docs/");
   for (const width of [320, 390, 639, 640, 680, 681, 767]) {

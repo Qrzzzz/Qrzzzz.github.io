@@ -1,112 +1,13 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import vm from 'node:vm';
-import { readFileSync } from 'node:fs';
-import { bootstrapLoadingPoem } from '../docs/.vitepress/theme/loadingPoemRuntime.mjs';
 import { prepareLoadingHtml } from '../docs/.vitepress/theme/loadingBootHtml.mjs';
-
-function bootHarness({ rootPresent = true, stylesheetPending = false, poems = [] } = {}) {
-  let time = 0, id = 0, starts = 0, destroys = 0, ended = 0;
-  const tasks = new Map(), listeners = new Map(), classes = new Set();
-  const style = { sheet: stylesheetPending ? null : {}, dataset: {} };
-  const document = {
-    documentElement: { classList: { add: c => classes.add(c), remove: c => classes.delete(c) } },
-    querySelector: () => rootPresent ? {} : null,
-    querySelectorAll: () => [style],
-    addEventListener(type, listener) { listeners.set(type, listener); },
-    removeEventListener(type) { listeners.delete(type); },
-    dispatchEvent(event) { if (event.type === 'site-loading-finished') ended++; listeners.get(event.type)?.(); }
-  };
-  function schedule(fn, delay) { tasks.set(++id, { fn, at: time + delay }); return id; }
-  const context = vm.createContext({ document, Event, poems, performance: { now: () => time },
-    setTimeout: schedule, clearTimeout: timer => tasks.delete(timer),
-    requestAnimationFrame: fn => schedule(fn, 16),
-    MutationObserver: class { observe() {} disconnect() {} },
-    createPlayer: () => ({ start() { starts++; }, destroy() { destroys++; } })
-  });
-  vm.runInContext(`(${bootstrapLoadingPoem.toString()})(poems, createPlayer)`, context);
-  function tick(ms) {
-    const end = time + ms;
-    while (true) {
-      const next = [...tasks].sort((a, b) => a[1].at - b[1].at)[0];
-      if (!next || next[1].at > end) break;
-      time = next[1].at; tasks.delete(next[0]); next[1].fn();
-    }
-    time = end;
-  }
-  return { classes, tasks, listeners, tick, document, style,
-    counts: () => ({ starts, destroys, ended }),
-    ready: () => document.dispatchEvent(new Event('site-loading-ready')),
-    stylesReady() { style.sheet = {}; document.dispatchEvent(new Event('site-loading-style-ready')); }
-  };
-}
-
-test('fast boot releases ready content after painted frames and cleans up once', () => {
-  const h = bootHarness();
-  assert.equal(h.counts().starts, 1);
-  h.ready(); h.tick(31);
-  assert.ok(h.classes.has('site-boot-loading'));
-  h.tick(1);
-  assert.ok(!h.classes.has('site-boot-loading'));
-  assert.deepEqual(h.counts(), { starts: 1, destroys: 1, ended: 1 });
-  assert.equal(h.tasks.size, 0);
-  assert.equal(h.listeners.size, 0);
+test('SSR keeps layout styles blocking without a JS-dependent reading gate', () => {
+  const html = prepareLoadingHtml('<head><link rel="preload stylesheet" href="/style.css" as="style"><script id="sync-initial-theme-color">theme()</script></head><main>Article</main>');
+  assert.ok(html.indexOf('theme()') < html.indexOf('/style.css'));
+  assert.match(html, /<link rel="preload stylesheet" href="\/style.css" as="style">/);
+  assert.doesNotMatch(html, /visibility:hidden|site-boot-loading|data-site-boot-style/);
 });
-
-test('boot waits for both the application and full stylesheet without another minimum delay', () => {
-  const h = bootHarness({ stylesheetPending: true });
-  h.ready(); h.tick(1200);
-  assert.ok(h.classes.has('site-boot-loading'));
-  h.stylesReady(); h.tick(0);
-  assert.equal(h.counts().ended, 1);
-  const slowApp = bootHarness();
-  slowApp.tick(1200);
-  assert.equal(slowApp.counts().ended, 0);
-  slowApp.ready(); slowApp.tick(0);
-  assert.equal(slowApp.counts().ended, 1);
-});
-
-test('a delayed or failed poem request never blocks ready content or restarts a dismissed player', async () => {
-  let resolve;
-  const h = bootHarness({ poems: new Promise(done => { resolve = done; }) });
-  h.ready(); h.tick(32);
-  assert.equal(h.counts().ended, 1);
-  resolve([]);
-  await new Promise(setImmediate);
-  assert.equal(h.counts().starts, 0);
-  const failed = bootHarness({ poems: Promise.reject(new Error('offline')) });
-  failed.ready(); failed.tick(32);
-  await new Promise(setImmediate);
-  assert.equal(failed.counts().ended, 1);
-});
-
-test('broken startup releases SSR and listeners even if no loading root arrived', () => {
-  const h = bootHarness({ rootPresent: false });
-  h.tick(11999);
-  assert.equal(h.counts().ended, 0);
-  h.tick(1);
-  assert.ok(!h.classes.has('site-boot-loading'));
-  assert.equal(h.counts().ended, 1);
-  assert.equal(h.listeners.size, 0);
-});
-
-test('production HTML puts critical boot before resources and preserves no-JS styles', () => {
-  const source = readFileSync(new URL('../docs/.vitepress/theme/SiteLoading.vue', import.meta.url), 'utf8');
-  const tokens = readFileSync(new URL('../docs/.vitepress/theme/styles/tokens.css', import.meta.url), 'utf8');
-  const html = prepareLoadingHtml('<html><head><link rel="preload stylesheet" href="/style.css" as="style"><script type="module" src="/app.js"></script><script id="site-loading-bootstrap">boot()</script><script id="sync-initial-theme-color">theme()</script></head><body></body></html>', source, tokens);
-  assert.ok(html.indexOf('theme()') < html.indexOf('site-loading-critical'));
-  assert.ok(html.indexOf('boot()') < html.indexOf('/style.css'));
-  assert.ok(html.includes('data-site-boot-style media="print"'));
-  assert.ok(html.includes('<noscript><link rel="preload stylesheet" href="/style.css" as="style"></noscript>'));
-  assert.ok(html.includes('--site-canvas: #151d37;'));
-  assert.ok(!html.includes(':global('));
-  assert.ok(!html.includes('loading-reveal'));
-});
-
-test('optional font styles load without gating boot and retain a no-JS fallback', () => {
-  const source = readFileSync(new URL('../docs/.vitepress/theme/SiteLoading.vue', import.meta.url), 'utf8');
-  const tokens = readFileSync(new URL('../docs/.vitepress/theme/styles/tokens.css', import.meta.url), 'utf8');
-  const html = prepareLoadingHtml('<html><head><link rel="stylesheet" href="/fonts.css" data-site-fonts="" media="print" onload="this.media=\'all\'"><script id="site-loading-bootstrap">boot()</script><script id="sync-initial-theme-color">theme()</script></head></html>', source, tokens);
-  assert.ok(!html.includes('data-site-boot-style'));
+test('optional fonts remain deferred with a no-JS fallback', () => {
+  const html = prepareLoadingHtml('<head><link rel="stylesheet" href="/fonts.css" data-site-fonts="" media="print"></head>');
   assert.ok(html.includes('<noscript><link rel="stylesheet" href="/fonts.css" data-site-fonts="" media="all"></noscript>'));
 });
