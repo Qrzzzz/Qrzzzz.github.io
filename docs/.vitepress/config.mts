@@ -11,6 +11,7 @@ import { bootstrapLoadingPoem, createLoadingPoemPlayer } from "./theme/loadingPo
 import { prepareLoadingHtml } from "./theme/loadingBootHtml.mjs";
 import { searchAssets, renderSearchContent } from "./searchAssets";
 import { bootPoems, bootPoemsPath } from "./bootPoems";
+import { fontAssets, fontStylesPath } from "./fontAssets";
 
 const loadingSource = readFileSync(new URL("./theme/SiteLoading.vue", import.meta.url), "utf8");
 const loadingTokens = readFileSync(new URL("./theme/styles/tokens.css", import.meta.url), "utf8");
@@ -62,7 +63,7 @@ function pageLanguage(value: unknown, relativePath = "") {
 
 export default defineConfig({
   vite: {
-    plugins: [searchAssets(), bootPoems()],
+    plugins: [searchAssets(), bootPoems(), fontAssets()],
     resolve: {
       // Preserve the native footer layout while formatting dates consistently.
       alias: [{
@@ -79,12 +80,14 @@ export default defineConfig({
   base: "/",
 
   lastUpdated: true,
+  router: { prefetchLinks: false },
 
   sitemap: {
     hostname: "https://qrzzzz.github.io"
   },
 
   head: [
+    ["link", { rel: "stylesheet", href: fontStylesPath, media: "print", onload: "this.media='all'", "data-site-fonts": "" }],
     [
       "script",
       { id: "site-loading-bootstrap" },

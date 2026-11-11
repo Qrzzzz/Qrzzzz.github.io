@@ -842,6 +842,8 @@
 }
 
 .library-result {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 100px;
   display: grid;
   grid-template-columns: 100px minmax(220px, 1fr) 120px;
   gap: 24px;

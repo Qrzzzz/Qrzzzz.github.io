@@ -26,6 +26,14 @@ function escapeRegExp(value) {
 
 try {
   assert.ok(existsSync(path.join(outputRoot, "index.html")), "请先运行 npm run docs:build，再验收生产构建产物。");
+  const libraryHtml = readFileSync(path.join(outputRoot, "library/index.html"), "utf8");
+  const primaryStyles = libraryHtml.match(/<link[^>]*href="([^"]+)"[^>]*data-site-boot-style[^>]*>/g) ?? [];
+  assert.ok(primaryStyles.some(link => {
+    const href = link.match(/href="([^"]+)"/)[1];
+    return readFileSync(path.join(outputRoot, href), "utf8").includes(".library-result");
+  }), "Library must load its layout stylesheet before dismissing boot");
+  assert.ok(primaryStyles.every(link => !link.includes("/fonts.")), "Font declarations must not gate readable content");
+  assert.match(libraryHtml, /<link[^>]*\/assets\/fonts\.[^>]*media="print"[^>]*data-site-fonts/, "Font styles need their independent deferred link");
   const notFoundHtml = readFileSync(path.join(outputRoot, "404.html"), "utf8");
   assert.match(notFoundHtml, /<html lang="en"/, "404 的英文界面应有正确语言标记");
   const notFoundFallback = notFoundHtml.match(/<div id="app"><\/div><noscript>([\s\S]*?)<\/noscript>/)?.[1] ?? "";

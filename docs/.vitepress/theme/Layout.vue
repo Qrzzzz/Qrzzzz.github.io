@@ -12,6 +12,7 @@ import VariableProximity from "./effects/VariableProximity.vue";
 import NavActions from "./NavActions.vue";
 import NotFound from "./NotFound.vue";
 import SiteLoading from "./SiteLoading.vue";
+import { prefetchPage } from "./prefetchPage";
 
 const { Layout } = DefaultTheme;
 const { frontmatter, isDark, page } = useData();
@@ -81,6 +82,9 @@ const navigationAccessibility = createNavigationAccessibility();
 const topNavigationMarker = createTopNavigationMarker();
 const headingMarker = createHeadingMarker();
 onMounted(() => {
+  document.addEventListener("pointerover", prefetchPage, { passive: true });
+  document.addEventListener("focusin", prefetchPage);
+  document.addEventListener("touchstart", prefetchPage, { passive: true });
   clientReady.value = true;
   syncDocumentMetadata();
   nextTick(syncDocumentMetadata);
@@ -96,6 +100,9 @@ watch(() => page.value.relativePath, () => nextTick(() => {
   headingMarker.sync();
 }), { flush: "post" });
 onBeforeUnmount(() => {
+  document.removeEventListener("pointerover", prefetchPage);
+  document.removeEventListener("focusin", prefetchPage);
+  document.removeEventListener("touchstart", prefetchPage);
   navigationAccessibility.destroy();
   topNavigationMarker.destroy();
   headingMarker.destroy();

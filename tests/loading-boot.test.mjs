@@ -102,3 +102,11 @@ test('production HTML puts critical boot before resources and preserves no-JS st
   assert.ok(!html.includes(':global('));
   assert.ok(!html.includes('loading-reveal'));
 });
+
+test('optional font styles load without gating boot and retain a no-JS fallback', () => {
+  const source = readFileSync(new URL('../docs/.vitepress/theme/SiteLoading.vue', import.meta.url), 'utf8');
+  const tokens = readFileSync(new URL('../docs/.vitepress/theme/styles/tokens.css', import.meta.url), 'utf8');
+  const html = prepareLoadingHtml('<html><head><link rel="stylesheet" href="/fonts.css" data-site-fonts="" media="print" onload="this.media=\'all\'"><script id="site-loading-bootstrap">boot()</script><script id="sync-initial-theme-color">theme()</script></head></html>', source, tokens);
+  assert.ok(!html.includes('data-site-boot-style'));
+  assert.ok(html.includes('<noscript><link rel="stylesheet" href="/fonts.css" data-site-fonts="" media="all"></noscript>'));
+});

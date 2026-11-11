@@ -17,6 +17,10 @@ export function prepareLoadingHtml(html, loaderSource, tokensSource) {
   });
   // Without JavaScript the original stylesheet remains blocking and SSR stays readable.
   html = html.replace(/<link\b[^>]*\brel="[^"]*stylesheet[^"]*"[^>]*>/g, link => {
+    if (link.includes("data-site-fonts")) {
+      const fallback = link.replace('media="print"', 'media="all"').replace(/ onload="[^"]*"/, '');
+      return `${link}<noscript>${fallback}</noscript>`;
+    }
     const asyncLink = link.replace(/>$/, ' data-site-boot-style media="print" onload="this.media=\'all\';this.dataset.siteStyleReady=\'true\';document.dispatchEvent(new Event(\'site-loading-style-ready\'))" onerror="this.dataset.siteStyleReady=\'true\';document.dispatchEvent(new Event(\'site-loading-style-ready\'))">');
     return `${asyncLink}<noscript>${link}</noscript>`;
   });
