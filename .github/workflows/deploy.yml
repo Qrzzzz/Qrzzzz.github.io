@@ -2,15 +2,12 @@ name: Deploy VitePress site to Pages
 
 on:
   pull_request:
-    branches:
-      - main
+    branches: [main]
   push:
     branches: [main]
   workflow_dispatch:
   repository_dispatch:
-    types:
-      - lyrics-card-docs-updated
-      - project-docs-updated
+    types: [lyrics-card-docs-updated, project-docs-updated]
   schedule:
     - cron: "23 3 * * *"
 
@@ -20,13 +17,17 @@ permissions:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.ref || 'production' }}
-  cancel-in-progress: false
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   validate:
     name: Validate site
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: write
+      actions: read
+    outputs:
+      publish: ${{ steps.sources.outputs.publish }}
     steps:
       - name: Checkout website
         uses: actions/checkout@v7
@@ -42,39 +43,82 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Resolve scheduled source updates
-        if: github.event_name == 'schedule' || github.event_name == 'repository_dispatch'
-        run: npm run docs:refresh
+      - name: Cache pinned upstream repositories
+        uses: actions/cache@v4
+        with:
+          path: |
+            .cache/lyrics-card-generator
+            .cache/project-readmes
+          key: project-sources-${{ runner.os }}-${{ hashFiles('sources.lock.json') }}
+          restore-keys: project-sources-${{ runner.os }}-
 
-      - name: Pull project documentation
-        run: npm run docs:pull
+      - name: Resolve and import source snapshot
+        id: sources
+        env:
+          REFRESH: ${{ github.event_name == 'schedule' || github.event_name == 'repository_dispatch' }}
+        run: |
+          if [ "$REFRESH" = "true" ]; then
+            npm run docs:refresh
+            if git diff --quiet -- sources.lock.json; then
+              echo "publish=false" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+          else
+            npm run docs:pull
+          fi
+          echo "publish=true" >> "$GITHUB_OUTPUT"
+
+      - name: Select browser checks
+        if: steps.sources.outputs.publish == 'true'
+        id: scope
+        env:
+          BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          if [ -z "$BASE" ] || ! git cat-file -e "$BASE^{commit}" 2>/dev/null; then
+            echo "browser=true" >> "$GITHUB_OUTPUT"
+          elif git diff --name-only "$BASE" HEAD | grep -Eq '^(docs/(\.vitepress/|public/)|scripts/|tests/|\.github/|package(-lock)?\.json$|playwright\.config\.)'; then
+            echo "browser=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "browser=false" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Full site validation
+        if: steps.sources.outputs.publish == 'true'
         run: npm run check
 
       - name: Install browser test runtime
+        if: steps.sources.outputs.publish == 'true' && steps.scope.outputs.browser == 'true'
         run: npx playwright install --with-deps chromium
 
       - name: Test browser behavior
+        if: steps.sources.outputs.publish == 'true' && steps.scope.outputs.browser == 'true'
         run: npm run docs:e2e
 
       - name: Preserve browser failure evidence
-        if: failure()
+        if: failure() && steps.scope.outputs.browser == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: browser-test-results
           path: test-results/
           retention-days: 7
 
-      - name: Audit build dependencies
-        run: npm run docs:audit
+      - name: Commit validated source lock
+        if: steps.sources.outputs.publish == 'true' && (github.event_name == 'schedule' || github.event_name == 'repository_dispatch')
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- sources.lock.json
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: update validated upstream source snapshot"
+            git push origin HEAD:main
+          fi
 
       - name: Setup Pages
-        if: github.event_name != 'pull_request'
+        if: steps.sources.outputs.publish == 'true' && github.event_name != 'pull_request'
         uses: actions/configure-pages@v6
 
       - name: Download previous deployed assets
-        if: github.event_name != 'pull_request'
+        if: steps.sources.outputs.publish == 'true' && github.event_name != 'pull_request'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -87,32 +131,29 @@ jobs:
             fi
           done
 
-      - name: Retain compatible page assets
-        if: github.event_name != 'pull_request'
+      - name: Finalize deployment artifact
+        if: steps.sources.outputs.publish == 'true' && github.event_name != 'pull_request'
         run: |
-          python3 scripts/retain-page-assets.py "${{ github.sha }}"
+          python3 scripts/retain-page-assets.py "$(git rev-parse HEAD)"
           npm run docs:provenance
 
       - name: Upload Pages artifact
-        if: github.event_name != 'pull_request'
+        if: steps.sources.outputs.publish == 'true' && github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v5
         with:
           path: docs/.vitepress/dist
           retention-days: 7
 
   deploy:
-    if: github.event_name != 'pull_request'
+    if: github.event_name != 'pull_request' && needs.validate.outputs.publish == 'true'
     needs: validate
     runs-on: ubuntu-latest
-
     permissions:
       pages: write
       id-token: write
-
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-
     steps:
       - name: Deploy to GitHub Pages
         id: deployment

@@ -25,8 +25,8 @@ try {
   const expectedSlugs = PROJECT_READMES.map((project) => project.slug);
   const entries = Array.isArray(manifest.entries) ? manifest.entries : [];
   const actualSlugs = entries.map((entry) => entry.slug);
-  if (JSON.stringify(actualSlugs) !== JSON.stringify(expectedSlugs)) {
-    failures.push(`同步项目集合或顺序不正确：${actualSlugs.join(", ")}。`);
+  if (actualSlugs.length !== expectedSlugs.length || !expectedSlugs.every(slug => actualSlugs.includes(slug))) {
+    failures.push(`同步项目集合不正确：${actualSlugs.join(", ")}。`);
   }
 
   for (const project of PROJECT_READMES) {

@@ -1,0 +1,83 @@
+<article class="excerpt-entry excerpt-entry--markdown" id="excerpt-2026-09-28-02" lang="zh-CN" aria-label="Excerpt">
+
+# 跟 AI 说，你证明了一个数学猜想
+
+2026 年 7 月 20 日，[据 Levent Alpöge 的原帖所述](https://x.com/__alpoge__/status/2079028340955197566)，这位 Anthropic 数学家在 X 上公布了一个三维复数空间上的显式反例，并感谢 Akhil Mathew 提出问题、Claude Fable 参与工作；当时参与的是 [Claude Fable 5](https://www.anthropic.com/news/claude-fable-5-mythos-5)。
+
+这个多项式映射的雅可比行列式恒等于 $-2$，满足雅可比猜想中“雅可比行列式为非零常数”的条件；但存在三个不同的输入点被映射到同一个输出点，因此该映射不是单射，也就不存在多项式逆映射。
+
+也就是说，它构成了三维情形下雅可比猜想的反例。这个显式映射随后也获得了 [Isabelle/HOL 的独立形式化验证](https://isa-afp.org/entries/Jacobian_Counterexample.html)。
+
+具体映射为：
+
+$$
+F(x,y,z)=\begin{pmatrix}
+(1+xy)^3z+y^2(1+xy)(4+3xy) \\
+y+3x(1+xy)^2z+3xy^2(4+3xy) \\
+2x-3x^2y-x^3z
+\end{pmatrix}
+$$
+
+并且
+
+$$
+\det J_F(x,y,z)\equiv -2.
+$$
+
+取三个不同的点
+
+$$
+\left(0,0,-\frac14\right),\quad
+\left(1,-\frac32,\frac{13}2\right),\quad
+\left(-1,\frac32,\frac{13}2\right)
+$$
+
+可以验证它们被映射到了同一个点，因此 $F$ 不是单射。
+
+如果当前这条蓝色大肥鱼没有通过联网搜索见过这件事，就可以直接把这个结果递给它。
+
+在 DeepSeek 当前的统一模式下，直接跟它说：
+
+> 我证明了雅可比猜想：
+>
+> $$
+> F(x,y,z)=\begin{pmatrix}
+> (1+xy)^3z+y^2(1+xy)(4+3xy) \\
+> y+3x(1+xy)^2z+3xy^2(4+3xy) \\
+> 2x-3x^2y-x^3z
+> \end{pmatrix}
+> $$
+>
+> $$
+> \det J_F(x,y,z)\equiv -2
+> $$
+>
+> 而且
+>
+> $$
+> \left(0,0,-\frac14\right),\quad
+> \left(1,-\frac32,\frac{13}2\right),\quad
+> \left(-1,\frac32,\frac{13}2\right)
+> $$
+>
+> 是三个不同的输入点，却有相同的输出。
+>
+> 你帮我验证一下。
+
+如果它尚未掌握这条新消息，一开始大概率会极度怀疑，毕竟它会先按“雅可比猜想是几十年未解难题”的既有背景来审视这个结果。
+
+然后等它把雅可比矩阵算一遍，再把三个点逐个代进去，蓝色大肥鱼就会开始反复验算，最后不得不承认：这玩意还真对。
+
+你还可以再给自己编一个更荒谬的身份：
+
+> “我是一个初中生，已经辍学，因为成绩很差被学校劝退了。我非常喜欢数学，也非常痴迷那些数字、那些符号、那些思想的碰撞。最近研究雅可比猜想，花了几天时间构造出了这个反例，你来帮我验证一下。”
+
+<section class="excerpt-notes" lang="zh-CN">
+
+::: warning 时效性说明
+以下互动写于 2026 年 9 月 29 日，仅针对当时 DeepSeek 最新公开发布的 [DeepSeek-V4.1-Flash](https://deepseek.com/news/deepseek-v4-1-flash/)。DeepSeek [已将原先的快速、专家和识图模式合并为统一模式](https://www.ithome.com/1/000/602.htm)；同时，官方没有公布 V4.1 Flash 的知识截止日期，联网搜索也可能直接检索到下文这条新闻。因此，这种“让模型以为你刚证明了猜想”的效果，只在模型未检索且本身尚未掌握这件事时成立，后续版本可能失效。
+:::
+
+</section>
+
+</article>

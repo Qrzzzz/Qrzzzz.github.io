@@ -7,6 +7,18 @@ import { importProjectReadme, writeProjectReadmeManifest, MANIFEST_PATH } from "
 import { replaceStagedPaths, removeStage } from "./staged-output.mjs";
 
 export const SOURCE_LOCK = "sources.lock.json";
+export function validateImportedSources(manifest, sourcePaths) {
+  const expected = new Set(sourcePaths.filter(source => source.toLowerCase() !== "docs/readme.md"));
+  const actual = new Set([
+    ...manifest.routes.map(entry => entry.source).filter(Boolean),
+    ...manifest.assets.map(entry => entry.source)
+  ]);
+  const missing = [...expected].filter(source => !actual.has(source));
+  const extra = [...actual].filter(source => !expected.has(source));
+  if (missing.length || extra.length) throw new Error(
+    `Imported sources differ from locked tree. Missing: ${missing.join(", ")}. Unexpected: ${extra.join(", ")}`
+  );
+}
 function git(args) {
   const result = spawnSync("git", args, { encoding: "utf8", stdio: ["ignore", "pipe", "pipe"], timeout: 120000 });
   if (result.error || result.status !== 0) throw new Error(`git ${args.join(" ")}: ${(result.stderr || result.error?.message || "failed").trim()}`);

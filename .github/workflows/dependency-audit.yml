@@ -1,0 +1,22 @@
+name: Audit dependencies
+on:
+  push:
+    branches: [main]
+    paths: [package.json, package-lock.json, .github/workflows/dependency-audit.yml]
+  pull_request:
+    branches: [main]
+    paths: [package.json, package-lock.json, .github/workflows/dependency-audit.yml]
+  schedule:
+    - cron: "35 3 * * 1"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+      - run: npm run docs:audit

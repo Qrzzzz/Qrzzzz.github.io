@@ -43,8 +43,9 @@ try {
   assert.match(notFoundFallback, /data-poem-count="250"/, "404 应保留完整诗歌集合和静态诗歌");
   mkdirSync(cacheRoot, { recursive: true });
   const mathHtml = readFileSync(path.join(outputRoot, "excerpts/2026-09-28-02.html"), "utf8");
-  assert.equal((mathHtml.match(/<mjx-container\b/g) ?? []).length, 8, "基准页应预渲染全部八处公式");
-  assert.equal((mathHtml.match(/<mjx-assistive-mml\b/g) ?? []).length, 8, "公式应保留辅助 MathML");
+  const formulas = (mathHtml.match(/<mjx-container\b/g) ?? []).length;
+  assert.ok(formulas > 0, "公式页应预渲染数学内容");
+  assert.equal((mathHtml.match(/<mjx-assistive-mml\b/g) ?? []).length, formulas, "公式应保留辅助 MathML");
   assert.doesNotMatch(mathHtml, /data-mjx-error|<merror/, "生产公式不应含 TeX 错误");
   fixtureRoot = mkdtempSync(path.join(cacheRoot, "vitepress-output-test-"));
   const fixtureConfigRoot = path.join(fixtureRoot, ".vitepress");

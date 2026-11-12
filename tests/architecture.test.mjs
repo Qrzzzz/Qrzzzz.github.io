@@ -10,7 +10,7 @@ import { checkSiteNavigation } from "../scripts/lib/site-navigation.mjs";
 import { replaceStagedPaths, removeStage } from "../scripts/lib/staged-output.mjs";
 import { importLyricsCardDocs } from "../scripts/lib/lyrics-card-docs.mjs";
 import { PROJECTS } from "../docs/.vitepress/content/projects.mjs";
-import { validateSourceLock } from "../scripts/lib/source-snapshot.mjs";
+import { validateSourceLock, validateImportedSources } from "../scripts/lib/source-snapshot.mjs";
 
 test("YAML comments, lists and multiline strings share one calendar-safe contract", () => {
   const { frontmatter, error } = parseFrontmatterDocument('---\ntitle: "A: B" # comment\ntags: [AI, Vue]\npublished: 2026-02-31\npreview: >-\n  first\n  second\n---\n');
@@ -104,4 +104,12 @@ test("source snapshot rejects omitted projects and moving refs", () => {
   assert.equal(validateSourceLock(lock), lock);
   assert.throws(() => validateSourceLock({ ...lock, sources: lock.sources.slice(1) }), /Incomplete/);
   assert.throws(() => validateSourceLock({ ...lock, sources: lock.sources.map(source => ({ ...source, commit: "main" })) }), /Invalid/);
+});
+
+test("import completeness follows the locked tree and permits intentional upstream removals", () => {
+  const manifest = { routes: [{ source: "docs/desktop.md" }, { source: null }], assets: [{ source: "docs/manual.pdf" }] };
+  const sources = ["docs/README.md", "docs/desktop.md", "docs/manual.pdf"];
+  assert.doesNotThrow(() => validateImportedSources(manifest, sources));
+  assert.throws(() => validateImportedSources(manifest, [...sources, "docs/new.md"]), /Missing: docs\/new.md/);
+  assert.throws(() => validateImportedSources(manifest, ["docs/desktop.md"]), /Unexpected: docs\/manual.pdf/);
 });

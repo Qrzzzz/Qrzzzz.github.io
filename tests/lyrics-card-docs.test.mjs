@@ -5,7 +5,6 @@ import path from "node:path";
 import test from "node:test";
 import {
   CONTENT_FORMAT,
-  PRODUCTION_BASELINE,
   UPSTREAM_REPOSITORY,
   importLyricsCardDocs
 } from "../scripts/lib/lyrics-card-docs.mjs";
@@ -396,15 +395,6 @@ test("requires exactly the six supported release languages before replacing outp
   } finally {
     rmSync(root, { recursive: true, force: true });
   }
-});
-
-test("pins explicit production anti-shrink baselines", () => {
-  assert.deepEqual(PRODUCTION_BASELINE, {
-    referenceCommit: "01166666",
-    minimumReleasePages: 234,
-    minimumImportedRoutes: 238,
-    minimumReachablePages: 246
-  });
 });
 
 test("a repeated import removes deleted pages and discovers new Markdown", () => {

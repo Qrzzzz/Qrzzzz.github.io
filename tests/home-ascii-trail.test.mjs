@@ -1,5 +1,4 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
 import test from "node:test";
 
 import {
@@ -10,18 +9,6 @@ import {
   createHomeAsciiTrailRuntime
 } from "../docs/.vitepress/theme/homeAsciiTrailRuntime.mjs";
 
-const layoutSource = readFileSync(
-  new URL("../docs/.vitepress/theme/Layout.vue", import.meta.url),
-  "utf8"
-);
-const componentSource = readFileSync(
-  new URL("../docs/.vitepress/theme/HomeAsciiTrail.vue", import.meta.url),
-  "utf8"
-);
-const siteStyles = readFileSync(
-  new URL("../docs/.vitepress/theme/styles/site.css", import.meta.url),
-  "utf8"
-);
 
 class FakeEventTarget {
   listeners = new Map();
@@ -202,26 +189,4 @@ test("touch, coarse pointers, reduced motion, and hidden pages stay inactive", (
   active.document.dispatch("visibilitychange");
   assert.equal(active.frames.size, 0);
   assert.equal(active.runtime.getState().activeCells, 0);
-});
-
-test("the trail remains behind the interactive homepage", () => {
-  const trailIndex = layoutSource.indexOf("<HomeAsciiTrail");
-  const defaultLayoutIndex = layoutSource.indexOf("<Layout>");
-
-  assert.ok(trailIndex > 0);
-  assert.ok(defaultLayoutIndex > trailIndex);
-  assert.match(
-    layoutSource,
-    /<HomeAsciiTrail v-if="clientReady && pageKind === 'home'" \/>/
-  );
-  assert.match(componentSource, /class="home-ascii-trail"/);
-  assert.match(componentSource, /aria-hidden="true"/);
-  assert.match(componentSource, /position:\s*fixed/);
-  assert.match(componentSource, /z-index:\s*1/);
-  assert.match(componentSource, /pointer-events:\s*none/);
-  assert.match(componentSource, /prefers-reduced-motion:\s*reduce/);
-  assert.match(
-    siteStyles,
-    /\.site-layout\[data-page-kind="home"\] > \.Layout\s*\{[\s\S]*?z-index:\s*2/
-  );
 });

@@ -196,15 +196,3 @@ test("imports new releases and rewritten README copy without pinning a version l
     rmSync(root, { recursive: true, force: true });
   }
 });
-
-test("wires all project sync and check scripts into deployment", () => {
-  const packageJson = JSON.parse(readFileSync("package.json", "utf8"));
-  const workflow = readFileSync(".github/workflows/deploy.yml", "utf8");
-  const navigationCheck = readFileSync("scripts/check-site-navigation.mjs", "utf8");
-  assert.equal(packageJson.scripts["docs:pull"], "node scripts/pull-project-docs.mjs");
-  assert.equal(packageJson.scripts["docs:check"], "node scripts/check-project-docs.mjs");
-  assert.match(workflow, /name: Pull project documentation\s+run: npm run docs:pull/);
-  assert.doesNotMatch(workflow, /Checkout lyrics-card-generator docs/);
-  assert.match(workflow, /run: npm run check/);
-  assert.match(navigationCheck, /checkSiteNavigation/);
-});

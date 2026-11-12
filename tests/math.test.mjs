@@ -11,7 +11,7 @@ const renderer = createMarkdownRenderer('docs', {
 });
 
 test('MathJax renders the baseline including quoted matrices and fractions', async () => {
-  const source = readFileSync('docs/excerpts/2026-09-28-02.md', 'utf8').replace(/^---[\s\S]*?---\s*/, '');
+  const source = readFileSync('tests/fixtures/math.md', 'utf8').replace(/^---[\s\S]*?---\s*/, '');
   const html = (await renderer).render(source);
   const { document } = parseHTML(html);
   assert.equal(document.querySelectorAll('mjx-container').length, 8);

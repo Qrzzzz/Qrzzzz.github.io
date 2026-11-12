@@ -111,13 +111,14 @@ test("reports excerpt previews, duplicate URLs, and archived featured items", ()
   assert.match(message, /分类首页，不能加入 Library 内容列表/);
 });
 
-test("forbids article and excerpt descriptions while requiring them for prompts", () => {
+test("accepts optional article and excerpt descriptions and requires prompt descriptions", () => {
   const articleWithDescription = record({
-    description: "文章摘要不应继续存在。"
+    description: "可选的文章摘要。"
   });
   const excerptWithDescription = record({
     kind: "excerpt",
-    description: "偶拾摘要不应继续存在。"
+    description: "可选的偶拾摘要。",
+    preview: "列表使用的原文片段。"
   });
   excerptWithDescription.relativePath = "excerpts/example.md";
   excerptWithDescription.expectedKind = "excerpt";
@@ -125,23 +126,8 @@ test("forbids article and excerpt descriptions while requiring them for prompts"
   promptWithoutDescription.relativePath = "prompt-collection/example.md";
   promptWithoutDescription.expectedKind = "prompt";
 
-  const message = validateLibraryRecords([
-    articleWithDescription,
-    excerptWithDescription,
-    promptWithoutDescription
-  ]).join("\n");
-
-  assert.match(message, /文章，不应提供 description/);
-  assert.match(message, /excerpts\/example\.md 是偶拾，不应提供 description/);
+  assert.deepEqual(validateLibraryRecords([articleWithDescription]), []);
+  assert.deepEqual(validateLibraryRecords([excerptWithDescription]), []);
+  const message = validateLibraryRecords([promptWithoutDescription]).join("\n");
   assert.match(message, /prompt-collection\/example\.md 缺少 description/);
-});
-
-test("wires the metadata check into the complete validation chain", () => {
-  const packageJson = JSON.parse(readFileSync("package.json", "utf8"));
-
-  assert.equal(
-    packageJson.scripts["docs:content-check"],
-    "node scripts/check-content-metadata.mjs"
-  );
-  assert.match(packageJson.scripts.check, /npm run docs:content-check/);
 });

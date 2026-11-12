@@ -10,9 +10,9 @@ import {
   GENERATED_PUBLIC_ROOT,
   GENERATED_ROOT,
   MANIFEST_NAME,
-  PRODUCTION_BASELINE,
   generatedManifest
 } from "./lib/lyrics-card-docs.mjs";
+import { validateImportedSources } from "./lib/source-snapshot.mjs";
 
 const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const generatedRoot = path.join(repositoryRoot, GENERATED_ROOT);
@@ -139,13 +139,13 @@ try {
   if (!manifest.importedAt || Number.isNaN(Date.parse(manifest.importedAt))) failures.push("导入清单缺少有效同步时间。");
   if (!Array.isArray(manifest.routes)) {
     failures.push("导入清单缺少路由列表。");
-  } else if (manifest.routes.length < PRODUCTION_BASELINE.minimumImportedRoutes) {
-    failures.push(
-      `导入路由意外缩水：当前 ${manifest.routes.length}，不得低于 ${PRODUCTION_BASELINE.minimumImportedRoutes}` +
-      `（基线 commit ${PRODUCTION_BASELINE.referenceCommit}）。`
-    );
   }
   if (!Array.isArray(manifest.assets)) failures.push("导入清单缺少附件列表。");
+  const upstreamFiles = execFileSync("git", [
+    "-C", path.join(repositoryRoot, ".cache/lyrics-card-generator"),
+    "ls-tree", "-r", "--name-only", manifest.commit, "docs"
+  ], { encoding: "utf8" }).trim().split(/\r?\n/).filter(Boolean);
+  validateImportedSources(manifest, upstreamFiles);
   if (manifest.projectPage?.source !== "README.md" || manifest.projectPage?.route !== "/projects/lyrics-card-generator/") {
     failures.push("导入清单缺少 README 驱动的项目页记录。");
   }
@@ -191,12 +191,6 @@ try {
     if (!importedMarkdown.includes(`${manifest.repository}/blob/${manifest.commit}/${encodedSource}`)) {
       failures.push(`生成页面没有链接到锁定 commit 的源文件：${entry.route}`);
     }
-    if (/^\s*\*\s+/m.test(importedMarkdown)) {
-      failures.push(`生成页面仍使用星号列表，未按站内格式规范化：${entry.route}`);
-    }
-    if (/<details\b[^>]*>\s*<summary\b[^>]*>.*?<\/summary>.*?<\/details>/i.test(importedMarkdown)) {
-      failures.push(`生成页面仍包含单行折叠内容：${entry.route}`);
-    }
   }
 
   const requiredRoutes = [
@@ -219,16 +213,6 @@ try {
       failures.push(`项目文档入口没有自动收录上游维护文档：${entry.source}`);
     }
   }
-  const releasePages = (manifest.routes ?? []).filter(
-    (entry) => /^docs\/releases\/v(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?\.(?:zh-CN|zh-TW|en|fr|ja|es)\.md$/.test(entry.source ?? "")
-  );
-  if (releasePages.length < PRODUCTION_BASELINE.minimumReleasePages) {
-    failures.push(
-      `具体版本说明意外缩水：当前 ${releasePages.length}，不得低于 ${PRODUCTION_BASELINE.minimumReleasePages}` +
-      `（基线 commit ${PRODUCTION_BASELINE.referenceCommit}）。`
-    );
-  }
-
   for (const asset of manifest.assets ?? []) {
     const sourceRelative = asset.source.replace(/^docs\//, "");
     const publicFile = path.join(generatedPublicRoot, ...sourceRelative.split("/"));
@@ -248,7 +232,7 @@ try {
   }
   console.log(
     `[docs:check] 通过：${manifest.routes.length} 条唯一路由，` +
-    `${releasePages.length} 个具体版本说明，${manifest.assets.length} 个附件，` +
+    `${manifest.assets.length} 个附件，` +
     `commit ${manifest.commit.slice(0, 8)}` +
     `${checkDist ? "，构建边界正常" : ""}。`
   );

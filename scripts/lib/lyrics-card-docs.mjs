@@ -21,13 +21,6 @@ export const GENERATED_PUBLIC_ROOT = "docs/public/projects/lyrics-card-generator
 export const MANIFEST_NAME = ".import-manifest.json";
 export const UPSTREAM_REPOSITORY = "https://github.com/Qrzzzz/lyrics-card-generator";
 export const CONTENT_FORMAT = "site-writing-style@1";
-// Raise these together, with tests, after an intentional production content change.
-export const PRODUCTION_BASELINE = Object.freeze({
-  referenceCommit: "01166666",
-  minimumReleasePages: 234,
-  minimumImportedRoutes: 238,
-  minimumReachablePages: 246
-});
 
 const REQUIRED_SOURCES = ["desktop.md", "examples.md", "releases/README.md"];
 const REQUIRED_ROUTES = [
