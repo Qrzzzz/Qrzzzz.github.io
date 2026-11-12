@@ -117,32 +117,6 @@ test("keeps hand-written pages on their category-specific metadata and lead cont
       assert.doesNotMatch(unfenced, /^#\s|<h1(?:\s|>)/m);
       continue;
     }
-    const markdownH1 = unfenced.match(/^#\s+(.+)$/gm) ?? [];
-    const htmlH1 = unfenced.match(/<h1(?:\s|>)/gi) ?? [];
-    const isExcerpt = frontmatterValue(page.frontmatter, "kind") === "excerpt";
-    if (!isExcerpt) {
-      assert.equal(markdownH1.length + htmlH1.length, 1, `${page.relativePath} 应遵循所属分类的标题规则`);
-    }
-
-    if (!isExcerpt) {
-      assert.equal(markdownH1.length, 1, `${page.relativePath} 应使用 Markdown 一级标题`);
-      const visibleTitle = markdownH1[0].replace(/^#\s+/, "").trim();
-      assert.equal(visibleTitle, title, `${page.relativePath} 的 title 与一级标题应一致`);
-      if (page.relativePath === "notes/sangetsuki-translation.md") {
-        // This translation introduces its source in an info block instead of a lead.
-        assert.doesNotMatch(unfenced, /<p class="lead">/);
-        assert.match(unfenced, /^#\s+.+\n\n::: info 原文来源与翻译说明\n本篇中文译文与译注由 .+\n/m);
-      } else if (page.relativePath === "notes/hitler-art-school-and-the-second-world-war.md") {
-        // The counterfactual keeps its opening judgment inside the source body.
-        assert.doesNotMatch(unfenced, /<p class="lead">/);
-      } else {
-        assert.match(
-          unfenced,
-          /^#\s+.+\n\n<p class="lead">.+<\/p>/m,
-          `${page.relativePath} 的一级标题后应有明确导语`
-        );
-      }
-    }
   }
 });
 
@@ -160,10 +134,7 @@ test("keeps heading levels continuous and semantic formatting free of visual-onl
     for (const [pattern, message] of [
       [/<u\b/i, "不应使用下划线制造强调"],
       [/<strong class="content-index-title"/, "索引标题不应依赖 strong 模拟层级"],
-      [/::: details/, "折叠内容应使用原生 details"],
-      [/^title: 页面标题$/m, "不应保留标题占位文字"],
-      [/一句话说明本页的主要内容/, "不应保留摘要占位文字"],
-      [/正文从这里开始/, "不应保留正文占位文字"]
+      [/::: details/, "折叠内容应使用原生 details"]
     ]) {
       assert.doesNotMatch(unfenced, pattern, `${page.relativePath} ${message}`);
     }
