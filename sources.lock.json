@@ -1,21 +1,21 @@
 {
   "schemaVersion": 1,
-  "resolvedAt": "2026-10-29T12:42:34.202Z",
+  "resolvedAt": "2026-11-13T11:09:46.943Z",
   "sources": [
     {
       "slug": "lyrics-card-generator",
       "repository": "Qrzzzz/lyrics-card-generator",
-      "commit": "86598166ea41d8b4fd082fe8d50cd47e67fec2b7"
+      "commit": "5e5b116ce747fb41355122f4062ef4c9f1df18e3"
     },
     {
       "slug": "lexora",
       "repository": "Qrzzzz/lexora",
-      "commit": "0a3022323d4e12deb04cb76cf000254be7786490"
+      "commit": "2b60920953d22b638c3508efbdc3525a2aa332d7"
     },
     {
       "slug": "lyrics-card-generator-android",
       "repository": "Qrzzzz/lyrics-card-generator-android",
-      "commit": "ae255651d81d1f6f4293e035d6d092b0cacb9d54"
+      "commit": "f6bcaa498214061601b3797ab80a45ca0ce6c592"
     },
     {
       "slug": "second-glow",
@@ -30,12 +30,12 @@
     {
       "slug": "bili-downloader",
       "repository": "Qrzzzz/bili-downloader",
-      "commit": "6c4bd066cc704661c3ebfe48393e2b20571c0b6d"
+      "commit": "ef72fde6c138e51d681ad2724694c978fc3fe523"
     },
     {
       "slug": "aegis-vault-mobile",
       "repository": "Qrzzzz/AegisVaultMobile",
-      "commit": "fd9811b82453d1feebecfe3e167b32a9b30acb1a"
+      "commit": "49651485d357ac68eac9082f85a7706d1aa80fb6"
     },
     {
       "slug": "slop-infinity",
@@ -45,12 +45,12 @@
     {
       "slug": "pelican-bike-benchmark",
       "repository": "Qrzzzz/pelican-bike-benchmark",
-      "commit": "b40263d9aa3c3e045907691826e296e038891e8a"
+      "commit": "8157214fa3c1c6ea5df7be3bf711e0f35298209e"
     },
     {
       "slug": "openrevo",
       "repository": "Qrzzzz/OpenRevo",
-      "commit": "dd882ef4c5149898494450552eaf5d1896cf1dd4"
+      "commit": "c8b3fce2285f16bc0d7838a51a37fc6874c6d122"
     }
   ]
 }
