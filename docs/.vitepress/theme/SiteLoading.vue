@@ -43,6 +43,11 @@ function retryLoading() {
   window.location.reload();
 }
 
+function setLoadingHidden(element: Element, hidden: boolean) {
+  (element as HTMLElement).inert = hidden;
+  element.setAttribute("aria-hidden", String(hidden));
+}
+
 function finish() {
   clearTimers();
   player?.destroy();
@@ -93,6 +98,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
+  <Transition name="site-loading" @before-enter="setLoadingHidden($event, false)" @before-leave="setLoadingHidden($event, true)">
   <div
     v-if="visible"
     class="site-loading"
@@ -122,9 +128,12 @@ onBeforeUnmount(() => {
       <button type="button" data-loading-retry @click="retryLoading">Retry</button>
     </div>
   </div>
+  </Transition>
 </template>
 
 <style scoped>
+.site-loading-enter-active, .site-loading-leave-active { transition: opacity 140ms ease; }
+.site-loading-enter-from, .site-loading-leave-to { opacity: 0; }
 .site-loading, .site-loading * { box-sizing: border-box; }
 .site-loading {
   position: fixed;
@@ -272,6 +281,7 @@ onBeforeUnmount(() => {
   .site-loading__poem:lang(en) { font-size: 27px; }
 }
 @media (prefers-reduced-motion: reduce) {
+  .site-loading-enter-active, .site-loading-leave-active { transition: none; }
   .site-loading__title span { animation: none; }
   .site-loading__cursor { animation: none; }
 }

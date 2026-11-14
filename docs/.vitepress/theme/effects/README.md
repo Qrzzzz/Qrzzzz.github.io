@@ -8,7 +8,7 @@ Copyright (c) 2025 David Haz. MIT + Commons Clause; the full license is shipped 
 - `VariableProximity.vue`: adapts the character-distance/falloff algorithm from
   `src/content/TextAnimations/VariableProximity/VariableProximity.vue`. It inherits
   site typography, limits weight to 400–600, ignores touch/reduced motion, uses
-  event-driven frames, and preserves the current home activation animation.
+  event-driven frames, and smoothly returns individual weights on pointer exit.
 - `FadeContent.vue`: adapts the basic once-on-visible opacity reveal from
   `src/content/Animations/FadeContent/FadeContent.vue`, using IntersectionObserver
   and Web Animations. SSR stays visible, boot completion gates the first reveal,

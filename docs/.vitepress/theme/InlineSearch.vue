@@ -609,6 +609,7 @@ onBeforeUnmount(() => {
   pointer-events: none;
   border-radius: var(--site-radius-sm);
   background: var(--site-surface-subtle);
+  transition: opacity var(--site-motion-short) ease;
 }
 .inline-search-selection.is-ready { transition: transform var(--site-motion-settle) var(--site-ease), height var(--site-motion-settle) var(--site-ease), opacity var(--site-motion-short) ease; }
 .inline-search-panel li { position: relative; z-index: 1; animation: search-result-arrive var(--site-motion-short) var(--site-ease) both; animation-delay: var(--search-result-delay, 0ms); }

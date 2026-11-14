@@ -17,5 +17,5 @@ Change the owning rule instead of appending a later override. Preserve necessary
 - `effects/`: Vue Bits adaptations for proximity weight, once-only fades and search selection geometry. Sources and the pinned license are recorded in `effects/README.md`. Native menu staging stays in `site.css`.
 
 - `heading-feedback.css`: shared H1/H2 variable-weight hover and sequential line marker, including keyboard focus, reduced motion and print fallbacks. Markdown wrapping is owned by `markdown/heading-feedback.mjs`; component titles use the same inline class.
-  `effects/headingMarker.ts` measures live text line boxes and animates them in reading order, finishing each stroke before the next. It tracks weight changes, resizes and route cleanup without splitting text.
+  `effects/headingMarker.ts` measures live text line boxes and draws them in reading order. Exit retracts the same progress in reverse order; re-entry resumes the current stroke. Independent headings can retire together. It tracks weight changes, resizes, reduced motion and route cleanup without splitting text.
   Static search renders opt out of the paint wrapper through `siteSearchRender`, preserving VitePress heading/anchor section extraction.

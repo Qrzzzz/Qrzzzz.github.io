@@ -40,6 +40,9 @@
 .site-layout .VPNavScreenMenuLink:nth-child(4) { --menu-index: 3; }
 .site-layout .VPNavScreenMenuLink:nth-child(5) { --menu-index: 4; }
 @keyframes site-menu-arrive { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+.site-layout .VPNavScreen.fade-leave-active { transition: opacity var(--site-motion-short) var(--site-ease); }
+.site-layout .VPNavScreen.fade-leave-active .container { transition: transform var(--site-motion-short) var(--site-ease); }
+.site-layout .VPNavScreen.fade-leave-to .container { transform: translateY(-4px); }
 @media (prefers-reduced-motion: reduce) {
   .site-layout .VPNavScreenMenuLink { animation: none; }
   .site-layout .VPNavScreen, .site-layout .VPNavScreen .container { transition: none !important; }
@@ -64,8 +67,7 @@
 ::view-transition-old(root) { z-index: 2; }
 ::view-transition-new(root) { z-index: 1; }
 html.theme-is-switching, html.theme-is-switching body,
-html.theme-is-switching .site-layout, html.theme-is-switching .VPNavBar,
-html.theme-is-switching .site-layout :where(a, button, p, h1, h2, h3, input, path) {
+html.theme-is-switching .site-layout, html.theme-is-switching .VPNavBar {
   transition: background-color 240ms ease, color 240ms ease, border-color 240ms ease, stroke 240ms ease;
 }
 

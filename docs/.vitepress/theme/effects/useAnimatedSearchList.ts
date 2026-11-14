@@ -9,13 +9,19 @@ export function useAnimatedSearchList(root: Ref<HTMLElement | undefined>, select
   function sync() {
     if (disposed) return;
     const option = root.value?.querySelectorAll<HTMLElement>(".inline-search-result")[selected.value];
-    if (!root.value || !option) {
+    if (!root.value) {
       selectionStyle.value = { opacity: "0" };
       selectionReady.value = false;
       if (frame) cancelAnimationFrame(frame);
       frame = 0;
       return;
     }
+    if (!option) {
+      selectionStyle.value = { ...selectionStyle.value, opacity: "0" };
+      return;
+    }
+    const marker = root.value.querySelector<HTMLElement>(".inline-search-selection");
+    if (marker && getComputedStyle(marker).opacity === "0") selectionReady.value = false;
     const bounds = option.getBoundingClientRect();
     const container = root.value.getBoundingClientRect();
     selectionStyle.value = { opacity: "1", height: `${bounds.height}px`, transform: `translateY(${bounds.top - container.top}px)` };

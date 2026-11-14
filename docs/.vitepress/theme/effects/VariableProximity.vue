@@ -11,11 +11,16 @@ let anchor: HTMLElement | null = null;
 function reset() {
   if (frame) cancelAnimationFrame(frame);
   frame = 0;
-  root.value?.removeAttribute("data-proximity-active");
+  if (root.value?.hasAttribute("data-proximity-active")) {
+    root.value.querySelectorAll<HTMLElement>(".proximity-letter").forEach(letter => {
+      letter.style.setProperty("--proximity-weight", "400");
+    });
+    root.value.removeAttribute("data-proximity-active");
+  }
 }
 function update() {
   frame = 0;
-  if (!root.value || props.disabled || !capability?.matches || anchor?.matches(":focus-visible, .is-activating")) { reset(); return; }
+  if (!root.value || props.disabled || !capability?.matches || anchor?.matches(":focus-visible")) { reset(); return; }
   const nodes = [...root.value.querySelectorAll<HTMLElement>(".proximity-letter")];
   const strengths = nodes.map(letter => {
     const bounds = letter.getBoundingClientRect();
@@ -67,10 +72,14 @@ onBeforeUnmount(() => {
 .variable-proximity { display: inline; }
 .proximity-accessible { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
 .proximity-visual { white-space: nowrap; }
-.proximity-letter { font-variation-settings: inherit; }
-[data-proximity-active] .proximity-letter {
+.proximity-letter {
   font-variation-settings: "wght" var(--proximity-weight, 400);
-  transition: font-variation-settings 90ms linear;
+  transition: font-variation-settings var(--site-motion-short) var(--site-ease);
 }
+[data-proximity-active] .proximity-letter {
+  transition-duration: 90ms;
+  transition-timing-function: linear;
+}
+a:focus-visible .proximity-letter { font-variation-settings: "wght" 650; }
 @media (prefers-reduced-motion: reduce) { .proximity-letter { transition: none !important; font-variation-settings: inherit !important; } }
 </style>
