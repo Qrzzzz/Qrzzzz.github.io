@@ -45,7 +45,7 @@ export function createLoadingPoemPlayer({
     root.dataset.cursor = cursor;
   }
   function hold() {
-    phase('holding', 'hidden');
+    phase('holding', motion?.matches ? 'typing' : 'blinking');
     later(Math.max(0, cycleMs - ((suspended ? pausedAt : now()) - startedAt)), erase);
   }
   function complete() {
@@ -118,6 +118,7 @@ export function createLoadingPoemPlayer({
     const shouldSuspend = doc.hidden || paused;
     if (shouldSuspend === suspended) return;
     suspended = shouldSuspend;
+    root.dataset.poemSuspended = String(suspended);
     if (suspended) {
       pausedAt = now();
       if (task) task.delay = Math.max(0, task.due - now());

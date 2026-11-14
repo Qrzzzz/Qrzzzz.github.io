@@ -24,3 +24,8 @@ Copyright (c) 2025 David Haz. MIT + Commons Clause; the full license is shipped 
 These are site-specific Vue adaptations, not wholesale upstream components.
 GSAP/motion-v/React runtimes, demo fonts, decorative layers and extra scrolling
 containers are not bundled. Shared duration tokens live in `styles/tokens.css`.
+
+Site-native microinteractions:
+- `useGentleResults.ts` snapshots painted result positions, limits movement to nearby visible rows, retires inert copies, and cancels interrupted transitions.
+- `randomFeedback.ts` briefly offsets Random letters without intercepting navigation; labels and DOM are restored after completion or teardown.
+- Home poetry animates full-poem height changes once per layout change, while the shared cursor remains visible throughout reading. Reduced motion uses a static cursor.

@@ -238,24 +238,12 @@ onBeforeUnmount(() => {
   color: var(--site-text-muted);
 }
 .site-loading__attribution a, .site-loading__attribution a:hover { color: var(--site-text); text-decoration: none; background: none; cursor: default; pointer-events: auto; }
-.site-loading__cursor {
-  display: inline-block;
-  width: .65em;
-  margin-left: .06em;
-  font-family: var(--site-font-mono);
-  font-size: .7em;
-  font-weight: 500;
-  line-height: 1;
-  color: var(--site-accent);
-  letter-spacing: 0;
-  text-shadow:
-    0 0 3px color-mix(in srgb, var(--site-accent) 40%, transparent),
-    0 0 8px color-mix(in srgb, var(--site-accent) 16%, transparent);
-}
+.site-loading__cursor { display: inline-block; width: .48em; height: max(1px, .035em); margin-left: .08em; vertical-align: .04em; border-radius: 1px; background: var(--site-accent); color: transparent; font-size: 1em; line-height: 0; overflow: hidden; }
 [data-cursor="hidden"] .site-loading__cursor,
 .site-loading__poem:not([data-cursor]) .site-loading__cursor { opacity: 0; }
-[data-cursor="blinking"] .site-loading__cursor { animation: loading-cursor .6s steps(1, end) 3; }
-@keyframes loading-cursor { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+[data-cursor="blinking"] .site-loading__cursor { animation: loading-cursor 1.2s ease-in-out infinite; }
+[data-poem-suspended="true"] .site-loading__cursor { animation-play-state: paused; }
+@keyframes loading-cursor { 0%, 100% { opacity: .85; } 50% { opacity: .18; } }
 @keyframes loading-letter {
   0%, 60%, 100% { opacity: .7; transform: translateY(0); }
   30% { opacity: 1; transform: translateY(-1px); }

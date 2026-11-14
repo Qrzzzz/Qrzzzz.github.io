@@ -3,7 +3,7 @@
 .site-layout[data-page-kind="home"] .VPFooter { display: none; }
 .home-page { width: min(100% - 96px, 1160px); margin-inline: auto; }
 .home-composition { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.1fr); align-items: center; gap: clamp(64px, 8vw, 128px); min-height: max(580px, calc(100svh - var(--site-nav-height) - 78px)); padding: 72px 0 88px; }
-.home-composition > .home-poetry { grid-column: 2; grid-row: 1; }
+.home-composition > .home-poetry { grid-column: 2; grid-row: 1; align-self: start; margin-top: 48px; }
 .home-composition > .home-actions { grid-column: 1; grid-row: 1; }
 .home-actions { display: grid; gap: 72px; align-content: center; padding-left: 8%; padding-bottom: 80px; }
 .home-entry { position: relative; z-index: 2; display: grid; grid-template-columns: auto 36px; align-content: center; gap: 2px 32px; width: max-content; min-height: 76px; transform-origin: left center; color: var(--site-text); text-decoration: none; transition: color 180ms ease; }
@@ -40,9 +40,9 @@
 .home-poetry { min-width: 0; display: flex; flex-direction: column; justify-content: center; }
 .home-poem { font-family: var(--site-font-reading); font-size: clamp(28px, 2.4vw, 36px); font-weight: 400; line-height: 1.65; letter-spacing: .025em; overflow-wrap: anywhere; }
 .home-poem:lang(en) { font-family: "Newsreader", var(--site-font-reading); font-size: clamp(36px, 3.1vw, 48px); line-height: 1.32; letter-spacing: -.018em; }
-.home-poem__copy { display: grid; }
+.home-poem__copy { display: grid; overflow: clip; }
 .home-poem__ghost, .home-poem__live { grid-area: 1 / 1; min-width: 0; white-space: pre-wrap; }
-.home-poem__ghost { visibility: hidden; }
+.home-poem__ghost { visibility: hidden; align-self: start; }
 .home-poetry__footer { margin-top: 28px; font-family: var(--site-font-sans); }
 .home-poetry__credit { margin: 0; font-size: var(--site-ui-meta-size); color: var(--site-text-muted); letter-spacing: .02em; }
 .home-poetry__credit a, .home-poetry__credit a:hover { color: var(--site-text); text-decoration: none; background: none; cursor: default; transition: none; }
@@ -50,10 +50,11 @@
 .home-poetry__controls { display: flex; align-items: center; gap: 12px; height: 44px; margin-top: 4px; color: var(--site-text-muted); font-size: var(--site-ui-size); }
 .home-poetry__controls button { min-height: 44px; min-width: 44px; text-align: left; cursor: pointer; transition: color 160ms ease; }
 .home-poetry__controls button:hover, .home-poetry__controls button:focus-visible { color: var(--site-accent); }
-.home-poem__cursor { display: inline-block; width: .65em; margin-left: .06em; font-family: var(--site-font-mono); font-size: .7em; line-height: 1; color: var(--site-accent); text-shadow: 0 0 3px color-mix(in srgb, var(--site-accent) 40%, transparent), 0 0 8px color-mix(in srgb, var(--site-accent) 16%, transparent); }
+.home-poem__cursor { display: inline-block; width: .48em; height: max(1px, .035em); margin-left: .08em; vertical-align: .04em; border-radius: 1px; background: var(--site-accent); color: transparent; font-size: 1em; line-height: 0; overflow: hidden; }
 .home-poem:not([data-cursor]) .home-poem__cursor, .home-poem[data-cursor="hidden"] .home-poem__cursor { opacity: 0; }
-.home-poem[data-cursor="blinking"] .home-poem__cursor { animation: home-poem-cursor .6s steps(1, end) 3; }
-@keyframes home-poem-cursor { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+.home-poem[data-cursor="blinking"] .home-poem__cursor { animation: home-poem-cursor 1.2s ease-in-out infinite; }
+[data-poem-suspended="true"] .home-poem__cursor { animation-play-state: paused; }
+@keyframes home-poem-cursor { 0%, 100% { opacity: .85; } 50% { opacity: .18; } }
 @media (max-width: 1079px) and (min-width: 681px) {
   .home-page { width: calc(100% - 64px); }
   .home-composition { grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 48px; }
@@ -65,7 +66,7 @@
 @media (max-width: 680px) {
   .home-page { width: calc(100% - 48px); }
   .home-composition { grid-template-columns: minmax(0, 1fr); gap: 48px; min-height: calc(100svh - 150px); padding: 32px 0 44px; }
-  .home-composition > .home-poetry { grid-column: 1; grid-row: 2; min-height: 300px; padding-inline: 8px; }
+  .home-composition > .home-poetry { grid-column: 1; grid-row: 2; margin-top: 0; min-height: 300px; padding-inline: 8px; }
   .home-composition > .home-actions { grid-column: 1; grid-row: 1; }
   .home-poem { font-size: clamp(23px, 6.2vw, 28px); line-height: 1.65; }
   .home-poem:lang(en) { font-size: clamp(28px, 7.4vw, 34px); line-height: 1.32; }

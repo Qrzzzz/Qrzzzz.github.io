@@ -17,6 +17,9 @@ const readable = ref(initial.text);
 let player: ReturnType<typeof createLoadingPoemPlayer> | undefined;
 let observer: MutationObserver | undefined;
 let selectionPaused = false;
+let geometry: ResizeObserver | undefined;
+let resizeAnimation: Animation | undefined;
+let previousHeight = 0;
 
 function selectionChange() {
   const selection = window.getSelection();
@@ -44,10 +47,25 @@ onMounted(() => {
   });
   observer.observe(root.value!, { attributes: true, attributeFilter: ["data-phase"] });
   document.addEventListener("selectionchange", selectionChange);
+  const copy = root.value!.querySelector<HTMLElement>(".home-poem__copy")!;
+  previousHeight = copy.getBoundingClientRect().height;
+  geometry = new ResizeObserver(() => {
+    const target = copy.querySelector<HTMLElement>("[data-poem-ghost]")!.getBoundingClientRect().height;
+    const from = resizeAnimation?.playState === "running" ? copy.getBoundingClientRect().height : previousHeight;
+    if (target === previousHeight) return;
+    previousHeight = target;
+    resizeAnimation?.cancel();
+    if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      resizeAnimation = copy.animate([{ height: `${from}px` }, { height: `${target}px` }], { duration: 360, easing: "cubic-bezier(.2,.7,.25,1)" });
+    }
+  });
+  geometry.observe(copy.querySelector("[data-poem-ghost]")!);
   player.start();
   ready.value = true;
 });
 onBeforeUnmount(() => {
+  geometry?.disconnect();
+  resizeAnimation?.cancel();
   player?.destroy();
   observer?.disconnect();
   document.removeEventListener("selectionchange", selectionChange);

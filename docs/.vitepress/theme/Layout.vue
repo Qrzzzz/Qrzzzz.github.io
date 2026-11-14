@@ -4,6 +4,7 @@ import { useData } from "vitepress";
 import { createNavigationAccessibility } from "./navigationAccessibility";
 import { createTopNavigationMarker } from "./topNavigationMarker";
 import { createHeadingMarker } from "./effects/headingMarker";
+import { createRandomFeedback } from "./effects/randomFeedback";
 import DefaultTheme from "vitepress/theme-without-fonts";
 import BackToTop from "./BackToTop.vue";
 import HomeContent from "./HomeContent.vue";
@@ -81,6 +82,7 @@ function syncDocumentMetadata() {
 const navigationAccessibility = createNavigationAccessibility();
 const topNavigationMarker = createTopNavigationMarker();
 const headingMarker = createHeadingMarker();
+const randomFeedback = createRandomFeedback();
 onMounted(() => {
   document.addEventListener("pointerover", prefetchPage, { passive: true });
   document.addEventListener("focusin", prefetchPage);
@@ -91,6 +93,7 @@ onMounted(() => {
   navigationAccessibility.mount();
   topNavigationMarker.mount();
   headingMarker.mount();
+  randomFeedback.mount();
 });
 watch([isDark, pageLanguage], syncDocumentMetadata, { flush: "sync" });
 watch(() => page.value.relativePath, () => nextTick(() => {
@@ -106,6 +109,7 @@ onBeforeUnmount(() => {
   navigationAccessibility.destroy();
   topNavigationMarker.destroy();
   headingMarker.destroy();
+  randomFeedback.destroy();
 });
 </script>
 

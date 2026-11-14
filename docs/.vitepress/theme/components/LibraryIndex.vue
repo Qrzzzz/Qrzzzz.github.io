@@ -14,6 +14,7 @@ import {
   matchesLibraryItem,
   type LibraryKind
 } from "../../content/library";
+import { useGentleResults } from "../effects/useGentleResults";
 import LibraryToolbar from "./LibraryToolbar.vue";
 import { useLibraryResultMarker } from "./useLibraryResultMarker";
 import { useVisiblePagePrefetch } from "../useVisiblePagePrefetch";
@@ -39,6 +40,7 @@ const filteredItems = computed(() =>
   )
 );
 useVisiblePagePrefetch(resultsRef, filteredItems);
+useGentleResults(resultsRef, filteredItems);
 
 function restoreUrlState() {
   const parameters = new URLSearchParams(window.location.search);
@@ -132,7 +134,6 @@ onBeforeUnmount(() => {
       />
 
       <div
-        v-if="filteredItems.length"
         ref="resultsRef"
         class="library-results"
         @click.capture="flushQuery"
@@ -182,7 +183,7 @@ onBeforeUnmount(() => {
         </a>
       </div>
 
-      <div v-else class="library-empty" role="status">
+      <div v-if="!filteredItems.length" class="library-empty" role="status">
         <h3>No results found</h3>
         <p>Try a different term or remove the current filters.</p>
         <button type="button" @click="clearFilters">Clear filters</button>

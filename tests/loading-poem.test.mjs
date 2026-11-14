@@ -51,7 +51,7 @@ test('all 50 source works retain language, prose and authored verse breaks', () 
   assert.equal(loadingPoems[49].text, 'She sets out three cups, then puts one back. The afternoon is still ahead of us; already, it has a different shape.');
 });
 
-test('streaming retains geometry, blinks briefly, and reverses at 30 seconds before a different poem', () => {
+test('streaming retains geometry, keeps blinking, and reverses at 30 seconds before a different poem', () => {
   const h = harness(); h.player.start();
   const first = h.root.dataset.poemId;
   const ghost = h.ghost.textContent;
@@ -61,7 +61,7 @@ test('streaming retains geometry, blinks briefly, and reverses at 30 seconds bef
   h.tick(1000); assert.equal(h.root.dataset.phase, 'settling');
   assert.equal(h.root.dataset.cursor, 'blinking');
   assert.equal(h.text.textContent, loadingPoems[0].text);
-  h.tick(2200); assert.equal(h.root.dataset.cursor, 'hidden');
+  h.tick(2200); assert.equal(h.root.dataset.cursor, 'blinking');
   h.tick(26599); assert.equal(h.root.dataset.phase, 'holding');
   const complete = h.text.textContent;
   h.tick(1); assert.equal(h.root.dataset.phase, 'erasing');
@@ -93,7 +93,7 @@ test('hidden tabs pause the stream and reading interval, and disposal prevents l
 test('reduced motion shows complete text and changes it without typing or cursor flicker', () => {
   const h = harness({ reduced: true }); h.player.start();
   assert.equal(h.text.textContent, loadingPoems[0].text);
-  assert.equal(h.root.dataset.cursor, 'hidden');
+  assert.equal(h.root.dataset.cursor, 'typing');
   h.tick(30000); assert.equal(h.root.dataset.poemId, '2');
   assert.equal(h.text.textContent, loadingPoems[1].text);
   h.player.destroy();
@@ -103,7 +103,7 @@ test('switching motion preference mid-stream finishes the text and keeps the 30-
   const h = harness(); h.player.start(); h.tick(200);
   h.motion.matches = true; h.motion.change();
   assert.equal(h.text.textContent, loadingPoems[0].text);
-  assert.equal(h.root.dataset.cursor, 'hidden');
+  assert.equal(h.root.dataset.cursor, 'typing');
   h.tick(29800); assert.equal(h.root.dataset.poemId, '2');
   h.player.destroy();
 });
