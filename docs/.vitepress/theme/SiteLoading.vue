@@ -238,12 +238,12 @@ onBeforeUnmount(() => {
   color: var(--site-text-muted);
 }
 .site-loading__attribution a, .site-loading__attribution a:hover { color: var(--site-text); text-decoration: none; background: none; cursor: default; pointer-events: auto; }
-.site-loading__cursor { display: inline-block; width: .48em; height: max(1px, .035em); margin-left: .08em; vertical-align: .04em; border-radius: 1px; background: var(--site-accent); color: transparent; font-size: 1em; line-height: 0; overflow: hidden; }
+.site-loading__cursor { display: inline-block; width: clamp(1px, .03em, 1.5px); height: .68em; margin-left: .12em; vertical-align: -.025em; border-radius: 1px; background: var(--site-accent); color: transparent; font-size: 1em; line-height: 0; overflow: hidden; }
 [data-cursor="hidden"] .site-loading__cursor,
 .site-loading__poem:not([data-cursor]) .site-loading__cursor { opacity: 0; }
-[data-cursor="blinking"] .site-loading__cursor { animation: loading-cursor 1.2s ease-in-out infinite; }
+[data-cursor="blinking"] .site-loading__cursor { animation: loading-cursor 1.4s ease-in-out infinite; }
 [data-poem-suspended="true"] .site-loading__cursor { animation-play-state: paused; }
-@keyframes loading-cursor { 0%, 100% { opacity: .85; } 50% { opacity: .18; } }
+@keyframes loading-cursor { 0%, 100% { opacity: .65; } 50% { opacity: .12; } }
 @keyframes loading-letter {
   0%, 60%, 100% { opacity: .7; transform: translateY(0); }
   30% { opacity: 1; transform: translateY(-1px); }

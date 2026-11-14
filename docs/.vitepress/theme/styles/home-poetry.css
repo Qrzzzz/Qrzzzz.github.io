@@ -50,11 +50,11 @@
 .home-poetry__controls { display: flex; align-items: center; gap: 12px; height: 44px; margin-top: 4px; color: var(--site-text-muted); font-size: var(--site-ui-size); }
 .home-poetry__controls button { min-height: 44px; min-width: 44px; text-align: left; cursor: pointer; transition: color 160ms ease; }
 .home-poetry__controls button:hover, .home-poetry__controls button:focus-visible { color: var(--site-accent); }
-.home-poem__cursor { display: inline-block; width: .48em; height: max(1px, .035em); margin-left: .08em; vertical-align: .04em; border-radius: 1px; background: var(--site-accent); color: transparent; font-size: 1em; line-height: 0; overflow: hidden; }
+.home-poem__cursor { display: inline-block; width: clamp(1px, .03em, 1.5px); height: .68em; margin-left: .12em; vertical-align: -.025em; border-radius: 1px; background: var(--site-accent); color: transparent; font-size: 1em; line-height: 0; overflow: hidden; }
 .home-poem:not([data-cursor]) .home-poem__cursor, .home-poem[data-cursor="hidden"] .home-poem__cursor { opacity: 0; }
-.home-poem[data-cursor="blinking"] .home-poem__cursor { animation: home-poem-cursor 1.2s ease-in-out infinite; }
+.home-poem[data-cursor="blinking"] .home-poem__cursor { animation: home-poem-cursor 1.4s ease-in-out infinite; }
 [data-poem-suspended="true"] .home-poem__cursor { animation-play-state: paused; }
-@keyframes home-poem-cursor { 0%, 100% { opacity: .85; } 50% { opacity: .18; } }
+@keyframes home-poem-cursor { 0%, 100% { opacity: .65; } 50% { opacity: .12; } }
 @media (max-width: 1079px) and (min-width: 681px) {
   .home-page { width: calc(100% - 64px); }
   .home-composition { grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 48px; }
