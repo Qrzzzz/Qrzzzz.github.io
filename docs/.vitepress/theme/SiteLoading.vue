@@ -23,7 +23,11 @@ function clearTimers() {
 
 function showRecovery() {
   const controls = document.querySelector<HTMLElement>('.site-loading [data-loading-recovery]');
-  if (controls) controls.hidden = false;
+  if (controls) {
+    controls.hidden = false;
+    controls.inert = false;
+    controls.setAttribute("aria-hidden", "false");
+  }
 }
 
 function continueReading() {
@@ -49,6 +53,12 @@ function setLoadingHidden(element: Element, hidden: boolean) {
 }
 
 function finish() {
+  const controls = document.querySelector<HTMLElement>('.site-loading [data-loading-recovery]');
+  if (controls) {
+    controls.hidden = true;
+    controls.inert = true;
+    controls.setAttribute("aria-hidden", "true");
+  }
   clearTimers();
   player?.destroy();
   player = undefined;
@@ -117,12 +127,12 @@ onBeforeUnmount(() => {
       <div class="site-loading__poem-stage">
         <div ref="poemRoot" class="site-loading__poem" data-poem-player data-allow-mismatch>
           <div class="site-loading__poem-ghost" data-poem-ghost></div>
-          <div class="site-loading__poem-live"><span data-poem-text></span><span class="site-loading__cursor">_</span></div>
+          <div class="site-loading__poem-live"><span data-poem-text></span></div>
           <p class="site-loading__attribution" lang="en">Words by <a data-poem-author href="https://openai.com/index/gpt-6-astra/" target="_blank" rel="noopener noreferrer" tabindex="-1">GPT-6 Astra</a></p>
         </div>
       </div>
     </div>
-    <div class="site-loading__recovery" data-loading-recovery data-allow-mismatch="attribute" hidden role="group" aria-label="Loading options">
+    <div class="site-loading__recovery" data-loading-recovery data-allow-mismatch="attribute" hidden inert aria-hidden="true" role="group" aria-label="Loading options">
       <p>Still loading. You can continue reading or try again.</p>
       <button type="button" data-loading-continue @click="continueReading">Continue reading</button>
       <button type="button" data-loading-retry @click="retryLoading">Retry</button>
@@ -145,10 +155,17 @@ onBeforeUnmount(() => {
   pointer-events: none;
   overflow: hidden;
 }
-.site-loading__recovery[hidden] { display: none; }
+.site-loading__recovery[hidden] {
+  display: flex;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translate(-50%, 8px);
+  transition-delay: 0s, 0s, 280ms;
+}
 .site-loading__recovery {
   position: absolute;
-  bottom: max(16px, env(safe-area-inset-bottom));
+  bottom: max(24px, env(safe-area-inset-bottom));
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -162,11 +179,13 @@ onBeforeUnmount(() => {
   font-size: 14px;
   line-height: 1.6;
   pointer-events: auto;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 280ms ease, transform 360ms var(--site-ease), visibility 0s;
 }
 .site-loading__recovery p { flex-basis: 100%; margin: 0; }
 .site-loading__recovery button { border: 0; padding: 0; background: transparent; font: inherit; min-height: 44px; color: var(--site-accent); text-decoration: underline; text-underline-offset: 4px; cursor: pointer; }
 .site-loading__recovery button:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
-.site-loading:has([data-loading-recovery]:not([hidden])) .site-loading__composition { height: calc(100% - 124px); padding-bottom: 16px; }
 .site-loading__composition {
   position: relative;
   display: flex;
@@ -176,7 +195,7 @@ onBeforeUnmount(() => {
   width: min(100% - 96px, 640px);
   height: 100%;
   margin-inline: auto;
-  padding-block: 40px;
+  padding-block: 40px 132px;
 }
 .site-loading__heading {
   flex: 0 0 auto;
@@ -198,7 +217,8 @@ onBeforeUnmount(() => {
 .site-loading__poem-stage {
   display: flex;
   min-width: 0;
-  max-height: 100%;
+  min-height: 0;
+  max-height: calc(100svh - 228px);
   overflow-y: auto;
   font-size: clamp(30px, 2.5vw, 38px);
 }
@@ -238,12 +258,6 @@ onBeforeUnmount(() => {
   color: var(--site-text-muted);
 }
 .site-loading__attribution a, .site-loading__attribution a:hover { color: var(--site-text); text-decoration: none; background: none; cursor: default; pointer-events: auto; }
-.site-loading__cursor { display: inline-block; width: clamp(1px, .03em, 1.5px); height: .68em; margin-left: .12em; vertical-align: -.025em; border-radius: 1px; background: var(--site-accent); color: transparent; font-size: 1em; line-height: 0; overflow: hidden; }
-[data-cursor="hidden"] .site-loading__cursor,
-.site-loading__poem:not([data-cursor]) .site-loading__cursor { opacity: 0; }
-[data-cursor="blinking"] .site-loading__cursor { animation: loading-cursor 1.4s ease-in-out infinite; }
-[data-poem-suspended="true"] .site-loading__cursor { animation-play-state: paused; }
-@keyframes loading-cursor { 0%, 100% { opacity: .65; } 50% { opacity: .12; } }
 @keyframes loading-letter {
   0%, 60%, 100% { opacity: .7; transform: translateY(0); }
   30% { opacity: 1; transform: translateY(-1px); }
@@ -258,7 +272,7 @@ onBeforeUnmount(() => {
   .site-loading__attribution { margin-top: 22px; font-size: 12px; }
 }
 @media (max-height: 560px) and (min-width: 681px) {
-  .site-loading__composition { gap: 24px; padding-block: 24px; }
+  .site-loading__composition { gap: 24px; padding-block: 24px 116px; }
   .site-loading__poem-stage { font-size: clamp(22px, 2.8vw, 26px); }
   .site-loading__poem { line-height: 1.4; }
   .site-loading__poem:lang(en) { font-size: clamp(27px, 3.4vw, 32px); line-height: 1.28; }
@@ -271,6 +285,6 @@ onBeforeUnmount(() => {
 @media (prefers-reduced-motion: reduce) {
   .site-loading-enter-active, .site-loading-leave-active { transition: none; }
   .site-loading__title span { animation: none; }
-  .site-loading__cursor { animation: none; }
+  .site-loading__recovery { transition: none !important; }
 }
 </style>

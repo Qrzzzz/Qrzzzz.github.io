@@ -19,8 +19,8 @@ metadata, public routes and VitePress navigation remain the source of truth.
   phones stack the content without decorative dividers.
 - The preserved ASCII pointer trail is a quiet secondary texture, home only.
 - Home poetry uses the shared multi-model collection, shuffled without repeats until
-  the bag is exhausted. A cycle counts 60 seconds from the start of typing, then
-  retracts the text before the next work. Both first-paint and client-navigation
+  the bag is exhausted. A cycle counts 60 seconds from the start of revealing, then
+  fades the whole poem before the next work. Sentence/verse layers reveal with damped traveling waves and blur; no typing or cursor remains. Both first-paint and client-navigation
   loading overlays use the full 350-work collection from `sitePoems.mjs`, with the existing 30-second cycle and independent
   selection state. First-paint poems load from a content-hashed, cacheable collection.
 - The 404 reading column uses that same collection in its own shuffled bag and
@@ -118,3 +118,5 @@ reduced motion, responsive widths, search, history, theme and reading navigation
   body text remain intact; reduced motion removes transitions.
 
 Poem imports live in `contributedPoems.json`: each entry contains only `model`, `url` and `text` (JSON `\n` retains authored breaks). Use the specific model’s official announcement URL. `sitePoems.mjs` adds runtime IDs, language and form; all poetry surfaces update attribution with each selection.
+
+Home destinations retain their stagger and rotation, with both columns vertically balanced in the available page height, larger entry labels and a bottom colophon; short poems no longer stay pinned near the top above a large empty area. Loading recovery occupies its own permanently reserved bottom band: visibility transitions never resize or shift the poetry composition.

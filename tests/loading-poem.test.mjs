@@ -51,22 +51,13 @@ test('all 50 source works retain language, prose and authored verse breaks', () 
   assert.equal(loadingPoems[49].text, 'She sets out three cups, then puts one back. The afternoon is still ahead of us; already, it has a different shape.');
 });
 
-test('streaming retains geometry, keeps blinking, and reverses at 30 seconds before a different poem', () => {
+test('the full text stays intact until the reading interval selects another work', () => {
   const h = harness(); h.player.start();
   const first = h.root.dataset.poemId;
-  const ghost = h.ghost.textContent;
-  assert.equal(h.text.textContent, '');
-  h.tick(200); assert.ok(h.text.textContent.length > 0 && h.text.textContent.length < loadingPoems[0].text.length);
-  assert.equal(h.ghost.textContent, ghost);
-  h.tick(1000); assert.equal(h.root.dataset.phase, 'settling');
-  assert.equal(h.root.dataset.cursor, 'blinking');
   assert.equal(h.text.textContent, loadingPoems[0].text);
-  h.tick(2200); assert.equal(h.root.dataset.cursor, 'blinking');
-  h.tick(26599); assert.equal(h.root.dataset.phase, 'holding');
-  const complete = h.text.textContent;
-  h.tick(1); assert.equal(h.root.dataset.phase, 'erasing');
-  assert.equal(h.text.textContent, Array.from(complete).slice(0, -1).join(''));
-  h.tick(1000); assert.notEqual(h.root.dataset.poemId, first);
+  assert.equal(h.ghost.textContent, h.text.textContent);
+  h.tick(29999); assert.equal(h.root.dataset.poemId, first);
+  h.tick(1); assert.notEqual(h.root.dataset.poemId, first);
   h.player.destroy(); assert.equal(h.tasks.size, 0); assert.equal(h.listeners.size, 0);
 });
 
@@ -93,7 +84,7 @@ test('hidden tabs pause the stream and reading interval, and disposal prevents l
 test('reduced motion shows complete text and changes it without typing or cursor flicker', () => {
   const h = harness({ reduced: true }); h.player.start();
   assert.equal(h.text.textContent, loadingPoems[0].text);
-  assert.equal(h.root.dataset.cursor, 'typing');
+  assert.equal(h.root.dataset.phase, 'holding');
   h.tick(30000); assert.equal(h.root.dataset.poemId, '2');
   assert.equal(h.text.textContent, loadingPoems[1].text);
   h.player.destroy();
@@ -103,7 +94,7 @@ test('switching motion preference mid-stream finishes the text and keeps the 30-
   const h = harness(); h.player.start(); h.tick(200);
   h.motion.matches = true; h.motion.change();
   assert.equal(h.text.textContent, loadingPoems[0].text);
-  assert.equal(h.root.dataset.cursor, 'typing');
+  assert.equal(h.root.dataset.phase, 'holding');
   h.tick(29800); assert.equal(h.root.dataset.poemId, '2');
   h.player.destroy();
 });
@@ -118,7 +109,7 @@ test('homepage collection preserves 200 distinct original works and attribution'
   assert.ok(homeCollection.items.every(p => ['verse', 'prose'].includes(p.form) && ['en', 'zh-CN'].includes(p.lang)));
 });
 
-test('homepage streams, freezes across overlapping user/background pauses and retracts at 60 active seconds', () => {
+test('homepage reveals, freezes across overlapping user/background pauses and changes at 60 active seconds', () => {
   const h = harness({ poems: homeCollection.items, cycleMs: 60000, shuffle: true });
   h.player.start(); h.tick(5000);
   const first = h.root.dataset.poemId;
@@ -128,8 +119,7 @@ test('homepage streams, freezes across overlapping user/background pauses and re
   assert.equal(h.text.textContent, full);
   h.visibility(false); h.tick(54999);
   assert.equal(h.root.dataset.phase, 'holding');
-  h.tick(1); assert.equal(h.root.dataset.phase, 'erasing');
-  assert.equal(h.text.textContent, Array.from(full).slice(0, -1).join(''));
+  h.tick(1); assert.notEqual(h.root.dataset.poemId, first);
   h.tick(5000); assert.notEqual(h.root.dataset.poemId, first);
   h.player.destroy(); assert.equal(h.tasks.size, 0);
 });
@@ -163,7 +153,7 @@ test('404 cycles through the complete multi-model collection without repeats or 
   assert.equal(h.tasks.size, 0);
 });
 
-test('Next retracts the current poem, tolerates repeated clicks and pause freezes typing', () => {
+test('Next selects another complete poem and pause freezes the reading interval', () => {
   const h = harness({ poems: homeCollection.items, cycleMs: 60000, shuffle: true });
   h.player.start(); h.tick(200);
   h.player.pause(); const partial = h.text.textContent; h.tick(5000);
@@ -172,7 +162,7 @@ test('Next retracts the current poem, tolerates repeated clicks and pause freeze
   const full = h.text.textContent;
   const id = h.root.dataset.poemId;
   h.player.next(); h.player.next();
-  assert.equal(h.text.textContent, Array.from(full).slice(0, -1).join(''));
+  assert.notEqual(h.root.dataset.poemId, id);
   h.tick(5000); assert.notEqual(h.root.dataset.poemId, id);
   h.player.destroy();
 });

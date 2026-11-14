@@ -41,7 +41,7 @@ onMounted(() => {
   player = createLoadingPoemPlayer({ root: root.value!, poems: props.poems, cycleMs: 60000, shuffle: true });
   observer = new MutationObserver(() => {
     const phase = root.value?.dataset.phase;
-    if (phase === "settling" || phase === "holding") {
+    if (phase === "revealing" || phase === "holding") {
       readable.value = root.value?.querySelector("[data-poem-text]")?.textContent || initial.text;
     }
   });
@@ -76,8 +76,8 @@ onBeforeUnmount(() => {
   <section class="home-poetry" :aria-label="label" :data-poem-count="poems.length">
     <div ref="root" class="home-poem" :lang="initial.lang" :data-form="initial.form" data-home-poem>
       <div class="home-poem__copy" aria-hidden="true">
-        <div class="home-poem__ghost" data-poem-ghost>{{ initial.text }}&nbsp;_</div>
-        <div class="home-poem__live"><span data-poem-text>{{ initial.text }}</span><span class="home-poem__cursor">_</span></div>
+        <div class="home-poem__ghost" data-poem-ghost>{{ initial.text }}</div>
+        <div class="home-poem__live"><span data-poem-text>{{ initial.text }}</span></div>
       </div>
       <p class="visually-hidden">{{ readable }}</p>
     </div>

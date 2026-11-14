@@ -14,8 +14,7 @@ export function createLoadingPoemPlayer({
   let active = false;
   let disposed = false;
   let poem;
-  let letters = [];
-  let count = 0;
+  let animations = [];
   let startedAt = 0;
   let pausedAt = 0;
   let paused = false;
@@ -40,44 +39,82 @@ export function createLoadingPoemPlayer({
     }, delay);
   }
 
-  function render() { output.textContent = letters.slice(0, count).join(''); }
-  function phase(value, cursor) {
-    root.dataset.phase = value;
-    root.dataset.cursor = cursor;
+  function stopAnimations() {
+    animations.forEach(animation => animation.cancel());
+    animations = [];
   }
+  function animate(element, frames, options) {
+    const animation = element.animate(frames, { ...options, fill: 'both' });
+    animations.push(animation);
+    if (suspended) animation.pause();
+  }
+  function phase(value) { root.dataset.phase = value; }
   function hold() {
-    phase('holding', motion?.matches ? 'typing' : 'blinking');
-    later(Math.max(0, cycleMs - ((suspended ? pausedAt : now()) - startedAt)), erase);
+    stopAnimations();
+    phase('holding');
+    later(Math.max(0, cycleMs - ((suspended ? pausedAt : now()) - startedAt)), fade);
   }
-  function complete() {
-    if (motion?.matches) { hold(); return; }
-    phase('settling', 'blinking');
-    later(1800, hold);
+  function reveal() {
+    output.textContent = poem.text;
+    if (motion?.matches || !doc.createElement || !output.animate) { hold(); return; }
+    output.textContent = '';
+    const lines = poem.form === 'verse'
+      ? poem.text.split(/(?<=\n)/u)
+      : [...new Intl.Segmenter(poem.lang, { granularity: 'sentence' }).segment(poem.text)].map(part => part.segment);
+    let duration = 0;
+    const graphemes = new Intl.Segmenter(poem.lang, { granularity: 'grapheme' });
+    const words = new Intl.Segmenter(poem.lang, { granularity: 'word' });
+    lines.forEach((line, layer) => {
+      const length = [...graphemes.segment(line)].length;
+      let index = 0;
+      let previousWord;
+      for (const part of words.segment(line)) {
+        if (/^\s+$/u.test(part.segment)) {
+          output.append(doc.createTextNode(part.segment));
+          index += [...graphemes.segment(part.segment)].length;
+          continue;
+        }
+        const word = !part.isWordLike && previousWord ? previousWord : doc.createElement('span');
+        if (word !== previousWord) {
+          word.style.cssText = 'display:inline-block;white-space:pre;';
+          output.append(word);
+        }
+        previousWord = word;
+        for (const { segment } of graphemes.segment(part.segment)) {
+          const glyph = doc.createElement('span');
+          glyph.textContent = segment;
+          glyph.style.cssText = 'display:inline-block;transform-origin:50% 70%;';
+          word.append(glyph);
+          const position = index++ / Math.max(1, length - 1);
+          const frames = Array.from({ length: 41 }, (_, step) => {
+            const t = step / 40;
+            const envelope = (1 - t) ** 1.4;
+            const angle = position * Math.PI * 1.5 - t * Math.PI * 1.2;
+            return {
+              offset: t,
+              transform: `translateY(${-Math.sin(angle) * .55 * envelope + .28 * (1 - t)}em) rotate(${-Math.cos(angle) * 12 * envelope}deg)`,
+              opacity: Math.min(1, t * 2.4),
+              filter: `blur(${5 * (1 - Math.min(1, t * 2.2))}px)`
+            };
+          });
+          const delay = layer * 650 + position * 600;
+          animate(glyph, frames, { duration: 2800, delay, easing: 'linear' });
+          duration = Math.max(duration, delay + 2800);
+        }
+      }
+    });
+    if (author?.animate) animate(author, [{ opacity: 0 }, { opacity: 1 }], { duration: 1000, delay: 650, easing: 'ease-out' });
+    phase('revealing');
+    later(duration, hold);
   }
-  function type() {
-    if (count >= letters.length) { complete(); return; }
-    count += 1;
-    render();
-    const letter = letters[count - 1];
-    const base = poem.lang === 'en' ? 13 : 22;
-    later(/[，。；！？,.!?;\n]/u.test(letter) ? base * 2 : base, type);
-  }
-  function erase() {
-    phase('erasing', 'typing');
-    if (motion?.matches) {
-      count = 0;
-      render();
-      next();
-      return;
-    }
-    if (count > 0) {
-      count -= 1;
-      render();
-      later(poem.lang === 'en' ? 9 : 15, erase);
-    } else {
-      phase('between', 'hidden');
-      later(240, next);
-    }
+  function fade() {
+    if (motion?.matches || !output.animate) { next(); return; }
+    phase('fading');
+    // Freeze the current wave if Next is pressed mid-reveal; fade that exact pose.
+    animations.forEach(animation => animation.pause());
+    animate(output, [{ opacity: 1, filter: 'blur(0px)' }, { opacity: 0, filter: 'blur(3px)' }], { duration: 420, easing: 'ease-in' });
+    if (author?.animate) animate(author, [{ opacity: 1 }, { opacity: 0 }], { duration: 300, easing: 'ease-in' });
+    later(420, next);
   }
   function next() {
     const previous = shuffle ? lastId : doc.documentElement.dataset.loadingLastPoem;
@@ -108,22 +145,17 @@ export function createLoadingPoemPlayer({
     root.dataset.poemId = String(poem.id);
     root.dataset.form = poem.form;
     root.lang = poem.lang;
-    // Full-text geometry prevents reflow while characters enter and leave.
-    ghost.textContent = poem.text + '\u00a0_';
-    letters = Array.from(poem.text);
-    count = motion?.matches ? letters.length : 0;
+    stopAnimations();
+    ghost.textContent = poem.text;
     startedAt = suspended ? pausedAt : now();
-    phase('typing', motion?.matches ? 'hidden' : 'typing');
-    render();
-    if (motion?.matches) hold();
-    else later(100, type);
+    reveal();
   }
   function visibility() {
     if (!active) return;
     const shouldSuspend = doc.hidden || paused;
     if (shouldSuspend === suspended) return;
     suspended = shouldSuspend;
-    root.dataset.poemSuspended = String(suspended);
+    animations.forEach(animation => suspended ? animation.pause() : animation.play());
     if (suspended) {
       pausedAt = now();
       if (task) task.delay = Math.max(0, task.due - now());
@@ -137,9 +169,11 @@ export function createLoadingPoemPlayer({
   function motionChange() {
     if (!active || !poem) return;
     clear();
-    count = letters.length;
-    render();
-    hold();
+    const wasFading = root.dataset.phase === 'fading';
+    stopAnimations();
+    output.textContent = poem.text;
+    if (wasFading) next();
+    else hold();
   }
   doc.addEventListener('visibilitychange', visibility);
   motion?.addEventListener('change', motionChange);
@@ -156,9 +190,9 @@ export function createLoadingPoemPlayer({
       visibility();
     },
     next() {
-      if (!active || disposed || root.dataset.phase === 'erasing' || root.dataset.phase === 'between') return;
+      if (!active || disposed || root.dataset.phase === 'fading') return;
       clear();
-      erase();
+      fade();
     },
     destroy() {
       active = false;
@@ -166,7 +200,8 @@ export function createLoadingPoemPlayer({
       clear();
       doc.removeEventListener('visibilitychange', visibility);
       motion?.removeEventListener('change', motionChange);
-      phase('idle', 'hidden');
+      stopAnimations();
+      phase('idle');
     }
   };
 }
@@ -222,7 +257,11 @@ export function bootstrapLoadingPoem(poems, createPlayer) {
   }
   function showRecovery() {
     const controls = doc.querySelector('.site-loading [data-loading-recovery]');
-    if (controls) controls.hidden = false;
+    if (controls) {
+      controls.hidden = false;
+      controls.inert = false;
+      controls.setAttribute('aria-hidden', 'false');
+    }
   }
   function resourceFailed(event) {
     if (!['SCRIPT', 'LINK'].includes(event.target?.tagName)) return;
@@ -249,6 +288,12 @@ export function bootstrapLoadingPoem(poems, createPlayer) {
   function finish() {
     if (done) return;
     done = true;
+    const controls = doc.querySelector('.site-loading [data-loading-recovery]');
+    if (controls) {
+      controls.hidden = true;
+      controls.inert = true;
+      controls.setAttribute('aria-hidden', 'true');
+    }
     observer.disconnect();
     clearTimeout(dismissal);
     clearTimeout(watchdog);

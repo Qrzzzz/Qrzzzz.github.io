@@ -28,4 +28,4 @@ containers are not bundled. Shared duration tokens live in `styles/tokens.css`.
 Site-native microinteractions:
 - `useGentleResults.ts` snapshots painted result positions, limits movement to nearby visible rows, retires inert copies, and cancels interrupted transitions.
 - `randomFeedback.ts` briefly offsets Random letters without intercepting navigation; labels and DOM are restored after completion or teardown.
-- Home poetry animates full-poem height changes once per layout change, while the shared cursor remains visible throughout reading. Reduced motion uses a static cursor.
+- Home poetry animates full-poem height changes once per layout change, while the shared poem player reveals sentence layers with damped glyph waves and fades each complete poem on exit. Reduced motion shows intact text immediately.
