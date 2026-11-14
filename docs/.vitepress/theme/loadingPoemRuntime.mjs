@@ -8,6 +8,7 @@ export function createLoadingPoemPlayer({
   const motion = doc.defaultView?.matchMedia?.('(prefers-reduced-motion: reduce)');
   const ghost = root.querySelector('[data-poem-ghost]');
   const output = root.querySelector('[data-poem-text]');
+  const author = root.querySelector('[data-poem-author]') ?? root.parentElement?.querySelector('[data-poem-author]');
   let timer;
   let task;
   let active = false;
@@ -98,6 +99,10 @@ export function createLoadingPoemPlayer({
       poem = pool[Math.min(pool.length - 1, Math.floor(Math.max(0, random()) * pool.length))];
     }
     if (!poem) return;
+    if (author && poem.model && poem.url) {
+      author.textContent = poem.model;
+      author.setAttribute('href', poem.url);
+    }
     lastId = poem.id;
     if (!shuffle) doc.documentElement.dataset.loadingLastPoem = String(poem.id);
     root.dataset.poemId = String(poem.id);

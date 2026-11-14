@@ -118,7 +118,7 @@ onBeforeUnmount(() => {
         <div ref="poemRoot" class="site-loading__poem" data-poem-player data-allow-mismatch>
           <div class="site-loading__poem-ghost" data-poem-ghost></div>
           <div class="site-loading__poem-live"><span data-poem-text></span><span class="site-loading__cursor">_</span></div>
-          <p class="site-loading__attribution" lang="en">Words by <a href="https://chatgpt.com/" target="_blank" rel="noopener noreferrer" tabindex="-1">ChatGPT 6 Astra</a></p>
+          <p class="site-loading__attribution" lang="en">Words by <a data-poem-author href="https://openai.com/index/gpt-6-astra/" target="_blank" rel="noopener noreferrer" tabindex="-1">GPT-6 Astra</a></p>
         </div>
       </div>
     </div>

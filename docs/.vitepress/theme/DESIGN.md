@@ -18,10 +18,10 @@ metadata, public routes and VitePress navigation remain the source of truth.
   The 404 uses its large typographic number, recovery links and a separate poem column;
   phones stack the content without decorative dividers.
 - The preserved ASCII pointer trail is a quiet secondary texture, home only.
-- Home poetry uses 200 original works by ChatGPT 6 Astra, shuffled without repeats until
+- Home poetry uses the shared multi-model collection, shuffled without repeats until
   the bag is exhausted. A cycle counts 60 seconds from the start of typing, then
   retracts the text before the next work. Both first-paint and client-navigation
-  loading overlays use the full 250-work collection from `sitePoems.mjs`, with the existing 30-second cycle and independent
+  loading overlays use the full 350-work collection from `sitePoems.mjs`, with the existing 30-second cycle and independent
   selection state. First-paint poems load from a content-hashed, cacheable collection.
 - The 404 reading column uses that same collection in its own shuffled bag and
   reuses HomePoetry's 60-second player, pause, selection and Next controls.
@@ -116,3 +116,5 @@ reduced motion, responsive widths, search, history, theme and reading navigation
   Markdown headings receive a semantic inline paint layer, with wrapped lines marked
   sequentially: each stroke finishes before the next begins, at a consistent drawing speed. Catalog and 404 titles use the same class. Anchors, heading text, dates,
   body text remain intact; reduced motion removes transitions.
+
+Poem imports live in `contributedPoems.json`: each entry contains only `model`, `url` and `text` (JSON `\n` retains authored breaks). Use the specific model’s official announcement URL. `sitePoems.mjs` adds runtime IDs, language and form; all poetry surfaces update attribution with each selection.

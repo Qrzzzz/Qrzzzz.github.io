@@ -1,3 +1,4 @@
+import { sitePoems } from "../docs/.vitepress/theme/sitePoems.mjs";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
@@ -40,7 +41,7 @@ try {
   const notFoundFallback = notFoundHtml.match(/<div id="app"><\/div><noscript>([\s\S]*?)<\/noscript>/)?.[1] ?? "";
   assert.match(notFoundFallback, /Page not found\./, "无 JavaScript 时 404 应显示错误提示");
   assert.match(notFoundFallback, /Return home/, "无 JavaScript 时 404 应能返回首页");
-  assert.match(notFoundFallback, /data-poem-count="250"/, "404 应保留完整诗歌集合和静态诗歌");
+  assert.match(notFoundFallback, new RegExp(`data-poem-count="${sitePoems.length}"`), "404 应保留完整诗歌集合和静态诗歌");
   mkdirSync(cacheRoot, { recursive: true });
   const mathHtml = readFileSync(path.join(outputRoot, "excerpts/2026-09-28-02.html"), "utf8");
   const formulas = (mathHtml.match(/<mjx-container\b/g) ?? []).length;

@@ -19,7 +19,7 @@ function harness({ random = () => 0, reduced = false, poems = sitePoems, ...opti
   };
   const ghost = { textContent: '' };
   const text = { textContent: '' };
-  const root = { ownerDocument: doc, dataset: {}, querySelector(selector) { return selector.includes('ghost') ? ghost : text; } };
+  const root = { ownerDocument: doc, dataset: {}, querySelector(selector) { return selector.includes('ghost') ? ghost : selector.includes('text') ? text : null; } };
   const player = createLoadingPoemPlayer({ root, poems, random, ...options, now: () => time,
     schedule(fn, delay) { tasks.set(++id, { fn, due: time + delay }); return id; },
     cancel(timer) { tasks.delete(timer); }
@@ -110,7 +110,7 @@ test('switching motion preference mid-stream finishes the text and keeps the 30-
 
 const homeCollection = JSON.parse(fs.readFileSync(new URL('../docs/.vitepress/theme/homePoems.json', import.meta.url), 'utf8'));
 test('homepage collection preserves 200 distinct original works and attribution', () => {
-  assert.equal(homeCollection.author, 'ChatGPT 6 Astra');
+  assert.equal(homeCollection.author, 'GPT-6 Astra');
   assert.equal(homeCollection.items.length, 200);
   assert.equal(new Set(homeCollection.items.map(p => p.text.replace(/\s/gu, ''))).size, 200);
   assert.deepEqual(homeCollection.items.map(p => p.id), Array.from({length: 200}, (_, i) => `home-${String(i + 1).padStart(3, '0')}`));
@@ -145,10 +145,10 @@ test('homepage exhausts its shuffle bag before repeating and leaves loader state
   h.player.destroy();
 });
 
-test('404 cycles through all 250 existing poems without repeats or changing the loader selection', () => {
+test('404 cycles through the complete multi-model collection without repeats or changing the loader selection', () => {
   const poems = sitePoems;
-  assert.equal(poems.length, 250);
-  assert.equal(new Set(poems.map(poem => String(poem.id))).size, 250);
+  assert.equal(poems.length, 350);
+  assert.equal(new Set(poems.map(poem => String(poem.id))).size, poems.length);
   const h = harness({ poems, cycleMs: 60000, shuffle: true, reduced: true });
   h.doc.documentElement.dataset.loadingLastPoem = '24';
   h.player.start();
@@ -157,7 +157,7 @@ test('404 cycles through all 250 existing poems without repeats or changing the 
     ids.add(h.root.dataset.poemId);
     h.tick(60000);
   }
-  assert.equal(ids.size, 250);
+  assert.equal(ids.size, poems.length);
   assert.equal(h.doc.documentElement.dataset.loadingLastPoem, '24');
   h.player.destroy();
   assert.equal(h.tasks.size, 0);
@@ -175,4 +175,21 @@ test('Next retracts the current poem, tolerates repeated clicks and pause freeze
   assert.equal(h.text.textContent, Array.from(full).slice(0, -1).join(''));
   h.tick(5000); assert.notEqual(h.root.dataset.poemId, id);
   h.player.destroy();
+});
+
+test('all surfaces share uniquely identified works with model-specific attribution', () => {
+  assert.equal(new Set(sitePoems.map(poem => poem.text)).size, sitePoems.length);
+  assert.deepEqual(Object.fromEntries([...new Set(sitePoems.map(p => p.model))].map(model => [model, sitePoems.filter(p => p.model === model).length])), { 'GPT-6 Astra': 250, 'Gemini 4 Argon': 50, 'Claude Opus 4.6': 50 });
+  const imported = JSON.parse(fs.readFileSync(new URL('../docs/.vitepress/theme/contributedPoems.json', import.meta.url), 'utf8'));
+  assert.deepEqual(sitePoems.slice(-imported.length).map(({model,url,text}) => ({model,url,text})), imported);
+  const h = harness({ reduced: true });
+  const author = { textContent: '', setAttribute(_, value) { this.href = value; } };
+  const query = h.root.querySelector;
+  h.root.querySelector = selector => selector.includes('author') ? author : query(selector);
+  const player = createLoadingPoemPlayer({ root: h.root, poems: sitePoems, random: () => .99 });
+  player.start();
+  const poem = sitePoems.find(p => String(p.id) === h.root.dataset.poemId);
+  assert.equal(author.textContent, poem.model);
+  assert.equal(author.href, poem.url);
+  player.destroy(); h.player.destroy();
 });

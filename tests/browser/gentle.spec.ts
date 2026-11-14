@@ -39,3 +39,16 @@ test("poem cursor keeps blinking through the reading interval", async ({ page })
   await page.emulateMedia({ reducedMotion: "reduce" });
   await expect(page.locator("[data-home-poem]")).toHaveAttribute("data-cursor", "typing");
 });
+
+test("imported poems show their own model and announcement on home and 404", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.addInitScript(() => { Math.random = () => .999999; });
+  for (const path of ["/", "/404.html"]) {
+    await page.goto(path);
+    await expect(page.locator("[data-home-poem]")).toHaveAttribute("data-poem-id", "contributed-100");
+    const author = page.locator(".home-poetry [data-poem-author]");
+    await expect(author).toHaveText("Claude Opus 4.6");
+    await expect(author).toHaveAttribute("href", "https://www.anthropic.com/news/claude-opus-4-6");
+    await expect(page.locator(".home-poem__live")).not.toBeEmpty();
+  }
+});

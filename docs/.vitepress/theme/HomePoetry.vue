@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import SiteIcon from "./SiteIcon.vue";
 import { onBeforeUnmount, onMounted, ref } from "vue";
-import collection from "./homePoems.json";
+import { sitePoems } from "./sitePoems.mjs";
 import { createLoadingPoemPlayer } from "./loadingPoemRuntime.mjs";
 
-type Poem = { id: string | number; lang: string; form: string; text: string };
+type Poem = { id: string | number; lang: string; form: string; text: string; model: string; url: string };
 const props = withDefaults(defineProps<{ poems?: Poem[]; label?: string }>(), {
-  poems: () => collection.items,
+  poems: () => sitePoems,
   label: "A poem for this visit"
 });
-const initial = props.poems[120] ?? props.poems[0];
+const initial = props.poems[170] ?? props.poems[0];
 const root = ref<HTMLElement>();
 const paused = ref(false);
 const ready = ref(false);
@@ -82,7 +82,7 @@ onBeforeUnmount(() => {
       <p class="visually-hidden">{{ readable }}</p>
     </div>
     <div class="home-poetry__footer" lang="en">
-      <p class="home-poetry__credit">Words by <a class="poem-author" href="https://chatgpt.com/" target="_blank" rel="noopener noreferrer">ChatGPT 6 Astra</a></p>
+      <p class="home-poetry__credit">Words by <a class="poem-author" data-poem-author :href="initial.url" target="_blank" rel="noopener noreferrer">{{ initial.model }}</a></p>
       <div class="home-poetry__controls" aria-label="Poem controls">
         <template v-if="ready">
         <button type="button" :aria-pressed="paused" @click="togglePause">{{ paused ? "Resume" : "Pause" }}</button>
