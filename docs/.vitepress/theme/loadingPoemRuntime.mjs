@@ -2,9 +2,12 @@
 export function createLoadingPoemPlayer({
   root, poems, random = Math.random, schedule = setTimeout,
   cancel = clearTimeout, now = () => performance.now(),
-  cycleMs = 30000, shuffle = false
+  cycleMs = 30000, shuffle = false, loading = false
 }) {
   const doc = root.ownerDocument;
+  const waveDuration = loading ? 1350 : 2800;
+  const layerDelay = loading ? 310 : 650;
+  const waveTravel = loading ? 220 : 600;
   const motion = doc.defaultView?.matchMedia?.('(prefers-reduced-motion: reduce)');
   const ghost = root.querySelector('[data-poem-ghost]');
   const output = root.querySelector('[data-poem-text]');
@@ -55,8 +58,11 @@ export function createLoadingPoemPlayer({
     later(Math.max(0, cycleMs - ((suspended ? pausedAt : now()) - startedAt)), fade);
   }
   function reveal() {
-    output.textContent = poem.text;
-    if (motion?.matches || !doc.createElement || !output.animate) { hold(); return; }
+    if (motion?.matches || !doc.createElement || !output.animate) {
+      output.textContent = poem.text;
+      hold();
+      return;
+    }
     output.textContent = '';
     const lines = poem.form === 'verse'
       ? poem.text.split(/(?<=\n)/u)
@@ -64,20 +70,29 @@ export function createLoadingPoemPlayer({
     let duration = 0;
     const graphemes = new Intl.Segmenter(poem.lang, { granularity: 'grapheme' });
     const words = new Intl.Segmenter(poem.lang, { granularity: 'word' });
+    const fragment = doc.createDocumentFragment();
     lines.forEach((line, layer) => {
+      if (!line.trim()) { fragment.append(doc.createTextNode(line)); return; }
+      const sentence = doc.createElement('span');
+      fragment.append(sentence);
+      animate(sentence, [
+        { opacity: 0, filter: 'blur(5px)' },
+        { opacity: 1, filter: 'blur(0px)' }
+      ], { duration: loading ? 420 : 1180, delay: layer * layerDelay, easing: 'ease-out' });
       const length = [...graphemes.segment(line)].length;
       let index = 0;
       let previousWord;
       for (const part of words.segment(line)) {
         if (/^\s+$/u.test(part.segment)) {
-          output.append(doc.createTextNode(part.segment));
+          sentence.append(doc.createTextNode(part.segment));
+          previousWord = undefined;
           index += [...graphemes.segment(part.segment)].length;
           continue;
         }
         const word = !part.isWordLike && previousWord ? previousWord : doc.createElement('span');
         if (word !== previousWord) {
           word.style.cssText = 'display:inline-block;white-space:pre;';
-          output.append(word);
+          sentence.append(word);
         }
         previousWord = word;
         for (const { segment } of graphemes.segment(part.segment)) {
@@ -86,24 +101,23 @@ export function createLoadingPoemPlayer({
           glyph.style.cssText = 'display:inline-block;transform-origin:50% 70%;';
           word.append(glyph);
           const position = index++ / Math.max(1, length - 1);
-          const frames = Array.from({ length: 41 }, (_, step) => {
-            const t = step / 40;
+          const frames = Array.from({ length: 9 }, (_, step) => {
+            const t = step / 8;
             const envelope = (1 - t) ** 1.4;
             const angle = position * Math.PI * 1.5 - t * Math.PI * 1.2;
             return {
               offset: t,
-              transform: `translateY(${-Math.sin(angle) * .55 * envelope + .28 * (1 - t)}em) rotate(${-Math.cos(angle) * 12 * envelope}deg)`,
-              opacity: Math.min(1, t * 2.4),
-              filter: `blur(${5 * (1 - Math.min(1, t * 2.2))}px)`
+              transform: `translateY(${-Math.sin(angle) * .55 * envelope + .28 * (1 - t)}em) rotate(${-Math.cos(angle) * 12 * envelope}deg)`
             };
           });
-          const delay = layer * 650 + position * 600;
-          animate(glyph, frames, { duration: 2800, delay, easing: 'linear' });
-          duration = Math.max(duration, delay + 2800);
+          const delay = layer * layerDelay + position * waveTravel;
+          animate(glyph, frames, { duration: waveDuration, delay, easing: 'linear' });
+          duration = Math.max(duration, delay + waveDuration);
         }
       }
     });
-    if (author?.animate) animate(author, [{ opacity: 0 }, { opacity: 1 }], { duration: 1000, delay: 650, easing: 'ease-out' });
+    output.append(fragment);
+    if (author?.animate) animate(author, [{ opacity: 0 }, { opacity: 1 }], { duration: loading ? 480 : 1000, delay: layerDelay, easing: 'ease-out' });
     phase('revealing');
     later(duration, hold);
   }
@@ -221,7 +235,7 @@ export function bootstrapLoadingPoem(poems, createPlayer) {
   let poemRoot;
   function play() {
     if (done || player || !poemRoot || !collection) return;
-    player = createPlayer({ root: poemRoot, poems: collection });
+    player = createPlayer({ root: poemRoot, poems: collection, loading: true });
     player.start();
   }
   if (!collection) Promise.resolve(poems).then(items => {

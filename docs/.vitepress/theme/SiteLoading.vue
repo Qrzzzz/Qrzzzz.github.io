@@ -78,7 +78,7 @@ const start: NonNullable<typeof router.onBeforePageLoad> = async (to) => {
     await nextTick();
     if (!visible.value || pending !== to || !poemRoot.value) return;
     player?.destroy();
-    player = createLoadingPoemPlayer({ root: poemRoot.value, poems: sitePoems });
+    player = createLoadingPoemPlayer({ root: poemRoot.value, poems: sitePoems, loading: true });
     player.start();
   }, 180);
   // A stalled request must never leave the reading surface covered indefinitely.

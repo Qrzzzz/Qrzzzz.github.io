@@ -40,7 +40,7 @@ const filteredItems = computed(() =>
   )
 );
 useVisiblePagePrefetch(resultsRef, filteredItems);
-useGentleResults(resultsRef, filteredItems);
+useGentleResults(resultsRef, filteredItems, query);
 
 function restoreUrlState() {
   const parameters = new URLSearchParams(window.location.search);

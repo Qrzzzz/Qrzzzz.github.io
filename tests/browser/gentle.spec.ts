@@ -44,6 +44,8 @@ test("poems wave into place, pause, and fade without deleting their text", async
   await expect(poem).toHaveAttribute("data-phase", "holding", { timeout: 15000 });
   await expect(output).toHaveText(full!);
   await expect(page.locator(".home-poem__cursor")).toHaveCount(0);
+  const entries = page.getByRole("navigation", { name: "Primary destinations" });
+  const entriesTop = (await entries.boundingBox())!.y;
   const before = await poem.getAttribute("data-poem-id");
   await page.getByRole("button", { name: "Next", exact: true }).click();
   await expect(poem).toHaveAttribute("data-phase", "fading");
@@ -52,6 +54,7 @@ test("poems wave into place, pause, and fade without deleting their text", async
   await page.emulateMedia({ reducedMotion: "reduce" });
   await expect(poem).toHaveAttribute("data-phase", "holding");
   expect(await output.evaluate(element => element.getAnimations({ subtree: true }).length)).toBe(0);
+  expect((await entries.boundingBox())!.y).toBeCloseTo(entriesTop, 0);
 });
 
 test("imported poems show their own model and announcement on home and 404", async ({ page }) => {
@@ -78,6 +81,8 @@ test("slow loading recovery fades in without moving the poem on mobile", async (
     const composition = page.locator(".site-loading__composition");
     await expect(composition).toBeVisible();
     const before = await composition.boundingBox();
+    const firstLine = composition.locator("[data-poem-text] > span").first();
+    await expect.poll(() => firstLine.evaluate(el => Number(getComputedStyle(el).opacity)), { timeout: 1500 }).toBe(1);
     const controls = page.locator("[data-loading-recovery]");
     await expect(controls).toBeVisible({ timeout: 9000 });
     await expect(controls).not.toHaveAttribute("inert");
