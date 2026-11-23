@@ -2,12 +2,12 @@
 export function createLoadingPoemPlayer({
   root, poems, random = Math.random, schedule = setTimeout,
   cancel = clearTimeout, now = () => performance.now(),
-  cycleMs = 30000, shuffle = false, loading = false
+  cycleMs = 30000, shuffle = false
 }) {
   const doc = root.ownerDocument;
-  const waveDuration = loading ? 1350 : 2800;
-  const layerDelay = loading ? 310 : 650;
-  const waveTravel = loading ? 220 : 600;
+  const waveDuration = 2800;
+  const layerDelay = 650;
+  const waveTravel = 600;
   const motion = doc.defaultView?.matchMedia?.('(prefers-reduced-motion: reduce)');
   const ghost = root.querySelector('[data-poem-ghost]');
   const output = root.querySelector('[data-poem-text]');
@@ -78,7 +78,7 @@ export function createLoadingPoemPlayer({
       animate(sentence, [
         { opacity: 0, filter: 'blur(5px)' },
         { opacity: 1, filter: 'blur(0px)' }
-      ], { duration: loading ? 420 : 1180, delay: layer * layerDelay, easing: 'ease-out' });
+      ], { duration: 1180, delay: layer * layerDelay, easing: 'ease-out' });
       const length = [...graphemes.segment(line)].length;
       let index = 0;
       let previousWord;
@@ -117,7 +117,7 @@ export function createLoadingPoemPlayer({
       }
     });
     output.append(fragment);
-    if (author?.animate) animate(author, [{ opacity: 0 }, { opacity: 1 }], { duration: loading ? 480 : 1000, delay: layerDelay, easing: 'ease-out' });
+    if (author?.animate) animate(author, [{ opacity: 0 }, { opacity: 1 }], { duration: 1000, delay: layerDelay, easing: 'ease-out' });
     phase('revealing');
     later(duration, hold);
   }
@@ -235,7 +235,7 @@ export function bootstrapLoadingPoem(poems, createPlayer) {
   let poemRoot;
   function play() {
     if (done || player || !poemRoot || !collection) return;
-    player = createPlayer({ root: poemRoot, poems: collection, loading: true });
+    player = createPlayer({ root: poemRoot, poems: collection });
     player.start();
   }
   if (!collection) Promise.resolve(poems).then(items => {

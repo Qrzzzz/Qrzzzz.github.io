@@ -4,6 +4,7 @@ import { useRouter } from "vitepress";
 import { sitePoems } from "./sitePoems.mjs";
 import { createLoadingPoemPlayer } from "./loadingPoemRuntime.mjs";
 
+const emit = defineEmits<{ routeReady: [to: string, hadLoading: boolean] }>();
 const router = useRouter();
 const visible = ref(false);
 const poemRoot = ref<HTMLElement | null>(null);
@@ -78,7 +79,7 @@ const start: NonNullable<typeof router.onBeforePageLoad> = async (to) => {
     await nextTick();
     if (!visible.value || pending !== to || !poemRoot.value) return;
     player?.destroy();
-    player = createLoadingPoemPlayer({ root: poemRoot.value, poems: sitePoems, loading: true });
+    player = createLoadingPoemPlayer({ root: poemRoot.value, poems: sitePoems });
     player.start();
   }, 180);
   // A stalled request must never leave the reading surface covered indefinitely.
@@ -91,7 +92,9 @@ const complete: NonNullable<typeof router.onAfterRouteChange> = async (to) => {
     await after?.(to);
   } finally {
     await nextTick();
+    const hadLoading = visible.value;
     if (pending === to) finish();
+    emit("routeReady", to, hadLoading);
   }
 };
 

@@ -4,6 +4,7 @@
 .site-layout .VPDocFooter .pager-link { border: 0; border-top: 1px solid var(--site-line); border-radius: 0; padding: 20px 0; background: transparent; }
 .site-layout .VPDocFooter .pager-link:hover { border-top-color: var(--site-link); }
 .site-layout .VPDocFooter .pager-link .title { font-size: 15px; }
+.site-layout[data-page-kind="excerpt"] .VPDocFooter .pager-link:active { opacity: .75; }
 .site-layout :is(.library-result, .content-index-row, .hub-entry, .project-link-row, .project-link-card, .project-docs-card) { border-radius: 0; transition: color 180ms ease, border-color 180ms ease, background-color 180ms ease; }
 .site-layout :is(.library-result, .content-index-row, .hub-entry):hover { background: transparent; }
 .site-layout .library-filter { position: relative; z-index: 1; padding: 9px 6px; border: 0; border-radius: 0; background: transparent; min-height: 44px; min-width: 44px; font-size: var(--site-ui-size); font-weight: 400; }

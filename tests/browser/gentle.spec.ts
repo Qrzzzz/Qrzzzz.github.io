@@ -81,8 +81,6 @@ test("slow loading recovery fades in without moving the poem on mobile", async (
     const composition = page.locator(".site-loading__composition");
     await expect(composition).toBeVisible();
     const before = await composition.boundingBox();
-    const firstLine = composition.locator("[data-poem-text] > span").first();
-    await expect.poll(() => firstLine.evaluate(el => Number(getComputedStyle(el).opacity)), { timeout: 1500 }).toBe(1);
     const controls = page.locator("[data-loading-recovery]");
     await expect(controls).toBeVisible({ timeout: 9000 });
     await expect(controls).not.toHaveAttribute("inert");
@@ -92,4 +90,37 @@ test("slow loading recovery fades in without moving the poem on mobile", async (
     await page.getByRole("button", { name: "Continue reading", exact: true }).click();
     await expect(page.locator(".site-loading")).toHaveCount(0);
   } finally { release(); }
+});
+
+test("excerpt pager animates in the selected direction and respects reduced motion", async ({ page }) => {
+  await page.addInitScript(() => {
+    const animate = Element.prototype.animate;
+    Element.prototype.animate = function (frames, options) {
+      if (this.matches(".excerpt-entry") && Array.isArray(frames)) {
+        document.body.dataset.excerptFrom = String(frames[0].transform);
+      }
+      return animate.call(this, frames, options);
+    };
+  });
+  await page.goto("/excerpts/2026-10-21-04.html");
+  async function turn(direction: "prev" | "next") {
+    // Preload the destination so the navigation exercises the fast path.
+    const link = page.locator(`.pager-link.${direction}`);
+    const href = (await link.getAttribute("href"))!;
+    await link.evaluate(async (anchor: HTMLAnchorElement) => {
+      const path = anchor.pathname.slice(1).replace(/\.html$/, "").replaceAll("/", "_") + ".md";
+      const hashes = (window as Window & { __VP_HASH_MAP__: Record<string, string> }).__VP_HASH_MAP__;
+      await import(`/assets/${path}.${hashes[path]}.js`);
+    });
+    await link.click();
+    await expect(page).toHaveURL(new RegExp(href.replace(/\.html$/, "") + "(?:\\.html)?$"));
+  }
+  await turn("next");
+  await expect(page.locator("body")).toHaveAttribute("data-excerpt-from", /^translateX\([1-9]/);
+  await turn("prev");
+  await expect(page.locator("body")).toHaveAttribute("data-excerpt-from", /^translateX\(-/);
+  await page.evaluate(() => delete document.body.dataset.excerptFrom);
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await turn("next");
+  await expect(page.locator("body")).not.toHaveAttribute("data-excerpt-from");
 });

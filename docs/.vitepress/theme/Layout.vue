@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, defineAsyncComponent, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
-import { useData } from "vitepress";
+import { useData, useRouter } from "vitepress";
 import { createNavigationAccessibility } from "./navigationAccessibility";
 import { createTopNavigationMarker } from "./topNavigationMarker";
 import { createHeadingMarker } from "./effects/headingMarker";
@@ -17,6 +17,7 @@ import { prefetchPage } from "./prefetchPage";
 
 const { Layout } = DefaultTheme;
 const { frontmatter, isDark, page } = useData();
+const router = useRouter();
 const HomeAsciiTrail = defineAsyncComponent(() => import("./HomeAsciiTrail.vue"));
 const clientReady = ref(false);
 
@@ -83,7 +84,41 @@ const navigationAccessibility = createNavigationAccessibility();
 const topNavigationMarker = createTopNavigationMarker();
 const headingMarker = createHeadingMarker();
 const randomFeedback = createRandomFeedback();
+let excerptTurn: { path: string; direction: number } | undefined;
+let excerptAnimation: Animation | undefined;
+
+function captureExcerptTurn(event: MouseEvent) {
+  if (event.button || event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) return;
+  excerptTurn = undefined;
+  // VitePress intercepts internal links at window capture before this handler.
+  if (pageKind.value !== "excerpt") return;
+  const link = event.target instanceof Element
+    ? event.target.closest<HTMLAnchorElement>(".VPDocFooter a.pager-link")
+    : null;
+  if (!link || (link.target && link.target !== "_self")) return;
+  excerptTurn = { path: link.pathname.replace(/\.html$/, ""), direction: link.classList.contains("next") ? 1 : -1 };
+}
+
+function animateExcerptTurn(to: string, hadLoading: boolean) {
+  // VitePress can report a superseded navigation before the active one settles.
+  const normalize = (path: string) => path.replace(/\.html$/, "");
+  if (normalize(new URL(to, location.href).pathname) !== normalize(router.route.path)) return;
+  excerptAnimation?.cancel();
+  const turn = excerptTurn;
+  excerptTurn = undefined;
+  if (!turn || pageKind.value !== "excerpt" || turn.path !== router.route.path.replace(/\.html$/, "")) return;
+  if (hadLoading || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const distance = matchMedia("(max-width: 680px)").matches ? 6 : 12;
+  excerptAnimation = document.querySelector(".excerpt-entry")?.animate([
+    { opacity: .35, transform: `translateX(${turn.direction * distance}px)` },
+    { opacity: 1, transform: "translateX(0)" }
+  ], { duration: 200, easing: "ease-out" });
+}
+
+function clearExcerptTurn() { excerptTurn = undefined; }
+
 onMounted(() => {
+  window.addEventListener("popstate", clearExcerptTurn);
   document.addEventListener("pointerover", prefetchPage, { passive: true });
   document.addEventListener("focusin", prefetchPage);
   document.addEventListener("touchstart", prefetchPage, { passive: true });
@@ -103,6 +138,8 @@ watch(() => page.value.relativePath, () => nextTick(() => {
   headingMarker.sync();
 }), { flush: "post" });
 onBeforeUnmount(() => {
+  window.removeEventListener("popstate", clearExcerptTurn);
+  excerptAnimation?.cancel();
   document.removeEventListener("pointerover", prefetchPage);
   document.removeEventListener("focusin", prefetchPage);
   document.removeEventListener("touchstart", prefetchPage);
@@ -118,8 +155,9 @@ onBeforeUnmount(() => {
     class="site-layout"
     :data-page-kind="pageKind"
     :data-page-language="pageLanguage"
+    @click.capture="captureExcerptTurn"
   >
-    <SiteLoading />
+    <SiteLoading @route-ready="animateExcerptTurn" />
     <HomeAsciiTrail v-if="clientReady && pageKind === 'home'" />
 
     <Layout>

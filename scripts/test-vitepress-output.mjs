@@ -116,7 +116,7 @@ try {
   );
   assert.match(
     excerpt,
-    /<p>公道世间唯白发，<br>\s*贵人头上不曾饶。<\/p>[\s\S]*?<div class="excerpt-attribution"[^>]*>\s*<p>杜牧《送隐者一绝》<\/p>/,
+    /<p>公道世间唯白发，<br>\s*贵人头上不曾饶。<\/p>[\s\S]*?<div class="excerpt-attribution"[^>]*>\s*<p>杜牧《送隐者一绝》。<\/p>/,
     "第三则偶拾的古典近义表达结构缺失"
   );
   assert.doesNotMatch(
