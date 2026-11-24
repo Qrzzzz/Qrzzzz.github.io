@@ -7,7 +7,7 @@ aside: false
 pageType: index
 ---
 
-<CatalogHeader title="Docs" description="Product guides and the notes that keep this site maintainable." />
+<CatalogHeader title="Docs" />
 
 <section class="hub-section" aria-labelledby="product-docs-title">
   <header class="hub-section__header">

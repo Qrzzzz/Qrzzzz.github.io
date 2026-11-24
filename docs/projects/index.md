@@ -7,7 +7,7 @@ aside: false
 pageType: index
 ---
 
-<CatalogHeader title="Projects" description="Apps, utilities, and experiments built for real use." />
+<CatalogHeader title="Projects" />
 
 <script setup>
 import ProjectIndex from "../.vitepress/theme/components/ProjectIndex.vue";

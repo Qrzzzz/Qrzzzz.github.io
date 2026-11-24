@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import type { LibraryKind } from "../../content/library";
 
 const props = defineProps<{
@@ -7,6 +7,13 @@ const props = defineProps<{
   activeKind: LibraryKind | "all";
   resultCount: number;
 }>();
+
+const countLabel = computed(() => {
+  if (props.activeKind !== "all" || props.query.trim()) {
+    return props.resultCount === 1 ? "result" : "results";
+  }
+  return props.resultCount === 1 ? "entry" : "entries";
+});
 
 const emit = defineEmits<{
   "update:query": [value: string];
@@ -143,7 +150,7 @@ onBeforeUnmount(() => {
     </div>
 
     <p class="library-toolbar__count" aria-live="polite">
-      {{ resultCount }} {{ resultCount === 1 ? "result" : "results" }}
+      {{ resultCount }} {{ countLabel }}
     </p>
   </div>
 </template>

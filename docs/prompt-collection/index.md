@@ -11,6 +11,6 @@ pageType: index
 import CollectionIndex from "../.vitepress/theme/components/CollectionIndex.vue";
 </script>
 
-<CatalogHeader title="Prompts" description="Working prompts for research, writing, and making things." parent="Library" parent-href="/library/" />
+<CatalogHeader title="Prompts" parent="Library" parent-href="/library/" />
 
 <CollectionIndex kind="prompt" />

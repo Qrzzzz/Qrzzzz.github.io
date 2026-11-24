@@ -318,7 +318,7 @@ export default defineConfig({
     },
 
     footer: {
-      message: '<a href="/about">Cherry Chu</a> · Projects, notes, and working documentation.',
+      message: '<a href="/about">Cherry Chu</a>',
       copyright: "© 2026 Qrzzzz"
     },
 

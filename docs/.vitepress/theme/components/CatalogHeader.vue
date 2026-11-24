@@ -3,7 +3,7 @@ import SiteIcon from "../SiteIcon.vue";
 import FadeContent from "../effects/FadeContent.vue";
 defineProps<{
   title: string;
-  description: string;
+  description?: string;
   parent?: string;
   parentHref?: string;
 }>();
@@ -15,6 +15,6 @@ defineProps<{
       <SiteIcon name="arrow-left" /> {{ parent }}
     </a>
     <h1><span class="heading-feedback">{{ title }}</span></h1>
-    <p class="catalog-header__description">{{ description }}</p>
+    <p v-if="description" class="catalog-header__description">{{ description }}</p>
   </FadeContent>
 </template>

@@ -6,8 +6,6 @@ lang: en
 
 # Maintainer Handbook
 
-<p class="lead">Local development, publishing workflows, and writing standards for Qrzzzz.github.io.</p>
-
 ## Handbook contents
 
 <div class="content-index" aria-label="Handbook pages">

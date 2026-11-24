@@ -11,6 +11,6 @@ pageType: index
 import CollectionIndex from "../.vitepress/theme/components/CollectionIndex.vue";
 </script>
 
-<CatalogHeader title="Articles" description="Essays and notes on whatever holds my attention." parent="Library" parent-href="/library/" />
+<CatalogHeader title="Articles" parent="Library" parent-href="/library/" />
 
 <CollectionIndex kind="article" />

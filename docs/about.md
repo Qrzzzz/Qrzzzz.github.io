@@ -7,7 +7,7 @@ aside: false
 outline: false
 ---
 
-<CatalogHeader title="About" description="A public home for Cherry Chu's projects, documentation, tools, articles, prompts, and excerpts." />
+<CatalogHeader title="About" />
 
 <div class="about-reading">
 

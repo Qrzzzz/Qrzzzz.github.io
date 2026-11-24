@@ -16,6 +16,6 @@ head:
 import ProjectIndex from "../.vitepress/theme/components/ProjectIndex.vue";
 </script>
 
-<CatalogHeader title="Projects" description="Apps, utilities, and experiments built for real use." />
+<CatalogHeader title="Projects" />
 
 <ProjectIndex />

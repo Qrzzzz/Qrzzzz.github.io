@@ -7,7 +7,7 @@ aside: false
 pageType: index
 ---
 
-<CatalogHeader title="Tools" description="Small browser tools, ready to use." parent="Projects" parent-href="/projects/" />
+<CatalogHeader title="Tools" parent="Projects" parent-href="/projects/" />
 
 <script setup>
 import ProjectIndex from "../.vitepress/theme/components/ProjectIndex.vue";

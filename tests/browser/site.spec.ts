@@ -111,11 +111,15 @@ test("search is lazy, finds Chinese words and navigates with the keyboard", asyn
 
 test("Library filtering, browser history and URL restoration agree", async ({ page }) => {
   await page.goto("/library/");
+  const count = page.locator(".library-toolbar__count");
+  await expect(count).toHaveText(/^\d+ entries$/);
+  await expect(page.locator(".library-stats")).toHaveText(/^\s*Last updated /);
   await page.getByRole("searchbox", { name: "Search the Library" }).fill("野心");
   await expect(page).toHaveURL(/q=/);
   await page.getByRole("button", { name: "Articles", exact: true }).click();
   await expect(page).toHaveURL(/type=article/);
   await expect(page.locator(".library-results .library-result")).toHaveCount(1);
+  await expect(count).toHaveText("1 result");
   await page.goBack();
   await expect(page.getByRole("button", { name: "All", exact: true })).toHaveAttribute("aria-pressed", "true");
   await expect(page.getByRole("searchbox", { name: "Search the Library" })).toHaveValue("野心");

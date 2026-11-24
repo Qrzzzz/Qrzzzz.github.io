@@ -115,12 +115,9 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="library-index">
-    <header class="library-header">
+    <header v-if="latestUpdated" class="library-header">
       <p class="library-stats">
-        {{ libraryItems.length }} entries
-        <template v-if="latestUpdated">
-          · Last updated <time :datetime="latestUpdated">{{ formatSiteDate(latestUpdated) }}</time>
-        </template>
+        Last updated <time :datetime="latestUpdated">{{ formatSiteDate(latestUpdated) }}</time>
       </p>
     </header>
 
