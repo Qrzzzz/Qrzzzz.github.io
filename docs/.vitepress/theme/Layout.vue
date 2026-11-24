@@ -77,6 +77,9 @@ function syncDocumentMetadata() {
   );
 
   themeColor?.setAttribute("content", isDark.value ? "#151d37" : "#eef2f3");
+  const icon = document.querySelector<HTMLLinkElement>("[data-site-icon]");
+  const iconPath = isDark.value ? icon?.dataset.dark : icon?.dataset.light;
+  if (iconPath && icon?.getAttribute("href") !== iconPath) icon?.setAttribute("href", iconPath);
   document.documentElement.lang = pageLanguage.value;
 }
 

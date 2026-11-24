@@ -211,11 +211,18 @@ test("mobile navigation restores focus and releases background across breakpoint
 test("theme and language survive client navigation; tools keep their separate origin path", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce", colorScheme: "light" });
   await page.goto("/tools/");
+  const icon = page.locator('link[rel="icon"][data-site-icon]');
+  await expect(icon).toHaveAttribute("href", "/favicon-light.png");
   await expect(page.locator('.content-index a')).toHaveAttribute("href", "https://qrzzzz.github.io/password-generator/");
   await expect(page.locator('.content-index a')).toHaveAttribute("target", "_self");
   await page.locator('.NavActions button[role="switch"]').click();
   await expect(page.locator("html")).toHaveClass(/dark/);
+  await expect(icon).toHaveAttribute("href", "/favicon-dark.png");
   await page.getByRole("link", { name: "Library", exact: true }).click();
   await expect(page.locator("html")).toHaveAttribute("lang", "en");
   await expect(page.locator("html")).toHaveClass(/dark/);
+  await page.reload();
+  await expect(icon).toHaveAttribute("href", "/favicon-dark.png");
+  await page.locator('.NavActions button[role="switch"]').click();
+  await expect(icon).toHaveAttribute("href", "/favicon-light.png");
 });

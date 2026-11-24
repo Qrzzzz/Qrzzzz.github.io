@@ -81,6 +81,7 @@ export default defineConfig({
   },
 
   head: [
+    ["link", { rel: "icon", type: "image/png", sizes: "64x64", href: "/favicon-light.png", "data-site-icon": "", "data-light": "/favicon-light.png", "data-dark": "/favicon-dark.png" }],
     ["link", { rel: "stylesheet", href: fontStylesPath, media: "print", onload: "this.media='all'", "data-site-fonts": "" }],
     [
       "script",
@@ -93,6 +94,8 @@ export default defineConfig({
         const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
         const isDark = preference === "dark" || (preference !== "light" && prefersDark);
         document.documentElement.classList.toggle("dark", isDark);
+        const icon = document.querySelector("[data-site-icon]");
+        if (isDark && icon) icon.setAttribute("href", icon.dataset.dark);
         let themeColor = document.querySelector('meta[name="theme-color"]');
         if (!themeColor) {
           themeColor = document.createElement("meta");
