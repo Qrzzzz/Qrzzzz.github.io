@@ -137,7 +137,7 @@ test('homepage exhausts its shuffle bag before repeating and leaves loader state
 
 test('404 cycles through the complete multi-model collection without repeats or changing the loader selection', () => {
   const poems = sitePoems;
-  assert.equal(poems.length, 350);
+  assert.equal(poems.length, 400);
   assert.equal(new Set(poems.map(poem => String(poem.id))).size, poems.length);
   const h = harness({ poems, cycleMs: 60000, shuffle: true, reduced: true });
   h.doc.documentElement.dataset.loadingLastPoem = '24';
@@ -169,7 +169,7 @@ test('Next selects another complete poem and pause freezes the reading interval'
 
 test('all surfaces share uniquely identified works with model-specific attribution', () => {
   assert.equal(new Set(sitePoems.map(poem => poem.text)).size, sitePoems.length);
-  assert.deepEqual(Object.fromEntries([...new Set(sitePoems.map(p => p.model))].map(model => [model, sitePoems.filter(p => p.model === model).length])), { 'GPT-6 Astra': 250, 'Gemini 4 Argon': 50, 'Claude Opus 4.6': 50 });
+  assert.deepEqual(Object.fromEntries([...new Set(sitePoems.map(p => p.model))].map(model => [model, sitePoems.filter(p => p.model === model).length])), { 'GPT-6 Astra': 250, 'Gemini 4 Argon': 50, 'Claude Opus 4.6': 50, 'Gemini 4 Neon': 50 });
   const imported = JSON.parse(fs.readFileSync(new URL('../docs/.vitepress/theme/contributedPoems.json', import.meta.url), 'utf8'));
   assert.deepEqual(sitePoems.slice(-imported.length).map(({model,url,text}) => ({model,url,text})), imported);
   const h = harness({ reduced: true });
